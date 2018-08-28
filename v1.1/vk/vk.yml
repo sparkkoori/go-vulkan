@@ -20,9 +20,22 @@ PARSER:
 TRANSLATOR:
   Rules:
     global:
-      - {action: accept, from: "^TTT"}
+    type:
+      - {action: accept, from: "^Vk"}
+      - {action: replace, from: "^Vk", to: ""}
+      - {transform: export}
+    const:
+      - {action: accept, from: "^VK_"}
+      - {action: replace, from: "^VK_", to: ""}
+      - {transform: lower}
+      - {load: snakecase}
+      - {transform: export}
+    function:
+      - {action: accept, from: "^vk"}
+      - {action: ignore, from: "ProcAddr$"}
+      - {action: replace, from: "^vk", to: ""}
+      - {transform: export}
+
   MemTips:
 
   PtrTips:
-    function:
-    struct:
