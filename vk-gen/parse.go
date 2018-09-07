@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"io/ioutil"
 	"log"
 	"os"
@@ -16,12 +15,7 @@ import (
 func parse() ast.Node {
 	var headerPath string
 	{
-		dir := flag.Arg(0)
-		if dir == "" {
-			dir = "."
-		}
-
-		headerPath = path.Join(dir, "vulkan", "vulkan.h")
+		headerPath = path.Join(pkgdir(), "vulkan", "vulkan.h")
 		_, err := os.Stat(headerPath)
 		if err != nil {
 			log.Fatalln("%s isn't found")

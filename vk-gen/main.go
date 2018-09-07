@@ -15,9 +15,14 @@ func main() {
 	print(goAst, cAst)
 }
 
-func print(goAst goast.Node, cAst cast.Node) {
-}
-
 func generate(cast.Node) (goast.Node, cast.Node) {
 	return nil, nil
+}
+
+func pkgdir() string {
+	dir := flag.Arg(0)
+	if dir == "" {
+		dir = "."
+	}
+	return dir
 }
