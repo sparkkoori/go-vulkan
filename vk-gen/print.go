@@ -30,7 +30,7 @@ func printGo(nodes []goast.Node) {
 	cfg := printer.Config{Tabwidth: 1}
 	cfg.Mode |= printer.RawFormat
 
-	f, err := os.Create(path.Join(pkgdir(), "vk_auto.go"))
+	f, err := os.Create(path.Join(pkgdir(), "vk.auto.go"))
 	if err != nil {
 		panic(err)
 	}

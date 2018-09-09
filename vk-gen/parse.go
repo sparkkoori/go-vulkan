@@ -34,13 +34,13 @@ func parse() Source {
 
 	var ppPath string
 	{
-		dir, err := ioutil.TempDir("", "c2go")
-		if err != nil {
-			log.Fatalf("Cannot create temp folder: %v\n", err)
-		}
-		defer os.RemoveAll(dir)
-		ppPath = path.Join(dir, "pp.h")
-		err = ioutil.WriteFile(ppPath, proprossed, 0644)
+		// dir, err := ioutil.TempDir("", "vk-gen")
+		// if err != nil {
+		// 	log.Fatalf("Cannot create temp folder: %v\n", err)
+		// }
+		// defer os.RemoveAll(dir)
+		ppPath = path.Join("", "vulkan.auto.h")
+		err := ioutil.WriteFile(ppPath, proprossed, 0644)
 		if err != nil {
 			log.Fatalf("writing to %s failed: %v\n", ppPath, err)
 		}
