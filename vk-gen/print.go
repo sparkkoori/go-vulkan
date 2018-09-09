@@ -7,11 +7,9 @@ import (
 	"go/token"
 	"os"
 	"path"
-
-	cast "github.com/elliotchance/c2go/ast"
 )
 
-func print(goAst goast.Node, cAst cast.Node) {
+func print(target Target) {
 	// 	src := `
 	// package main
 	// func main() {
@@ -24,10 +22,10 @@ func print(goAst goast.Node, cAst cast.Node) {
 	// 	if err != nil {
 	// 		panic(err)
 	// 	}
-	printGo(goAst)
+	printGo(target.targetGo)
 }
 
-func printGo(goAst goast.Node) {
+func printGo(nodes []goast.Node) {
 	fset := token.NewFileSet() // positions are relative to fset
 	cfg := printer.Config{Tabwidth: 1}
 	cfg.Mode |= printer.RawFormat
@@ -38,8 +36,19 @@ func printGo(goAst goast.Node) {
 	}
 	defer f.Close()
 
-	if err := cfg.Fprint(f, fset, goAst); err != nil {
+	file := &goast.File{}
+	file.Name = &goast.Ident{Name: "vk"}
+	for _, node := range nodes {
+		switch n := node.(type) {
+		case goast.Decl:
+			file.Decls = append(file.Decls, n)
+		default:
+			// goast.Print(fset, node)
+			panic(fmt.Sprintf("unkown node %#v", node))
+		}
+	}
+
+	if err := cfg.Fprint(f, fset, file); err != nil {
 		fmt.Errorf("print: %s", err)
 	}
-	// goast.Print(fset, goAst)
 }

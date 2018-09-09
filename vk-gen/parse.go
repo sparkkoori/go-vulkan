@@ -12,7 +12,7 @@ import (
 	"github.com/elliotchance/c2go/preprocessor"
 )
 
-func parse() ast.Node {
+func parse() Source {
 	var headerPath string
 	{
 		headerPath = path.Join(pkgdir(), "vulkan", "vulkan.h")
@@ -58,7 +58,7 @@ func parse() ast.Node {
 	return parseClangAstDump(string(ast))
 }
 
-func parseClangAstDump(dump string) ast.Node {
+func parseClangAstDump(dump string) Source {
 	lines := strings.Split(string(dump), "\n")
 
 	var nodes []ast.Node
@@ -94,5 +94,7 @@ func parseClangAstDump(dump string) ast.Node {
 		panic("the top level node should be the only one")
 	}
 
-	return nodes[0]
+	unit := nodes[0].(*ast.TranslationUnitDecl)
+	src := Source(unit.Children())
+	return src
 }
