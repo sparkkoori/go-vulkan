@@ -117,22 +117,24 @@ func (ws *workspace) gen(name string) string {
 	return goname
 }
 
-func (ws *workspace) genTypedefDecl(n *cast.TypedefDecl, name string) string {
-	t := n.Type
-	gname := ws.gen(t)
-	if gname == "" {
-		gname = "C." + name
+func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl, cn string) string {
+	ct := node.Type
+	gt := ws.gen(ct)
+	if gt == "" {
+		gt = "C." + cn
 	}
+	gn := vkName(cn)
+
 	ws.target.addGo(&goast.GenDecl{
 		Tok: token.TYPE,
 		Specs: []goast.Spec{
 			&goast.TypeSpec{
-				Name: &goast.Ident{token.NoPos, name, nil},
-				Type: &goast.Ident{token.NoPos, gname, nil},
+				Name: &goast.Ident{token.NoPos, gn, nil},
+				Type: &goast.Ident{token.NoPos, gt, nil},
 			},
 		},
 	})
-	return gname
+	return gn
 }
 
 func getNodeName(node cast.Node) string {
@@ -149,6 +151,14 @@ func getNodeName(node cast.Node) string {
 	deepPrint(node, 0)
 	panic("Unkown node for getNodeName()")
 	return ""
+}
+
+func vkName(n string) string {
+	n = strings.TrimPrefix(n, "C.")
+	n = strings.TrimPrefix(n, "Vk")
+	n = strings.TrimPrefix(n, "VK_")
+	n = strings.TrimPrefix(n, "vk")
+	return n
 }
 
 func deepPrint(node cast.Node, level int) {
