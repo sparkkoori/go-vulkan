@@ -2,11 +2,12 @@ package main
 
 import (
 	"flag"
-	"log"
+	"fmt"
 
 	goast "go/ast"
 
 	cast "github.com/elliotchance/c2go/ast"
+	"github.com/logrusorgru/aurora"
 )
 
 type Source []cast.Node
@@ -28,9 +29,9 @@ func main() {
 	flag.Parse()
 
 	src := parse()
-	log.Printf("Parsed %d nodes\n", len(src))
+	fmt.Printf("Parsed %d nodes.\n", aurora.Green(len(src)))
 	tgt := generate(src)
-	log.Printf("Generated %d go nodes and %d c nodes\n", len(tgt.targetGo), len(tgt.targetC))
+	fmt.Printf("Generated %d go nodes and %d c nodes.\n", aurora.Green(len(tgt.targetGo)), aurora.Green(len(tgt.targetC)))
 	print(tgt)
 }
 
