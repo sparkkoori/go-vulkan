@@ -1233,306 +1233,288 @@ const (
 )
 
 type InstanceCreateFlags Flags
-type FormatFeatureFlagBits int
-
-const (
-	FORMAT_FEATURE_SAMPLED_IMAGE_BIT                                                               FormatFeatureFlagBits = 1
-	FORMAT_FEATURE_STORAGE_IMAGE_BIT                                                               FormatFeatureFlagBits = 2
-	FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT                                                        FormatFeatureFlagBits = 4
-	FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT                                                        FormatFeatureFlagBits = 8
-	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT                                                        FormatFeatureFlagBits = 16
-	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT                                                 FormatFeatureFlagBits = 32
-	FORMAT_FEATURE_VERTEX_BUFFER_BIT                                                               FormatFeatureFlagBits = 64
-	FORMAT_FEATURE_COLOR_ATTACHMENT_BIT                                                            FormatFeatureFlagBits = 128
-	FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT                                                      FormatFeatureFlagBits = 256
-	FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT                                                    FormatFeatureFlagBits = 512
-	FORMAT_FEATURE_BLIT_SRC_BIT                                                                    FormatFeatureFlagBits = 1024
-	FORMAT_FEATURE_BLIT_DST_BIT                                                                    FormatFeatureFlagBits = 2048
-	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT                                                 FormatFeatureFlagBits = 4096
-	FORMAT_FEATURE_TRANSFER_SRC_BIT                                                                FormatFeatureFlagBits = 16384
-	FORMAT_FEATURE_TRANSFER_DST_BIT                                                                FormatFeatureFlagBits = 32768
-	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT                                                     FormatFeatureFlagBits = 131072
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT                                FormatFeatureFlagBits = 262144
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT               FormatFeatureFlagBits = 524288
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT               FormatFeatureFlagBits = 1048576
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT     FormatFeatureFlagBits = 2097152
-	FORMAT_FEATURE_DISJOINT_BIT                                                                    FormatFeatureFlagBits = 4194304
-	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT                                                      FormatFeatureFlagBits = 8388608
-	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG                                              FormatFeatureFlagBits = 8192
-	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT                                             FormatFeatureFlagBits = 65536
-	FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR                                                            FormatFeatureFlagBits = FORMAT_FEATURE_TRANSFER_SRC_BIT
-	FORMAT_FEATURE_TRANSFER_DST_BIT_KHR                                                            FormatFeatureFlagBits = FORMAT_FEATURE_TRANSFER_DST_BIT
-	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR                                                 FormatFeatureFlagBits = FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR                            FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR           FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR           FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
-	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
-	FORMAT_FEATURE_DISJOINT_BIT_KHR                                                                FormatFeatureFlagBits = FORMAT_FEATURE_DISJOINT_BIT
-	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR                                                  FormatFeatureFlagBits = FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
-	FORMAT_FEATURE_FLAG_BITS_MAX_ENUM                                                              FormatFeatureFlagBits = 2147483647
-)
-
 type FormatFeatureFlags Flags
-type ImageUsageFlagBits int
 
 const (
-	IMAGE_USAGE_TRANSFER_SRC_BIT             ImageUsageFlagBits = 1
-	IMAGE_USAGE_TRANSFER_DST_BIT             ImageUsageFlagBits = 2
-	IMAGE_USAGE_SAMPLED_BIT                  ImageUsageFlagBits = 4
-	IMAGE_USAGE_STORAGE_BIT                  ImageUsageFlagBits = 8
-	IMAGE_USAGE_COLOR_ATTACHMENT_BIT         ImageUsageFlagBits = 16
-	IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT ImageUsageFlagBits = 32
-	IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     ImageUsageFlagBits = 64
-	IMAGE_USAGE_INPUT_ATTACHMENT_BIT         ImageUsageFlagBits = 128
-	IMAGE_USAGE_FLAG_BITS_MAX_ENUM           ImageUsageFlagBits = 2147483647
+	FORMAT_FEATURE_SAMPLED_IMAGE_BIT                                                               FormatFeatureFlags = 1
+	FORMAT_FEATURE_STORAGE_IMAGE_BIT                                                               FormatFeatureFlags = 2
+	FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT                                                        FormatFeatureFlags = 4
+	FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT                                                        FormatFeatureFlags = 8
+	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT                                                        FormatFeatureFlags = 16
+	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT                                                 FormatFeatureFlags = 32
+	FORMAT_FEATURE_VERTEX_BUFFER_BIT                                                               FormatFeatureFlags = 64
+	FORMAT_FEATURE_COLOR_ATTACHMENT_BIT                                                            FormatFeatureFlags = 128
+	FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT                                                      FormatFeatureFlags = 256
+	FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT                                                    FormatFeatureFlags = 512
+	FORMAT_FEATURE_BLIT_SRC_BIT                                                                    FormatFeatureFlags = 1024
+	FORMAT_FEATURE_BLIT_DST_BIT                                                                    FormatFeatureFlags = 2048
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT                                                 FormatFeatureFlags = 4096
+	FORMAT_FEATURE_TRANSFER_SRC_BIT                                                                FormatFeatureFlags = 16384
+	FORMAT_FEATURE_TRANSFER_DST_BIT                                                                FormatFeatureFlags = 32768
+	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT                                                     FormatFeatureFlags = 131072
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT                                FormatFeatureFlags = 262144
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT               FormatFeatureFlags = 524288
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT               FormatFeatureFlags = 1048576
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT     FormatFeatureFlags = 2097152
+	FORMAT_FEATURE_DISJOINT_BIT                                                                    FormatFeatureFlags = 4194304
+	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT                                                      FormatFeatureFlags = 8388608
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG                                              FormatFeatureFlags = 8192
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT                                             FormatFeatureFlags = 65536
+	FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR                                                            FormatFeatureFlags = FORMAT_FEATURE_TRANSFER_SRC_BIT
+	FORMAT_FEATURE_TRANSFER_DST_BIT_KHR                                                            FormatFeatureFlags = FORMAT_FEATURE_TRANSFER_DST_BIT
+	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR                                                 FormatFeatureFlags = FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR                            FormatFeatureFlags = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR           FormatFeatureFlags = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR           FormatFeatureFlags = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR FormatFeatureFlags = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+	FORMAT_FEATURE_DISJOINT_BIT_KHR                                                                FormatFeatureFlags = FORMAT_FEATURE_DISJOINT_BIT
+	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR                                                  FormatFeatureFlags = FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+	FORMAT_FEATURE_FLAG_BITS_MAX_ENUM                                                              FormatFeatureFlags = 2147483647
 )
 
 type ImageUsageFlags Flags
-type ImageCreateFlagBits int
 
 const (
-	IMAGE_CREATE_SPARSE_BINDING_BIT                        ImageCreateFlagBits = 1
-	IMAGE_CREATE_SPARSE_RESIDENCY_BIT                      ImageCreateFlagBits = 2
-	IMAGE_CREATE_SPARSE_ALIASED_BIT                        ImageCreateFlagBits = 4
-	IMAGE_CREATE_MUTABLE_FORMAT_BIT                        ImageCreateFlagBits = 8
-	IMAGE_CREATE_CUBE_COMPATIBLE_BIT                       ImageCreateFlagBits = 16
-	IMAGE_CREATE_ALIAS_BIT                                 ImageCreateFlagBits = 1024
-	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT           ImageCreateFlagBits = 64
-	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT                   ImageCreateFlagBits = 32
-	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT           ImageCreateFlagBits = 128
-	IMAGE_CREATE_EXTENDED_USAGE_BIT                        ImageCreateFlagBits = 256
-	IMAGE_CREATE_PROTECTED_BIT                             ImageCreateFlagBits = 2048
-	IMAGE_CREATE_DISJOINT_BIT                              ImageCreateFlagBits = 512
-	IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT ImageCreateFlagBits = 4096
-	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR       ImageCreateFlagBits = IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
-	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR               ImageCreateFlagBits = IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
-	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR       ImageCreateFlagBits = IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
-	IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR                    ImageCreateFlagBits = IMAGE_CREATE_EXTENDED_USAGE_BIT
-	IMAGE_CREATE_DISJOINT_BIT_KHR                          ImageCreateFlagBits = IMAGE_CREATE_DISJOINT_BIT
-	IMAGE_CREATE_ALIAS_BIT_KHR                             ImageCreateFlagBits = IMAGE_CREATE_ALIAS_BIT
-	IMAGE_CREATE_FLAG_BITS_MAX_ENUM                        ImageCreateFlagBits = 2147483647
+	IMAGE_USAGE_TRANSFER_SRC_BIT             ImageUsageFlags = 1
+	IMAGE_USAGE_TRANSFER_DST_BIT             ImageUsageFlags = 2
+	IMAGE_USAGE_SAMPLED_BIT                  ImageUsageFlags = 4
+	IMAGE_USAGE_STORAGE_BIT                  ImageUsageFlags = 8
+	IMAGE_USAGE_COLOR_ATTACHMENT_BIT         ImageUsageFlags = 16
+	IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT ImageUsageFlags = 32
+	IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     ImageUsageFlags = 64
+	IMAGE_USAGE_INPUT_ATTACHMENT_BIT         ImageUsageFlags = 128
+	IMAGE_USAGE_FLAG_BITS_MAX_ENUM           ImageUsageFlags = 2147483647
 )
 
 type ImageCreateFlags Flags
-type SampleCountFlagBits int
 
 const (
-	SAMPLE_COUNT_1_BIT              SampleCountFlagBits = 1
-	SAMPLE_COUNT_2_BIT              SampleCountFlagBits = 2
-	SAMPLE_COUNT_4_BIT              SampleCountFlagBits = 4
-	SAMPLE_COUNT_8_BIT              SampleCountFlagBits = 8
-	SAMPLE_COUNT_16_BIT             SampleCountFlagBits = 16
-	SAMPLE_COUNT_32_BIT             SampleCountFlagBits = 32
-	SAMPLE_COUNT_64_BIT             SampleCountFlagBits = 64
-	SAMPLE_COUNT_FLAG_BITS_MAX_ENUM SampleCountFlagBits = 2147483647
+	IMAGE_CREATE_SPARSE_BINDING_BIT                        ImageCreateFlags = 1
+	IMAGE_CREATE_SPARSE_RESIDENCY_BIT                      ImageCreateFlags = 2
+	IMAGE_CREATE_SPARSE_ALIASED_BIT                        ImageCreateFlags = 4
+	IMAGE_CREATE_MUTABLE_FORMAT_BIT                        ImageCreateFlags = 8
+	IMAGE_CREATE_CUBE_COMPATIBLE_BIT                       ImageCreateFlags = 16
+	IMAGE_CREATE_ALIAS_BIT                                 ImageCreateFlags = 1024
+	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT           ImageCreateFlags = 64
+	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT                   ImageCreateFlags = 32
+	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT           ImageCreateFlags = 128
+	IMAGE_CREATE_EXTENDED_USAGE_BIT                        ImageCreateFlags = 256
+	IMAGE_CREATE_PROTECTED_BIT                             ImageCreateFlags = 2048
+	IMAGE_CREATE_DISJOINT_BIT                              ImageCreateFlags = 512
+	IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT ImageCreateFlags = 4096
+	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR       ImageCreateFlags = IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR               ImageCreateFlags = IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR       ImageCreateFlags = IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+	IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR                    ImageCreateFlags = IMAGE_CREATE_EXTENDED_USAGE_BIT
+	IMAGE_CREATE_DISJOINT_BIT_KHR                          ImageCreateFlags = IMAGE_CREATE_DISJOINT_BIT
+	IMAGE_CREATE_ALIAS_BIT_KHR                             ImageCreateFlags = IMAGE_CREATE_ALIAS_BIT
+	IMAGE_CREATE_FLAG_BITS_MAX_ENUM                        ImageCreateFlags = 2147483647
 )
 
 type SampleCountFlags Flags
-type QueueFlagBits int
 
 const (
-	QUEUE_GRAPHICS_BIT       QueueFlagBits = 1
-	QUEUE_COMPUTE_BIT        QueueFlagBits = 2
-	QUEUE_TRANSFER_BIT       QueueFlagBits = 4
-	QUEUE_SPARSE_BINDING_BIT QueueFlagBits = 8
-	QUEUE_PROTECTED_BIT      QueueFlagBits = 16
-	QUEUE_FLAG_BITS_MAX_ENUM QueueFlagBits = 2147483647
+	SAMPLE_COUNT_1_BIT              SampleCountFlags = 1
+	SAMPLE_COUNT_2_BIT              SampleCountFlags = 2
+	SAMPLE_COUNT_4_BIT              SampleCountFlags = 4
+	SAMPLE_COUNT_8_BIT              SampleCountFlags = 8
+	SAMPLE_COUNT_16_BIT             SampleCountFlags = 16
+	SAMPLE_COUNT_32_BIT             SampleCountFlags = 32
+	SAMPLE_COUNT_64_BIT             SampleCountFlags = 64
+	SAMPLE_COUNT_FLAG_BITS_MAX_ENUM SampleCountFlags = 2147483647
 )
 
 type QueueFlags Flags
-type MemoryPropertyFlagBits int
 
 const (
-	MEMORY_PROPERTY_DEVICE_LOCAL_BIT     MemoryPropertyFlagBits = 1
-	MEMORY_PROPERTY_HOST_VISIBLE_BIT     MemoryPropertyFlagBits = 2
-	MEMORY_PROPERTY_HOST_COHERENT_BIT    MemoryPropertyFlagBits = 4
-	MEMORY_PROPERTY_HOST_CACHED_BIT      MemoryPropertyFlagBits = 8
-	MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MemoryPropertyFlagBits = 16
-	MEMORY_PROPERTY_PROTECTED_BIT        MemoryPropertyFlagBits = 32
-	MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM   MemoryPropertyFlagBits = 2147483647
+	QUEUE_GRAPHICS_BIT       QueueFlags = 1
+	QUEUE_COMPUTE_BIT        QueueFlags = 2
+	QUEUE_TRANSFER_BIT       QueueFlags = 4
+	QUEUE_SPARSE_BINDING_BIT QueueFlags = 8
+	QUEUE_PROTECTED_BIT      QueueFlags = 16
+	QUEUE_FLAG_BITS_MAX_ENUM QueueFlags = 2147483647
 )
 
 type MemoryPropertyFlags Flags
-type MemoryHeapFlagBits int
 
 const (
-	MEMORY_HEAP_DEVICE_LOCAL_BIT       MemoryHeapFlagBits = 1
-	MEMORY_HEAP_MULTI_INSTANCE_BIT     MemoryHeapFlagBits = 2
-	MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR MemoryHeapFlagBits = MEMORY_HEAP_MULTI_INSTANCE_BIT
-	MEMORY_HEAP_FLAG_BITS_MAX_ENUM     MemoryHeapFlagBits = 2147483647
+	MEMORY_PROPERTY_DEVICE_LOCAL_BIT     MemoryPropertyFlags = 1
+	MEMORY_PROPERTY_HOST_VISIBLE_BIT     MemoryPropertyFlags = 2
+	MEMORY_PROPERTY_HOST_COHERENT_BIT    MemoryPropertyFlags = 4
+	MEMORY_PROPERTY_HOST_CACHED_BIT      MemoryPropertyFlags = 8
+	MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MemoryPropertyFlags = 16
+	MEMORY_PROPERTY_PROTECTED_BIT        MemoryPropertyFlags = 32
+	MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM   MemoryPropertyFlags = 2147483647
 )
 
 type MemoryHeapFlags Flags
-type DeviceCreateFlags Flags
-type DeviceQueueCreateFlagBits int
 
 const (
-	DEVICE_QUEUE_CREATE_PROTECTED_BIT      DeviceQueueCreateFlagBits = 1
-	DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM DeviceQueueCreateFlagBits = 2147483647
+	MEMORY_HEAP_DEVICE_LOCAL_BIT       MemoryHeapFlags = 1
+	MEMORY_HEAP_MULTI_INSTANCE_BIT     MemoryHeapFlags = 2
+	MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR MemoryHeapFlags = MEMORY_HEAP_MULTI_INSTANCE_BIT
+	MEMORY_HEAP_FLAG_BITS_MAX_ENUM     MemoryHeapFlags = 2147483647
 )
 
+type DeviceCreateFlags Flags
 type DeviceQueueCreateFlags Flags
-type PipelineStageFlagBits int
 
 const (
-	PIPELINE_STAGE_TOP_OF_PIPE_BIT                    PipelineStageFlagBits = 1
-	PIPELINE_STAGE_DRAW_INDIRECT_BIT                  PipelineStageFlagBits = 2
-	PIPELINE_STAGE_VERTEX_INPUT_BIT                   PipelineStageFlagBits = 4
-	PIPELINE_STAGE_VERTEX_SHADER_BIT                  PipelineStageFlagBits = 8
-	PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    PipelineStageFlagBits = 16
-	PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PipelineStageFlagBits = 32
-	PIPELINE_STAGE_GEOMETRY_SHADER_BIT                PipelineStageFlagBits = 64
-	PIPELINE_STAGE_FRAGMENT_SHADER_BIT                PipelineStageFlagBits = 128
-	PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           PipelineStageFlagBits = 256
-	PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            PipelineStageFlagBits = 512
-	PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        PipelineStageFlagBits = 1024
-	PIPELINE_STAGE_COMPUTE_SHADER_BIT                 PipelineStageFlagBits = 2048
-	PIPELINE_STAGE_TRANSFER_BIT                       PipelineStageFlagBits = 4096
-	PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 PipelineStageFlagBits = 8192
-	PIPELINE_STAGE_HOST_BIT                           PipelineStageFlagBits = 16384
-	PIPELINE_STAGE_ALL_GRAPHICS_BIT                   PipelineStageFlagBits = 32768
-	PIPELINE_STAGE_ALL_COMMANDS_BIT                   PipelineStageFlagBits = 65536
-	PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT      PipelineStageFlagBits = 262144
-	PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX            PipelineStageFlagBits = 131072
-	PIPELINE_STAGE_FLAG_BITS_MAX_ENUM                 PipelineStageFlagBits = 2147483647
+	DEVICE_QUEUE_CREATE_PROTECTED_BIT      DeviceQueueCreateFlags = 1
+	DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM DeviceQueueCreateFlags = 2147483647
 )
 
 type PipelineStageFlags Flags
-type MemoryMapFlags Flags
-type ImageAspectFlagBits int
 
 const (
-	IMAGE_ASPECT_COLOR_BIT          ImageAspectFlagBits = 1
-	IMAGE_ASPECT_DEPTH_BIT          ImageAspectFlagBits = 2
-	IMAGE_ASPECT_STENCIL_BIT        ImageAspectFlagBits = 4
-	IMAGE_ASPECT_METADATA_BIT       ImageAspectFlagBits = 8
-	IMAGE_ASPECT_PLANE_0_BIT        ImageAspectFlagBits = 16
-	IMAGE_ASPECT_PLANE_1_BIT        ImageAspectFlagBits = 32
-	IMAGE_ASPECT_PLANE_2_BIT        ImageAspectFlagBits = 64
-	IMAGE_ASPECT_PLANE_0_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_0_BIT
-	IMAGE_ASPECT_PLANE_1_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_1_BIT
-	IMAGE_ASPECT_PLANE_2_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_2_BIT
-	IMAGE_ASPECT_FLAG_BITS_MAX_ENUM ImageAspectFlagBits = 2147483647
+	PIPELINE_STAGE_TOP_OF_PIPE_BIT                    PipelineStageFlags = 1
+	PIPELINE_STAGE_DRAW_INDIRECT_BIT                  PipelineStageFlags = 2
+	PIPELINE_STAGE_VERTEX_INPUT_BIT                   PipelineStageFlags = 4
+	PIPELINE_STAGE_VERTEX_SHADER_BIT                  PipelineStageFlags = 8
+	PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    PipelineStageFlags = 16
+	PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PipelineStageFlags = 32
+	PIPELINE_STAGE_GEOMETRY_SHADER_BIT                PipelineStageFlags = 64
+	PIPELINE_STAGE_FRAGMENT_SHADER_BIT                PipelineStageFlags = 128
+	PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           PipelineStageFlags = 256
+	PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            PipelineStageFlags = 512
+	PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        PipelineStageFlags = 1024
+	PIPELINE_STAGE_COMPUTE_SHADER_BIT                 PipelineStageFlags = 2048
+	PIPELINE_STAGE_TRANSFER_BIT                       PipelineStageFlags = 4096
+	PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 PipelineStageFlags = 8192
+	PIPELINE_STAGE_HOST_BIT                           PipelineStageFlags = 16384
+	PIPELINE_STAGE_ALL_GRAPHICS_BIT                   PipelineStageFlags = 32768
+	PIPELINE_STAGE_ALL_COMMANDS_BIT                   PipelineStageFlags = 65536
+	PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT      PipelineStageFlags = 262144
+	PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX            PipelineStageFlags = 131072
+	PIPELINE_STAGE_FLAG_BITS_MAX_ENUM                 PipelineStageFlags = 2147483647
 )
 
+type MemoryMapFlags Flags
 type ImageAspectFlags Flags
-type SparseImageFormatFlagBits int
 
 const (
-	SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT         SparseImageFormatFlagBits = 1
-	SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT       SparseImageFormatFlagBits = 2
-	SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT SparseImageFormatFlagBits = 4
-	SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM         SparseImageFormatFlagBits = 2147483647
+	IMAGE_ASPECT_COLOR_BIT          ImageAspectFlags = 1
+	IMAGE_ASPECT_DEPTH_BIT          ImageAspectFlags = 2
+	IMAGE_ASPECT_STENCIL_BIT        ImageAspectFlags = 4
+	IMAGE_ASPECT_METADATA_BIT       ImageAspectFlags = 8
+	IMAGE_ASPECT_PLANE_0_BIT        ImageAspectFlags = 16
+	IMAGE_ASPECT_PLANE_1_BIT        ImageAspectFlags = 32
+	IMAGE_ASPECT_PLANE_2_BIT        ImageAspectFlags = 64
+	IMAGE_ASPECT_PLANE_0_BIT_KHR    ImageAspectFlags = IMAGE_ASPECT_PLANE_0_BIT
+	IMAGE_ASPECT_PLANE_1_BIT_KHR    ImageAspectFlags = IMAGE_ASPECT_PLANE_1_BIT
+	IMAGE_ASPECT_PLANE_2_BIT_KHR    ImageAspectFlags = IMAGE_ASPECT_PLANE_2_BIT
+	IMAGE_ASPECT_FLAG_BITS_MAX_ENUM ImageAspectFlags = 2147483647
 )
 
 type SparseImageFormatFlags Flags
-type SparseMemoryBindFlagBits int
 
 const (
-	SPARSE_MEMORY_BIND_METADATA_BIT       SparseMemoryBindFlagBits = 1
-	SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM SparseMemoryBindFlagBits = 2147483647
+	SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT         SparseImageFormatFlags = 1
+	SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT       SparseImageFormatFlags = 2
+	SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT SparseImageFormatFlags = 4
+	SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM         SparseImageFormatFlags = 2147483647
 )
 
 type SparseMemoryBindFlags Flags
-type FenceCreateFlagBits int
 
 const (
-	FENCE_CREATE_SIGNALED_BIT       FenceCreateFlagBits = 1
-	FENCE_CREATE_FLAG_BITS_MAX_ENUM FenceCreateFlagBits = 2147483647
+	SPARSE_MEMORY_BIND_METADATA_BIT       SparseMemoryBindFlags = 1
+	SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM SparseMemoryBindFlags = 2147483647
 )
 
 type FenceCreateFlags Flags
+
+const (
+	FENCE_CREATE_SIGNALED_BIT       FenceCreateFlags = 1
+	FENCE_CREATE_FLAG_BITS_MAX_ENUM FenceCreateFlags = 2147483647
+)
+
 type SemaphoreCreateFlags Flags
 type EventCreateFlags Flags
 type QueryPoolCreateFlags Flags
-type QueryPipelineStatisticFlagBits int
-
-const (
-	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT                    QueryPipelineStatisticFlagBits = 1
-	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT                  QueryPipelineStatisticFlagBits = 2
-	QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT                  QueryPipelineStatisticFlagBits = 4
-	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlagBits = 8
-	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT                 QueryPipelineStatisticFlagBits = 16
-	QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT                       QueryPipelineStatisticFlagBits = 32
-	QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                        QueryPipelineStatisticFlagBits = 64
-	QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlagBits = 128
-	QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT        QueryPipelineStatisticFlagBits = 256
-	QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT QueryPipelineStatisticFlagBits = 512
-	QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT                 QueryPipelineStatisticFlagBits = 1024
-	QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM                             QueryPipelineStatisticFlagBits = 2147483647
-)
-
 type QueryPipelineStatisticFlags Flags
-type QueryResultFlagBits int
 
 const (
-	QUERY_RESULT_64_BIT                QueryResultFlagBits = 1
-	QUERY_RESULT_WAIT_BIT              QueryResultFlagBits = 2
-	QUERY_RESULT_WITH_AVAILABILITY_BIT QueryResultFlagBits = 4
-	QUERY_RESULT_PARTIAL_BIT           QueryResultFlagBits = 8
-	QUERY_RESULT_FLAG_BITS_MAX_ENUM    QueryResultFlagBits = 2147483647
+	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT                    QueryPipelineStatisticFlags = 1
+	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT                  QueryPipelineStatisticFlags = 2
+	QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT                  QueryPipelineStatisticFlags = 4
+	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlags = 8
+	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT                 QueryPipelineStatisticFlags = 16
+	QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT                       QueryPipelineStatisticFlags = 32
+	QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                        QueryPipelineStatisticFlags = 64
+	QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlags = 128
+	QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT        QueryPipelineStatisticFlags = 256
+	QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT QueryPipelineStatisticFlags = 512
+	QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT                 QueryPipelineStatisticFlags = 1024
+	QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM                             QueryPipelineStatisticFlags = 2147483647
 )
 
 type QueryResultFlags Flags
-type BufferCreateFlagBits int
 
 const (
-	BUFFER_CREATE_SPARSE_BINDING_BIT   BufferCreateFlagBits = 1
-	BUFFER_CREATE_SPARSE_RESIDENCY_BIT BufferCreateFlagBits = 2
-	BUFFER_CREATE_SPARSE_ALIASED_BIT   BufferCreateFlagBits = 4
-	BUFFER_CREATE_PROTECTED_BIT        BufferCreateFlagBits = 8
-	BUFFER_CREATE_FLAG_BITS_MAX_ENUM   BufferCreateFlagBits = 2147483647
+	QUERY_RESULT_64_BIT                QueryResultFlags = 1
+	QUERY_RESULT_WAIT_BIT              QueryResultFlags = 2
+	QUERY_RESULT_WITH_AVAILABILITY_BIT QueryResultFlags = 4
+	QUERY_RESULT_PARTIAL_BIT           QueryResultFlags = 8
+	QUERY_RESULT_FLAG_BITS_MAX_ENUM    QueryResultFlags = 2147483647
 )
 
 type BufferCreateFlags Flags
-type BufferUsageFlagBits int
 
 const (
-	BUFFER_USAGE_TRANSFER_SRC_BIT              BufferUsageFlagBits = 1
-	BUFFER_USAGE_TRANSFER_DST_BIT              BufferUsageFlagBits = 2
-	BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT      BufferUsageFlagBits = 4
-	BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT      BufferUsageFlagBits = 8
-	BUFFER_USAGE_UNIFORM_BUFFER_BIT            BufferUsageFlagBits = 16
-	BUFFER_USAGE_STORAGE_BUFFER_BIT            BufferUsageFlagBits = 32
-	BUFFER_USAGE_INDEX_BUFFER_BIT              BufferUsageFlagBits = 64
-	BUFFER_USAGE_VERTEX_BUFFER_BIT             BufferUsageFlagBits = 128
-	BUFFER_USAGE_INDIRECT_BUFFER_BIT           BufferUsageFlagBits = 256
-	BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT BufferUsageFlagBits = 512
-	BUFFER_USAGE_FLAG_BITS_MAX_ENUM            BufferUsageFlagBits = 2147483647
+	BUFFER_CREATE_SPARSE_BINDING_BIT   BufferCreateFlags = 1
+	BUFFER_CREATE_SPARSE_RESIDENCY_BIT BufferCreateFlags = 2
+	BUFFER_CREATE_SPARSE_ALIASED_BIT   BufferCreateFlags = 4
+	BUFFER_CREATE_PROTECTED_BIT        BufferCreateFlags = 8
+	BUFFER_CREATE_FLAG_BITS_MAX_ENUM   BufferCreateFlags = 2147483647
 )
 
 type BufferUsageFlags Flags
+
+const (
+	BUFFER_USAGE_TRANSFER_SRC_BIT              BufferUsageFlags = 1
+	BUFFER_USAGE_TRANSFER_DST_BIT              BufferUsageFlags = 2
+	BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT      BufferUsageFlags = 4
+	BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT      BufferUsageFlags = 8
+	BUFFER_USAGE_UNIFORM_BUFFER_BIT            BufferUsageFlags = 16
+	BUFFER_USAGE_STORAGE_BUFFER_BIT            BufferUsageFlags = 32
+	BUFFER_USAGE_INDEX_BUFFER_BIT              BufferUsageFlags = 64
+	BUFFER_USAGE_VERTEX_BUFFER_BIT             BufferUsageFlags = 128
+	BUFFER_USAGE_INDIRECT_BUFFER_BIT           BufferUsageFlags = 256
+	BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT BufferUsageFlags = 512
+	BUFFER_USAGE_FLAG_BITS_MAX_ENUM            BufferUsageFlags = 2147483647
+)
+
 type BufferViewCreateFlags Flags
 type ImageViewCreateFlags Flags
 type ShaderModuleCreateFlags Flags
 type PipelineCacheCreateFlags Flags
-type PipelineCreateFlagBits int
+type PipelineCreateFlags Flags
 
 const (
-	PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT             PipelineCreateFlagBits = 1
-	PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                PipelineCreateFlagBits = 2
-	PIPELINE_CREATE_DERIVATIVE_BIT                       PipelineCreateFlagBits = 4
-	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT     PipelineCreateFlagBits = 8
-	PIPELINE_CREATE_DISPATCH_BASE                        PipelineCreateFlagBits = 16
-	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR PipelineCreateFlagBits = PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
-	PIPELINE_CREATE_DISPATCH_BASE_KHR                    PipelineCreateFlagBits = PIPELINE_CREATE_DISPATCH_BASE
-	PIPELINE_CREATE_FLAG_BITS_MAX_ENUM                   PipelineCreateFlagBits = 2147483647
+	PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT             PipelineCreateFlags = 1
+	PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                PipelineCreateFlags = 2
+	PIPELINE_CREATE_DERIVATIVE_BIT                       PipelineCreateFlags = 4
+	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT     PipelineCreateFlags = 8
+	PIPELINE_CREATE_DISPATCH_BASE                        PipelineCreateFlags = 16
+	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR PipelineCreateFlags = PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+	PIPELINE_CREATE_DISPATCH_BASE_KHR                    PipelineCreateFlags = PIPELINE_CREATE_DISPATCH_BASE
+	PIPELINE_CREATE_FLAG_BITS_MAX_ENUM                   PipelineCreateFlags = 2147483647
 )
 
-type PipelineCreateFlags Flags
 type PipelineShaderStageCreateFlags Flags
-type ShaderStageFlagBits int
+type ShaderStageFlags Flags
 
 const (
-	SHADER_STAGE_VERTEX_BIT                  ShaderStageFlagBits = 1
-	SHADER_STAGE_TESSELLATION_CONTROL_BIT    ShaderStageFlagBits = 2
-	SHADER_STAGE_TESSELLATION_EVALUATION_BIT ShaderStageFlagBits = 4
-	SHADER_STAGE_GEOMETRY_BIT                ShaderStageFlagBits = 8
-	SHADER_STAGE_FRAGMENT_BIT                ShaderStageFlagBits = 16
-	SHADER_STAGE_COMPUTE_BIT                 ShaderStageFlagBits = 32
-	SHADER_STAGE_ALL_GRAPHICS                ShaderStageFlagBits = 31
-	SHADER_STAGE_ALL                         ShaderStageFlagBits = 2147483647
-	SHADER_STAGE_FLAG_BITS_MAX_ENUM          ShaderStageFlagBits = 2147483647
+	SHADER_STAGE_VERTEX_BIT                  ShaderStageFlags = 1
+	SHADER_STAGE_TESSELLATION_CONTROL_BIT    ShaderStageFlags = 2
+	SHADER_STAGE_TESSELLATION_EVALUATION_BIT ShaderStageFlags = 4
+	SHADER_STAGE_GEOMETRY_BIT                ShaderStageFlags = 8
+	SHADER_STAGE_FRAGMENT_BIT                ShaderStageFlags = 16
+	SHADER_STAGE_COMPUTE_BIT                 ShaderStageFlags = 32
+	SHADER_STAGE_ALL_GRAPHICS                ShaderStageFlags = 31
+	SHADER_STAGE_ALL                         ShaderStageFlags = 2147483647
+	SHADER_STAGE_FLAG_BITS_MAX_ENUM          ShaderStageFlags = 2147483647
 )
 
 type PipelineVertexInputStateCreateFlags Flags
@@ -1540,164 +1522,148 @@ type PipelineInputAssemblyStateCreateFlags Flags
 type PipelineTessellationStateCreateFlags Flags
 type PipelineViewportStateCreateFlags Flags
 type PipelineRasterizationStateCreateFlags Flags
-type CullModeFlagBits int
+type CullModeFlags Flags
 
 const (
-	CULL_MODE_NONE               CullModeFlagBits = 0
-	CULL_MODE_FRONT_BIT          CullModeFlagBits = 1
-	CULL_MODE_BACK_BIT           CullModeFlagBits = 2
-	CULL_MODE_FRONT_AND_BACK     CullModeFlagBits = 3
-	CULL_MODE_FLAG_BITS_MAX_ENUM CullModeFlagBits = 2147483647
+	CULL_MODE_NONE               CullModeFlags = 0
+	CULL_MODE_FRONT_BIT          CullModeFlags = 1
+	CULL_MODE_BACK_BIT           CullModeFlags = 2
+	CULL_MODE_FRONT_AND_BACK     CullModeFlags = 3
+	CULL_MODE_FLAG_BITS_MAX_ENUM CullModeFlags = 2147483647
 )
 
-type CullModeFlags Flags
 type PipelineMultisampleStateCreateFlags Flags
 type PipelineDepthStencilStateCreateFlags Flags
 type PipelineColorBlendStateCreateFlags Flags
-type ColorComponentFlagBits int
+type ColorComponentFlags Flags
 
 const (
-	COLOR_COMPONENT_R_BIT              ColorComponentFlagBits = 1
-	COLOR_COMPONENT_G_BIT              ColorComponentFlagBits = 2
-	COLOR_COMPONENT_B_BIT              ColorComponentFlagBits = 4
-	COLOR_COMPONENT_A_BIT              ColorComponentFlagBits = 8
-	COLOR_COMPONENT_FLAG_BITS_MAX_ENUM ColorComponentFlagBits = 2147483647
+	COLOR_COMPONENT_R_BIT              ColorComponentFlags = 1
+	COLOR_COMPONENT_G_BIT              ColorComponentFlags = 2
+	COLOR_COMPONENT_B_BIT              ColorComponentFlags = 4
+	COLOR_COMPONENT_A_BIT              ColorComponentFlags = 8
+	COLOR_COMPONENT_FLAG_BITS_MAX_ENUM ColorComponentFlags = 2147483647
 )
 
-type ColorComponentFlags Flags
 type PipelineDynamicStateCreateFlags Flags
 type PipelineLayoutCreateFlags Flags
-type ShaderStageFlags Flags
 type SamplerCreateFlags Flags
-type DescriptorSetLayoutCreateFlagBits int
-
-const (
-	DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR        DescriptorSetLayoutCreateFlagBits = 1
-	DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DescriptorSetLayoutCreateFlagBits = 2
-	DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM             DescriptorSetLayoutCreateFlagBits = 2147483647
-)
-
 type DescriptorSetLayoutCreateFlags Flags
-type DescriptorPoolCreateFlagBits int
 
 const (
-	DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT   DescriptorPoolCreateFlagBits = 1
-	DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DescriptorPoolCreateFlagBits = 2
-	DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM        DescriptorPoolCreateFlagBits = 2147483647
+	DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR        DescriptorSetLayoutCreateFlags = 1
+	DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DescriptorSetLayoutCreateFlags = 2
+	DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM             DescriptorSetLayoutCreateFlags = 2147483647
 )
 
 type DescriptorPoolCreateFlags Flags
+
+const (
+	DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT   DescriptorPoolCreateFlags = 1
+	DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DescriptorPoolCreateFlags = 2
+	DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM        DescriptorPoolCreateFlags = 2147483647
+)
+
 type DescriptorPoolResetFlags Flags
 type FramebufferCreateFlags Flags
 type RenderPassCreateFlags Flags
-type AttachmentDescriptionFlagBits int
-
-const (
-	ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT      AttachmentDescriptionFlagBits = 1
-	ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM AttachmentDescriptionFlagBits = 2147483647
-)
-
 type AttachmentDescriptionFlags Flags
-type SubpassDescriptionFlagBits int
 
 const (
-	SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX      SubpassDescriptionFlagBits = 1
-	SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX SubpassDescriptionFlagBits = 2
-	SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM               SubpassDescriptionFlagBits = 2147483647
+	ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT      AttachmentDescriptionFlags = 1
+	ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM AttachmentDescriptionFlags = 2147483647
 )
 
 type SubpassDescriptionFlags Flags
-type AccessFlagBits int
 
 const (
-	ACCESS_INDIRECT_COMMAND_READ_BIT                 AccessFlagBits = 1
-	ACCESS_INDEX_READ_BIT                            AccessFlagBits = 2
-	ACCESS_VERTEX_ATTRIBUTE_READ_BIT                 AccessFlagBits = 4
-	ACCESS_UNIFORM_READ_BIT                          AccessFlagBits = 8
-	ACCESS_INPUT_ATTACHMENT_READ_BIT                 AccessFlagBits = 16
-	ACCESS_SHADER_READ_BIT                           AccessFlagBits = 32
-	ACCESS_SHADER_WRITE_BIT                          AccessFlagBits = 64
-	ACCESS_COLOR_ATTACHMENT_READ_BIT                 AccessFlagBits = 128
-	ACCESS_COLOR_ATTACHMENT_WRITE_BIT                AccessFlagBits = 256
-	ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT         AccessFlagBits = 512
-	ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT        AccessFlagBits = 1024
-	ACCESS_TRANSFER_READ_BIT                         AccessFlagBits = 2048
-	ACCESS_TRANSFER_WRITE_BIT                        AccessFlagBits = 4096
-	ACCESS_HOST_READ_BIT                             AccessFlagBits = 8192
-	ACCESS_HOST_WRITE_BIT                            AccessFlagBits = 16384
-	ACCESS_MEMORY_READ_BIT                           AccessFlagBits = 32768
-	ACCESS_MEMORY_WRITE_BIT                          AccessFlagBits = 65536
-	ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT        AccessFlagBits = 1048576
-	ACCESS_COMMAND_PROCESS_READ_BIT_NVX              AccessFlagBits = 131072
-	ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX             AccessFlagBits = 262144
-	ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT AccessFlagBits = 524288
-	ACCESS_FLAG_BITS_MAX_ENUM                        AccessFlagBits = 2147483647
+	SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX      SubpassDescriptionFlags = 1
+	SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX SubpassDescriptionFlags = 2
+	SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM               SubpassDescriptionFlags = 2147483647
 )
 
 type AccessFlags Flags
-type DependencyFlagBits int
 
 const (
-	DEPENDENCY_BY_REGION_BIT        DependencyFlagBits = 1
-	DEPENDENCY_DEVICE_GROUP_BIT     DependencyFlagBits = 4
-	DEPENDENCY_VIEW_LOCAL_BIT       DependencyFlagBits = 2
-	DEPENDENCY_VIEW_LOCAL_BIT_KHR   DependencyFlagBits = DEPENDENCY_VIEW_LOCAL_BIT
-	DEPENDENCY_DEVICE_GROUP_BIT_KHR DependencyFlagBits = DEPENDENCY_DEVICE_GROUP_BIT
-	DEPENDENCY_FLAG_BITS_MAX_ENUM   DependencyFlagBits = 2147483647
+	ACCESS_INDIRECT_COMMAND_READ_BIT                 AccessFlags = 1
+	ACCESS_INDEX_READ_BIT                            AccessFlags = 2
+	ACCESS_VERTEX_ATTRIBUTE_READ_BIT                 AccessFlags = 4
+	ACCESS_UNIFORM_READ_BIT                          AccessFlags = 8
+	ACCESS_INPUT_ATTACHMENT_READ_BIT                 AccessFlags = 16
+	ACCESS_SHADER_READ_BIT                           AccessFlags = 32
+	ACCESS_SHADER_WRITE_BIT                          AccessFlags = 64
+	ACCESS_COLOR_ATTACHMENT_READ_BIT                 AccessFlags = 128
+	ACCESS_COLOR_ATTACHMENT_WRITE_BIT                AccessFlags = 256
+	ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT         AccessFlags = 512
+	ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT        AccessFlags = 1024
+	ACCESS_TRANSFER_READ_BIT                         AccessFlags = 2048
+	ACCESS_TRANSFER_WRITE_BIT                        AccessFlags = 4096
+	ACCESS_HOST_READ_BIT                             AccessFlags = 8192
+	ACCESS_HOST_WRITE_BIT                            AccessFlags = 16384
+	ACCESS_MEMORY_READ_BIT                           AccessFlags = 32768
+	ACCESS_MEMORY_WRITE_BIT                          AccessFlags = 65536
+	ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT        AccessFlags = 1048576
+	ACCESS_COMMAND_PROCESS_READ_BIT_NVX              AccessFlags = 131072
+	ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX             AccessFlags = 262144
+	ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT AccessFlags = 524288
+	ACCESS_FLAG_BITS_MAX_ENUM                        AccessFlags = 2147483647
 )
 
 type DependencyFlags Flags
-type CommandPoolCreateFlagBits int
 
 const (
-	COMMAND_POOL_CREATE_TRANSIENT_BIT            CommandPoolCreateFlagBits = 1
-	COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT CommandPoolCreateFlagBits = 2
-	COMMAND_POOL_CREATE_PROTECTED_BIT            CommandPoolCreateFlagBits = 4
-	COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM       CommandPoolCreateFlagBits = 2147483647
+	DEPENDENCY_BY_REGION_BIT        DependencyFlags = 1
+	DEPENDENCY_DEVICE_GROUP_BIT     DependencyFlags = 4
+	DEPENDENCY_VIEW_LOCAL_BIT       DependencyFlags = 2
+	DEPENDENCY_VIEW_LOCAL_BIT_KHR   DependencyFlags = DEPENDENCY_VIEW_LOCAL_BIT
+	DEPENDENCY_DEVICE_GROUP_BIT_KHR DependencyFlags = DEPENDENCY_DEVICE_GROUP_BIT
+	DEPENDENCY_FLAG_BITS_MAX_ENUM   DependencyFlags = 2147483647
 )
 
 type CommandPoolCreateFlags Flags
-type CommandPoolResetFlagBits int
 
 const (
-	COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT CommandPoolResetFlagBits = 1
-	COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM    CommandPoolResetFlagBits = 2147483647
+	COMMAND_POOL_CREATE_TRANSIENT_BIT            CommandPoolCreateFlags = 1
+	COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT CommandPoolCreateFlags = 2
+	COMMAND_POOL_CREATE_PROTECTED_BIT            CommandPoolCreateFlags = 4
+	COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM       CommandPoolCreateFlags = 2147483647
 )
 
 type CommandPoolResetFlags Flags
-type CommandBufferUsageFlagBits int
 
 const (
-	COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      CommandBufferUsageFlagBits = 1
-	COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT CommandBufferUsageFlagBits = 2
-	COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     CommandBufferUsageFlagBits = 4
-	COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM       CommandBufferUsageFlagBits = 2147483647
+	COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT CommandPoolResetFlags = 1
+	COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM    CommandPoolResetFlags = 2147483647
 )
 
 type CommandBufferUsageFlags Flags
-type QueryControlFlagBits int
 
 const (
-	QUERY_CONTROL_PRECISE_BIT        QueryControlFlagBits = 1
-	QUERY_CONTROL_FLAG_BITS_MAX_ENUM QueryControlFlagBits = 2147483647
+	COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      CommandBufferUsageFlags = 1
+	COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT CommandBufferUsageFlags = 2
+	COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     CommandBufferUsageFlags = 4
+	COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM       CommandBufferUsageFlags = 2147483647
 )
 
 type QueryControlFlags Flags
-type CommandBufferResetFlagBits int
 
 const (
-	COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT CommandBufferResetFlagBits = 1
-	COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM    CommandBufferResetFlagBits = 2147483647
+	QUERY_CONTROL_PRECISE_BIT        QueryControlFlags = 1
+	QUERY_CONTROL_FLAG_BITS_MAX_ENUM QueryControlFlags = 2147483647
 )
 
 type CommandBufferResetFlags Flags
-type StencilFaceFlagBits int
 
 const (
-	STENCIL_FACE_FRONT_BIT          StencilFaceFlagBits = 1
-	STENCIL_FACE_BACK_BIT           StencilFaceFlagBits = 2
-	STENCIL_FRONT_AND_BACK          StencilFaceFlagBits = 3
-	STENCIL_FACE_FLAG_BITS_MAX_ENUM StencilFaceFlagBits = 2147483647
+	COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT CommandBufferResetFlags = 1
+	COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM    CommandBufferResetFlags = 2147483647
 )
 
 type StencilFaceFlags Flags
+
+const (
+	STENCIL_FACE_FRONT_BIT          StencilFaceFlags = 1
+	STENCIL_FACE_BACK_BIT           StencilFaceFlags = 2
+	STENCIL_FRONT_AND_BACK          StencilFaceFlags = 3
+	STENCIL_FACE_FLAG_BITS_MAX_ENUM StencilFaceFlags = 2147483647
+)

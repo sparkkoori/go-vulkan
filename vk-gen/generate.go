@@ -156,17 +156,24 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl, cn string) string {
 }
 
 func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
-	gn := strings.TrimPrefix(cn, "enum ")
-	gn = vkName(gn)
-	ws.target.addGo(&goast.GenDecl{
-		Tok: token.TYPE,
-		Specs: []goast.Spec{
-			&goast.TypeSpec{
-				Name: &goast.Ident{token.NoPos, gn, nil},
-				Type: &goast.Ident{token.NoPos, "int", nil},
+	var gn string
+	if strings.Contains(cn, "FlagBits") {
+		fcn := strings.TrimPrefix(cn, "enum ")
+		fcn = strings.Replace(fcn, "FlagBits", "Flags", 1)
+		gn = ws.gen(fcn)
+	} else {
+		gn = strings.TrimPrefix(cn, "enum ")
+		gn = vkName(gn)
+		ws.target.addGo(&goast.GenDecl{
+			Tok: token.TYPE,
+			Specs: []goast.Spec{
+				&goast.TypeSpec{
+					Name: &goast.Ident{token.NoPos, gn, nil},
+					Type: &goast.Ident{token.NoPos, "int", nil},
+				},
 			},
-		},
-	})
+		})
+	}
 
 	specs := []goast.Spec{}
 	constMapping := map[string]string{}
