@@ -11,8 +11,30 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+type halting struct {
+	msg  string
+	node cast.Node
+}
+
+func halt(msg string, node cast.Node) {
+	panic(&halting{msg, node})
+}
+
 func generate(src Source) (tgt Target) {
 	ws := &workspace{}
+
+	defer func() {
+		if r := recover(); r != nil {
+			if h, ok := r.(*halting); ok {
+				fmt.Println(aurora.Red("Generating Halted:"), h.msg)
+				deepPrint(h.node, 0)
+				tgt = ws.target
+			} else {
+				panic(r)
+			}
+		}
+	}()
+
 	ws.init(src)
 
 	for _, node := range src {
@@ -34,8 +56,6 @@ type workspace struct {
 	target  Target
 	source  map[string]cast.Node
 	mapping map[string]string
-
-	invalid bool
 }
 
 func (ws *workspace) init(nodes []cast.Node) {
@@ -71,24 +91,14 @@ func (ws *workspace) init(nodes []cast.Node) {
 		if name == "" {
 			continue
 		}
-		if _node, ok := ws.source[name]; ok {
-			fmt.Printf("Conflict node (original):\n")
-			deepPrint(_node, 0)
-			fmt.Printf("Conflict node (new):\n")
-			deepPrint(node, 0)
-			panic("Name conflict for " + name)
+		if _, ok := ws.source[name]; ok {
+			halt("Nodes conflicts", node)
 		}
 		ws.source[name] = node
-		// if name == "enum VkResult" {
-		// 	ws.halt("", node)
-		// }
 	}
 }
 
 func (ws *workspace) gen(name string) string {
-	if ws.invalid {
-		return ""
-	}
 	if goname, ok := ws.mapping[name]; ok {
 		return goname //already generated
 	}
@@ -110,7 +120,7 @@ func (ws *workspace) gen(name string) string {
 	// case *cast.FunctionDecl:
 	// 	return n.Name
 	default:
-		ws.halt("Unkown node for gen()", node)
+		halt("gen()", node)
 	}
 
 	ws.mapping[name] = goname
@@ -161,14 +171,13 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
 	specs := []goast.Spec{}
 	constMapping := map[string]string{}
 	for _, child := range node.ChildNodes {
-		if ws.invalid {
-			continue
-		}
 		con := child.(*cast.EnumConstantDecl)
+		// if con.Name == "VK_PIPELINE_CACHE_HEADER_VERSION_MAX_ENUM" {
+		// 	halt("", con)
+		// }
 
 		var expr = convExpr(constMapping, con.ChildNodes[0])
 
-		// ws.halt("Unkown enum const", v)
 		if expr != nil {
 			gcon := vkName(con.Name)
 			specs = append(specs, &goast.ValueSpec{
@@ -190,14 +199,6 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
 	})
 
 	return gn
-}
-
-func (ws *workspace) halt(str string, node cast.Node) {
-	if !ws.invalid {
-		ws.invalid = true
-		fmt.Println(aurora.Red("Generating Halted:"), str)
-		deepPrint(node, 0)
-	}
 }
 
 func convExpr(refs map[string]string, node cast.Node) goast.Expr {
@@ -224,8 +225,9 @@ func convExpr(refs map[string]string, node cast.Node) goast.Expr {
 			Op: convToken(v.Operator),
 		}
 	default:
-		return nil
+		halt("convExpr()", node)
 	}
+	return nil
 }
 
 func convToken(op string) token.Token {
