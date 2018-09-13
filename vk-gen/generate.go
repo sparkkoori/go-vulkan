@@ -81,7 +81,7 @@ func (m *mapping) init() {
 		"float":                  "float32", //	C.float
 		"double":                 "float64", //C.double
 
-		"void *": "unsafe.Pointer",
+		"void": "interface{}",
 
 		"size_t":   "uint",
 		"int8_t":   "int8",
@@ -116,7 +116,7 @@ func (m *mapping) get(k string) (string, bool) {
 
 func (m *mapping) setType(cv, gv string) {
 	if _, ok := m.types[cv]; ok {
-		halt("Type mapping conflicts for "+cv, nil)
+		panic("Type mapping conflicts for " + cv)
 	}
 	m.types[cv] = gv
 }
@@ -242,12 +242,12 @@ func parseComplexCType(t string, baseNode cast.Node) cast.Node {
 		return str
 	}
 
-	//do not support struct, union, enum
-	if eleType := match("^[struct|union|enum]\\s"); eleType != "" {
-		halt("do not support struct, union, enum", nil)
+	//do not support anonymouse struct, union, enum
+	if anony := match("^(struct\\s|enum\\s|union\\s)\\{.*\\}"); anony != "" {
+		halt("Can't parse anonymouse struct, union, enum", nil)
 	}
 
-	if id := match("^[0-9A-Za-z_]*"); id != "" {
+	if id := match("^(struct\\s|enum\\s)?[0-9A-Za-z_]*"); id != "" {
 		n := &cast.Typedef{Type: id}
 		// baseNode must be nil
 		t = strings.TrimPrefix(t, id)
@@ -261,7 +261,7 @@ func parseComplexCType(t string, baseNode cast.Node) cast.Node {
 		return parseComplexCType(t, n)
 	}
 
-	if arr := submatch("\\[([\\d])\\]$"); arr[0] != "" {
+	if arr := submatch("\\[(\\d*)\\]$"); arr != nil {
 		size, err := strconv.Atoi(arr[1])
 		if err != nil {
 			panic(err)
@@ -272,7 +272,7 @@ func parseComplexCType(t string, baseNode cast.Node) cast.Node {
 		return parseComplexCType(t, n)
 	}
 
-	if fn := submatch("\\((.*)\\)\\((.*)\\)$"); fn[0] != "" {
+	if fn := submatch("\\((.*)\\)\\((.*)\\)$"); fn != nil {
 		params := strings.Split(fn[2], ",")
 		n := &cast.FunctionProtoType{}
 		n.AddChild(baseNode)
@@ -334,6 +334,8 @@ func (ws *workspace) gen(name string) {
 		ws.genTypedefDecl(n)
 	// case *cast.RecordDecl:
 	// 	return "struct " + n.Name
+	case *cast.RecordDecl:
+		ws.genRecordDecl(n)
 	case *cast.EnumDecl:
 		ws.genEnumDecl(n)
 	// case *cast.FunctionDecl:
@@ -341,6 +343,7 @@ func (ws *workspace) gen(name string) {
 	default:
 		halt("gen()", node)
 	}
+	// println(name)
 }
 
 func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
@@ -349,10 +352,12 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 
 	//Skip, if any struct or enum with same name has been generated.
 	if _, ok := ws.source["struct "+cname]; ok {
-		ws.mapping.mustGetType("struct " + cname)
+		goname = ws.mapping.mustGetType("struct " + cname)
+		ws.mapping.setType(cname, goname)
 		return
 	} else if _, ok := ws.source["enum "+cname]; ok {
-		ws.mapping.mustGetType("enum " + cname)
+		goname = ws.mapping.mustGetType("enum " + cname)
+		ws.mapping.setType(cname, goname)
 		return
 	}
 
@@ -425,6 +430,47 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
 		Specs:  specs,
 		Rparen: token.Pos(1),
 	})
+}
+
+func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
+	cname := "struct " + node.Name
+	goname := vkName(cname)
+
+	ws.mapping.setType(cname, goname)
+
+	fields := []*goast.Field{}
+	for i := 0; i < len(node.ChildNodes); i++ {
+		fnode := node.ChildNodes[i]
+		fdecl, ok := fnode.(*cast.FieldDecl)
+		if !ok {
+			halt("Expected *cast.FieldDecl type", fnode)
+		}
+
+		fcn := fdecl.Name
+		fct := fdecl.Type
+		fgn := "_" + fcn
+		fgt := ws.transType(fct)
+
+		fields = append(fields, &goast.Field{
+			Names: []*goast.Ident{&goast.Ident{Name: fgn}},
+			Type:  fgt,
+		})
+	}
+
+	ws.target.addGo(&goast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []goast.Spec{
+			&goast.TypeSpec{
+				Name: &goast.Ident{token.NoPos, goname, nil},
+				Type: &goast.StructType{
+					Fields: &goast.FieldList{
+						List: fields,
+					},
+				},
+			},
+		},
+	})
+
 }
 
 func convConst(m *mapping, node cast.Node) goast.Expr {
