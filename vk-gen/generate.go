@@ -5,6 +5,8 @@ import (
 	goast "go/ast"
 	"go/token"
 	"reflect"
+	"regexp"
+	"strconv"
 	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
@@ -52,14 +54,19 @@ func generate(src Source) (tgt Target) {
 	return ws.target
 }
 
-type workspace struct {
-	target  Target
-	source  map[string]cast.Node
-	mapping map[string]string
+//mapping is c-to-go id mapping.
+type mapping struct {
+	types  map[string]string
+	consts map[string]string
+	funcs  map[string]string
+
+	typeGenFn  func(string)
+	constGenFn func(string)
+	funcGenFn  func(string)
 }
 
-func (ws *workspace) init(nodes []cast.Node) {
-	ws.mapping = map[string]string{
+func (m *mapping) init() {
+	m.types = map[string]string{
 		"char":                   "byte",    //C.char
 		"singed char":            "int8",    //C.schar
 		"unsigned char":          "uint8",   //C.uchar
@@ -74,6 +81,8 @@ func (ws *workspace) init(nodes []cast.Node) {
 		"float":                  "float32", //	C.float
 		"double":                 "float64", //C.double
 
+		"void *": "unsafe.Pointer",
+
 		"size_t":   "uint",
 		"int8_t":   "int8",
 		"uint8_t":  "uint8",
@@ -84,6 +93,211 @@ func (ws *workspace) init(nodes []cast.Node) {
 		"int64_t":  "int64",
 		"uint64_t": "uint64",
 	}
+
+	m.consts = map[string]string{}
+	m.funcs = map[string]string{}
+}
+
+func (m *mapping) get(k string) (string, bool) {
+	v, ok := m.types[k]
+	if ok {
+		return v, ok
+	}
+	v, ok = m.consts[k]
+	if ok {
+		return v, ok
+	}
+	v, ok = m.funcs[k]
+	if ok {
+		return v, ok
+	}
+	return "", false
+}
+
+func (m *mapping) setType(cv, gv string) {
+	if _, ok := m.types[cv]; ok {
+		halt("Type mapping conflicts for "+cv, nil)
+	}
+	m.types[cv] = gv
+}
+
+func (m *mapping) getType(t string) string {
+	gt, ok := m.types[t]
+	if !ok {
+		m.typeGenFn(t)
+		gt, _ = m.types[t]
+		return gt
+	}
+	return gt
+}
+
+func (m *mapping) mustGetType(t string) string {
+	gt := m.getType(t)
+	if gt == "" {
+		panic("No mapping for " + t)
+	}
+	return gt
+}
+
+func (m *mapping) setConst(cv, gv string) {
+	if _, ok := m.consts[cv]; ok {
+		halt("Type mapping conflicts for "+cv, nil)
+	}
+	m.consts[cv] = gv
+}
+
+func (m *mapping) getConst(c string) string {
+	gc, ok := m.consts[c]
+	if !ok {
+		m.constGenFn(c)
+		gc, _ = m.consts[c]
+		return gc
+	}
+	return gc
+}
+
+func (m *mapping) setFunc(cv, gv string) {
+	if _, ok := m.funcs[cv]; ok {
+		halt("Type mapping conflicts for "+cv, nil)
+	}
+	m.funcs[cv] = gv
+}
+
+func (m *mapping) getFunc(f string) string {
+	gf, ok := m.consts[f]
+	if !ok {
+		m.funcGenFn(f)
+		gf, _ = m.consts[f]
+		return gf
+	}
+	return gf
+}
+
+func convComplexType(m *mapping, cn cast.Node) goast.Expr {
+	switch n := cn.(type) {
+	case *cast.Typedef:
+		return &goast.Ident{Name: m.mustGetType(n.Type)}
+	case *cast.PointerType:
+		return &goast.StarExpr{
+			Star: token.Pos(1),
+			X:    convComplexType(m, n.ChildNodes[0]),
+		}
+	case *cast.ConstantArrayType:
+		return &goast.ArrayType{
+			Lbrack: token.Pos(1),
+			Len:    &goast.BasicLit{Kind: token.INT, Value: strconv.Itoa(n.Size)},
+			Elt:    convComplexType(m, n.ChildNodes[0]),
+		}
+	case *cast.FunctionProtoType:
+		params := []*goast.Field{}
+		for _, pn := range n.ChildNodes[1:] {
+			params = append(params, &goast.Field{
+				Type: convComplexType(m, pn),
+			})
+		}
+		return &goast.FuncType{
+			Func:   token.Pos(1),
+			Params: &goast.FieldList{List: params},
+			Results: &goast.FieldList{
+				List: []*goast.Field{
+					&goast.Field{
+						Type: convComplexType(m, n.ChildNodes[0]),
+					},
+				},
+			},
+		}
+	}
+	halt("Unkown c complex type node", cn)
+	return nil
+}
+
+func parseComplexCType(t string, baseNode cast.Node) cast.Node {
+	t = strings.TrimSpace(t)
+	if t == "" {
+		return baseNode
+	}
+
+	//ignore cv qualifier
+	for {
+		t = strings.TrimSpace(t)
+		if strings.HasPrefix(t, "const") {
+			t = strings.TrimPrefix(t, "const")
+			continue
+		} else if strings.HasPrefix(t, "violate") {
+			t = strings.TrimPrefix(t, "violate")
+			continue
+		}
+		break
+	}
+
+	submatch := func(reg string) []string {
+		re := regexp.MustCompile(reg)
+		subs := re.FindStringSubmatch(t)
+		return subs
+	}
+
+	match := func(reg string) string {
+		re := regexp.MustCompile(reg)
+		str := re.FindString(t)
+		return str
+	}
+
+	//do not support struct, union, enum
+	if eleType := match("^[struct|union|enum]\\s"); eleType != "" {
+		halt("do not support struct, union, enum", nil)
+	}
+
+	if id := match("^[0-9A-Za-z_]*"); id != "" {
+		n := &cast.Typedef{Type: id}
+		// baseNode must be nil
+		t = strings.TrimPrefix(t, id)
+		return parseComplexCType(t, n)
+	}
+
+	if id := match("^\\*"); id != "" {
+		n := &cast.PointerType{}
+		n.AddChild(baseNode)
+		t = strings.TrimPrefix(t, id)
+		return parseComplexCType(t, n)
+	}
+
+	if arr := submatch("\\[([\\d])\\]$"); arr[0] != "" {
+		size, err := strconv.Atoi(arr[1])
+		if err != nil {
+			panic(err)
+		}
+		n := &cast.ConstantArrayType{Size: size}
+		n.AddChild(baseNode)
+		t = strings.TrimPrefix(t, arr[0])
+		return parseComplexCType(t, n)
+	}
+
+	if fn := submatch("\\((.*)\\)\\((.*)\\)$"); fn[0] != "" {
+		params := strings.Split(fn[2], ",")
+		n := &cast.FunctionProtoType{}
+		n.AddChild(baseNode)
+		for _, param := range params {
+			n.AddChild(parseComplexCType(param, nil))
+		}
+		t = fn[1]
+		return parseComplexCType(t, n)
+	}
+
+	halt("Unkown complex c type "+t, nil)
+	return nil
+}
+
+type workspace struct {
+	target  Target
+	source  map[string]cast.Node
+	mapping mapping
+}
+
+func (ws *workspace) init(nodes []cast.Node) {
+	ws.mapping.init()
+	ws.mapping.typeGenFn = ws.gen
+	ws.mapping.constGenFn = ws.gen
+	ws.mapping.funcGenFn = ws.gen
 
 	ws.source = make(map[string]cast.Node, 2048)
 	for _, node := range nodes {
@@ -98,92 +312,99 @@ func (ws *workspace) init(nodes []cast.Node) {
 	}
 }
 
-func (ws *workspace) gen(name string) string {
-	if goname, ok := ws.mapping[name]; ok {
-		return goname //already generated
+func (ws *workspace) transType(t string) goast.Expr {
+	cn := parseComplexCType(t, nil)
+	gn := convComplexType(&ws.mapping, cn)
+	return gn
+}
+
+func (ws *workspace) gen(name string) {
+	_, ok := ws.mapping.get(name)
+	if ok {
+		return //already generated
 	}
 
 	node, ok := ws.source[name]
 	if !ok {
-		ws.mapping[name] = ""
-		return ""
+		return
 	}
 
-	var goname string
 	switch n := node.(type) {
 	case *cast.TypedefDecl:
-		goname = ws.genTypedefDecl(n, name)
+		ws.genTypedefDecl(n)
 	// case *cast.RecordDecl:
 	// 	return "struct " + n.Name
 	case *cast.EnumDecl:
-		goname = ws.genEnumDecl(n, name)
+		ws.genEnumDecl(n)
 	// case *cast.FunctionDecl:
 	// 	return n.Name
 	default:
 		halt("gen()", node)
 	}
-
-	ws.mapping[name] = goname
-	return goname
 }
 
-func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl, cn string) string {
-	ct := node.Type
-	gt := ws.gen(ct)
+func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
+	cname := node.Name
+	goname := vkName(cname)
 
-	if gt != "" {
-		if strings.HasPrefix(ct, "enum ") ||
-			strings.HasPrefix(ct, "struct ") {
-			return gt //two-one mapping
-		}
+	//Skip, if any struct or enum with same name has been generated.
+	if _, ok := ws.source["struct "+cname]; ok {
+		ws.mapping.mustGetType("struct " + cname)
+		return
+	} else if _, ok := ws.source["enum "+cname]; ok {
+		ws.mapping.mustGetType("enum " + cname)
+		return
 	}
 
-	if gt == "" {
-		gt = "C." + cn
+	var t goast.Expr
+	//Is this type is an opaque type? Use C.xxx or yyy?
+	re := regexp.MustCompile("^struct\\s[a-z|A-Z]*_T \\*$")
+	if re.MatchString(node.Type) {
+		t = &goast.Ident{token.NoPos, "C." + cname, nil}
+	} else {
+		t = ws.transType(node.Type)
 	}
-	gn := vkName(cn)
 
 	ws.target.addGo(&goast.GenDecl{
 		Tok: token.TYPE,
 		Specs: []goast.Spec{
 			&goast.TypeSpec{
-				Name: &goast.Ident{token.NoPos, gn, nil},
-				Type: &goast.Ident{token.NoPos, gt, nil},
+				Name: &goast.Ident{token.NoPos, goname, nil},
+				Type: t,
 			},
 		},
 	})
-	return gn
+	ws.mapping.setType(cname, goname)
 }
 
-func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
-	var gn string
-	if strings.Contains(cn, "FlagBits") {
-		fcn := strings.TrimPrefix(cn, "enum ")
-		fcn = strings.Replace(fcn, "FlagBits", "Flags", 1)
-		gn = ws.gen(fcn)
+func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
+	cname := "enum " + node.Name
+	goname := vkName(cname)
+
+	//generate enum type
+	//use xxxFlags if the name is not xxxFlagBits.
+	if strings.Contains(cname, "FlagBits") {
+		fcname := strings.Replace(cname, "FlagBits", "Flags", 1)
+		fcname = strings.TrimPrefix(fcname, "enum ")
+		goname = ws.mapping.mustGetType(fcname)
 	} else {
-		gn = strings.TrimPrefix(cn, "enum ")
-		gn = vkName(gn)
 		ws.target.addGo(&goast.GenDecl{
 			Tok: token.TYPE,
 			Specs: []goast.Spec{
 				&goast.TypeSpec{
-					Name: &goast.Ident{token.NoPos, gn, nil},
+					Name: &goast.Ident{token.NoPos, goname, nil},
 					Type: &goast.Ident{token.NoPos, "int", nil},
 				},
 			},
 		})
 	}
+	ws.mapping.setType(cname, goname)
 
+	//generate consts
 	specs := []goast.Spec{}
-	constMapping := map[string]string{}
 	for _, child := range node.ChildNodes {
 		con := child.(*cast.EnumConstantDecl)
-		// if con.Name == "VK_PIPELINE_CACHE_HEADER_VERSION_MAX_ENUM" {
-		// 	halt("", con)
-		// }
-
-		var expr = convExpr(constMapping, con.ChildNodes[0])
+		var expr = convConst(&ws.mapping, con.ChildNodes[0])
 
 		if expr != nil {
 			gcon := vkName(con.Name)
@@ -191,10 +412,10 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
 				Names: []*goast.Ident{
 					&goast.Ident{Name: gcon},
 				},
-				Type:   &goast.Ident{Name: gn},
+				Type:   &goast.Ident{Name: goname},
 				Values: []goast.Expr{expr},
 			})
-			constMapping[con.Name] = gcon
+			ws.mapping.setConst(con.Name, gcon)
 		}
 	}
 
@@ -204,40 +425,38 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl, cn string) string {
 		Specs:  specs,
 		Rparen: token.Pos(1),
 	})
-
-	return gn
 }
 
-func convExpr(refs map[string]string, node cast.Node) goast.Expr {
+func convConst(m *mapping, node cast.Node) goast.Expr {
 	switch v := node.(type) {
 	case *cast.IntegerLiteral:
 		return &goast.BasicLit{Kind: token.INT, Value: v.Value}
 	case *cast.DeclRefExpr:
-		return &goast.Ident{Name: refs[v.Name]}
+		return &goast.Ident{Name: m.getConst(v.Name)}
 	case *cast.ParenExpr:
 		return &goast.ParenExpr{
 			Lparen: token.Pos(1),
-			X:      convExpr(refs, v.ChildNodes[0]),
+			X:      convConst(m, v.ChildNodes[0]),
 			Rparen: token.Pos(1),
 		}
 	case *cast.BinaryOperator:
 		return &goast.BinaryExpr{
-			X:  convExpr(refs, v.ChildNodes[0]),
-			Op: convToken(v.Operator),
-			Y:  convExpr(refs, v.ChildNodes[1]),
+			X:  convConst(m, v.ChildNodes[0]),
+			Op: parseOperator(v.Operator),
+			Y:  convConst(m, v.ChildNodes[1]),
 		}
 	case *cast.UnaryOperator:
 		return &goast.UnaryExpr{
-			X:  convExpr(refs, v.ChildNodes[0]),
-			Op: convToken(v.Operator),
+			X:  convConst(m, v.ChildNodes[0]),
+			Op: parseOperator(v.Operator),
 		}
 	default:
-		halt("convExpr()", node)
+		halt("convConst()", node)
 	}
 	return nil
 }
 
-func convToken(op string) token.Token {
+func parseOperator(op string) token.Token {
 	switch op {
 	case token.ADD.String():
 		return token.ADD
@@ -284,6 +503,8 @@ func getNodeName(node cast.Node) string {
 }
 
 func vkName(n string) string {
+	n = strings.TrimPrefix(n, "enum ")
+	n = strings.TrimPrefix(n, "struct ")
 	n = strings.TrimPrefix(n, "C.")
 	n = strings.TrimPrefix(n, "Vk")
 	n = strings.TrimPrefix(n, "VK_")
@@ -292,6 +513,9 @@ func vkName(n string) string {
 }
 
 func deepPrint(node cast.Node, level int) {
+	if node == nil {
+		return
+	}
 	header := ""
 	for i := 0; i < level; i++ {
 		header += " - "
