@@ -456,6 +456,8 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 	ws.mapping.setType(cname, goname)
 
 	fields := []*goast.Field{}
+	var xxxCount *cast.FieldDecl
+	var pendAdding *goast.Field
 	for i := 0; i < len(node.ChildNodes); i++ {
 		fnode := node.ChildNodes[i]
 		fdecl, ok := fnode.(*cast.FieldDecl)
@@ -468,10 +470,41 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 		fgn := toGoName(fcn)
 		fgt := ws.transType(fct)
 
-		fields = append(fields, &goast.Field{
-			Names: []*goast.Ident{&goast.Ident{Name: fgn}},
-			Type:  fgt,
-		})
+		if strings.HasSuffix(fcn, "Count") && fct == "uint32_t" {
+			xxxCount = fdecl
+			pendAdding = &goast.Field{
+				Names: []*goast.Ident{&goast.Ident{Name: fgn}},
+				Type:  fgt,
+			}
+		} else if xxxCount != nil &&
+			strings.HasSuffix(fct, "*") {
+			pendAdding = nil
+
+			pointer := fgt.(*goast.StarExpr)
+			slice := &goast.ArrayType{
+				Elt: pointer.X,
+			}
+
+			fields = append(fields, &goast.Field{
+				Names: []*goast.Ident{&goast.Ident{Name: fgn}},
+				Type:  slice,
+			})
+		} else {
+			if xxxCount != nil {
+				xxxCount = nil
+				if pendAdding != nil {
+					fields = append(fields, pendAdding)
+					pendAdding = nil
+				}
+			}
+			fields = append(fields, &goast.Field{
+				Names: []*goast.Ident{&goast.Ident{Name: fgn}},
+				Type:  fgt,
+			})
+		}
+	}
+	if pendAdding != nil {
+		fields = append(fields, pendAdding)
 	}
 
 	ws.target.addGo(&goast.GenDecl{

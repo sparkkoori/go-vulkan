@@ -1,6 +1,8 @@
 package vk
+
 //#include "vulkan/vulkan.h"
 import "C"
+import "unsafe"
 
 type Flags uint32
 type DeviceSize uint64
@@ -1680,10 +1682,8 @@ type InstanceCreateInfo struct {
 	Next                  unsafe.Pointer
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
-	EnabledLayerCount     uint32
-	EnabledLayerNames     *string
-	EnabledExtensionCount uint32
-	EnabledExtensionNames *string
+	EnabledLayerNames     []string
+	EnabledExtensionNames []string
 }
 type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
 type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
@@ -1782,7 +1782,6 @@ type PhysicalDeviceLimits struct {
 	MaxUniformBufferRange                           uint32
 	MaxStorageBufferRange                           uint32
 	MaxPushConstantsSize                            uint32
-	MaxMemoryAllocationCount                        uint32
 	MaxSamplerAllocationCount                       uint32
 	BufferImageGranularity                          DeviceSize
 	SparseAddressSpaceSize                          DeviceSize
@@ -1923,20 +1922,16 @@ type DeviceQueueCreateInfo struct {
 	Next             unsafe.Pointer
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
-	QueueCount       uint32
-	QueuePriorities  *float32
+	QueuePriorities  []float32
 }
 type DeviceCreateInfo struct {
 	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 DeviceCreateFlags
-	QueueCreateInfoCount  uint32
-	QueueCreateInfos      *DeviceQueueCreateInfo
-	EnabledLayerCount     uint32
-	EnabledLayerNames     *string
-	EnabledExtensionCount uint32
-	EnabledExtensionNames *string
-	EnabledFeatures       *PhysicalDeviceFeatures
+	QueueCreateInfos      []DeviceQueueCreateInfo
+	EnabledLayerNames     []string
+	EnabledExtensionNames []string
+	EnabledFeatures       []PhysicalDeviceFeatures
 }
 type ExtensionProperties struct {
 	ExtensionName [256]byte
@@ -1949,15 +1944,12 @@ type LayerProperties struct {
 	Description           [256]byte
 }
 type SubmitInfo struct {
-	Type                 StructureType
-	Next                 unsafe.Pointer
-	WaitSemaphoreCount   uint32
-	WaitSemaphores       *Semaphore
-	WaitDstStageMask     *PipelineStageFlags
-	CommandBufferCount   uint32
-	CommandBuffers       *CommandBuffer
-	SignalSemaphoreCount uint32
-	SignalSemaphores     *Semaphore
+	Type             StructureType
+	Next             unsafe.Pointer
+	WaitSemaphores   []Semaphore
+	WaitDstStageMask []PipelineStageFlags
+	CommandBuffers   []CommandBuffer
+	SignalSemaphores []Semaphore
 }
 type MemoryAllocateInfo struct {
 	Type            StructureType
@@ -1997,14 +1989,12 @@ type SparseMemoryBind struct {
 	Flags          SparseMemoryBindFlags
 }
 type SparseBufferMemoryBindInfo struct {
-	Buffer    Buffer
-	BindCount uint32
-	Binds     *SparseMemoryBind
+	Buffer Buffer
+	Binds  []SparseMemoryBind
 }
 type SparseImageOpaqueMemoryBindInfo struct {
-	Image     Image
-	BindCount uint32
-	Binds     *SparseMemoryBind
+	Image Image
+	Binds []SparseMemoryBind
 }
 type ImageSubresource struct {
 	AspectMask ImageAspectFlags
@@ -2025,23 +2015,17 @@ type SparseImageMemoryBind struct {
 	Flags        SparseMemoryBindFlags
 }
 type SparseImageMemoryBindInfo struct {
-	Image     Image
-	BindCount uint32
-	Binds     *SparseImageMemoryBind
+	Image Image
+	Binds []SparseImageMemoryBind
 }
 type BindSparseInfo struct {
-	Type                 StructureType
-	Next                 unsafe.Pointer
-	WaitSemaphoreCount   uint32
-	WaitSemaphores       *Semaphore
-	BufferBindCount      uint32
-	BufferBinds          *SparseBufferMemoryBindInfo
-	ImageOpaqueBindCount uint32
-	ImageOpaqueBinds     *SparseImageOpaqueMemoryBindInfo
-	ImageBindCount       uint32
-	ImageBinds           *SparseImageMemoryBindInfo
-	SignalSemaphoreCount uint32
-	SignalSemaphores     *Semaphore
+	Type             StructureType
+	Next             unsafe.Pointer
+	WaitSemaphores   []Semaphore
+	BufferBinds      []SparseBufferMemoryBindInfo
+	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
+	ImageBinds       []SparseImageMemoryBindInfo
+	SignalSemaphores []Semaphore
 }
 type FenceCreateInfo struct {
 	Type  StructureType
@@ -2067,14 +2051,13 @@ type QueryPoolCreateInfo struct {
 	PipelineStatistics QueryPipelineStatisticFlags
 }
 type BufferCreateInfo struct {
-	Type                  StructureType
-	Next                  unsafe.Pointer
-	Flags                 BufferCreateFlags
-	Size                  DeviceSize
-	Usage                 BufferUsageFlags
-	SharingMode           SharingMode
-	QueueFamilyIndexCount uint32
-	QueueFamilyIndices    *uint32
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              BufferCreateFlags
+	Size               DeviceSize
+	Usage              BufferUsageFlags
+	SharingMode        SharingMode
+	QueueFamilyIndices []uint32
 }
 type BufferViewCreateInfo struct {
 	Type   StructureType
@@ -2086,21 +2069,20 @@ type BufferViewCreateInfo struct {
 	Range  DeviceSize
 }
 type ImageCreateInfo struct {
-	Type                  StructureType
-	Next                  unsafe.Pointer
-	Flags                 ImageCreateFlags
-	ImageType             ImageType
-	Format                Format
-	Extent                Extent3D
-	MipLevels             uint32
-	ArrayLayers           uint32
-	Samples               SampleCountFlags
-	Tiling                ImageTiling
-	Usage                 ImageUsageFlags
-	SharingMode           SharingMode
-	QueueFamilyIndexCount uint32
-	QueueFamilyIndices    *uint32
-	InitialLayout         ImageLayout
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              ImageCreateFlags
+	ImageType          ImageType
+	Format             Format
+	Extent             Extent3D
+	MipLevels          uint32
+	ArrayLayers        uint32
+	Samples            SampleCountFlags
+	Tiling             ImageTiling
+	Usage              ImageUsageFlags
+	SharingMode        SharingMode
+	QueueFamilyIndices []uint32
+	InitialLayout      ImageLayout
 }
 type SubresourceLayout struct {
 	Offset     DeviceSize
@@ -2152,10 +2134,9 @@ type SpecializationMapEntry struct {
 	Size       uint
 }
 type SpecializationInfo struct {
-	MapEntryCount uint32
-	MapEntries    *SpecializationMapEntry
-	DataSize      uint
-	Data          unsafe.Pointer
+	MapEntries []SpecializationMapEntry
+	DataSize   uint
+	Data       unsafe.Pointer
 }
 type PipelineShaderStageCreateInfo struct {
 	Type               StructureType
@@ -2178,13 +2159,11 @@ type VertexInputAttributeDescription struct {
 	Offset   uint32
 }
 type PipelineVertexInputStateCreateInfo struct {
-	Type                            StructureType
-	Next                            unsafe.Pointer
-	Flags                           PipelineVertexInputStateCreateFlags
-	VertexBindingDescriptionCount   uint32
-	VertexBindingDescriptions       *VertexInputBindingDescription
-	VertexAttributeDescriptionCount uint32
-	VertexAttributeDescriptions     *VertexInputAttributeDescription
+	Type                        StructureType
+	Next                        unsafe.Pointer
+	Flags                       PipelineVertexInputStateCreateFlags
+	VertexBindingDescriptions   []VertexInputBindingDescription
+	VertexAttributeDescriptions []VertexInputAttributeDescription
 }
 type PipelineInputAssemblyStateCreateInfo struct {
 	Type                   StructureType
@@ -2220,13 +2199,11 @@ type Rect2D struct {
 	Extent Extent2D
 }
 type PipelineViewportStateCreateInfo struct {
-	Type          StructureType
-	Next          unsafe.Pointer
-	Flags         PipelineViewportStateCreateFlags
-	ViewportCount uint32
-	Viewports     *Viewport
-	ScissorCount  uint32
-	Scissors      *Rect2D
+	Type      StructureType
+	Next      unsafe.Pointer
+	Flags     PipelineViewportStateCreateFlags
+	Viewports []Viewport
+	Scissors  []Rect2D
 }
 type PipelineRasterizationStateCreateInfo struct {
 	Type                    StructureType
@@ -2288,37 +2265,34 @@ type PipelineColorBlendAttachmentState struct {
 	ColorWriteMask      ColorComponentFlags
 }
 type PipelineColorBlendStateCreateInfo struct {
-	Type            StructureType
-	Next            unsafe.Pointer
-	Flags           PipelineColorBlendStateCreateFlags
-	LogicOpEnable   bool
-	LogicOp         LogicOp
-	AttachmentCount uint32
-	Attachments     *PipelineColorBlendAttachmentState
-	BlendConstants  [4]float32
+	Type           StructureType
+	Next           unsafe.Pointer
+	Flags          PipelineColorBlendStateCreateFlags
+	LogicOpEnable  bool
+	LogicOp        LogicOp
+	Attachments    []PipelineColorBlendAttachmentState
+	BlendConstants [4]float32
 }
 type PipelineDynamicStateCreateInfo struct {
-	Type              StructureType
-	Next              unsafe.Pointer
-	Flags             PipelineDynamicStateCreateFlags
-	DynamicStateCount uint32
-	DynamicStates     *DynamicState
+	Type          StructureType
+	Next          unsafe.Pointer
+	Flags         PipelineDynamicStateCreateFlags
+	DynamicStates []DynamicState
 }
 type GraphicsPipelineCreateInfo struct {
 	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineCreateFlags
-	StageCount         uint32
-	Stages             *PipelineShaderStageCreateInfo
-	VertexInputState   *PipelineVertexInputStateCreateInfo
-	InputAssemblyState *PipelineInputAssemblyStateCreateInfo
-	TessellationState  *PipelineTessellationStateCreateInfo
-	ViewportState      *PipelineViewportStateCreateInfo
-	RasterizationState *PipelineRasterizationStateCreateInfo
-	MultisampleState   *PipelineMultisampleStateCreateInfo
-	DepthStencilState  *PipelineDepthStencilStateCreateInfo
-	ColorBlendState    *PipelineColorBlendStateCreateInfo
-	DynamicState       *PipelineDynamicStateCreateInfo
+	Stages             []PipelineShaderStageCreateInfo
+	VertexInputState   []PipelineVertexInputStateCreateInfo
+	InputAssemblyState []PipelineInputAssemblyStateCreateInfo
+	TessellationState  []PipelineTessellationStateCreateInfo
+	ViewportState      []PipelineViewportStateCreateInfo
+	RasterizationState []PipelineRasterizationStateCreateInfo
+	MultisampleState   []PipelineMultisampleStateCreateInfo
+	DepthStencilState  []PipelineDepthStencilStateCreateInfo
+	ColorBlendState    []PipelineColorBlendStateCreateInfo
+	DynamicState       []PipelineDynamicStateCreateInfo
 	Layout             PipelineLayout
 	RenderPass         RenderPass
 	Subpass            uint32
@@ -2340,13 +2314,11 @@ type PushConstantRange struct {
 	Size       uint32
 }
 type PipelineLayoutCreateInfo struct {
-	Type                   StructureType
-	Next                   unsafe.Pointer
-	Flags                  PipelineLayoutCreateFlags
-	SetLayoutCount         uint32
-	SetLayouts             *DescriptorSetLayout
-	PushConstantRangeCount uint32
-	PushConstantRanges     *PushConstantRange
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              PipelineLayoutCreateFlags
+	SetLayouts         []DescriptorSetLayout
+	PushConstantRanges []PushConstantRange
 }
 type SamplerCreateInfo struct {
 	Type                    StructureType
@@ -2376,30 +2348,27 @@ type DescriptorSetLayoutBinding struct {
 	ImmutableSamplers *Sampler
 }
 type DescriptorSetLayoutCreateInfo struct {
-	Type         StructureType
-	Next         unsafe.Pointer
-	Flags        DescriptorSetLayoutCreateFlags
-	BindingCount uint32
-	Bindings     *DescriptorSetLayoutBinding
+	Type     StructureType
+	Next     unsafe.Pointer
+	Flags    DescriptorSetLayoutCreateFlags
+	Bindings []DescriptorSetLayoutBinding
 }
 type DescriptorPoolSize struct {
 	Type            DescriptorType
 	DescriptorCount uint32
 }
 type DescriptorPoolCreateInfo struct {
-	Type          StructureType
-	Next          unsafe.Pointer
-	Flags         DescriptorPoolCreateFlags
-	MaxSets       uint32
-	PoolSizeCount uint32
-	PoolSizes     *DescriptorPoolSize
+	Type      StructureType
+	Next      unsafe.Pointer
+	Flags     DescriptorPoolCreateFlags
+	MaxSets   uint32
+	PoolSizes []DescriptorPoolSize
 }
 type DescriptorSetAllocateInfo struct {
-	Type               StructureType
-	Next               unsafe.Pointer
-	DescriptorPool     DescriptorPool
-	DescriptorSetCount uint32
-	SetLayouts         *DescriptorSetLayout
+	Type           StructureType
+	Next           unsafe.Pointer
+	DescriptorPool DescriptorPool
+	SetLayouts     []DescriptorSetLayout
 }
 type DescriptorImageInfo struct {
 	Sampler     Sampler
@@ -2435,15 +2404,14 @@ type CopyDescriptorSet struct {
 	DescriptorCount uint32
 }
 type FramebufferCreateInfo struct {
-	Type            StructureType
-	Next            unsafe.Pointer
-	Flags           FramebufferCreateFlags
-	RenderPass      RenderPass
-	AttachmentCount uint32
-	Attachments     *ImageView
-	Width           uint32
-	Height          uint32
-	Layers          uint32
+	Type        StructureType
+	Next        unsafe.Pointer
+	Flags       FramebufferCreateFlags
+	RenderPass  RenderPass
+	Attachments []ImageView
+	Width       uint32
+	Height      uint32
+	Layers      uint32
 }
 type AttachmentDescription struct {
 	Flags          AttachmentDescriptionFlags
@@ -2461,16 +2429,13 @@ type AttachmentReference struct {
 	Layout     ImageLayout
 }
 type SubpassDescription struct {
-	Flags                   SubpassDescriptionFlags
-	PipelineBindPoint       PipelineBindPoint
-	InputAttachmentCount    uint32
-	InputAttachments        *AttachmentReference
-	ColorAttachmentCount    uint32
-	ColorAttachments        *AttachmentReference
-	ResolveAttachments      *AttachmentReference
-	DepthStencilAttachment  *AttachmentReference
-	PreserveAttachmentCount uint32
-	PreserveAttachments     *uint32
+	Flags                  SubpassDescriptionFlags
+	PipelineBindPoint      PipelineBindPoint
+	InputAttachments       []AttachmentReference
+	ColorAttachments       []AttachmentReference
+	ResolveAttachments     []AttachmentReference
+	DepthStencilAttachment []AttachmentReference
+	PreserveAttachments    []uint32
 }
 type SubpassDependency struct {
 	SrcSubpass      uint32
@@ -2482,15 +2447,12 @@ type SubpassDependency struct {
 	DependencyFlags DependencyFlags
 }
 type RenderPassCreateInfo struct {
-	Type            StructureType
-	Next            unsafe.Pointer
-	Flags           RenderPassCreateFlags
-	AttachmentCount uint32
-	Attachments     *AttachmentDescription
-	SubpassCount    uint32
-	Subpasses       *SubpassDescription
-	DependencyCount uint32
-	Dependencies    *SubpassDependency
+	Type         StructureType
+	Next         unsafe.Pointer
+	Flags        RenderPassCreateFlags
+	Attachments  []AttachmentDescription
+	Subpasses    []SubpassDescription
+	Dependencies []SubpassDependency
 }
 type CommandPoolCreateInfo struct {
 	Type             StructureType
@@ -2613,13 +2575,12 @@ type ImageMemoryBarrier struct {
 	SubresourceRange    ImageSubresourceRange
 }
 type RenderPassBeginInfo struct {
-	Type            StructureType
-	Next            unsafe.Pointer
-	RenderPass      RenderPass
-	Framebuffer     Framebuffer
-	RenderArea      Rect2D
-	ClearValueCount uint32
-	ClearValues     *ClearValue
+	Type        StructureType
+	Next        unsafe.Pointer
+	RenderPass  RenderPass
+	Framebuffer Framebuffer
+	RenderArea  Rect2D
+	ClearValues []ClearValue
 }
 type DispatchIndirectCommand struct {
 	X uint32
@@ -2627,14 +2588,12 @@ type DispatchIndirectCommand struct {
 	Z uint32
 }
 type DrawIndexedIndirectCommand struct {
-	IndexCount    uint32
 	InstanceCount uint32
 	FirstIndex    uint32
 	VertexOffset  int32
 	FirstInstance uint32
 }
 type DrawIndirectCommand struct {
-	VertexCount   uint32
 	InstanceCount uint32
 	FirstVertex   uint32
 	FirstInstance uint32

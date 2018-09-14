@@ -15,9 +15,12 @@ Go binding for Vulkan
 
 - Merge Vk\*FlagBit to Vk\*Flags.
 
-- Use bool for Bool32.
+- Map Bool32 to bool.
 
-- Use string for char *
+- Map char * to string.
+
+- Merge size and pointer fields to slice.
+  - eg. `EnabledLayerNames     []string` for `uint32_t enabledLayerCount;` and `const char* const* ppEnabledLayerNames;`
 
 
 ## License
