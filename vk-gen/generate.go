@@ -359,7 +359,7 @@ func (ws *workspace) gen(name string) {
 
 func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 	cname := node.Name
-	goname := vkName(cname)
+	goname := toGoName(cname)
 
 	//Skip, if any struct or enum with same name has been generated.
 	if _, ok := ws.source["struct "+cname]; ok {
@@ -395,7 +395,7 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 
 func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
 	cname := "enum " + node.Name
-	goname := vkName(cname)
+	goname := toGoName(cname)
 
 	//generate enum type
 	//use xxxFlags if the name is not xxxFlagBits.
@@ -423,7 +423,7 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
 		var expr = convConst(&ws.mapping, con.ChildNodes[0])
 
 		if expr != nil {
-			gcon := vkName(con.Name)
+			gcon := toGoName(con.Name)
 			specs = append(specs, &goast.ValueSpec{
 				Names: []*goast.Ident{
 					&goast.Ident{Name: gcon},
@@ -445,7 +445,7 @@ func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
 
 func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 	cname := "struct " + node.Name
-	goname := vkName(cname)
+	goname := toGoName(cname)
 
 	ws.mapping.setType(cname, goname)
 
@@ -459,7 +459,7 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 
 		fcn := fdecl.Name
 		fct := fdecl.Type
-		fgn := "_" + fcn
+		fgn := toGoName(fcn)
 		fgt := ws.transType(fct)
 
 		fields = append(fields, &goast.Field{
@@ -559,13 +559,26 @@ func getNodeName(node cast.Node) string {
 	return ""
 }
 
-func vkName(n string) string {
+func toGoName(n string) string {
 	n = strings.TrimPrefix(n, "enum ")
 	n = strings.TrimPrefix(n, "struct ")
-	n = strings.TrimPrefix(n, "C.")
+
 	n = strings.TrimPrefix(n, "Vk")
 	n = strings.TrimPrefix(n, "VK_")
 	n = strings.TrimPrefix(n, "vk")
+
+	re := regexp.MustCompile("^(p+)[A-Z]+")
+	if subs := re.FindStringSubmatch(n); subs != nil {
+		n = strings.TrimPrefix(n, subs[1])
+	}
+
+	re = regexp.MustCompile("^s[A-Z]+")
+	if re.MatchString(n) {
+		n = strings.TrimPrefix(n, "s")
+	}
+
+	n = strings.Title(n)
+
 	return n
 }
 

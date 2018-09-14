@@ -1670,23 +1670,23 @@ const (
 )
 
 type ApplicationInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_pApplicationName   *byte
-	_applicationVersion uint32
-	_pEngineName        *byte
-	_engineVersion      uint32
-	_apiVersion         uint32
+	Type               StructureType
+	Next               unsafe.Pointer
+	ApplicationName    *byte
+	ApplicationVersion uint32
+	EngineName         *byte
+	EngineVersion      uint32
+	ApiVersion         uint32
 }
 type InstanceCreateInfo struct {
-	_sType                   StructureType
-	_pNext                   unsafe.Pointer
-	_flags                   InstanceCreateFlags
-	_pApplicationInfo        *ApplicationInfo
-	_enabledLayerCount       uint32
-	_ppEnabledLayerNames     **byte
-	_enabledExtensionCount   uint32
-	_ppEnabledExtensionNames **byte
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 InstanceCreateFlags
+	ApplicationInfo       *ApplicationInfo
+	EnabledLayerCount     uint32
+	EnabledLayerNames     **byte
+	EnabledExtensionCount uint32
+	EnabledExtensionNames **byte
 }
 type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
 type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
@@ -1694,959 +1694,959 @@ type PFN_vkFreeFunction *func(unsafe.Pointer, unsafe.Pointer)
 type PFN_vkInternalAllocationNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
 type PFN_vkInternalFreeNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
 type AllocationCallbacks struct {
-	_pUserData             unsafe.Pointer
-	_pfnAllocation         PFN_vkAllocationFunction
-	_pfnReallocation       PFN_vkReallocationFunction
-	_pfnFree               PFN_vkFreeFunction
-	_pfnInternalAllocation PFN_vkInternalAllocationNotification
-	_pfnInternalFree       PFN_vkInternalFreeNotification
+	UserData              unsafe.Pointer
+	PfnAllocation         PFN_vkAllocationFunction
+	PfnReallocation       PFN_vkReallocationFunction
+	PfnFree               PFN_vkFreeFunction
+	PfnInternalAllocation PFN_vkInternalAllocationNotification
+	PfnInternalFree       PFN_vkInternalFreeNotification
 }
 type PhysicalDeviceFeatures struct {
-	_robustBufferAccess                      Bool32
-	_fullDrawIndexUint32                     Bool32
-	_imageCubeArray                          Bool32
-	_independentBlend                        Bool32
-	_geometryShader                          Bool32
-	_tessellationShader                      Bool32
-	_sampleRateShading                       Bool32
-	_dualSrcBlend                            Bool32
-	_logicOp                                 Bool32
-	_multiDrawIndirect                       Bool32
-	_drawIndirectFirstInstance               Bool32
-	_depthClamp                              Bool32
-	_depthBiasClamp                          Bool32
-	_fillModeNonSolid                        Bool32
-	_depthBounds                             Bool32
-	_wideLines                               Bool32
-	_largePoints                             Bool32
-	_alphaToOne                              Bool32
-	_multiViewport                           Bool32
-	_samplerAnisotropy                       Bool32
-	_textureCompressionETC2                  Bool32
-	_textureCompressionASTC_LDR              Bool32
-	_textureCompressionBC                    Bool32
-	_occlusionQueryPrecise                   Bool32
-	_pipelineStatisticsQuery                 Bool32
-	_vertexPipelineStoresAndAtomics          Bool32
-	_fragmentStoresAndAtomics                Bool32
-	_shaderTessellationAndGeometryPointSize  Bool32
-	_shaderImageGatherExtended               Bool32
-	_shaderStorageImageExtendedFormats       Bool32
-	_shaderStorageImageMultisample           Bool32
-	_shaderStorageImageReadWithoutFormat     Bool32
-	_shaderStorageImageWriteWithoutFormat    Bool32
-	_shaderUniformBufferArrayDynamicIndexing Bool32
-	_shaderSampledImageArrayDynamicIndexing  Bool32
-	_shaderStorageBufferArrayDynamicIndexing Bool32
-	_shaderStorageImageArrayDynamicIndexing  Bool32
-	_shaderClipDistance                      Bool32
-	_shaderCullDistance                      Bool32
-	_shaderFloat64                           Bool32
-	_shaderInt64                             Bool32
-	_shaderInt16                             Bool32
-	_shaderResourceResidency                 Bool32
-	_shaderResourceMinLod                    Bool32
-	_sparseBinding                           Bool32
-	_sparseResidencyBuffer                   Bool32
-	_sparseResidencyImage2D                  Bool32
-	_sparseResidencyImage3D                  Bool32
-	_sparseResidency2Samples                 Bool32
-	_sparseResidency4Samples                 Bool32
-	_sparseResidency8Samples                 Bool32
-	_sparseResidency16Samples                Bool32
-	_sparseResidencyAliased                  Bool32
-	_variableMultisampleRate                 Bool32
-	_inheritedQueries                        Bool32
+	RobustBufferAccess                      Bool32
+	FullDrawIndexUint32                     Bool32
+	ImageCubeArray                          Bool32
+	IndependentBlend                        Bool32
+	GeometryShader                          Bool32
+	TessellationShader                      Bool32
+	SampleRateShading                       Bool32
+	DualSrcBlend                            Bool32
+	LogicOp                                 Bool32
+	MultiDrawIndirect                       Bool32
+	DrawIndirectFirstInstance               Bool32
+	DepthClamp                              Bool32
+	DepthBiasClamp                          Bool32
+	FillModeNonSolid                        Bool32
+	DepthBounds                             Bool32
+	WideLines                               Bool32
+	LargePoints                             Bool32
+	AlphaToOne                              Bool32
+	MultiViewport                           Bool32
+	SamplerAnisotropy                       Bool32
+	TextureCompressionETC2                  Bool32
+	TextureCompressionASTC_LDR              Bool32
+	TextureCompressionBC                    Bool32
+	OcclusionQueryPrecise                   Bool32
+	PipelineStatisticsQuery                 Bool32
+	VertexPipelineStoresAndAtomics          Bool32
+	FragmentStoresAndAtomics                Bool32
+	ShaderTessellationAndGeometryPointSize  Bool32
+	ShaderImageGatherExtended               Bool32
+	ShaderStorageImageExtendedFormats       Bool32
+	ShaderStorageImageMultisample           Bool32
+	ShaderStorageImageReadWithoutFormat     Bool32
+	ShaderStorageImageWriteWithoutFormat    Bool32
+	ShaderUniformBufferArrayDynamicIndexing Bool32
+	ShaderSampledImageArrayDynamicIndexing  Bool32
+	ShaderStorageBufferArrayDynamicIndexing Bool32
+	ShaderStorageImageArrayDynamicIndexing  Bool32
+	ShaderClipDistance                      Bool32
+	ShaderCullDistance                      Bool32
+	ShaderFloat64                           Bool32
+	ShaderInt64                             Bool32
+	ShaderInt16                             Bool32
+	ShaderResourceResidency                 Bool32
+	ShaderResourceMinLod                    Bool32
+	SparseBinding                           Bool32
+	SparseResidencyBuffer                   Bool32
+	SparseResidencyImage2D                  Bool32
+	SparseResidencyImage3D                  Bool32
+	SparseResidency2Samples                 Bool32
+	SparseResidency4Samples                 Bool32
+	SparseResidency8Samples                 Bool32
+	SparseResidency16Samples                Bool32
+	SparseResidencyAliased                  Bool32
+	VariableMultisampleRate                 Bool32
+	InheritedQueries                        Bool32
 }
 type FormatProperties struct {
-	_linearTilingFeatures  FormatFeatureFlags
-	_optimalTilingFeatures FormatFeatureFlags
-	_bufferFeatures        FormatFeatureFlags
+	LinearTilingFeatures  FormatFeatureFlags
+	OptimalTilingFeatures FormatFeatureFlags
+	BufferFeatures        FormatFeatureFlags
 }
 type Extent3D struct {
-	_width  uint32
-	_height uint32
-	_depth  uint32
+	Width  uint32
+	Height uint32
+	Depth  uint32
 }
 type ImageFormatProperties struct {
-	_maxExtent       Extent3D
-	_maxMipLevels    uint32
-	_maxArrayLayers  uint32
-	_sampleCounts    SampleCountFlags
-	_maxResourceSize DeviceSize
+	MaxExtent       Extent3D
+	MaxMipLevels    uint32
+	MaxArrayLayers  uint32
+	SampleCounts    SampleCountFlags
+	MaxResourceSize DeviceSize
 }
 type PhysicalDeviceLimits struct {
-	_maxImageDimension1D                             uint32
-	_maxImageDimension2D                             uint32
-	_maxImageDimension3D                             uint32
-	_maxImageDimensionCube                           uint32
-	_maxImageArrayLayers                             uint32
-	_maxTexelBufferElements                          uint32
-	_maxUniformBufferRange                           uint32
-	_maxStorageBufferRange                           uint32
-	_maxPushConstantsSize                            uint32
-	_maxMemoryAllocationCount                        uint32
-	_maxSamplerAllocationCount                       uint32
-	_bufferImageGranularity                          DeviceSize
-	_sparseAddressSpaceSize                          DeviceSize
-	_maxBoundDescriptorSets                          uint32
-	_maxPerStageDescriptorSamplers                   uint32
-	_maxPerStageDescriptorUniformBuffers             uint32
-	_maxPerStageDescriptorStorageBuffers             uint32
-	_maxPerStageDescriptorSampledImages              uint32
-	_maxPerStageDescriptorStorageImages              uint32
-	_maxPerStageDescriptorInputAttachments           uint32
-	_maxPerStageResources                            uint32
-	_maxDescriptorSetSamplers                        uint32
-	_maxDescriptorSetUniformBuffers                  uint32
-	_maxDescriptorSetUniformBuffersDynamic           uint32
-	_maxDescriptorSetStorageBuffers                  uint32
-	_maxDescriptorSetStorageBuffersDynamic           uint32
-	_maxDescriptorSetSampledImages                   uint32
-	_maxDescriptorSetStorageImages                   uint32
-	_maxDescriptorSetInputAttachments                uint32
-	_maxVertexInputAttributes                        uint32
-	_maxVertexInputBindings                          uint32
-	_maxVertexInputAttributeOffset                   uint32
-	_maxVertexInputBindingStride                     uint32
-	_maxVertexOutputComponents                       uint32
-	_maxTessellationGenerationLevel                  uint32
-	_maxTessellationPatchSize                        uint32
-	_maxTessellationControlPerVertexInputComponents  uint32
-	_maxTessellationControlPerVertexOutputComponents uint32
-	_maxTessellationControlPerPatchOutputComponents  uint32
-	_maxTessellationControlTotalOutputComponents     uint32
-	_maxTessellationEvaluationInputComponents        uint32
-	_maxTessellationEvaluationOutputComponents       uint32
-	_maxGeometryShaderInvocations                    uint32
-	_maxGeometryInputComponents                      uint32
-	_maxGeometryOutputComponents                     uint32
-	_maxGeometryOutputVertices                       uint32
-	_maxGeometryTotalOutputComponents                uint32
-	_maxFragmentInputComponents                      uint32
-	_maxFragmentOutputAttachments                    uint32
-	_maxFragmentDualSrcAttachments                   uint32
-	_maxFragmentCombinedOutputResources              uint32
-	_maxComputeSharedMemorySize                      uint32
-	_maxComputeWorkGroupCount                        [3]uint32
-	_maxComputeWorkGroupInvocations                  uint32
-	_maxComputeWorkGroupSize                         [3]uint32
-	_subPixelPrecisionBits                           uint32
-	_subTexelPrecisionBits                           uint32
-	_mipmapPrecisionBits                             uint32
-	_maxDrawIndexedIndexValue                        uint32
-	_maxDrawIndirectCount                            uint32
-	_maxSamplerLodBias                               float32
-	_maxSamplerAnisotropy                            float32
-	_maxViewports                                    uint32
-	_maxViewportDimensions                           [2]uint32
-	_viewportBoundsRange                             [2]float32
-	_viewportSubPixelBits                            uint32
-	_minMemoryMapAlignment                           uint
-	_minTexelBufferOffsetAlignment                   DeviceSize
-	_minUniformBufferOffsetAlignment                 DeviceSize
-	_minStorageBufferOffsetAlignment                 DeviceSize
-	_minTexelOffset                                  int32
-	_maxTexelOffset                                  uint32
-	_minTexelGatherOffset                            int32
-	_maxTexelGatherOffset                            uint32
-	_minInterpolationOffset                          float32
-	_maxInterpolationOffset                          float32
-	_subPixelInterpolationOffsetBits                 uint32
-	_maxFramebufferWidth                             uint32
-	_maxFramebufferHeight                            uint32
-	_maxFramebufferLayers                            uint32
-	_framebufferColorSampleCounts                    SampleCountFlags
-	_framebufferDepthSampleCounts                    SampleCountFlags
-	_framebufferStencilSampleCounts                  SampleCountFlags
-	_framebufferNoAttachmentsSampleCounts            SampleCountFlags
-	_maxColorAttachments                             uint32
-	_sampledImageColorSampleCounts                   SampleCountFlags
-	_sampledImageIntegerSampleCounts                 SampleCountFlags
-	_sampledImageDepthSampleCounts                   SampleCountFlags
-	_sampledImageStencilSampleCounts                 SampleCountFlags
-	_storageImageSampleCounts                        SampleCountFlags
-	_maxSampleMaskWords                              uint32
-	_timestampComputeAndGraphics                     Bool32
-	_timestampPeriod                                 float32
-	_maxClipDistances                                uint32
-	_maxCullDistances                                uint32
-	_maxCombinedClipAndCullDistances                 uint32
-	_discreteQueuePriorities                         uint32
-	_pointSizeRange                                  [2]float32
-	_lineWidthRange                                  [2]float32
-	_pointSizeGranularity                            float32
-	_lineWidthGranularity                            float32
-	_strictLines                                     Bool32
-	_standardSampleLocations                         Bool32
-	_optimalBufferCopyOffsetAlignment                DeviceSize
-	_optimalBufferCopyRowPitchAlignment              DeviceSize
-	_nonCoherentAtomSize                             DeviceSize
+	MaxImageDimension1D                             uint32
+	MaxImageDimension2D                             uint32
+	MaxImageDimension3D                             uint32
+	MaxImageDimensionCube                           uint32
+	MaxImageArrayLayers                             uint32
+	MaxTexelBufferElements                          uint32
+	MaxUniformBufferRange                           uint32
+	MaxStorageBufferRange                           uint32
+	MaxPushConstantsSize                            uint32
+	MaxMemoryAllocationCount                        uint32
+	MaxSamplerAllocationCount                       uint32
+	BufferImageGranularity                          DeviceSize
+	SparseAddressSpaceSize                          DeviceSize
+	MaxBoundDescriptorSets                          uint32
+	MaxPerStageDescriptorSamplers                   uint32
+	MaxPerStageDescriptorUniformBuffers             uint32
+	MaxPerStageDescriptorStorageBuffers             uint32
+	MaxPerStageDescriptorSampledImages              uint32
+	MaxPerStageDescriptorStorageImages              uint32
+	MaxPerStageDescriptorInputAttachments           uint32
+	MaxPerStageResources                            uint32
+	MaxDescriptorSetSamplers                        uint32
+	MaxDescriptorSetUniformBuffers                  uint32
+	MaxDescriptorSetUniformBuffersDynamic           uint32
+	MaxDescriptorSetStorageBuffers                  uint32
+	MaxDescriptorSetStorageBuffersDynamic           uint32
+	MaxDescriptorSetSampledImages                   uint32
+	MaxDescriptorSetStorageImages                   uint32
+	MaxDescriptorSetInputAttachments                uint32
+	MaxVertexInputAttributes                        uint32
+	MaxVertexInputBindings                          uint32
+	MaxVertexInputAttributeOffset                   uint32
+	MaxVertexInputBindingStride                     uint32
+	MaxVertexOutputComponents                       uint32
+	MaxTessellationGenerationLevel                  uint32
+	MaxTessellationPatchSize                        uint32
+	MaxTessellationControlPerVertexInputComponents  uint32
+	MaxTessellationControlPerVertexOutputComponents uint32
+	MaxTessellationControlPerPatchOutputComponents  uint32
+	MaxTessellationControlTotalOutputComponents     uint32
+	MaxTessellationEvaluationInputComponents        uint32
+	MaxTessellationEvaluationOutputComponents       uint32
+	MaxGeometryShaderInvocations                    uint32
+	MaxGeometryInputComponents                      uint32
+	MaxGeometryOutputComponents                     uint32
+	MaxGeometryOutputVertices                       uint32
+	MaxGeometryTotalOutputComponents                uint32
+	MaxFragmentInputComponents                      uint32
+	MaxFragmentOutputAttachments                    uint32
+	MaxFragmentDualSrcAttachments                   uint32
+	MaxFragmentCombinedOutputResources              uint32
+	MaxComputeSharedMemorySize                      uint32
+	MaxComputeWorkGroupCount                        [3]uint32
+	MaxComputeWorkGroupInvocations                  uint32
+	MaxComputeWorkGroupSize                         [3]uint32
+	SubPixelPrecisionBits                           uint32
+	SubTexelPrecisionBits                           uint32
+	MipmapPrecisionBits                             uint32
+	MaxDrawIndexedIndexValue                        uint32
+	MaxDrawIndirectCount                            uint32
+	MaxSamplerLodBias                               float32
+	MaxSamplerAnisotropy                            float32
+	MaxViewports                                    uint32
+	MaxViewportDimensions                           [2]uint32
+	ViewportBoundsRange                             [2]float32
+	ViewportSubPixelBits                            uint32
+	MinMemoryMapAlignment                           uint
+	MinTexelBufferOffsetAlignment                   DeviceSize
+	MinUniformBufferOffsetAlignment                 DeviceSize
+	MinStorageBufferOffsetAlignment                 DeviceSize
+	MinTexelOffset                                  int32
+	MaxTexelOffset                                  uint32
+	MinTexelGatherOffset                            int32
+	MaxTexelGatherOffset                            uint32
+	MinInterpolationOffset                          float32
+	MaxInterpolationOffset                          float32
+	SubPixelInterpolationOffsetBits                 uint32
+	MaxFramebufferWidth                             uint32
+	MaxFramebufferHeight                            uint32
+	MaxFramebufferLayers                            uint32
+	FramebufferColorSampleCounts                    SampleCountFlags
+	FramebufferDepthSampleCounts                    SampleCountFlags
+	FramebufferStencilSampleCounts                  SampleCountFlags
+	FramebufferNoAttachmentsSampleCounts            SampleCountFlags
+	MaxColorAttachments                             uint32
+	SampledImageColorSampleCounts                   SampleCountFlags
+	SampledImageIntegerSampleCounts                 SampleCountFlags
+	SampledImageDepthSampleCounts                   SampleCountFlags
+	SampledImageStencilSampleCounts                 SampleCountFlags
+	StorageImageSampleCounts                        SampleCountFlags
+	MaxSampleMaskWords                              uint32
+	TimestampComputeAndGraphics                     Bool32
+	TimestampPeriod                                 float32
+	MaxClipDistances                                uint32
+	MaxCullDistances                                uint32
+	MaxCombinedClipAndCullDistances                 uint32
+	DiscreteQueuePriorities                         uint32
+	PointSizeRange                                  [2]float32
+	LineWidthRange                                  [2]float32
+	PointSizeGranularity                            float32
+	LineWidthGranularity                            float32
+	StrictLines                                     Bool32
+	StandardSampleLocations                         Bool32
+	OptimalBufferCopyOffsetAlignment                DeviceSize
+	OptimalBufferCopyRowPitchAlignment              DeviceSize
+	NonCoherentAtomSize                             DeviceSize
 }
 type PhysicalDeviceSparseProperties struct {
-	_residencyStandard2DBlockShape            Bool32
-	_residencyStandard2DMultisampleBlockShape Bool32
-	_residencyStandard3DBlockShape            Bool32
-	_residencyAlignedMipSize                  Bool32
-	_residencyNonResidentStrict               Bool32
+	ResidencyStandard2DBlockShape            Bool32
+	ResidencyStandard2DMultisampleBlockShape Bool32
+	ResidencyStandard3DBlockShape            Bool32
+	ResidencyAlignedMipSize                  Bool32
+	ResidencyNonResidentStrict               Bool32
 }
 type PhysicalDeviceProperties struct {
-	_apiVersion        uint32
-	_driverVersion     uint32
-	_vendorID          uint32
-	_deviceID          uint32
-	_deviceType        PhysicalDeviceType
-	_deviceName        [256]byte
-	_pipelineCacheUUID [16]uint8
-	_limits            PhysicalDeviceLimits
-	_sparseProperties  PhysicalDeviceSparseProperties
+	ApiVersion        uint32
+	DriverVersion     uint32
+	VendorID          uint32
+	DeviceID          uint32
+	DeviceType        PhysicalDeviceType
+	DeviceName        [256]byte
+	PipelineCacheUUID [16]uint8
+	Limits            PhysicalDeviceLimits
+	SparseProperties  PhysicalDeviceSparseProperties
 }
 type QueueFamilyProperties struct {
-	_queueFlags                  QueueFlags
-	_queueCount                  uint32
-	_timestampValidBits          uint32
-	_minImageTransferGranularity Extent3D
+	QueueFlags                  QueueFlags
+	QueueCount                  uint32
+	TimestampValidBits          uint32
+	MinImageTransferGranularity Extent3D
 }
 type MemoryType struct {
-	_propertyFlags MemoryPropertyFlags
-	_heapIndex     uint32
+	PropertyFlags MemoryPropertyFlags
+	HeapIndex     uint32
 }
 type MemoryHeap struct {
-	_size  DeviceSize
-	_flags MemoryHeapFlags
+	Size  DeviceSize
+	Flags MemoryHeapFlags
 }
 type PhysicalDeviceMemoryProperties struct {
-	_memoryTypeCount uint32
-	_memoryTypes     [32]MemoryType
-	_memoryHeapCount uint32
-	_memoryHeaps     [16]MemoryHeap
+	MemoryTypeCount uint32
+	MemoryTypes     [32]MemoryType
+	MemoryHeapCount uint32
+	MemoryHeaps     [16]MemoryHeap
 }
 type DeviceQueueCreateInfo struct {
-	_sType            StructureType
-	_pNext            unsafe.Pointer
-	_flags            DeviceQueueCreateFlags
-	_queueFamilyIndex uint32
-	_queueCount       uint32
-	_pQueuePriorities *float32
+	Type             StructureType
+	Next             unsafe.Pointer
+	Flags            DeviceQueueCreateFlags
+	QueueFamilyIndex uint32
+	QueueCount       uint32
+	QueuePriorities  *float32
 }
 type DeviceCreateInfo struct {
-	_sType                   StructureType
-	_pNext                   unsafe.Pointer
-	_flags                   DeviceCreateFlags
-	_queueCreateInfoCount    uint32
-	_pQueueCreateInfos       *DeviceQueueCreateInfo
-	_enabledLayerCount       uint32
-	_ppEnabledLayerNames     **byte
-	_enabledExtensionCount   uint32
-	_ppEnabledExtensionNames **byte
-	_pEnabledFeatures        *PhysicalDeviceFeatures
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 DeviceCreateFlags
+	QueueCreateInfoCount  uint32
+	QueueCreateInfos      *DeviceQueueCreateInfo
+	EnabledLayerCount     uint32
+	EnabledLayerNames     **byte
+	EnabledExtensionCount uint32
+	EnabledExtensionNames **byte
+	EnabledFeatures       *PhysicalDeviceFeatures
 }
 type ExtensionProperties struct {
-	_extensionName [256]byte
-	_specVersion   uint32
+	ExtensionName [256]byte
+	SpecVersion   uint32
 }
 type LayerProperties struct {
-	_layerName             [256]byte
-	_specVersion           uint32
-	_implementationVersion uint32
-	_description           [256]byte
+	LayerName             [256]byte
+	SpecVersion           uint32
+	ImplementationVersion uint32
+	Description           [256]byte
 }
 type SubmitInfo struct {
-	_sType                StructureType
-	_pNext                unsafe.Pointer
-	_waitSemaphoreCount   uint32
-	_pWaitSemaphores      *Semaphore
-	_pWaitDstStageMask    *PipelineStageFlags
-	_commandBufferCount   uint32
-	_pCommandBuffers      *CommandBuffer
-	_signalSemaphoreCount uint32
-	_pSignalSemaphores    *Semaphore
+	Type                 StructureType
+	Next                 unsafe.Pointer
+	WaitSemaphoreCount   uint32
+	WaitSemaphores       *Semaphore
+	WaitDstStageMask     *PipelineStageFlags
+	CommandBufferCount   uint32
+	CommandBuffers       *CommandBuffer
+	SignalSemaphoreCount uint32
+	SignalSemaphores     *Semaphore
 }
 type MemoryAllocateInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_allocationSize  DeviceSize
-	_memoryTypeIndex uint32
+	Type            StructureType
+	Next            unsafe.Pointer
+	AllocationSize  DeviceSize
+	MemoryTypeIndex uint32
 }
 type MappedMemoryRange struct {
-	_sType  StructureType
-	_pNext  unsafe.Pointer
-	_memory DeviceMemory
-	_offset DeviceSize
-	_size   DeviceSize
+	Type   StructureType
+	Next   unsafe.Pointer
+	Memory DeviceMemory
+	Offset DeviceSize
+	Size   DeviceSize
 }
 type MemoryRequirements struct {
-	_size           DeviceSize
-	_alignment      DeviceSize
-	_memoryTypeBits uint32
+	Size           DeviceSize
+	Alignment      DeviceSize
+	MemoryTypeBits uint32
 }
 type SparseImageFormatProperties struct {
-	_aspectMask       ImageAspectFlags
-	_imageGranularity Extent3D
-	_flags            SparseImageFormatFlags
+	AspectMask       ImageAspectFlags
+	ImageGranularity Extent3D
+	Flags            SparseImageFormatFlags
 }
 type SparseImageMemoryRequirements struct {
-	_formatProperties     SparseImageFormatProperties
-	_imageMipTailFirstLod uint32
-	_imageMipTailSize     DeviceSize
-	_imageMipTailOffset   DeviceSize
-	_imageMipTailStride   DeviceSize
+	FormatProperties     SparseImageFormatProperties
+	ImageMipTailFirstLod uint32
+	ImageMipTailSize     DeviceSize
+	ImageMipTailOffset   DeviceSize
+	ImageMipTailStride   DeviceSize
 }
 type SparseMemoryBind struct {
-	_resourceOffset DeviceSize
-	_size           DeviceSize
-	_memory         DeviceMemory
-	_memoryOffset   DeviceSize
-	_flags          SparseMemoryBindFlags
+	ResourceOffset DeviceSize
+	Size           DeviceSize
+	Memory         DeviceMemory
+	MemoryOffset   DeviceSize
+	Flags          SparseMemoryBindFlags
 }
 type SparseBufferMemoryBindInfo struct {
-	_buffer    Buffer
-	_bindCount uint32
-	_pBinds    *SparseMemoryBind
+	Buffer    Buffer
+	BindCount uint32
+	Binds     *SparseMemoryBind
 }
 type SparseImageOpaqueMemoryBindInfo struct {
-	_image     Image
-	_bindCount uint32
-	_pBinds    *SparseMemoryBind
+	Image     Image
+	BindCount uint32
+	Binds     *SparseMemoryBind
 }
 type ImageSubresource struct {
-	_aspectMask ImageAspectFlags
-	_mipLevel   uint32
-	_arrayLayer uint32
+	AspectMask ImageAspectFlags
+	MipLevel   uint32
+	ArrayLayer uint32
 }
 type Offset3D struct {
-	_x int32
-	_y int32
-	_z int32
+	X int32
+	Y int32
+	Z int32
 }
 type SparseImageMemoryBind struct {
-	_subresource  ImageSubresource
-	_offset       Offset3D
-	_extent       Extent3D
-	_memory       DeviceMemory
-	_memoryOffset DeviceSize
-	_flags        SparseMemoryBindFlags
+	Subresource  ImageSubresource
+	Offset       Offset3D
+	Extent       Extent3D
+	Memory       DeviceMemory
+	MemoryOffset DeviceSize
+	Flags        SparseMemoryBindFlags
 }
 type SparseImageMemoryBindInfo struct {
-	_image     Image
-	_bindCount uint32
-	_pBinds    *SparseImageMemoryBind
+	Image     Image
+	BindCount uint32
+	Binds     *SparseImageMemoryBind
 }
 type BindSparseInfo struct {
-	_sType                StructureType
-	_pNext                unsafe.Pointer
-	_waitSemaphoreCount   uint32
-	_pWaitSemaphores      *Semaphore
-	_bufferBindCount      uint32
-	_pBufferBinds         *SparseBufferMemoryBindInfo
-	_imageOpaqueBindCount uint32
-	_pImageOpaqueBinds    *SparseImageOpaqueMemoryBindInfo
-	_imageBindCount       uint32
-	_pImageBinds          *SparseImageMemoryBindInfo
-	_signalSemaphoreCount uint32
-	_pSignalSemaphores    *Semaphore
+	Type                 StructureType
+	Next                 unsafe.Pointer
+	WaitSemaphoreCount   uint32
+	WaitSemaphores       *Semaphore
+	BufferBindCount      uint32
+	BufferBinds          *SparseBufferMemoryBindInfo
+	ImageOpaqueBindCount uint32
+	ImageOpaqueBinds     *SparseImageOpaqueMemoryBindInfo
+	ImageBindCount       uint32
+	ImageBinds           *SparseImageMemoryBindInfo
+	SignalSemaphoreCount uint32
+	SignalSemaphores     *Semaphore
 }
 type FenceCreateInfo struct {
-	_sType StructureType
-	_pNext unsafe.Pointer
-	_flags FenceCreateFlags
+	Type  StructureType
+	Next  unsafe.Pointer
+	Flags FenceCreateFlags
 }
 type SemaphoreCreateInfo struct {
-	_sType StructureType
-	_pNext unsafe.Pointer
-	_flags SemaphoreCreateFlags
+	Type  StructureType
+	Next  unsafe.Pointer
+	Flags SemaphoreCreateFlags
 }
 type EventCreateInfo struct {
-	_sType StructureType
-	_pNext unsafe.Pointer
-	_flags EventCreateFlags
+	Type  StructureType
+	Next  unsafe.Pointer
+	Flags EventCreateFlags
 }
 type QueryPoolCreateInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_flags              QueryPoolCreateFlags
-	_queryType          QueryType
-	_queryCount         uint32
-	_pipelineStatistics QueryPipelineStatisticFlags
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              QueryPoolCreateFlags
+	QueryType          QueryType
+	QueryCount         uint32
+	PipelineStatistics QueryPipelineStatisticFlags
 }
 type BufferCreateInfo struct {
-	_sType                 StructureType
-	_pNext                 unsafe.Pointer
-	_flags                 BufferCreateFlags
-	_size                  DeviceSize
-	_usage                 BufferUsageFlags
-	_sharingMode           SharingMode
-	_queueFamilyIndexCount uint32
-	_pQueueFamilyIndices   *uint32
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 BufferCreateFlags
+	Size                  DeviceSize
+	Usage                 BufferUsageFlags
+	SharingMode           SharingMode
+	QueueFamilyIndexCount uint32
+	QueueFamilyIndices    *uint32
 }
 type BufferViewCreateInfo struct {
-	_sType  StructureType
-	_pNext  unsafe.Pointer
-	_flags  BufferViewCreateFlags
-	_buffer Buffer
-	_format Format
-	_offset DeviceSize
-	_range  DeviceSize
+	Type   StructureType
+	Next   unsafe.Pointer
+	Flags  BufferViewCreateFlags
+	Buffer Buffer
+	Format Format
+	Offset DeviceSize
+	Range  DeviceSize
 }
 type ImageCreateInfo struct {
-	_sType                 StructureType
-	_pNext                 unsafe.Pointer
-	_flags                 ImageCreateFlags
-	_imageType             ImageType
-	_format                Format
-	_extent                Extent3D
-	_mipLevels             uint32
-	_arrayLayers           uint32
-	_samples               SampleCountFlags
-	_tiling                ImageTiling
-	_usage                 ImageUsageFlags
-	_sharingMode           SharingMode
-	_queueFamilyIndexCount uint32
-	_pQueueFamilyIndices   *uint32
-	_initialLayout         ImageLayout
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 ImageCreateFlags
+	ImageType             ImageType
+	Format                Format
+	Extent                Extent3D
+	MipLevels             uint32
+	ArrayLayers           uint32
+	Samples               SampleCountFlags
+	Tiling                ImageTiling
+	Usage                 ImageUsageFlags
+	SharingMode           SharingMode
+	QueueFamilyIndexCount uint32
+	QueueFamilyIndices    *uint32
+	InitialLayout         ImageLayout
 }
 type SubresourceLayout struct {
-	_offset     DeviceSize
-	_size       DeviceSize
-	_rowPitch   DeviceSize
-	_arrayPitch DeviceSize
-	_depthPitch DeviceSize
+	Offset     DeviceSize
+	Size       DeviceSize
+	RowPitch   DeviceSize
+	ArrayPitch DeviceSize
+	DepthPitch DeviceSize
 }
 type ComponentMapping struct {
-	_r ComponentSwizzle
-	_g ComponentSwizzle
-	_b ComponentSwizzle
-	_a ComponentSwizzle
+	R ComponentSwizzle
+	G ComponentSwizzle
+	B ComponentSwizzle
+	A ComponentSwizzle
 }
 type ImageSubresourceRange struct {
-	_aspectMask     ImageAspectFlags
-	_baseMipLevel   uint32
-	_levelCount     uint32
-	_baseArrayLayer uint32
-	_layerCount     uint32
+	AspectMask     ImageAspectFlags
+	BaseMipLevel   uint32
+	LevelCount     uint32
+	BaseArrayLayer uint32
+	LayerCount     uint32
 }
 type ImageViewCreateInfo struct {
-	_sType            StructureType
-	_pNext            unsafe.Pointer
-	_flags            ImageViewCreateFlags
-	_image            Image
-	_viewType         ImageViewType
-	_format           Format
-	_components       ComponentMapping
-	_subresourceRange ImageSubresourceRange
+	Type             StructureType
+	Next             unsafe.Pointer
+	Flags            ImageViewCreateFlags
+	Image            Image
+	ViewType         ImageViewType
+	Format           Format
+	Components       ComponentMapping
+	SubresourceRange ImageSubresourceRange
 }
 type ShaderModuleCreateInfo struct {
-	_sType    StructureType
-	_pNext    unsafe.Pointer
-	_flags    ShaderModuleCreateFlags
-	_codeSize uint
-	_pCode    *uint32
+	Type     StructureType
+	Next     unsafe.Pointer
+	Flags    ShaderModuleCreateFlags
+	CodeSize uint
+	Code     *uint32
 }
 type PipelineCacheCreateInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_flags           PipelineCacheCreateFlags
-	_initialDataSize uint
-	_pInitialData    unsafe.Pointer
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           PipelineCacheCreateFlags
+	InitialDataSize uint
+	InitialData     unsafe.Pointer
 }
 type SpecializationMapEntry struct {
-	_constantID uint32
-	_offset     uint32
-	_size       uint
+	ConstantID uint32
+	Offset     uint32
+	Size       uint
 }
 type SpecializationInfo struct {
-	_mapEntryCount uint32
-	_pMapEntries   *SpecializationMapEntry
-	_dataSize      uint
-	_pData         unsafe.Pointer
+	MapEntryCount uint32
+	MapEntries    *SpecializationMapEntry
+	DataSize      uint
+	Data          unsafe.Pointer
 }
 type PipelineShaderStageCreateInfo struct {
-	_sType               StructureType
-	_pNext               unsafe.Pointer
-	_flags               PipelineShaderStageCreateFlags
-	_stage               ShaderStageFlags
-	_module              ShaderModule
-	_pName               *byte
-	_pSpecializationInfo *SpecializationInfo
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              PipelineShaderStageCreateFlags
+	Stage              ShaderStageFlags
+	Module             ShaderModule
+	Name               *byte
+	SpecializationInfo *SpecializationInfo
 }
 type VertexInputBindingDescription struct {
-	_binding   uint32
-	_stride    uint32
-	_inputRate VertexInputRate
+	Binding   uint32
+	Stride    uint32
+	InputRate VertexInputRate
 }
 type VertexInputAttributeDescription struct {
-	_location uint32
-	_binding  uint32
-	_format   Format
-	_offset   uint32
+	Location uint32
+	Binding  uint32
+	Format   Format
+	Offset   uint32
 }
 type PipelineVertexInputStateCreateInfo struct {
-	_sType                           StructureType
-	_pNext                           unsafe.Pointer
-	_flags                           PipelineVertexInputStateCreateFlags
-	_vertexBindingDescriptionCount   uint32
-	_pVertexBindingDescriptions      *VertexInputBindingDescription
-	_vertexAttributeDescriptionCount uint32
-	_pVertexAttributeDescriptions    *VertexInputAttributeDescription
+	Type                            StructureType
+	Next                            unsafe.Pointer
+	Flags                           PipelineVertexInputStateCreateFlags
+	VertexBindingDescriptionCount   uint32
+	VertexBindingDescriptions       *VertexInputBindingDescription
+	VertexAttributeDescriptionCount uint32
+	VertexAttributeDescriptions     *VertexInputAttributeDescription
 }
 type PipelineInputAssemblyStateCreateInfo struct {
-	_sType                  StructureType
-	_pNext                  unsafe.Pointer
-	_flags                  PipelineInputAssemblyStateCreateFlags
-	_topology               PrimitiveTopology
-	_primitiveRestartEnable Bool32
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	Flags                  PipelineInputAssemblyStateCreateFlags
+	Topology               PrimitiveTopology
+	PrimitiveRestartEnable Bool32
 }
 type PipelineTessellationStateCreateInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_flags              PipelineTessellationStateCreateFlags
-	_patchControlPoints uint32
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              PipelineTessellationStateCreateFlags
+	PatchControlPoints uint32
 }
 type Viewport struct {
-	_x        float32
-	_y        float32
-	_width    float32
-	_height   float32
-	_minDepth float32
-	_maxDepth float32
+	X        float32
+	Y        float32
+	Width    float32
+	Height   float32
+	MinDepth float32
+	MaxDepth float32
 }
 type Offset2D struct {
-	_x int32
-	_y int32
+	X int32
+	Y int32
 }
 type Extent2D struct {
-	_width  uint32
-	_height uint32
+	Width  uint32
+	Height uint32
 }
 type Rect2D struct {
-	_offset Offset2D
-	_extent Extent2D
+	Offset Offset2D
+	Extent Extent2D
 }
 type PipelineViewportStateCreateInfo struct {
-	_sType         StructureType
-	_pNext         unsafe.Pointer
-	_flags         PipelineViewportStateCreateFlags
-	_viewportCount uint32
-	_pViewports    *Viewport
-	_scissorCount  uint32
-	_pScissors     *Rect2D
+	Type          StructureType
+	Next          unsafe.Pointer
+	Flags         PipelineViewportStateCreateFlags
+	ViewportCount uint32
+	Viewports     *Viewport
+	ScissorCount  uint32
+	Scissors      *Rect2D
 }
 type PipelineRasterizationStateCreateInfo struct {
-	_sType                   StructureType
-	_pNext                   unsafe.Pointer
-	_flags                   PipelineRasterizationStateCreateFlags
-	_depthClampEnable        Bool32
-	_rasterizerDiscardEnable Bool32
-	_polygonMode             PolygonMode
-	_cullMode                CullModeFlags
-	_frontFace               FrontFace
-	_depthBiasEnable         Bool32
-	_depthBiasConstantFactor float32
-	_depthBiasClamp          float32
-	_depthBiasSlopeFactor    float32
-	_lineWidth               float32
+	Type                    StructureType
+	Next                    unsafe.Pointer
+	Flags                   PipelineRasterizationStateCreateFlags
+	DepthClampEnable        Bool32
+	RasterizerDiscardEnable Bool32
+	PolygonMode             PolygonMode
+	CullMode                CullModeFlags
+	FrontFace               FrontFace
+	DepthBiasEnable         Bool32
+	DepthBiasConstantFactor float32
+	DepthBiasClamp          float32
+	DepthBiasSlopeFactor    float32
+	LineWidth               float32
 }
 type PipelineMultisampleStateCreateInfo struct {
-	_sType                 StructureType
-	_pNext                 unsafe.Pointer
-	_flags                 PipelineMultisampleStateCreateFlags
-	_rasterizationSamples  SampleCountFlags
-	_sampleShadingEnable   Bool32
-	_minSampleShading      float32
-	_pSampleMask           *SampleMask
-	_alphaToCoverageEnable Bool32
-	_alphaToOneEnable      Bool32
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 PipelineMultisampleStateCreateFlags
+	RasterizationSamples  SampleCountFlags
+	SampleShadingEnable   Bool32
+	MinSampleShading      float32
+	SampleMask            *SampleMask
+	AlphaToCoverageEnable Bool32
+	AlphaToOneEnable      Bool32
 }
 type StencilOpState struct {
-	_failOp      StencilOp
-	_passOp      StencilOp
-	_depthFailOp StencilOp
-	_compareOp   CompareOp
-	_compareMask uint32
-	_writeMask   uint32
-	_reference   uint32
+	FailOp      StencilOp
+	PassOp      StencilOp
+	DepthFailOp StencilOp
+	CompareOp   CompareOp
+	CompareMask uint32
+	WriteMask   uint32
+	Reference   uint32
 }
 type PipelineDepthStencilStateCreateInfo struct {
-	_sType                 StructureType
-	_pNext                 unsafe.Pointer
-	_flags                 PipelineDepthStencilStateCreateFlags
-	_depthTestEnable       Bool32
-	_depthWriteEnable      Bool32
-	_depthCompareOp        CompareOp
-	_depthBoundsTestEnable Bool32
-	_stencilTestEnable     Bool32
-	_front                 StencilOpState
-	_back                  StencilOpState
-	_minDepthBounds        float32
-	_maxDepthBounds        float32
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	Flags                 PipelineDepthStencilStateCreateFlags
+	DepthTestEnable       Bool32
+	DepthWriteEnable      Bool32
+	DepthCompareOp        CompareOp
+	DepthBoundsTestEnable Bool32
+	StencilTestEnable     Bool32
+	Front                 StencilOpState
+	Back                  StencilOpState
+	MinDepthBounds        float32
+	MaxDepthBounds        float32
 }
 type PipelineColorBlendAttachmentState struct {
-	_blendEnable         Bool32
-	_srcColorBlendFactor BlendFactor
-	_dstColorBlendFactor BlendFactor
-	_colorBlendOp        BlendOp
-	_srcAlphaBlendFactor BlendFactor
-	_dstAlphaBlendFactor BlendFactor
-	_alphaBlendOp        BlendOp
-	_colorWriteMask      ColorComponentFlags
+	BlendEnable         Bool32
+	SrcColorBlendFactor BlendFactor
+	DstColorBlendFactor BlendFactor
+	ColorBlendOp        BlendOp
+	SrcAlphaBlendFactor BlendFactor
+	DstAlphaBlendFactor BlendFactor
+	AlphaBlendOp        BlendOp
+	ColorWriteMask      ColorComponentFlags
 }
 type PipelineColorBlendStateCreateInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_flags           PipelineColorBlendStateCreateFlags
-	_logicOpEnable   Bool32
-	_logicOp         LogicOp
-	_attachmentCount uint32
-	_pAttachments    *PipelineColorBlendAttachmentState
-	_blendConstants  [4]float32
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           PipelineColorBlendStateCreateFlags
+	LogicOpEnable   Bool32
+	LogicOp         LogicOp
+	AttachmentCount uint32
+	Attachments     *PipelineColorBlendAttachmentState
+	BlendConstants  [4]float32
 }
 type PipelineDynamicStateCreateInfo struct {
-	_sType             StructureType
-	_pNext             unsafe.Pointer
-	_flags             PipelineDynamicStateCreateFlags
-	_dynamicStateCount uint32
-	_pDynamicStates    *DynamicState
+	Type              StructureType
+	Next              unsafe.Pointer
+	Flags             PipelineDynamicStateCreateFlags
+	DynamicStateCount uint32
+	DynamicStates     *DynamicState
 }
 type GraphicsPipelineCreateInfo struct {
-	_sType               StructureType
-	_pNext               unsafe.Pointer
-	_flags               PipelineCreateFlags
-	_stageCount          uint32
-	_pStages             *PipelineShaderStageCreateInfo
-	_pVertexInputState   *PipelineVertexInputStateCreateInfo
-	_pInputAssemblyState *PipelineInputAssemblyStateCreateInfo
-	_pTessellationState  *PipelineTessellationStateCreateInfo
-	_pViewportState      *PipelineViewportStateCreateInfo
-	_pRasterizationState *PipelineRasterizationStateCreateInfo
-	_pMultisampleState   *PipelineMultisampleStateCreateInfo
-	_pDepthStencilState  *PipelineDepthStencilStateCreateInfo
-	_pColorBlendState    *PipelineColorBlendStateCreateInfo
-	_pDynamicState       *PipelineDynamicStateCreateInfo
-	_layout              PipelineLayout
-	_renderPass          RenderPass
-	_subpass             uint32
-	_basePipelineHandle  Pipeline
-	_basePipelineIndex   int32
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              PipelineCreateFlags
+	StageCount         uint32
+	Stages             *PipelineShaderStageCreateInfo
+	VertexInputState   *PipelineVertexInputStateCreateInfo
+	InputAssemblyState *PipelineInputAssemblyStateCreateInfo
+	TessellationState  *PipelineTessellationStateCreateInfo
+	ViewportState      *PipelineViewportStateCreateInfo
+	RasterizationState *PipelineRasterizationStateCreateInfo
+	MultisampleState   *PipelineMultisampleStateCreateInfo
+	DepthStencilState  *PipelineDepthStencilStateCreateInfo
+	ColorBlendState    *PipelineColorBlendStateCreateInfo
+	DynamicState       *PipelineDynamicStateCreateInfo
+	Layout             PipelineLayout
+	RenderPass         RenderPass
+	Subpass            uint32
+	BasePipelineHandle Pipeline
+	BasePipelineIndex  int32
 }
 type ComputePipelineCreateInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_flags              PipelineCreateFlags
-	_stage              PipelineShaderStageCreateInfo
-	_layout             PipelineLayout
-	_basePipelineHandle Pipeline
-	_basePipelineIndex  int32
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              PipelineCreateFlags
+	Stage              PipelineShaderStageCreateInfo
+	Layout             PipelineLayout
+	BasePipelineHandle Pipeline
+	BasePipelineIndex  int32
 }
 type PushConstantRange struct {
-	_stageFlags ShaderStageFlags
-	_offset     uint32
-	_size       uint32
+	StageFlags ShaderStageFlags
+	Offset     uint32
+	Size       uint32
 }
 type PipelineLayoutCreateInfo struct {
-	_sType                  StructureType
-	_pNext                  unsafe.Pointer
-	_flags                  PipelineLayoutCreateFlags
-	_setLayoutCount         uint32
-	_pSetLayouts            *DescriptorSetLayout
-	_pushConstantRangeCount uint32
-	_pPushConstantRanges    *PushConstantRange
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	Flags                  PipelineLayoutCreateFlags
+	SetLayoutCount         uint32
+	SetLayouts             *DescriptorSetLayout
+	PushConstantRangeCount uint32
+	PushConstantRanges     *PushConstantRange
 }
 type SamplerCreateInfo struct {
-	_sType                   StructureType
-	_pNext                   unsafe.Pointer
-	_flags                   SamplerCreateFlags
-	_magFilter               Filter
-	_minFilter               Filter
-	_mipmapMode              SamplerMipmapMode
-	_addressModeU            SamplerAddressMode
-	_addressModeV            SamplerAddressMode
-	_addressModeW            SamplerAddressMode
-	_mipLodBias              float32
-	_anisotropyEnable        Bool32
-	_maxAnisotropy           float32
-	_compareEnable           Bool32
-	_compareOp               CompareOp
-	_minLod                  float32
-	_maxLod                  float32
-	_borderColor             BorderColor
-	_unnormalizedCoordinates Bool32
+	Type                    StructureType
+	Next                    unsafe.Pointer
+	Flags                   SamplerCreateFlags
+	MagFilter               Filter
+	MinFilter               Filter
+	MipmapMode              SamplerMipmapMode
+	AddressModeU            SamplerAddressMode
+	AddressModeV            SamplerAddressMode
+	AddressModeW            SamplerAddressMode
+	MipLodBias              float32
+	AnisotropyEnable        Bool32
+	MaxAnisotropy           float32
+	CompareEnable           Bool32
+	CompareOp               CompareOp
+	MinLod                  float32
+	MaxLod                  float32
+	BorderColor             BorderColor
+	UnnormalizedCoordinates Bool32
 }
 type DescriptorSetLayoutBinding struct {
-	_binding            uint32
-	_descriptorType     DescriptorType
-	_descriptorCount    uint32
-	_stageFlags         ShaderStageFlags
-	_pImmutableSamplers *Sampler
+	Binding           uint32
+	DescriptorType    DescriptorType
+	DescriptorCount   uint32
+	StageFlags        ShaderStageFlags
+	ImmutableSamplers *Sampler
 }
 type DescriptorSetLayoutCreateInfo struct {
-	_sType        StructureType
-	_pNext        unsafe.Pointer
-	_flags        DescriptorSetLayoutCreateFlags
-	_bindingCount uint32
-	_pBindings    *DescriptorSetLayoutBinding
+	Type         StructureType
+	Next         unsafe.Pointer
+	Flags        DescriptorSetLayoutCreateFlags
+	BindingCount uint32
+	Bindings     *DescriptorSetLayoutBinding
 }
 type DescriptorPoolSize struct {
-	_type            DescriptorType
-	_descriptorCount uint32
+	Type            DescriptorType
+	DescriptorCount uint32
 }
 type DescriptorPoolCreateInfo struct {
-	_sType         StructureType
-	_pNext         unsafe.Pointer
-	_flags         DescriptorPoolCreateFlags
-	_maxSets       uint32
-	_poolSizeCount uint32
-	_pPoolSizes    *DescriptorPoolSize
+	Type          StructureType
+	Next          unsafe.Pointer
+	Flags         DescriptorPoolCreateFlags
+	MaxSets       uint32
+	PoolSizeCount uint32
+	PoolSizes     *DescriptorPoolSize
 }
 type DescriptorSetAllocateInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_descriptorPool     DescriptorPool
-	_descriptorSetCount uint32
-	_pSetLayouts        *DescriptorSetLayout
+	Type               StructureType
+	Next               unsafe.Pointer
+	DescriptorPool     DescriptorPool
+	DescriptorSetCount uint32
+	SetLayouts         *DescriptorSetLayout
 }
 type DescriptorImageInfo struct {
-	_sampler     Sampler
-	_imageView   ImageView
-	_imageLayout ImageLayout
+	Sampler     Sampler
+	ImageView   ImageView
+	ImageLayout ImageLayout
 }
 type DescriptorBufferInfo struct {
-	_buffer Buffer
-	_offset DeviceSize
-	_range  DeviceSize
+	Buffer Buffer
+	Offset DeviceSize
+	Range  DeviceSize
 }
 type WriteDescriptorSet struct {
-	_sType            StructureType
-	_pNext            unsafe.Pointer
-	_dstSet           DescriptorSet
-	_dstBinding       uint32
-	_dstArrayElement  uint32
-	_descriptorCount  uint32
-	_descriptorType   DescriptorType
-	_pImageInfo       *DescriptorImageInfo
-	_pBufferInfo      *DescriptorBufferInfo
-	_pTexelBufferView *BufferView
+	Type            StructureType
+	Next            unsafe.Pointer
+	DstSet          DescriptorSet
+	DstBinding      uint32
+	DstArrayElement uint32
+	DescriptorCount uint32
+	DescriptorType  DescriptorType
+	ImageInfo       *DescriptorImageInfo
+	BufferInfo      *DescriptorBufferInfo
+	TexelBufferView *BufferView
 }
 type CopyDescriptorSet struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_srcSet          DescriptorSet
-	_srcBinding      uint32
-	_srcArrayElement uint32
-	_dstSet          DescriptorSet
-	_dstBinding      uint32
-	_dstArrayElement uint32
-	_descriptorCount uint32
+	Type            StructureType
+	Next            unsafe.Pointer
+	SrcSet          DescriptorSet
+	SrcBinding      uint32
+	SrcArrayElement uint32
+	DstSet          DescriptorSet
+	DstBinding      uint32
+	DstArrayElement uint32
+	DescriptorCount uint32
 }
 type FramebufferCreateInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_flags           FramebufferCreateFlags
-	_renderPass      RenderPass
-	_attachmentCount uint32
-	_pAttachments    *ImageView
-	_width           uint32
-	_height          uint32
-	_layers          uint32
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           FramebufferCreateFlags
+	RenderPass      RenderPass
+	AttachmentCount uint32
+	Attachments     *ImageView
+	Width           uint32
+	Height          uint32
+	Layers          uint32
 }
 type AttachmentDescription struct {
-	_flags          AttachmentDescriptionFlags
-	_format         Format
-	_samples        SampleCountFlags
-	_loadOp         AttachmentLoadOp
-	_storeOp        AttachmentStoreOp
-	_stencilLoadOp  AttachmentLoadOp
-	_stencilStoreOp AttachmentStoreOp
-	_initialLayout  ImageLayout
-	_finalLayout    ImageLayout
+	Flags          AttachmentDescriptionFlags
+	Format         Format
+	Samples        SampleCountFlags
+	LoadOp         AttachmentLoadOp
+	StoreOp        AttachmentStoreOp
+	StencilLoadOp  AttachmentLoadOp
+	StencilStoreOp AttachmentStoreOp
+	InitialLayout  ImageLayout
+	FinalLayout    ImageLayout
 }
 type AttachmentReference struct {
-	_attachment uint32
-	_layout     ImageLayout
+	Attachment uint32
+	Layout     ImageLayout
 }
 type SubpassDescription struct {
-	_flags                   SubpassDescriptionFlags
-	_pipelineBindPoint       PipelineBindPoint
-	_inputAttachmentCount    uint32
-	_pInputAttachments       *AttachmentReference
-	_colorAttachmentCount    uint32
-	_pColorAttachments       *AttachmentReference
-	_pResolveAttachments     *AttachmentReference
-	_pDepthStencilAttachment *AttachmentReference
-	_preserveAttachmentCount uint32
-	_pPreserveAttachments    *uint32
+	Flags                   SubpassDescriptionFlags
+	PipelineBindPoint       PipelineBindPoint
+	InputAttachmentCount    uint32
+	InputAttachments        *AttachmentReference
+	ColorAttachmentCount    uint32
+	ColorAttachments        *AttachmentReference
+	ResolveAttachments      *AttachmentReference
+	DepthStencilAttachment  *AttachmentReference
+	PreserveAttachmentCount uint32
+	PreserveAttachments     *uint32
 }
 type SubpassDependency struct {
-	_srcSubpass      uint32
-	_dstSubpass      uint32
-	_srcStageMask    PipelineStageFlags
-	_dstStageMask    PipelineStageFlags
-	_srcAccessMask   AccessFlags
-	_dstAccessMask   AccessFlags
-	_dependencyFlags DependencyFlags
+	SrcSubpass      uint32
+	DstSubpass      uint32
+	SrcStageMask    PipelineStageFlags
+	DstStageMask    PipelineStageFlags
+	SrcAccessMask   AccessFlags
+	DstAccessMask   AccessFlags
+	DependencyFlags DependencyFlags
 }
 type RenderPassCreateInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_flags           RenderPassCreateFlags
-	_attachmentCount uint32
-	_pAttachments    *AttachmentDescription
-	_subpassCount    uint32
-	_pSubpasses      *SubpassDescription
-	_dependencyCount uint32
-	_pDependencies   *SubpassDependency
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           RenderPassCreateFlags
+	AttachmentCount uint32
+	Attachments     *AttachmentDescription
+	SubpassCount    uint32
+	Subpasses       *SubpassDescription
+	DependencyCount uint32
+	Dependencies    *SubpassDependency
 }
 type CommandPoolCreateInfo struct {
-	_sType            StructureType
-	_pNext            unsafe.Pointer
-	_flags            CommandPoolCreateFlags
-	_queueFamilyIndex uint32
+	Type             StructureType
+	Next             unsafe.Pointer
+	Flags            CommandPoolCreateFlags
+	QueueFamilyIndex uint32
 }
 type CommandBufferAllocateInfo struct {
-	_sType              StructureType
-	_pNext              unsafe.Pointer
-	_commandPool        CommandPool
-	_level              CommandBufferLevel
-	_commandBufferCount uint32
+	Type               StructureType
+	Next               unsafe.Pointer
+	CommandPool        CommandPool
+	Level              CommandBufferLevel
+	CommandBufferCount uint32
 }
 type CommandBufferInheritanceInfo struct {
-	_sType                StructureType
-	_pNext                unsafe.Pointer
-	_renderPass           RenderPass
-	_subpass              uint32
-	_framebuffer          Framebuffer
-	_occlusionQueryEnable Bool32
-	_queryFlags           QueryControlFlags
-	_pipelineStatistics   QueryPipelineStatisticFlags
+	Type                 StructureType
+	Next                 unsafe.Pointer
+	RenderPass           RenderPass
+	Subpass              uint32
+	Framebuffer          Framebuffer
+	OcclusionQueryEnable Bool32
+	QueryFlags           QueryControlFlags
+	PipelineStatistics   QueryPipelineStatisticFlags
 }
 type CommandBufferBeginInfo struct {
-	_sType            StructureType
-	_pNext            unsafe.Pointer
-	_flags            CommandBufferUsageFlags
-	_pInheritanceInfo *CommandBufferInheritanceInfo
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           CommandBufferUsageFlags
+	InheritanceInfo *CommandBufferInheritanceInfo
 }
 type BufferCopy struct {
-	_srcOffset DeviceSize
-	_dstOffset DeviceSize
-	_size      DeviceSize
+	SrcOffset DeviceSize
+	DstOffset DeviceSize
+	Size      DeviceSize
 }
 type ImageSubresourceLayers struct {
-	_aspectMask     ImageAspectFlags
-	_mipLevel       uint32
-	_baseArrayLayer uint32
-	_layerCount     uint32
+	AspectMask     ImageAspectFlags
+	MipLevel       uint32
+	BaseArrayLayer uint32
+	LayerCount     uint32
 }
 type ImageCopy struct {
-	_srcSubresource ImageSubresourceLayers
-	_srcOffset      Offset3D
-	_dstSubresource ImageSubresourceLayers
-	_dstOffset      Offset3D
-	_extent         Extent3D
+	SrcSubresource ImageSubresourceLayers
+	SrcOffset      Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffset      Offset3D
+	Extent         Extent3D
 }
 type ImageBlit struct {
-	_srcSubresource ImageSubresourceLayers
-	_srcOffsets     [2]Offset3D
-	_dstSubresource ImageSubresourceLayers
-	_dstOffsets     [2]Offset3D
+	SrcSubresource ImageSubresourceLayers
+	SrcOffsets     [2]Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffsets     [2]Offset3D
 }
 type BufferImageCopy struct {
-	_bufferOffset      DeviceSize
-	_bufferRowLength   uint32
-	_bufferImageHeight uint32
-	_imageSubresource  ImageSubresourceLayers
-	_imageOffset       Offset3D
-	_imageExtent       Extent3D
+	BufferOffset      DeviceSize
+	BufferRowLength   uint32
+	BufferImageHeight uint32
+	ImageSubresource  ImageSubresourceLayers
+	ImageOffset       Offset3D
+	ImageExtent       Extent3D
 }
 type ClearColorValue struct {
-	_float32 [4]float32
-	_int32   [4]int32
-	_uint32  [4]uint32
+	Float32 [4]float32
+	Int32   [4]int32
+	Uint32  [4]uint32
 }
 type ClearDepthStencilValue struct {
-	_depth   float32
-	_stencil uint32
+	Depth   float32
+	Stencil uint32
 }
 type ClearValue struct {
-	_color        ClearColorValue
-	_depthStencil ClearDepthStencilValue
+	Color        ClearColorValue
+	DepthStencil ClearDepthStencilValue
 }
 type ClearAttachment struct {
-	_aspectMask      ImageAspectFlags
-	_colorAttachment uint32
-	_clearValue      ClearValue
+	AspectMask      ImageAspectFlags
+	ColorAttachment uint32
+	ClearValue      ClearValue
 }
 type ClearRect struct {
-	_rect           Rect2D
-	_baseArrayLayer uint32
-	_layerCount     uint32
+	Rect           Rect2D
+	BaseArrayLayer uint32
+	LayerCount     uint32
 }
 type ImageResolve struct {
-	_srcSubresource ImageSubresourceLayers
-	_srcOffset      Offset3D
-	_dstSubresource ImageSubresourceLayers
-	_dstOffset      Offset3D
-	_extent         Extent3D
+	SrcSubresource ImageSubresourceLayers
+	SrcOffset      Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffset      Offset3D
+	Extent         Extent3D
 }
 type MemoryBarrier struct {
-	_sType         StructureType
-	_pNext         unsafe.Pointer
-	_srcAccessMask AccessFlags
-	_dstAccessMask AccessFlags
+	Type          StructureType
+	Next          unsafe.Pointer
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
 }
 type BufferMemoryBarrier struct {
-	_sType               StructureType
-	_pNext               unsafe.Pointer
-	_srcAccessMask       AccessFlags
-	_dstAccessMask       AccessFlags
-	_srcQueueFamilyIndex uint32
-	_dstQueueFamilyIndex uint32
-	_buffer              Buffer
-	_offset              DeviceSize
-	_size                DeviceSize
+	Type                StructureType
+	Next                unsafe.Pointer
+	SrcAccessMask       AccessFlags
+	DstAccessMask       AccessFlags
+	SrcQueueFamilyIndex uint32
+	DstQueueFamilyIndex uint32
+	Buffer              Buffer
+	Offset              DeviceSize
+	Size                DeviceSize
 }
 type ImageMemoryBarrier struct {
-	_sType               StructureType
-	_pNext               unsafe.Pointer
-	_srcAccessMask       AccessFlags
-	_dstAccessMask       AccessFlags
-	_oldLayout           ImageLayout
-	_newLayout           ImageLayout
-	_srcQueueFamilyIndex uint32
-	_dstQueueFamilyIndex uint32
-	_image               Image
-	_subresourceRange    ImageSubresourceRange
+	Type                StructureType
+	Next                unsafe.Pointer
+	SrcAccessMask       AccessFlags
+	DstAccessMask       AccessFlags
+	OldLayout           ImageLayout
+	NewLayout           ImageLayout
+	SrcQueueFamilyIndex uint32
+	DstQueueFamilyIndex uint32
+	Image               Image
+	SubresourceRange    ImageSubresourceRange
 }
 type RenderPassBeginInfo struct {
-	_sType           StructureType
-	_pNext           unsafe.Pointer
-	_renderPass      RenderPass
-	_framebuffer     Framebuffer
-	_renderArea      Rect2D
-	_clearValueCount uint32
-	_pClearValues    *ClearValue
+	Type            StructureType
+	Next            unsafe.Pointer
+	RenderPass      RenderPass
+	Framebuffer     Framebuffer
+	RenderArea      Rect2D
+	ClearValueCount uint32
+	ClearValues     *ClearValue
 }
 type DispatchIndirectCommand struct {
-	_x uint32
-	_y uint32
-	_z uint32
+	X uint32
+	Y uint32
+	Z uint32
 }
 type DrawIndexedIndirectCommand struct {
-	_indexCount    uint32
-	_instanceCount uint32
-	_firstIndex    uint32
-	_vertexOffset  int32
-	_firstInstance uint32
+	IndexCount    uint32
+	InstanceCount uint32
+	FirstIndex    uint32
+	VertexOffset  int32
+	FirstInstance uint32
 }
 type DrawIndirectCommand struct {
-	_vertexCount   uint32
-	_instanceCount uint32
-	_firstVertex   uint32
-	_firstInstance uint32
+	VertexCount   uint32
+	InstanceCount uint32
+	FirstVertex   uint32
+	FirstInstance uint32
 }
 type BaseOutStructure struct {
-	_sType StructureType
-	_pNext *BaseOutStructure
+	Type StructureType
+	Next *BaseOutStructure
 }
 type BaseInStructure struct {
-	_sType StructureType
-	_pNext *BaseInStructure
+	Type StructureType
+	Next *BaseInStructure
 }
