@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
+	"github.com/iancoleman/strcase"
 	"github.com/logrusorgru/aurora"
 )
 
@@ -96,6 +97,10 @@ func (m *mapping) init() {
 		"VkBool32": "bool",
 
 		"char *": "string",
+
+		"enum VkStructureType":      "",
+		"struct VkBaseInStructure":  "",
+		"struct VkBaseOutStructure": "",
 	}
 
 	m.consts = map[string]string{}
@@ -308,6 +313,8 @@ type workspace struct {
 	target  Target
 	source  map[string]cast.Node
 	mapping mapping
+
+	sTypes map[string]int
 }
 
 func (ws *workspace) init(nodes []cast.Node) {
@@ -317,6 +324,8 @@ func (ws *workspace) init(nodes []cast.Node) {
 	ws.mapping.funcGenFn = ws.gen
 
 	ws.source = make(map[string]cast.Node, 2048)
+	ws.sTypes = make(map[string]int, 128)
+
 	for _, node := range nodes {
 		name := getNodeName(node)
 		if name == "" {
@@ -326,6 +335,25 @@ func (ws *workspace) init(nodes []cast.Node) {
 			halt("Nodes conflicts", node)
 		}
 		ws.source[name] = node
+
+		if name == "enum VkStructureType" {
+			// for _, child := range node.ChildNodes {
+			// 	con := child.(*cast.EnumConstantDecl)
+			// 	var expr = convConst(&ws.mapping, con.ChildNodes[0])
+			//
+			// 	if expr != nil {
+			// 		gcon := toGoName(con.Name)
+			// 		specs = append(specs, &goast.ValueSpec{
+			// 			Names: []*goast.Ident{
+			// 				&goast.Ident{Name: gcon},
+			// 			},
+			// 			Type:   &goast.Ident{Name: goname},
+			// 			Values: []goast.Expr{expr},
+			// 		})
+			// 		ws.mapping.setConst(con.Name, gcon)
+			// 	}
+			// }
+		}
 	}
 }
 
@@ -369,11 +397,11 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 
 	//Skip, if any struct or enum with same name has been generated.
 	if _, ok := ws.source["struct "+cname]; ok {
-		goname = ws.mapping.mustGetType("struct " + cname)
+		goname = ws.mapping.getType("struct " + cname)
 		ws.mapping.setType(cname, goname)
 		return
 	} else if _, ok := ws.source["enum "+cname]; ok {
-		goname = ws.mapping.mustGetType("enum " + cname)
+		goname = ws.mapping.getType("enum " + cname)
 		ws.mapping.setType(cname, goname)
 		return
 	}
@@ -456,6 +484,7 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 	ws.mapping.setType(cname, goname)
 
 	fields := []*goast.Field{}
+	var isStructure bool
 	var xxxCount *cast.FieldDecl
 	var pendAdding *goast.Field
 	for i := 0; i < len(node.ChildNodes); i++ {
@@ -466,6 +495,10 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 		}
 
 		fcn := fdecl.Name
+		if fcn == "sType" {
+			isStructure = true
+			continue //ignore sType
+		}
 		fct := fdecl.Type
 		fgn := toGoName(fcn)
 		fgt := ws.transType(fct)
@@ -521,6 +554,60 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 		},
 	})
 
+	if isStructure {
+		/*VkStructureType value is obtained by taking the name of the structure,
+		  stripping the leading Vk, prefixing each capital letter with _,
+		  converting the entire resulting string to upper case,
+		  and prefixing it with VK_STRUCTURE_TYPE_.*/
+		name := node.Name
+		name = strings.TrimPrefix(name, "Vk")
+		name = strcase.ToScreamingSnake(name)
+		name = "VK_STRUCTURE_TYPE_" + name
+
+		ws.target.addGo(&goast.FuncDecl{
+			Recv: &goast.FieldList{
+				Opening: token.Pos(1),
+				List: []*goast.Field{
+					&goast.Field{
+						Names: []*goast.Ident{
+							&goast.Ident{Name: "s"},
+						},
+						Type: &goast.StarExpr{
+							X: &goast.Ident{Name: goname},
+						},
+					},
+				},
+				Closing: token.Pos(1),
+			},
+			Name: &goast.Ident{Name: "sType"},
+			Type: &goast.FuncType{
+				Func: token.Pos(1),
+				Params: &goast.FieldList{
+					Opening: token.Pos(1),
+					Closing: token.Pos(1),
+				},
+				Results: &goast.FieldList{
+					List: []*goast.Field{
+						&goast.Field{
+							Type: &goast.Ident{Name: "C.VkStructureType"},
+						},
+					},
+				},
+			},
+			Body: &goast.BlockStmt{
+				Lbrace: token.Pos(1),
+				List: []goast.Stmt{
+					&goast.ReturnStmt{
+						Return: token.Pos(1),
+						Results: []goast.Expr{
+							&goast.Ident{Name: "C." + name},
+						},
+					},
+				},
+				Rbrace: token.Pos(1),
+			},
+		})
+	}
 }
 
 func convConst(m *mapping, node cast.Node) goast.Expr {

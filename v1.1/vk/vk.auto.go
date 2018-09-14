@@ -82,324 +82,6 @@ const (
 	RESULT_MAX_ENUM                   Result = 2147483647
 )
 
-type StructureType int
-
-const (
-	STRUCTURE_TYPE_APPLICATION_INFO                                             StructureType = 0
-	STRUCTURE_TYPE_INSTANCE_CREATE_INFO                                         StructureType = 1
-	STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO                                     StructureType = 2
-	STRUCTURE_TYPE_DEVICE_CREATE_INFO                                           StructureType = 3
-	STRUCTURE_TYPE_SUBMIT_INFO                                                  StructureType = 4
-	STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO                                         StructureType = 5
-	STRUCTURE_TYPE_MAPPED_MEMORY_RANGE                                          StructureType = 6
-	STRUCTURE_TYPE_BIND_SPARSE_INFO                                             StructureType = 7
-	STRUCTURE_TYPE_FENCE_CREATE_INFO                                            StructureType = 8
-	STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO                                        StructureType = 9
-	STRUCTURE_TYPE_EVENT_CREATE_INFO                                            StructureType = 10
-	STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO                                       StructureType = 11
-	STRUCTURE_TYPE_BUFFER_CREATE_INFO                                           StructureType = 12
-	STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO                                      StructureType = 13
-	STRUCTURE_TYPE_IMAGE_CREATE_INFO                                            StructureType = 14
-	STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO                                       StructureType = 15
-	STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO                                    StructureType = 16
-	STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO                                   StructureType = 17
-	STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO                            StructureType = 18
-	STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO                      StructureType = 19
-	STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO                    StructureType = 20
-	STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO                      StructureType = 21
-	STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO                          StructureType = 22
-	STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO                     StructureType = 23
-	STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO                       StructureType = 24
-	STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO                     StructureType = 25
-	STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO                       StructureType = 26
-	STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO                           StructureType = 27
-	STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO                                StructureType = 28
-	STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO                                 StructureType = 29
-	STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO                                  StructureType = 30
-	STRUCTURE_TYPE_SAMPLER_CREATE_INFO                                          StructureType = 31
-	STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO                            StructureType = 32
-	STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO                                  StructureType = 33
-	STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO                                 StructureType = 34
-	STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET                                         StructureType = 35
-	STRUCTURE_TYPE_COPY_DESCRIPTOR_SET                                          StructureType = 36
-	STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO                                      StructureType = 37
-	STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO                                      StructureType = 38
-	STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO                                     StructureType = 39
-	STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO                                 StructureType = 40
-	STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO                              StructureType = 41
-	STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO                                    StructureType = 42
-	STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO                                       StructureType = 43
-	STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER                                        StructureType = 44
-	STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER                                         StructureType = 45
-	STRUCTURE_TYPE_MEMORY_BARRIER                                               StructureType = 46
-	STRUCTURE_TYPE_LOADER_INSTANCE_CREATE_INFO                                  StructureType = 47
-	STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO                                    StructureType = 48
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES                          StructureType = 1000094000
-	STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO                                      StructureType = 1000157000
-	STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO                                       StructureType = 1000157001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES                       StructureType = 1000083000
-	STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS                                StructureType = 1000127000
-	STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO                               StructureType = 1000127001
-	STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO                                   StructureType = 1000060000
-	STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO                          StructureType = 1000060003
-	STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO                       StructureType = 1000060004
-	STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO                                     StructureType = 1000060005
-	STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO                                StructureType = 1000060006
-	STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO                         StructureType = 1000060013
-	STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO                          StructureType = 1000060014
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES                             StructureType = 1000070000
-	STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO                              StructureType = 1000070001
-	STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2                            StructureType = 1000146000
-	STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2                             StructureType = 1000146001
-	STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2                      StructureType = 1000146002
-	STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2                                        StructureType = 1000146003
-	STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2                           StructureType = 1000146004
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2                                   StructureType = 1000059000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2                                 StructureType = 1000059001
-	STRUCTURE_TYPE_FORMAT_PROPERTIES_2                                          StructureType = 1000059002
-	STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2                                    StructureType = 1000059003
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2                          StructureType = 1000059004
-	STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2                                    StructureType = 1000059005
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2                          StructureType = 1000059006
-	STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2                             StructureType = 1000059007
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2                   StructureType = 1000059008
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES                    StructureType = 1000117000
-	STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO              StructureType = 1000117001
-	STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO                                 StructureType = 1000117002
-	STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO        StructureType = 1000117003
-	STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO                            StructureType = 1000053000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES                           StructureType = 1000053001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES                         StructureType = 1000053002
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES                    StructureType = 1000120000
-	STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO                                        StructureType = 1000145000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_FEATURES                    StructureType = 1000145001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_PROTECTED_MEMORY_PROPERTIES                  StructureType = 1000145002
-	STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2                                          StructureType = 1000145003
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO                         StructureType = 1000156000
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO                                StructureType = 1000156001
-	STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO                                 StructureType = 1000156002
-	STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO                         StructureType = 1000156003
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES            StructureType = 1000156004
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES             StructureType = 1000156005
-	STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO                       StructureType = 1000085000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO                   StructureType = 1000071000
-	STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES                             StructureType = 1000071001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO                         StructureType = 1000071002
-	STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES                                   StructureType = 1000071003
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES                                StructureType = 1000071004
-	STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO                           StructureType = 1000072000
-	STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO                            StructureType = 1000072001
-	STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO                                  StructureType = 1000072002
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO                          StructureType = 1000112000
-	STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES                                    StructureType = 1000112001
-	STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO                                     StructureType = 1000113000
-	STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO                                 StructureType = 1000077000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO                      StructureType = 1000076000
-	STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES                                StructureType = 1000076001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES                     StructureType = 1000168000
-	STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT                                StructureType = 1000168001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_DRAW_PARAMETER_FEATURES               StructureType = 1000063000
-	STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR                                    StructureType = 1000001000
-	STRUCTURE_TYPE_PRESENT_INFO_KHR                                             StructureType = 1000001001
-	STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR                        StructureType = 1000060007
-	STRUCTURE_TYPE_IMAGE_SWAPCHAIN_CREATE_INFO_KHR                              StructureType = 1000060008
-	STRUCTURE_TYPE_BIND_IMAGE_MEMORY_SWAPCHAIN_INFO_KHR                         StructureType = 1000060009
-	STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR                                  StructureType = 1000060010
-	STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_INFO_KHR                                StructureType = 1000060011
-	STRUCTURE_TYPE_DEVICE_GROUP_SWAPCHAIN_CREATE_INFO_KHR                       StructureType = 1000060012
-	STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR                                 StructureType = 1000002000
-	STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR                              StructureType = 1000002001
-	STRUCTURE_TYPE_DISPLAY_PRESENT_INFO_KHR                                     StructureType = 1000003000
-	STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR                                 StructureType = 1000004000
-	STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR                                  StructureType = 1000005000
-	STRUCTURE_TYPE_WAYLAND_SURFACE_CREATE_INFO_KHR                              StructureType = 1000006000
-	STRUCTURE_TYPE_MIR_SURFACE_CREATE_INFO_KHR                                  StructureType = 1000007000
-	STRUCTURE_TYPE_ANDROID_SURFACE_CREATE_INFO_KHR                              StructureType = 1000008000
-	STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR                                StructureType = 1000009000
-	STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT                        StructureType = 1000011000
-	STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_RASTERIZATION_ORDER_AMD         StructureType = 1000018000
-	STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT                            StructureType = 1000022000
-	STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT                             StructureType = 1000022001
-	STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT                                 StructureType = 1000022002
-	STRUCTURE_TYPE_DEDICATED_ALLOCATION_IMAGE_CREATE_INFO_NV                    StructureType = 1000026000
-	STRUCTURE_TYPE_DEDICATED_ALLOCATION_BUFFER_CREATE_INFO_NV                   StructureType = 1000026001
-	STRUCTURE_TYPE_DEDICATED_ALLOCATION_MEMORY_ALLOCATE_INFO_NV                 StructureType = 1000026002
-	STRUCTURE_TYPE_TEXTURE_LOD_GATHER_FORMAT_PROPERTIES_AMD                     StructureType = 1000041000
-	STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_NV                         StructureType = 1000056000
-	STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_NV                               StructureType = 1000056001
-	STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_NV                           StructureType = 1000057000
-	STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_NV                           StructureType = 1000057001
-	STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_NV                    StructureType = 1000058000
-	STRUCTURE_TYPE_VALIDATION_FLAGS_EXT                                         StructureType = 1000061000
-	STRUCTURE_TYPE_VI_SURFACE_CREATE_INFO_NN                                    StructureType = 1000062000
-	STRUCTURE_TYPE_IMPORT_MEMORY_WIN32_HANDLE_INFO_KHR                          StructureType = 1000073000
-	STRUCTURE_TYPE_EXPORT_MEMORY_WIN32_HANDLE_INFO_KHR                          StructureType = 1000073001
-	STRUCTURE_TYPE_MEMORY_WIN32_HANDLE_PROPERTIES_KHR                           StructureType = 1000073002
-	STRUCTURE_TYPE_MEMORY_GET_WIN32_HANDLE_INFO_KHR                             StructureType = 1000073003
-	STRUCTURE_TYPE_IMPORT_MEMORY_FD_INFO_KHR                                    StructureType = 1000074000
-	STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR                                     StructureType = 1000074001
-	STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR                                       StructureType = 1000074002
-	STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR                   StructureType = 1000075000
-	STRUCTURE_TYPE_IMPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR                       StructureType = 1000078000
-	STRUCTURE_TYPE_EXPORT_SEMAPHORE_WIN32_HANDLE_INFO_KHR                       StructureType = 1000078001
-	STRUCTURE_TYPE_D3D12_FENCE_SUBMIT_INFO_KHR                                  StructureType = 1000078002
-	STRUCTURE_TYPE_SEMAPHORE_GET_WIN32_HANDLE_INFO_KHR                          StructureType = 1000078003
-	STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR                                 StructureType = 1000079000
-	STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR                                    StructureType = 1000079001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_PUSH_DESCRIPTOR_PROPERTIES_KHR               StructureType = 1000080000
-	STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_CONDITIONAL_RENDERING_INFO_EXT    StructureType = 1000081000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_CONDITIONAL_RENDERING_FEATURES_EXT           StructureType = 1000081001
-	STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT                         StructureType = 1000081002
-	STRUCTURE_TYPE_PRESENT_REGIONS_KHR                                          StructureType = 1000084000
-	STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX                                 StructureType = 1000086000
-	STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX                     StructureType = 1000086001
-	STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX                                StructureType = 1000086002
-	STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX                      StructureType = 1000086003
-	STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX                         StructureType = 1000086004
-	STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX                       StructureType = 1000086005
-	STRUCTURE_TYPE_PIPELINE_VIEWPORT_W_SCALING_STATE_CREATE_INFO_NV             StructureType = 1000087000
-	STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT                                   StructureType = 1000090000
-	STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT                                       StructureType = 1000091000
-	STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT                                        StructureType = 1000091001
-	STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT                                       StructureType = 1000091002
-	STRUCTURE_TYPE_SWAPCHAIN_COUNTER_CREATE_INFO_EXT                            StructureType = 1000091003
-	STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE                                    StructureType = 1000092000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PER_VIEW_ATTRIBUTES_PROPERTIES_NVX StructureType = 1000097000
-	STRUCTURE_TYPE_PIPELINE_VIEWPORT_SWIZZLE_STATE_CREATE_INFO_NV               StructureType = 1000098000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_DISCARD_RECTANGLE_PROPERTIES_EXT             StructureType = 1000099000
-	STRUCTURE_TYPE_PIPELINE_DISCARD_RECTANGLE_STATE_CREATE_INFO_EXT             StructureType = 1000099001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_CONSERVATIVE_RASTERIZATION_PROPERTIES_EXT    StructureType = 1000101000
-	STRUCTURE_TYPE_PIPELINE_RASTERIZATION_CONSERVATIVE_STATE_CREATE_INFO_EXT    StructureType = 1000101001
-	STRUCTURE_TYPE_HDR_METADATA_EXT                                             StructureType = 1000105000
-	STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR                                 StructureType = 1000109000
-	STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR                                   StructureType = 1000109001
-	STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR                                    StructureType = 1000109002
-	STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR                                     StructureType = 1000109003
-	STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR                                StructureType = 1000109004
-	STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR                                       StructureType = 1000109005
-	STRUCTURE_TYPE_SUBPASS_END_INFO_KHR                                         StructureType = 1000109006
-	STRUCTURE_TYPE_SHARED_PRESENT_SURFACE_CAPABILITIES_KHR                      StructureType = 1000111000
-	STRUCTURE_TYPE_IMPORT_FENCE_WIN32_HANDLE_INFO_KHR                           StructureType = 1000114000
-	STRUCTURE_TYPE_EXPORT_FENCE_WIN32_HANDLE_INFO_KHR                           StructureType = 1000114001
-	STRUCTURE_TYPE_FENCE_GET_WIN32_HANDLE_INFO_KHR                              StructureType = 1000114002
-	STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR                                     StructureType = 1000115000
-	STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR                                        StructureType = 1000115001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR                           StructureType = 1000119000
-	STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR                                   StructureType = 1000119001
-	STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR                                         StructureType = 1000119002
-	STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR                                     StructureType = 1000121000
-	STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR                               StructureType = 1000121001
-	STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR                                StructureType = 1000121002
-	STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR                                     StructureType = 1000121003
-	STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR                             StructureType = 1000121004
-	STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK                                  StructureType = 1000122000
-	STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK                                StructureType = 1000123000
-	STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT                             StructureType = 1000128000
-	STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT                              StructureType = 1000128001
-	STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT                                        StructureType = 1000128002
-	STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT                      StructureType = 1000128003
-	STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT                        StructureType = 1000128004
-	STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_USAGE_ANDROID                        StructureType = 1000129000
-	STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_PROPERTIES_ANDROID                   StructureType = 1000129001
-	STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID            StructureType = 1000129002
-	STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID                  StructureType = 1000129003
-	STRUCTURE_TYPE_MEMORY_GET_ANDROID_HARDWARE_BUFFER_INFO_ANDROID              StructureType = 1000129004
-	STRUCTURE_TYPE_EXTERNAL_FORMAT_ANDROID                                      StructureType = 1000129005
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_FILTER_MINMAX_PROPERTIES_EXT         StructureType = 1000130000
-	STRUCTURE_TYPE_SAMPLER_REDUCTION_MODE_CREATE_INFO_EXT                       StructureType = 1000130001
-	STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT                                    StructureType = 1000143000
-	STRUCTURE_TYPE_RENDER_PASS_SAMPLE_LOCATIONS_BEGIN_INFO_EXT                  StructureType = 1000143001
-	STRUCTURE_TYPE_PIPELINE_SAMPLE_LOCATIONS_STATE_CREATE_INFO_EXT              StructureType = 1000143002
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLE_LOCATIONS_PROPERTIES_EXT              StructureType = 1000143003
-	STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT                                   StructureType = 1000143004
-	STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR                            StructureType = 1000147000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_FEATURES_EXT        StructureType = 1000148000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_BLEND_OPERATION_ADVANCED_PROPERTIES_EXT      StructureType = 1000148001
-	STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_ADVANCED_STATE_CREATE_INFO_EXT          StructureType = 1000148002
-	STRUCTURE_TYPE_PIPELINE_COVERAGE_TO_COLOR_STATE_CREATE_INFO_NV              StructureType = 1000149000
-	STRUCTURE_TYPE_PIPELINE_COVERAGE_MODULATION_STATE_CREATE_INFO_NV            StructureType = 1000152000
-	STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT                             StructureType = 1000160000
-	STRUCTURE_TYPE_SHADER_MODULE_VALIDATION_CACHE_CREATE_INFO_EXT               StructureType = 1000160001
-	STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO_EXT          StructureType = 1000161000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_FEATURES_EXT             StructureType = 1000161001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_DESCRIPTOR_INDEXING_PROPERTIES_EXT           StructureType = 1000161002
-	STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT   StructureType = 1000161003
-	STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_LAYOUT_SUPPORT_EXT  StructureType = 1000161004
-	STRUCTURE_TYPE_DEVICE_QUEUE_GLOBAL_PRIORITY_CREATE_INFO_EXT                 StructureType = 1000174000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_8BIT_STORAGE_FEATURES_KHR                    StructureType = 1000177000
-	STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT                          StructureType = 1000178000
-	STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT                           StructureType = 1000178001
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT          StructureType = 1000178002
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD                   StructureType = 1000185000
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_VERTEX_ATTRIBUTE_DIVISOR_PROPERTIES_EXT      StructureType = 1000190000
-	STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT          StructureType = 1000190001
-	STRUCTURE_TYPE_CHECKPOINT_DATA_NV                                           StructureType = 1000206000
-	STRUCTURE_TYPE_QUEUE_FAMILY_CHECKPOINT_PROPERTIES_NV                        StructureType = 1000206001
-	STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO_KHR                        StructureType = STRUCTURE_TYPE_RENDER_PASS_MULTIVIEW_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES_KHR                       StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_FEATURES
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES_KHR                     StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTIVIEW_PROPERTIES
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2_KHR                               StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR                             StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
-	STRUCTURE_TYPE_FORMAT_PROPERTIES_2_KHR                                      StructureType = STRUCTURE_TYPE_FORMAT_PROPERTIES_2
-	STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2_KHR                                StructureType = STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2_KHR                      StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
-	STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2_KHR                                StructureType = STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2_KHR                      StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
-	STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2_KHR                         StructureType = STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2_KHR               StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
-	STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO_KHR                               StructureType = STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO
-	STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO_KHR                      StructureType = STRUCTURE_TYPE_DEVICE_GROUP_RENDER_PASS_BEGIN_INFO
-	STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO_KHR                   StructureType = STRUCTURE_TYPE_DEVICE_GROUP_COMMAND_BUFFER_BEGIN_INFO
-	STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO_KHR                                 StructureType = STRUCTURE_TYPE_DEVICE_GROUP_SUBMIT_INFO
-	STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO_KHR                            StructureType = STRUCTURE_TYPE_DEVICE_GROUP_BIND_SPARSE_INFO
-	STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO_KHR                     StructureType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_DEVICE_GROUP_INFO
-	STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO_KHR                      StructureType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_DEVICE_GROUP_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES_KHR                         StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
-	STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO_KHR                          StructureType = STRUCTURE_TYPE_DEVICE_GROUP_DEVICE_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO_KHR               StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_IMAGE_FORMAT_INFO
-	STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES_KHR                         StructureType = STRUCTURE_TYPE_EXTERNAL_IMAGE_FORMAT_PROPERTIES
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO_KHR                     StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
-	STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES_KHR                               StructureType = STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES_KHR                            StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES
-	STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO_KHR                       StructureType = STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO
-	STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO_KHR                        StructureType = STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO
-	STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO_KHR                              StructureType = STRUCTURE_TYPE_EXPORT_MEMORY_ALLOCATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO_KHR                  StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
-	STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES_KHR                            StructureType = STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
-	STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO_KHR                             StructureType = STRUCTURE_TYPE_EXPORT_SEMAPHORE_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES_KHR                   StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_16BIT_STORAGE_FEATURES
-	STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO_KHR                   StructureType = STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO_KHR                      StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
-	STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES_KHR                                StructureType = STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
-	STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO_KHR                                 StructureType = STRUCTURE_TYPE_EXPORT_FENCE_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES_KHR                StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_POINT_CLIPPING_PROPERTIES
-	STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO_KHR          StructureType = STRUCTURE_TYPE_RENDER_PASS_INPUT_ATTACHMENT_ASPECT_CREATE_INFO
-	STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO_KHR                             StructureType = STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO
-	STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO_KHR    StructureType = STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES_KHR                StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_VARIABLE_POINTER_FEATURES
-	STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS_KHR                            StructureType = STRUCTURE_TYPE_MEMORY_DEDICATED_REQUIREMENTS
-	STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO_KHR                           StructureType = STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO
-	STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2_KHR                        StructureType = STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
-	STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2_KHR                         StructureType = STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
-	STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2_KHR                  StructureType = STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
-	STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2_KHR                                    StructureType = STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
-	STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2_KHR                       StructureType = STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO_KHR                     StructureType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO_KHR                            StructureType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO
-	STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO_KHR                             StructureType = STRUCTURE_TYPE_BIND_IMAGE_PLANE_MEMORY_INFO
-	STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO_KHR                     StructureType = STRUCTURE_TYPE_IMAGE_PLANE_MEMORY_REQUIREMENTS_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES_KHR        StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_SAMPLER_YCBCR_CONVERSION_FEATURES
-	STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES_KHR         StructureType = STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_IMAGE_FORMAT_PROPERTIES
-	STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO_KHR                                  StructureType = STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
-	STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO_KHR                                   StructureType = STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
-	STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES_KHR                 StructureType = STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_3_PROPERTIES
-	STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT_KHR                            StructureType = STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
-	STRUCTURE_TYPE_BEGIN_RANGE                                                  StructureType = STRUCTURE_TYPE_APPLICATION_INFO
-	STRUCTURE_TYPE_END_RANGE                                                    StructureType = STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO
-	STRUCTURE_TYPE_RANGE_SIZE                                                   StructureType = (STRUCTURE_TYPE_LOADER_DEVICE_CREATE_INFO - STRUCTURE_TYPE_APPLICATION_INFO + 1)
-	STRUCTURE_TYPE_MAX_ENUM                                                     StructureType = 2147483647
-)
-
 type SystemAllocationScope int
 
 const (
@@ -1669,7 +1351,6 @@ const (
 )
 
 type ApplicationInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	ApplicationName    string
 	ApplicationVersion uint32
@@ -1677,14 +1358,23 @@ type ApplicationInfo struct {
 	EngineVersion      uint32
 	ApiVersion         uint32
 }
+
+func (s *ApplicationInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_APPLICATION_INFO
+}
+
 type InstanceCreateInfo struct {
-	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
 	EnabledLayerNames     []string
 	EnabledExtensionNames []string
 }
+
+func (s *InstanceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+}
+
 type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
 type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
 type PFN_vkFreeFunction *func(unsafe.Pointer, unsafe.Pointer)
@@ -1918,14 +1608,17 @@ type PhysicalDeviceMemoryProperties struct {
 	MemoryHeaps     [16]MemoryHeap
 }
 type DeviceQueueCreateInfo struct {
-	Type             StructureType
 	Next             unsafe.Pointer
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
 	QueuePriorities  []float32
 }
+
+func (s *DeviceQueueCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
+}
+
 type DeviceCreateInfo struct {
-	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 DeviceCreateFlags
 	QueueCreateInfos      []DeviceQueueCreateInfo
@@ -1933,6 +1626,11 @@ type DeviceCreateInfo struct {
 	EnabledExtensionNames []string
 	EnabledFeatures       []PhysicalDeviceFeatures
 }
+
+func (s *DeviceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+}
+
 type ExtensionProperties struct {
 	ExtensionName [256]byte
 	SpecVersion   uint32
@@ -1944,26 +1642,38 @@ type LayerProperties struct {
 	Description           [256]byte
 }
 type SubmitInfo struct {
-	Type             StructureType
 	Next             unsafe.Pointer
 	WaitSemaphores   []Semaphore
 	WaitDstStageMask []PipelineStageFlags
 	CommandBuffers   []CommandBuffer
 	SignalSemaphores []Semaphore
 }
+
+func (s *SubmitInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBMIT_INFO
+}
+
 type MemoryAllocateInfo struct {
-	Type            StructureType
 	Next            unsafe.Pointer
 	AllocationSize  DeviceSize
 	MemoryTypeIndex uint32
 }
+
+func (s *MemoryAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
+}
+
 type MappedMemoryRange struct {
-	Type   StructureType
 	Next   unsafe.Pointer
 	Memory DeviceMemory
 	Offset DeviceSize
 	Size   DeviceSize
 }
+
+func (s *MappedMemoryRange) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+}
+
 type MemoryRequirements struct {
 	Size           DeviceSize
 	Alignment      DeviceSize
@@ -2019,7 +1729,6 @@ type SparseImageMemoryBindInfo struct {
 	Binds []SparseImageMemoryBind
 }
 type BindSparseInfo struct {
-	Type             StructureType
 	Next             unsafe.Pointer
 	WaitSemaphores   []Semaphore
 	BufferBinds      []SparseBufferMemoryBindInfo
@@ -2027,31 +1736,51 @@ type BindSparseInfo struct {
 	ImageBinds       []SparseImageMemoryBindInfo
 	SignalSemaphores []Semaphore
 }
+
+func (s *BindSparseInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
+}
+
 type FenceCreateInfo struct {
-	Type  StructureType
 	Next  unsafe.Pointer
 	Flags FenceCreateFlags
 }
+
+func (s *FenceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
+}
+
 type SemaphoreCreateInfo struct {
-	Type  StructureType
 	Next  unsafe.Pointer
 	Flags SemaphoreCreateFlags
 }
+
+func (s *SemaphoreCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+}
+
 type EventCreateInfo struct {
-	Type  StructureType
 	Next  unsafe.Pointer
 	Flags EventCreateFlags
 }
+
+func (s *EventCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
+}
+
 type QueryPoolCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              QueryPoolCreateFlags
 	QueryType          QueryType
 	QueryCount         uint32
 	PipelineStatistics QueryPipelineStatisticFlags
 }
+
+func (s *QueryPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
+}
+
 type BufferCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              BufferCreateFlags
 	Size               DeviceSize
@@ -2059,8 +1788,12 @@ type BufferCreateInfo struct {
 	SharingMode        SharingMode
 	QueueFamilyIndices []uint32
 }
+
+func (s *BufferCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
+}
+
 type BufferViewCreateInfo struct {
-	Type   StructureType
 	Next   unsafe.Pointer
 	Flags  BufferViewCreateFlags
 	Buffer Buffer
@@ -2068,8 +1801,12 @@ type BufferViewCreateInfo struct {
 	Offset DeviceSize
 	Range  DeviceSize
 }
+
+func (s *BufferViewCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
+}
+
 type ImageCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              ImageCreateFlags
 	ImageType          ImageType
@@ -2084,6 +1821,11 @@ type ImageCreateInfo struct {
 	QueueFamilyIndices []uint32
 	InitialLayout      ImageLayout
 }
+
+func (s *ImageCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
+}
+
 type SubresourceLayout struct {
 	Offset     DeviceSize
 	Size       DeviceSize
@@ -2105,7 +1847,6 @@ type ImageSubresourceRange struct {
 	LayerCount     uint32
 }
 type ImageViewCreateInfo struct {
-	Type             StructureType
 	Next             unsafe.Pointer
 	Flags            ImageViewCreateFlags
 	Image            Image
@@ -2114,20 +1855,33 @@ type ImageViewCreateInfo struct {
 	Components       ComponentMapping
 	SubresourceRange ImageSubresourceRange
 }
+
+func (s *ImageViewCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
+}
+
 type ShaderModuleCreateInfo struct {
-	Type     StructureType
 	Next     unsafe.Pointer
 	Flags    ShaderModuleCreateFlags
 	CodeSize uint
 	Code     *uint32
 }
+
+func (s *ShaderModuleCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
+}
+
 type PipelineCacheCreateInfo struct {
-	Type            StructureType
 	Next            unsafe.Pointer
 	Flags           PipelineCacheCreateFlags
 	InitialDataSize uint
 	InitialData     unsafe.Pointer
 }
+
+func (s *PipelineCacheCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
+}
+
 type SpecializationMapEntry struct {
 	ConstantID uint32
 	Offset     uint32
@@ -2139,7 +1893,6 @@ type SpecializationInfo struct {
 	Data       unsafe.Pointer
 }
 type PipelineShaderStageCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineShaderStageCreateFlags
 	Stage              ShaderStageFlags
@@ -2147,6 +1900,11 @@ type PipelineShaderStageCreateInfo struct {
 	Name               string
 	SpecializationInfo *SpecializationInfo
 }
+
+func (s *PipelineShaderStageCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
+}
+
 type VertexInputBindingDescription struct {
 	Binding   uint32
 	Stride    uint32
@@ -2159,25 +1917,37 @@ type VertexInputAttributeDescription struct {
 	Offset   uint32
 }
 type PipelineVertexInputStateCreateInfo struct {
-	Type                        StructureType
 	Next                        unsafe.Pointer
 	Flags                       PipelineVertexInputStateCreateFlags
 	VertexBindingDescriptions   []VertexInputBindingDescription
 	VertexAttributeDescriptions []VertexInputAttributeDescription
 }
+
+func (s *PipelineVertexInputStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
+}
+
 type PipelineInputAssemblyStateCreateInfo struct {
-	Type                   StructureType
 	Next                   unsafe.Pointer
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
 	PrimitiveRestartEnable bool
 }
+
+func (s *PipelineInputAssemblyStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO
+}
+
 type PipelineTessellationStateCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineTessellationStateCreateFlags
 	PatchControlPoints uint32
 }
+
+func (s *PipelineTessellationStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
+}
+
 type Viewport struct {
 	X        float32
 	Y        float32
@@ -2199,14 +1969,17 @@ type Rect2D struct {
 	Extent Extent2D
 }
 type PipelineViewportStateCreateInfo struct {
-	Type      StructureType
 	Next      unsafe.Pointer
 	Flags     PipelineViewportStateCreateFlags
 	Viewports []Viewport
 	Scissors  []Rect2D
 }
+
+func (s *PipelineViewportStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
+}
+
 type PipelineRasterizationStateCreateInfo struct {
-	Type                    StructureType
 	Next                    unsafe.Pointer
 	Flags                   PipelineRasterizationStateCreateFlags
 	DepthClampEnable        bool
@@ -2220,8 +1993,12 @@ type PipelineRasterizationStateCreateInfo struct {
 	DepthBiasSlopeFactor    float32
 	LineWidth               float32
 }
+
+func (s *PipelineRasterizationStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
+}
+
 type PipelineMultisampleStateCreateInfo struct {
-	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlags
@@ -2231,6 +2008,11 @@ type PipelineMultisampleStateCreateInfo struct {
 	AlphaToCoverageEnable bool
 	AlphaToOneEnable      bool
 }
+
+func (s *PipelineMultisampleStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
+}
+
 type StencilOpState struct {
 	FailOp      StencilOp
 	PassOp      StencilOp
@@ -2241,7 +2023,6 @@ type StencilOpState struct {
 	Reference   uint32
 }
 type PipelineDepthStencilStateCreateInfo struct {
-	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 PipelineDepthStencilStateCreateFlags
 	DepthTestEnable       bool
@@ -2254,6 +2035,11 @@ type PipelineDepthStencilStateCreateInfo struct {
 	MinDepthBounds        float32
 	MaxDepthBounds        float32
 }
+
+func (s *PipelineDepthStencilStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
+}
+
 type PipelineColorBlendAttachmentState struct {
 	BlendEnable         bool
 	SrcColorBlendFactor BlendFactor
@@ -2265,7 +2051,6 @@ type PipelineColorBlendAttachmentState struct {
 	ColorWriteMask      ColorComponentFlags
 }
 type PipelineColorBlendStateCreateInfo struct {
-	Type           StructureType
 	Next           unsafe.Pointer
 	Flags          PipelineColorBlendStateCreateFlags
 	LogicOpEnable  bool
@@ -2273,14 +2058,22 @@ type PipelineColorBlendStateCreateInfo struct {
 	Attachments    []PipelineColorBlendAttachmentState
 	BlendConstants [4]float32
 }
+
+func (s *PipelineColorBlendStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
+}
+
 type PipelineDynamicStateCreateInfo struct {
-	Type          StructureType
 	Next          unsafe.Pointer
 	Flags         PipelineDynamicStateCreateFlags
 	DynamicStates []DynamicState
 }
+
+func (s *PipelineDynamicStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
+}
+
 type GraphicsPipelineCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineCreateFlags
 	Stages             []PipelineShaderStageCreateInfo
@@ -2299,8 +2092,12 @@ type GraphicsPipelineCreateInfo struct {
 	BasePipelineHandle Pipeline
 	BasePipelineIndex  int32
 }
+
+func (s *GraphicsPipelineCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
+}
+
 type ComputePipelineCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineCreateFlags
 	Stage              PipelineShaderStageCreateInfo
@@ -2308,20 +2105,28 @@ type ComputePipelineCreateInfo struct {
 	BasePipelineHandle Pipeline
 	BasePipelineIndex  int32
 }
+
+func (s *ComputePipelineCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+}
+
 type PushConstantRange struct {
 	StageFlags ShaderStageFlags
 	Offset     uint32
 	Size       uint32
 }
 type PipelineLayoutCreateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	Flags              PipelineLayoutCreateFlags
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
 }
+
+func (s *PipelineLayoutCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
+}
+
 type SamplerCreateInfo struct {
-	Type                    StructureType
 	Next                    unsafe.Pointer
 	Flags                   SamplerCreateFlags
 	MagFilter               Filter
@@ -2340,6 +2145,11 @@ type SamplerCreateInfo struct {
 	BorderColor             BorderColor
 	UnnormalizedCoordinates bool
 }
+
+func (s *SamplerCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
+}
+
 type DescriptorSetLayoutBinding struct {
 	Binding           uint32
 	DescriptorType    DescriptorType
@@ -2348,28 +2158,40 @@ type DescriptorSetLayoutBinding struct {
 	ImmutableSamplers *Sampler
 }
 type DescriptorSetLayoutCreateInfo struct {
-	Type     StructureType
 	Next     unsafe.Pointer
 	Flags    DescriptorSetLayoutCreateFlags
 	Bindings []DescriptorSetLayoutBinding
 }
+
+func (s *DescriptorSetLayoutCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
+}
+
 type DescriptorPoolSize struct {
 	Type            DescriptorType
 	DescriptorCount uint32
 }
 type DescriptorPoolCreateInfo struct {
-	Type      StructureType
 	Next      unsafe.Pointer
 	Flags     DescriptorPoolCreateFlags
 	MaxSets   uint32
 	PoolSizes []DescriptorPoolSize
 }
+
+func (s *DescriptorPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
+}
+
 type DescriptorSetAllocateInfo struct {
-	Type           StructureType
 	Next           unsafe.Pointer
 	DescriptorPool DescriptorPool
 	SetLayouts     []DescriptorSetLayout
 }
+
+func (s *DescriptorSetAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
+}
+
 type DescriptorImageInfo struct {
 	Sampler     Sampler
 	ImageView   ImageView
@@ -2381,7 +2203,6 @@ type DescriptorBufferInfo struct {
 	Range  DeviceSize
 }
 type WriteDescriptorSet struct {
-	Type            StructureType
 	Next            unsafe.Pointer
 	DstSet          DescriptorSet
 	DstBinding      uint32
@@ -2392,8 +2213,12 @@ type WriteDescriptorSet struct {
 	BufferInfo      *DescriptorBufferInfo
 	TexelBufferView *BufferView
 }
+
+func (s *WriteDescriptorSet) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
+}
+
 type CopyDescriptorSet struct {
-	Type            StructureType
 	Next            unsafe.Pointer
 	SrcSet          DescriptorSet
 	SrcBinding      uint32
@@ -2403,8 +2228,12 @@ type CopyDescriptorSet struct {
 	DstArrayElement uint32
 	DescriptorCount uint32
 }
+
+func (s *CopyDescriptorSet) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
+}
+
 type FramebufferCreateInfo struct {
-	Type        StructureType
 	Next        unsafe.Pointer
 	Flags       FramebufferCreateFlags
 	RenderPass  RenderPass
@@ -2413,6 +2242,11 @@ type FramebufferCreateInfo struct {
 	Height      uint32
 	Layers      uint32
 }
+
+func (s *FramebufferCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+}
+
 type AttachmentDescription struct {
 	Flags          AttachmentDescriptionFlags
 	Format         Format
@@ -2447,28 +2281,39 @@ type SubpassDependency struct {
 	DependencyFlags DependencyFlags
 }
 type RenderPassCreateInfo struct {
-	Type         StructureType
 	Next         unsafe.Pointer
 	Flags        RenderPassCreateFlags
 	Attachments  []AttachmentDescription
 	Subpasses    []SubpassDescription
 	Dependencies []SubpassDependency
 }
+
+func (s *RenderPassCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
+}
+
 type CommandPoolCreateInfo struct {
-	Type             StructureType
 	Next             unsafe.Pointer
 	Flags            CommandPoolCreateFlags
 	QueueFamilyIndex uint32
 }
+
+func (s *CommandPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
+}
+
 type CommandBufferAllocateInfo struct {
-	Type               StructureType
 	Next               unsafe.Pointer
 	CommandPool        CommandPool
 	Level              CommandBufferLevel
 	CommandBufferCount uint32
 }
+
+func (s *CommandBufferAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
+}
+
 type CommandBufferInheritanceInfo struct {
-	Type                 StructureType
 	Next                 unsafe.Pointer
 	RenderPass           RenderPass
 	Subpass              uint32
@@ -2477,12 +2322,21 @@ type CommandBufferInheritanceInfo struct {
 	QueryFlags           QueryControlFlags
 	PipelineStatistics   QueryPipelineStatisticFlags
 }
+
+func (s *CommandBufferInheritanceInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
+}
+
 type CommandBufferBeginInfo struct {
-	Type            StructureType
 	Next            unsafe.Pointer
 	Flags           CommandBufferUsageFlags
 	InheritanceInfo *CommandBufferInheritanceInfo
 }
+
+func (s *CommandBufferBeginInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+}
+
 type BufferCopy struct {
 	SrcOffset DeviceSize
 	DstOffset DeviceSize
@@ -2546,13 +2400,16 @@ type ImageResolve struct {
 	Extent         Extent3D
 }
 type MemoryBarrier struct {
-	Type          StructureType
 	Next          unsafe.Pointer
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 }
+
+func (s *MemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_BARRIER
+}
+
 type BufferMemoryBarrier struct {
-	Type                StructureType
 	Next                unsafe.Pointer
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
@@ -2562,8 +2419,12 @@ type BufferMemoryBarrier struct {
 	Offset              DeviceSize
 	Size                DeviceSize
 }
+
+func (s *BufferMemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
+}
+
 type ImageMemoryBarrier struct {
-	Type                StructureType
 	Next                unsafe.Pointer
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
@@ -2574,14 +2435,23 @@ type ImageMemoryBarrier struct {
 	Image               Image
 	SubresourceRange    ImageSubresourceRange
 }
+
+func (s *ImageMemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+}
+
 type RenderPassBeginInfo struct {
-	Type        StructureType
 	Next        unsafe.Pointer
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 	RenderArea  Rect2D
 	ClearValues []ClearValue
 }
+
+func (s *RenderPassBeginInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+}
+
 type DispatchIndirectCommand struct {
 	X uint32
 	Y uint32
@@ -2597,12 +2467,4 @@ type DrawIndirectCommand struct {
 	InstanceCount uint32
 	FirstVertex   uint32
 	FirstInstance uint32
-}
-type BaseOutStructure struct {
-	Type StructureType
-	Next *BaseOutStructure
-}
-type BaseInStructure struct {
-	Type StructureType
-	Next *BaseInStructure
 }
