@@ -503,6 +503,10 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 		fgn := toGoName(fcn)
 		fgt := ws.transType(fct)
 
+		if fcn == "pNext" {
+			fgt = &goast.Ident{Name: "Structure"}
+		}
+
 		if strings.HasSuffix(fcn, "Count") && fct == "uint32_t" {
 			xxxCount = fdecl
 			pendAdding = &goast.Field{
@@ -555,59 +559,158 @@ func (ws *workspace) genRecordDecl(node *cast.RecordDecl) {
 	})
 
 	if isStructure {
-		/*VkStructureType value is obtained by taking the name of the structure,
-		  stripping the leading Vk, prefixing each capital letter with _,
-		  converting the entire resulting string to upper case,
-		  and prefixing it with VK_STRUCTURE_TYPE_.*/
-		name := node.Name
-		name = strings.TrimPrefix(name, "Vk")
-		name = strcase.ToScreamingSnake(name)
-		name = "VK_STRUCTURE_TYPE_" + name
+		ws.genStructureMethods(cname, goname)
+	}
+}
 
-		ws.target.addGo(&goast.FuncDecl{
-			Recv: &goast.FieldList{
+func (ws *workspace) genStructureMethods(cname, goname string) {
+	/*VkStructureType value is obtained by taking the name of the structure,
+	  stripping the leading Vk, prefixing each capital letter with _,
+	  converting the entire resulting string to upper case,
+	  and prefixing it with VK_STRUCTURE_TYPE_.*/
+	sType := strings.TrimPrefix(cname, "struct ")
+	sType = strings.TrimPrefix(sType, "Vk")
+	sType = strcase.ToScreamingSnake(sType)
+	sType = "VK_STRUCTURE_TYPE_" + sType
+
+	//sType()
+	ws.target.addGo(&goast.FuncDecl{
+		Recv: &goast.FieldList{
+			Opening: token.Pos(1),
+			List: []*goast.Field{
+				&goast.Field{
+					Names: []*goast.Ident{
+						&goast.Ident{Name: "s"},
+					},
+					Type: &goast.StarExpr{
+						X: &goast.Ident{Name: goname},
+					},
+				},
+			},
+			Closing: token.Pos(1),
+		},
+		Name: &goast.Ident{Name: "sType"},
+		Type: &goast.FuncType{
+			Func: token.Pos(1),
+			Params: &goast.FieldList{
+				Opening: token.Pos(1),
+				Closing: token.Pos(1),
+			},
+			Results: &goast.FieldList{
+				List: []*goast.Field{
+					&goast.Field{
+						Type: &goast.Ident{Name: "C.VkStructureType"},
+					},
+				},
+			},
+		},
+		Body: &goast.BlockStmt{
+			Lbrace: token.Pos(1),
+			List: []goast.Stmt{
+				&goast.ReturnStmt{
+					Return: token.Pos(1),
+					Results: []goast.Expr{
+						&goast.Ident{Name: "C." + sType},
+					},
+				},
+			},
+			Rbrace: token.Pos(1),
+		},
+	})
+
+	//GetNext()
+	ws.target.addGo(&goast.FuncDecl{
+		Recv: &goast.FieldList{
+			Opening: token.Pos(1),
+			List: []*goast.Field{
+				&goast.Field{
+					Names: []*goast.Ident{
+						&goast.Ident{Name: "s"},
+					},
+					Type: &goast.StarExpr{
+						X: &goast.Ident{Name: goname},
+					},
+				},
+			},
+			Closing: token.Pos(1),
+		},
+		Name: &goast.Ident{Name: "GetNext"},
+		Type: &goast.FuncType{
+			Func: token.Pos(1),
+			Params: &goast.FieldList{
+				Opening: token.Pos(1),
+				Closing: token.Pos(1),
+			},
+			Results: &goast.FieldList{
+				List: []*goast.Field{
+					&goast.Field{
+						Type: &goast.Ident{Name: "Structure"},
+					},
+				},
+			},
+		},
+		Body: &goast.BlockStmt{
+			Lbrace: token.Pos(1),
+			List: []goast.Stmt{
+				&goast.ReturnStmt{
+					Return: token.Pos(1),
+					Results: []goast.Expr{
+						&goast.Ident{Name: "s.Next"},
+					},
+				},
+			},
+			Rbrace: token.Pos(1),
+		},
+	})
+
+	//SetNext()
+	ws.target.addGo(&goast.FuncDecl{
+		Recv: &goast.FieldList{
+			Opening: token.Pos(1),
+			List: []*goast.Field{
+				&goast.Field{
+					Names: []*goast.Ident{
+						&goast.Ident{Name: "s"},
+					},
+					Type: &goast.StarExpr{
+						X: &goast.Ident{Name: goname},
+					},
+				},
+			},
+			Closing: token.Pos(1),
+		},
+		Name: &goast.Ident{Name: "SetNext"},
+		Type: &goast.FuncType{
+			Func: token.Pos(1),
+			Params: &goast.FieldList{
 				Opening: token.Pos(1),
 				List: []*goast.Field{
 					&goast.Field{
 						Names: []*goast.Ident{
-							&goast.Ident{Name: "s"},
+							&goast.Ident{Name: "n"},
 						},
-						Type: &goast.StarExpr{
-							X: &goast.Ident{Name: goname},
-						},
+						Type: &goast.Ident{Name: "Structure"},
 					},
 				},
 				Closing: token.Pos(1),
 			},
-			Name: &goast.Ident{Name: "sType"},
-			Type: &goast.FuncType{
-				Func: token.Pos(1),
-				Params: &goast.FieldList{
-					Opening: token.Pos(1),
-					Closing: token.Pos(1),
-				},
-				Results: &goast.FieldList{
-					List: []*goast.Field{
-						&goast.Field{
-							Type: &goast.Ident{Name: "C.VkStructureType"},
-						},
+		},
+		Body: &goast.BlockStmt{
+			Lbrace: token.Pos(1),
+			List: []goast.Stmt{
+				&goast.AssignStmt{
+					Lhs: []goast.Expr{
+						&goast.Ident{Name: "s.Next"},
+					},
+					Tok: token.ASSIGN,
+					Rhs: []goast.Expr{
+						&goast.Ident{Name: "n"},
 					},
 				},
 			},
-			Body: &goast.BlockStmt{
-				Lbrace: token.Pos(1),
-				List: []goast.Stmt{
-					&goast.ReturnStmt{
-						Return: token.Pos(1),
-						Results: []goast.Expr{
-							&goast.Ident{Name: "C." + name},
-						},
-					},
-				},
-				Rbrace: token.Pos(1),
-			},
-		})
-	}
+			Rbrace: token.Pos(1),
+		},
+	})
 }
 
 func convConst(m *mapping, node cast.Node) goast.Expr {

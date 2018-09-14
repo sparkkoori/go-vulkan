@@ -13,16 +13,20 @@ Go binding for Vulkan
   - eg. `type Instance C.VkInstance`
 
 
-- Merge Vk\*FlagBit to Vk\*Flags.
+- Merge `Vk*FlagBit` to `Vk*Flags`.
 
-- Map Bool32 to bool.
+- Map `Bool32` to `bool`.
 
-- Map char * to string.
+- Map `char *` to `string`.
 
 - Merge size and pointer fields to slice.
-  - eg. `EnabledLayerNames     []string` for `uint32_t enabledLayerCount;` and `const char* const* ppEnabledLayerNames;`
+  - eg. `EnabledLayerNames     []string` for
+  `uint32_t enabledLayerCount` and `const char* const* ppEnabledLayerNames`
 
-- Remove sType field, it can be inferred from struct name.
+
+- Remove `sType` field, it can be inferred from struct name.
+
+- Map `void *` to `Structure` in `pNext` field.
 
 ## License
 MIT

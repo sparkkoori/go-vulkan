@@ -1351,7 +1351,7 @@ const (
 )
 
 type ApplicationInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	ApplicationName    string
 	ApplicationVersion uint32
 	EngineName         string
@@ -1362,9 +1362,15 @@ type ApplicationInfo struct {
 func (s *ApplicationInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_APPLICATION_INFO
 }
+func (s *ApplicationInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ApplicationInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type InstanceCreateInfo struct {
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
 	EnabledLayerNames     []string
@@ -1373,6 +1379,12 @@ type InstanceCreateInfo struct {
 
 func (s *InstanceCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+}
+func (s *InstanceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *InstanceCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
@@ -1608,7 +1620,7 @@ type PhysicalDeviceMemoryProperties struct {
 	MemoryHeaps     [16]MemoryHeap
 }
 type DeviceQueueCreateInfo struct {
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
 	QueuePriorities  []float32
@@ -1617,9 +1629,15 @@ type DeviceQueueCreateInfo struct {
 func (s *DeviceQueueCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
 }
+func (s *DeviceQueueCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceQueueCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DeviceCreateInfo struct {
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 DeviceCreateFlags
 	QueueCreateInfos      []DeviceQueueCreateInfo
 	EnabledLayerNames     []string
@@ -1629,6 +1647,12 @@ type DeviceCreateInfo struct {
 
 func (s *DeviceCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+}
+func (s *DeviceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ExtensionProperties struct {
@@ -1642,7 +1666,7 @@ type LayerProperties struct {
 	Description           [256]byte
 }
 type SubmitInfo struct {
-	Next             unsafe.Pointer
+	Next             Structure
 	WaitSemaphores   []Semaphore
 	WaitDstStageMask []PipelineStageFlags
 	CommandBuffers   []CommandBuffer
@@ -1652,9 +1676,15 @@ type SubmitInfo struct {
 func (s *SubmitInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SUBMIT_INFO
 }
+func (s *SubmitInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SubmitInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type MemoryAllocateInfo struct {
-	Next            unsafe.Pointer
+	Next            Structure
 	AllocationSize  DeviceSize
 	MemoryTypeIndex uint32
 }
@@ -1662,9 +1692,15 @@ type MemoryAllocateInfo struct {
 func (s *MemoryAllocateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
 }
+func (s *MemoryAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryAllocateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type MappedMemoryRange struct {
-	Next   unsafe.Pointer
+	Next   Structure
 	Memory DeviceMemory
 	Offset DeviceSize
 	Size   DeviceSize
@@ -1672,6 +1708,12 @@ type MappedMemoryRange struct {
 
 func (s *MappedMemoryRange) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+}
+func (s *MappedMemoryRange) GetNext() Structure {
+	return s.Next
+}
+func (s *MappedMemoryRange) SetNext(n Structure) {
+	s.Next = n
 }
 
 type MemoryRequirements struct {
@@ -1729,7 +1771,7 @@ type SparseImageMemoryBindInfo struct {
 	Binds []SparseImageMemoryBind
 }
 type BindSparseInfo struct {
-	Next             unsafe.Pointer
+	Next             Structure
 	WaitSemaphores   []Semaphore
 	BufferBinds      []SparseBufferMemoryBindInfo
 	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
@@ -1740,36 +1782,60 @@ type BindSparseInfo struct {
 func (s *BindSparseInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
 }
+func (s *BindSparseInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BindSparseInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type FenceCreateInfo struct {
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags FenceCreateFlags
 }
 
 func (s *FenceCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
 }
+func (s *FenceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *FenceCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type SemaphoreCreateInfo struct {
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags SemaphoreCreateFlags
 }
 
 func (s *SemaphoreCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
 }
+func (s *SemaphoreCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SemaphoreCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type EventCreateInfo struct {
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags EventCreateFlags
 }
 
 func (s *EventCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
 }
+func (s *EventCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *EventCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type QueryPoolCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              QueryPoolCreateFlags
 	QueryType          QueryType
 	QueryCount         uint32
@@ -1779,9 +1845,15 @@ type QueryPoolCreateInfo struct {
 func (s *QueryPoolCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
 }
+func (s *QueryPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *QueryPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type BufferCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              BufferCreateFlags
 	Size               DeviceSize
 	Usage              BufferUsageFlags
@@ -1792,9 +1864,15 @@ type BufferCreateInfo struct {
 func (s *BufferCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
 }
+func (s *BufferCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type BufferViewCreateInfo struct {
-	Next   unsafe.Pointer
+	Next   Structure
 	Flags  BufferViewCreateFlags
 	Buffer Buffer
 	Format Format
@@ -1805,9 +1883,15 @@ type BufferViewCreateInfo struct {
 func (s *BufferViewCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
 }
+func (s *BufferViewCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferViewCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ImageCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              ImageCreateFlags
 	ImageType          ImageType
 	Format             Format
@@ -1824,6 +1908,12 @@ type ImageCreateInfo struct {
 
 func (s *ImageCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
+}
+func (s *ImageCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SubresourceLayout struct {
@@ -1847,7 +1937,7 @@ type ImageSubresourceRange struct {
 	LayerCount     uint32
 }
 type ImageViewCreateInfo struct {
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            ImageViewCreateFlags
 	Image            Image
 	ViewType         ImageViewType
@@ -1859,9 +1949,15 @@ type ImageViewCreateInfo struct {
 func (s *ImageViewCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
 }
+func (s *ImageViewCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageViewCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ShaderModuleCreateInfo struct {
-	Next     unsafe.Pointer
+	Next     Structure
 	Flags    ShaderModuleCreateFlags
 	CodeSize uint
 	Code     *uint32
@@ -1870,9 +1966,15 @@ type ShaderModuleCreateInfo struct {
 func (s *ShaderModuleCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
 }
+func (s *ShaderModuleCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ShaderModuleCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineCacheCreateInfo struct {
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           PipelineCacheCreateFlags
 	InitialDataSize uint
 	InitialData     unsafe.Pointer
@@ -1880,6 +1982,12 @@ type PipelineCacheCreateInfo struct {
 
 func (s *PipelineCacheCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
+}
+func (s *PipelineCacheCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineCacheCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SpecializationMapEntry struct {
@@ -1893,7 +2001,7 @@ type SpecializationInfo struct {
 	Data       unsafe.Pointer
 }
 type PipelineShaderStageCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineShaderStageCreateFlags
 	Stage              ShaderStageFlags
 	Module             ShaderModule
@@ -1903,6 +2011,12 @@ type PipelineShaderStageCreateInfo struct {
 
 func (s *PipelineShaderStageCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
+}
+func (s *PipelineShaderStageCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineShaderStageCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type VertexInputBindingDescription struct {
@@ -1917,7 +2031,7 @@ type VertexInputAttributeDescription struct {
 	Offset   uint32
 }
 type PipelineVertexInputStateCreateInfo struct {
-	Next                        unsafe.Pointer
+	Next                        Structure
 	Flags                       PipelineVertexInputStateCreateFlags
 	VertexBindingDescriptions   []VertexInputBindingDescription
 	VertexAttributeDescriptions []VertexInputAttributeDescription
@@ -1926,9 +2040,15 @@ type PipelineVertexInputStateCreateInfo struct {
 func (s *PipelineVertexInputStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
 }
+func (s *PipelineVertexInputStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineVertexInputStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineInputAssemblyStateCreateInfo struct {
-	Next                   unsafe.Pointer
+	Next                   Structure
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
 	PrimitiveRestartEnable bool
@@ -1937,15 +2057,27 @@ type PipelineInputAssemblyStateCreateInfo struct {
 func (s *PipelineInputAssemblyStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO
 }
+func (s *PipelineInputAssemblyStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineInputAssemblyStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineTessellationStateCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineTessellationStateCreateFlags
 	PatchControlPoints uint32
 }
 
 func (s *PipelineTessellationStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
+}
+func (s *PipelineTessellationStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineTessellationStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type Viewport struct {
@@ -1969,7 +2101,7 @@ type Rect2D struct {
 	Extent Extent2D
 }
 type PipelineViewportStateCreateInfo struct {
-	Next      unsafe.Pointer
+	Next      Structure
 	Flags     PipelineViewportStateCreateFlags
 	Viewports []Viewport
 	Scissors  []Rect2D
@@ -1978,9 +2110,15 @@ type PipelineViewportStateCreateInfo struct {
 func (s *PipelineViewportStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
 }
+func (s *PipelineViewportStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineViewportStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineRasterizationStateCreateInfo struct {
-	Next                    unsafe.Pointer
+	Next                    Structure
 	Flags                   PipelineRasterizationStateCreateFlags
 	DepthClampEnable        bool
 	RasterizerDiscardEnable bool
@@ -1997,9 +2135,15 @@ type PipelineRasterizationStateCreateInfo struct {
 func (s *PipelineRasterizationStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
 }
+func (s *PipelineRasterizationStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineRasterizationStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineMultisampleStateCreateInfo struct {
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlags
 	SampleShadingEnable   bool
@@ -2012,6 +2156,12 @@ type PipelineMultisampleStateCreateInfo struct {
 func (s *PipelineMultisampleStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
 }
+func (s *PipelineMultisampleStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineMultisampleStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type StencilOpState struct {
 	FailOp      StencilOp
@@ -2023,7 +2173,7 @@ type StencilOpState struct {
 	Reference   uint32
 }
 type PipelineDepthStencilStateCreateInfo struct {
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 PipelineDepthStencilStateCreateFlags
 	DepthTestEnable       bool
 	DepthWriteEnable      bool
@@ -2039,6 +2189,12 @@ type PipelineDepthStencilStateCreateInfo struct {
 func (s *PipelineDepthStencilStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
 }
+func (s *PipelineDepthStencilStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineDepthStencilStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineColorBlendAttachmentState struct {
 	BlendEnable         bool
@@ -2051,7 +2207,7 @@ type PipelineColorBlendAttachmentState struct {
 	ColorWriteMask      ColorComponentFlags
 }
 type PipelineColorBlendStateCreateInfo struct {
-	Next           unsafe.Pointer
+	Next           Structure
 	Flags          PipelineColorBlendStateCreateFlags
 	LogicOpEnable  bool
 	LogicOp        LogicOp
@@ -2062,9 +2218,15 @@ type PipelineColorBlendStateCreateInfo struct {
 func (s *PipelineColorBlendStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
 }
+func (s *PipelineColorBlendStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineColorBlendStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineDynamicStateCreateInfo struct {
-	Next          unsafe.Pointer
+	Next          Structure
 	Flags         PipelineDynamicStateCreateFlags
 	DynamicStates []DynamicState
 }
@@ -2072,9 +2234,15 @@ type PipelineDynamicStateCreateInfo struct {
 func (s *PipelineDynamicStateCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
 }
+func (s *PipelineDynamicStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineDynamicStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type GraphicsPipelineCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineCreateFlags
 	Stages             []PipelineShaderStageCreateInfo
 	VertexInputState   []PipelineVertexInputStateCreateInfo
@@ -2096,9 +2264,15 @@ type GraphicsPipelineCreateInfo struct {
 func (s *GraphicsPipelineCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
 }
+func (s *GraphicsPipelineCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *GraphicsPipelineCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ComputePipelineCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineCreateFlags
 	Stage              PipelineShaderStageCreateInfo
 	Layout             PipelineLayout
@@ -2109,6 +2283,12 @@ type ComputePipelineCreateInfo struct {
 func (s *ComputePipelineCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
 }
+func (s *ComputePipelineCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ComputePipelineCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PushConstantRange struct {
 	StageFlags ShaderStageFlags
@@ -2116,7 +2296,7 @@ type PushConstantRange struct {
 	Size       uint32
 }
 type PipelineLayoutCreateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineLayoutCreateFlags
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
@@ -2125,9 +2305,15 @@ type PipelineLayoutCreateInfo struct {
 func (s *PipelineLayoutCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
 }
+func (s *PipelineLayoutCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineLayoutCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type SamplerCreateInfo struct {
-	Next                    unsafe.Pointer
+	Next                    Structure
 	Flags                   SamplerCreateFlags
 	MagFilter               Filter
 	MinFilter               Filter
@@ -2149,6 +2335,12 @@ type SamplerCreateInfo struct {
 func (s *SamplerCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
 }
+func (s *SamplerCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SamplerCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DescriptorSetLayoutBinding struct {
 	Binding           uint32
@@ -2158,7 +2350,7 @@ type DescriptorSetLayoutBinding struct {
 	ImmutableSamplers *Sampler
 }
 type DescriptorSetLayoutCreateInfo struct {
-	Next     unsafe.Pointer
+	Next     Structure
 	Flags    DescriptorSetLayoutCreateFlags
 	Bindings []DescriptorSetLayoutBinding
 }
@@ -2166,13 +2358,19 @@ type DescriptorSetLayoutCreateInfo struct {
 func (s *DescriptorSetLayoutCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
 }
+func (s *DescriptorSetLayoutCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorSetLayoutCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DescriptorPoolSize struct {
 	Type            DescriptorType
 	DescriptorCount uint32
 }
 type DescriptorPoolCreateInfo struct {
-	Next      unsafe.Pointer
+	Next      Structure
 	Flags     DescriptorPoolCreateFlags
 	MaxSets   uint32
 	PoolSizes []DescriptorPoolSize
@@ -2181,15 +2379,27 @@ type DescriptorPoolCreateInfo struct {
 func (s *DescriptorPoolCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
 }
+func (s *DescriptorPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DescriptorSetAllocateInfo struct {
-	Next           unsafe.Pointer
+	Next           Structure
 	DescriptorPool DescriptorPool
 	SetLayouts     []DescriptorSetLayout
 }
 
 func (s *DescriptorSetAllocateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
+}
+func (s *DescriptorSetAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorSetAllocateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DescriptorImageInfo struct {
@@ -2203,7 +2413,7 @@ type DescriptorBufferInfo struct {
 	Range  DeviceSize
 }
 type WriteDescriptorSet struct {
-	Next            unsafe.Pointer
+	Next            Structure
 	DstSet          DescriptorSet
 	DstBinding      uint32
 	DstArrayElement uint32
@@ -2217,9 +2427,15 @@ type WriteDescriptorSet struct {
 func (s *WriteDescriptorSet) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
 }
+func (s *WriteDescriptorSet) GetNext() Structure {
+	return s.Next
+}
+func (s *WriteDescriptorSet) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CopyDescriptorSet struct {
-	Next            unsafe.Pointer
+	Next            Structure
 	SrcSet          DescriptorSet
 	SrcBinding      uint32
 	SrcArrayElement uint32
@@ -2232,9 +2448,15 @@ type CopyDescriptorSet struct {
 func (s *CopyDescriptorSet) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
 }
+func (s *CopyDescriptorSet) GetNext() Structure {
+	return s.Next
+}
+func (s *CopyDescriptorSet) SetNext(n Structure) {
+	s.Next = n
+}
 
 type FramebufferCreateInfo struct {
-	Next        unsafe.Pointer
+	Next        Structure
 	Flags       FramebufferCreateFlags
 	RenderPass  RenderPass
 	Attachments []ImageView
@@ -2245,6 +2467,12 @@ type FramebufferCreateInfo struct {
 
 func (s *FramebufferCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+}
+func (s *FramebufferCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *FramebufferCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type AttachmentDescription struct {
@@ -2281,7 +2509,7 @@ type SubpassDependency struct {
 	DependencyFlags DependencyFlags
 }
 type RenderPassCreateInfo struct {
-	Next         unsafe.Pointer
+	Next         Structure
 	Flags        RenderPassCreateFlags
 	Attachments  []AttachmentDescription
 	Subpasses    []SubpassDescription
@@ -2291,9 +2519,15 @@ type RenderPassCreateInfo struct {
 func (s *RenderPassCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
 }
+func (s *RenderPassCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *RenderPassCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CommandPoolCreateInfo struct {
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            CommandPoolCreateFlags
 	QueueFamilyIndex uint32
 }
@@ -2301,9 +2535,15 @@ type CommandPoolCreateInfo struct {
 func (s *CommandPoolCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
 }
+func (s *CommandPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CommandBufferAllocateInfo struct {
-	Next               unsafe.Pointer
+	Next               Structure
 	CommandPool        CommandPool
 	Level              CommandBufferLevel
 	CommandBufferCount uint32
@@ -2312,9 +2552,15 @@ type CommandBufferAllocateInfo struct {
 func (s *CommandBufferAllocateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
 }
+func (s *CommandBufferAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferAllocateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CommandBufferInheritanceInfo struct {
-	Next                 unsafe.Pointer
+	Next                 Structure
 	RenderPass           RenderPass
 	Subpass              uint32
 	Framebuffer          Framebuffer
@@ -2326,15 +2572,27 @@ type CommandBufferInheritanceInfo struct {
 func (s *CommandBufferInheritanceInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
 }
+func (s *CommandBufferInheritanceInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferInheritanceInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CommandBufferBeginInfo struct {
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           CommandBufferUsageFlags
 	InheritanceInfo *CommandBufferInheritanceInfo
 }
 
 func (s *CommandBufferBeginInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+}
+func (s *CommandBufferBeginInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferBeginInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type BufferCopy struct {
@@ -2400,7 +2658,7 @@ type ImageResolve struct {
 	Extent         Extent3D
 }
 type MemoryBarrier struct {
-	Next          unsafe.Pointer
+	Next          Structure
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 }
@@ -2408,9 +2666,15 @@ type MemoryBarrier struct {
 func (s *MemoryBarrier) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_MEMORY_BARRIER
 }
+func (s *MemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryBarrier) SetNext(n Structure) {
+	s.Next = n
+}
 
 type BufferMemoryBarrier struct {
-	Next                unsafe.Pointer
+	Next                Structure
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
 	SrcQueueFamilyIndex uint32
@@ -2423,9 +2687,15 @@ type BufferMemoryBarrier struct {
 func (s *BufferMemoryBarrier) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
 }
+func (s *BufferMemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferMemoryBarrier) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ImageMemoryBarrier struct {
-	Next                unsafe.Pointer
+	Next                Structure
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
 	OldLayout           ImageLayout
@@ -2439,9 +2709,15 @@ type ImageMemoryBarrier struct {
 func (s *ImageMemoryBarrier) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
 }
+func (s *ImageMemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageMemoryBarrier) SetNext(n Structure) {
+	s.Next = n
+}
 
 type RenderPassBeginInfo struct {
-	Next        unsafe.Pointer
+	Next        Structure
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 	RenderArea  Rect2D
@@ -2450,6 +2726,12 @@ type RenderPassBeginInfo struct {
 
 func (s *RenderPassBeginInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+}
+func (s *RenderPassBeginInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *RenderPassBeginInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DispatchIndirectCommand struct {
