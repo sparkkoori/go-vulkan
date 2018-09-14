@@ -5,7 +5,6 @@ import "C"
 import "unsafe"
 
 type Flags uint32
-type Bool32 uint32
 type DeviceSize uint64
 type SampleMask uint32
 type Instance C.VkInstance
@@ -1702,61 +1701,61 @@ type AllocationCallbacks struct {
 	PfnInternalFree       PFN_vkInternalFreeNotification
 }
 type PhysicalDeviceFeatures struct {
-	RobustBufferAccess                      Bool32
-	FullDrawIndexUint32                     Bool32
-	ImageCubeArray                          Bool32
-	IndependentBlend                        Bool32
-	GeometryShader                          Bool32
-	TessellationShader                      Bool32
-	SampleRateShading                       Bool32
-	DualSrcBlend                            Bool32
-	LogicOp                                 Bool32
-	MultiDrawIndirect                       Bool32
-	DrawIndirectFirstInstance               Bool32
-	DepthClamp                              Bool32
-	DepthBiasClamp                          Bool32
-	FillModeNonSolid                        Bool32
-	DepthBounds                             Bool32
-	WideLines                               Bool32
-	LargePoints                             Bool32
-	AlphaToOne                              Bool32
-	MultiViewport                           Bool32
-	SamplerAnisotropy                       Bool32
-	TextureCompressionETC2                  Bool32
-	TextureCompressionASTC_LDR              Bool32
-	TextureCompressionBC                    Bool32
-	OcclusionQueryPrecise                   Bool32
-	PipelineStatisticsQuery                 Bool32
-	VertexPipelineStoresAndAtomics          Bool32
-	FragmentStoresAndAtomics                Bool32
-	ShaderTessellationAndGeometryPointSize  Bool32
-	ShaderImageGatherExtended               Bool32
-	ShaderStorageImageExtendedFormats       Bool32
-	ShaderStorageImageMultisample           Bool32
-	ShaderStorageImageReadWithoutFormat     Bool32
-	ShaderStorageImageWriteWithoutFormat    Bool32
-	ShaderUniformBufferArrayDynamicIndexing Bool32
-	ShaderSampledImageArrayDynamicIndexing  Bool32
-	ShaderStorageBufferArrayDynamicIndexing Bool32
-	ShaderStorageImageArrayDynamicIndexing  Bool32
-	ShaderClipDistance                      Bool32
-	ShaderCullDistance                      Bool32
-	ShaderFloat64                           Bool32
-	ShaderInt64                             Bool32
-	ShaderInt16                             Bool32
-	ShaderResourceResidency                 Bool32
-	ShaderResourceMinLod                    Bool32
-	SparseBinding                           Bool32
-	SparseResidencyBuffer                   Bool32
-	SparseResidencyImage2D                  Bool32
-	SparseResidencyImage3D                  Bool32
-	SparseResidency2Samples                 Bool32
-	SparseResidency4Samples                 Bool32
-	SparseResidency8Samples                 Bool32
-	SparseResidency16Samples                Bool32
-	SparseResidencyAliased                  Bool32
-	VariableMultisampleRate                 Bool32
-	InheritedQueries                        Bool32
+	RobustBufferAccess                      bool
+	FullDrawIndexUint32                     bool
+	ImageCubeArray                          bool
+	IndependentBlend                        bool
+	GeometryShader                          bool
+	TessellationShader                      bool
+	SampleRateShading                       bool
+	DualSrcBlend                            bool
+	LogicOp                                 bool
+	MultiDrawIndirect                       bool
+	DrawIndirectFirstInstance               bool
+	DepthClamp                              bool
+	DepthBiasClamp                          bool
+	FillModeNonSolid                        bool
+	DepthBounds                             bool
+	WideLines                               bool
+	LargePoints                             bool
+	AlphaToOne                              bool
+	MultiViewport                           bool
+	SamplerAnisotropy                       bool
+	TextureCompressionETC2                  bool
+	TextureCompressionASTC_LDR              bool
+	TextureCompressionBC                    bool
+	OcclusionQueryPrecise                   bool
+	PipelineStatisticsQuery                 bool
+	VertexPipelineStoresAndAtomics          bool
+	FragmentStoresAndAtomics                bool
+	ShaderTessellationAndGeometryPointSize  bool
+	ShaderImageGatherExtended               bool
+	ShaderStorageImageExtendedFormats       bool
+	ShaderStorageImageMultisample           bool
+	ShaderStorageImageReadWithoutFormat     bool
+	ShaderStorageImageWriteWithoutFormat    bool
+	ShaderUniformBufferArrayDynamicIndexing bool
+	ShaderSampledImageArrayDynamicIndexing  bool
+	ShaderStorageBufferArrayDynamicIndexing bool
+	ShaderStorageImageArrayDynamicIndexing  bool
+	ShaderClipDistance                      bool
+	ShaderCullDistance                      bool
+	ShaderFloat64                           bool
+	ShaderInt64                             bool
+	ShaderInt16                             bool
+	ShaderResourceResidency                 bool
+	ShaderResourceMinLod                    bool
+	SparseBinding                           bool
+	SparseResidencyBuffer                   bool
+	SparseResidencyImage2D                  bool
+	SparseResidencyImage3D                  bool
+	SparseResidency2Samples                 bool
+	SparseResidency4Samples                 bool
+	SparseResidency8Samples                 bool
+	SparseResidency16Samples                bool
+	SparseResidencyAliased                  bool
+	VariableMultisampleRate                 bool
+	InheritedQueries                        bool
 }
 type FormatProperties struct {
 	LinearTilingFeatures  FormatFeatureFlags
@@ -1867,7 +1866,7 @@ type PhysicalDeviceLimits struct {
 	SampledImageStencilSampleCounts                 SampleCountFlags
 	StorageImageSampleCounts                        SampleCountFlags
 	MaxSampleMaskWords                              uint32
-	TimestampComputeAndGraphics                     Bool32
+	TimestampComputeAndGraphics                     bool
 	TimestampPeriod                                 float32
 	MaxClipDistances                                uint32
 	MaxCullDistances                                uint32
@@ -1877,18 +1876,18 @@ type PhysicalDeviceLimits struct {
 	LineWidthRange                                  [2]float32
 	PointSizeGranularity                            float32
 	LineWidthGranularity                            float32
-	StrictLines                                     Bool32
-	StandardSampleLocations                         Bool32
+	StrictLines                                     bool
+	StandardSampleLocations                         bool
 	OptimalBufferCopyOffsetAlignment                DeviceSize
 	OptimalBufferCopyRowPitchAlignment              DeviceSize
 	NonCoherentAtomSize                             DeviceSize
 }
 type PhysicalDeviceSparseProperties struct {
-	ResidencyStandard2DBlockShape            Bool32
-	ResidencyStandard2DMultisampleBlockShape Bool32
-	ResidencyStandard3DBlockShape            Bool32
-	ResidencyAlignedMipSize                  Bool32
-	ResidencyNonResidentStrict               Bool32
+	ResidencyStandard2DBlockShape            bool
+	ResidencyStandard2DMultisampleBlockShape bool
+	ResidencyStandard3DBlockShape            bool
+	ResidencyAlignedMipSize                  bool
+	ResidencyNonResidentStrict               bool
 }
 type PhysicalDeviceProperties struct {
 	ApiVersion        uint32
@@ -2194,7 +2193,7 @@ type PipelineInputAssemblyStateCreateInfo struct {
 	Next                   unsafe.Pointer
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
-	PrimitiveRestartEnable Bool32
+	PrimitiveRestartEnable bool
 }
 type PipelineTessellationStateCreateInfo struct {
 	Type               StructureType
@@ -2235,12 +2234,12 @@ type PipelineRasterizationStateCreateInfo struct {
 	Type                    StructureType
 	Next                    unsafe.Pointer
 	Flags                   PipelineRasterizationStateCreateFlags
-	DepthClampEnable        Bool32
-	RasterizerDiscardEnable Bool32
+	DepthClampEnable        bool
+	RasterizerDiscardEnable bool
 	PolygonMode             PolygonMode
 	CullMode                CullModeFlags
 	FrontFace               FrontFace
-	DepthBiasEnable         Bool32
+	DepthBiasEnable         bool
 	DepthBiasConstantFactor float32
 	DepthBiasClamp          float32
 	DepthBiasSlopeFactor    float32
@@ -2251,11 +2250,11 @@ type PipelineMultisampleStateCreateInfo struct {
 	Next                  unsafe.Pointer
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlags
-	SampleShadingEnable   Bool32
+	SampleShadingEnable   bool
 	MinSampleShading      float32
 	SampleMask            *SampleMask
-	AlphaToCoverageEnable Bool32
-	AlphaToOneEnable      Bool32
+	AlphaToCoverageEnable bool
+	AlphaToOneEnable      bool
 }
 type StencilOpState struct {
 	FailOp      StencilOp
@@ -2270,18 +2269,18 @@ type PipelineDepthStencilStateCreateInfo struct {
 	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 PipelineDepthStencilStateCreateFlags
-	DepthTestEnable       Bool32
-	DepthWriteEnable      Bool32
+	DepthTestEnable       bool
+	DepthWriteEnable      bool
 	DepthCompareOp        CompareOp
-	DepthBoundsTestEnable Bool32
-	StencilTestEnable     Bool32
+	DepthBoundsTestEnable bool
+	StencilTestEnable     bool
 	Front                 StencilOpState
 	Back                  StencilOpState
 	MinDepthBounds        float32
 	MaxDepthBounds        float32
 }
 type PipelineColorBlendAttachmentState struct {
-	BlendEnable         Bool32
+	BlendEnable         bool
 	SrcColorBlendFactor BlendFactor
 	DstColorBlendFactor BlendFactor
 	ColorBlendOp        BlendOp
@@ -2294,7 +2293,7 @@ type PipelineColorBlendStateCreateInfo struct {
 	Type            StructureType
 	Next            unsafe.Pointer
 	Flags           PipelineColorBlendStateCreateFlags
-	LogicOpEnable   Bool32
+	LogicOpEnable   bool
 	LogicOp         LogicOp
 	AttachmentCount uint32
 	Attachments     *PipelineColorBlendAttachmentState
@@ -2362,14 +2361,14 @@ type SamplerCreateInfo struct {
 	AddressModeV            SamplerAddressMode
 	AddressModeW            SamplerAddressMode
 	MipLodBias              float32
-	AnisotropyEnable        Bool32
+	AnisotropyEnable        bool
 	MaxAnisotropy           float32
-	CompareEnable           Bool32
+	CompareEnable           bool
 	CompareOp               CompareOp
 	MinLod                  float32
 	MaxLod                  float32
 	BorderColor             BorderColor
-	UnnormalizedCoordinates Bool32
+	UnnormalizedCoordinates bool
 }
 type DescriptorSetLayoutBinding struct {
 	Binding           uint32
@@ -2514,7 +2513,7 @@ type CommandBufferInheritanceInfo struct {
 	RenderPass           RenderPass
 	Subpass              uint32
 	Framebuffer          Framebuffer
-	OcclusionQueryEnable Bool32
+	OcclusionQueryEnable bool
 	QueryFlags           QueryControlFlags
 	PipelineStatistics   QueryPipelineStatisticFlags
 }

@@ -92,6 +92,8 @@ func (m *mapping) init() {
 		"uint32_t": "uint32",
 		"int64_t":  "int64",
 		"uint64_t": "uint64",
+
+		"VkBool32": "bool",
 	}
 
 	m.consts = map[string]string{}
