@@ -81,7 +81,7 @@ func (m *mapping) init() {
 		"float":                  "float32", //	C.float
 		"double":                 "float64", //C.double
 
-		"void": "interface{}",
+		"void *": "unsafe.Pointer",
 
 		"size_t":   "uint",
 		"int8_t":   "int8",
@@ -176,8 +176,16 @@ func (m *mapping) getFunc(f string) string {
 func convComplexType(m *mapping, cn cast.Node) goast.Expr {
 	switch n := cn.(type) {
 	case *cast.Typedef:
+		if n.Type == "void" {
+			return nil
+		}
 		return &goast.Ident{Name: m.mustGetType(n.Type)}
 	case *cast.PointerType:
+		if v, ok := n.ChildNodes[0].(*cast.Typedef); ok {
+			if v.Type == "void" {
+				return &goast.Ident{Name: m.mustGetType("void *")}
+			}
+		}
 		return &goast.StarExpr{
 			Star: token.Pos(1),
 			X:    convComplexType(m, n.ChildNodes[0]),
@@ -195,16 +203,19 @@ func convComplexType(m *mapping, cn cast.Node) goast.Expr {
 				Type: convComplexType(m, pn),
 			})
 		}
+		results := []*goast.Field{}
+		{
+			result := convComplexType(m, n.ChildNodes[0])
+			if result != nil {
+				results = append(results, &goast.Field{
+					Type: result,
+				})
+			}
+		}
 		return &goast.FuncType{
-			Func:   token.Pos(1),
-			Params: &goast.FieldList{List: params},
-			Results: &goast.FieldList{
-				List: []*goast.Field{
-					&goast.Field{
-						Type: convComplexType(m, n.ChildNodes[0]),
-					},
-				},
-			},
+			Func:    token.Pos(1),
+			Params:  &goast.FieldList{List: params},
+			Results: &goast.FieldList{List: results},
 		}
 	}
 	halt("Unkown c complex type node", cn)

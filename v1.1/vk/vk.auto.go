@@ -2,6 +2,7 @@ package vk
 
 //#include "vulkan/vulkan.h"
 import "C"
+import "unsafe"
 
 type Flags uint32
 type Bool32 uint32
@@ -1670,7 +1671,7 @@ const (
 
 type ApplicationInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_pApplicationName   *byte
 	_applicationVersion uint32
 	_pEngineName        *byte
@@ -1679,7 +1680,7 @@ type ApplicationInfo struct {
 }
 type InstanceCreateInfo struct {
 	_sType                   StructureType
-	_pNext                   *interface{}
+	_pNext                   unsafe.Pointer
 	_flags                   InstanceCreateFlags
 	_pApplicationInfo        *ApplicationInfo
 	_enabledLayerCount       uint32
@@ -1687,13 +1688,13 @@ type InstanceCreateInfo struct {
 	_enabledExtensionCount   uint32
 	_ppEnabledExtensionNames **byte
 }
-type PFN_vkAllocationFunction *func(*interface{}, uint, uint, SystemAllocationScope) *interface{}
-type PFN_vkReallocationFunction *func(*interface{}, *interface{}, uint, uint, SystemAllocationScope) *interface{}
-type PFN_vkFreeFunction *func(*interface{}, *interface{}) interface{}
-type PFN_vkInternalAllocationNotification *func(*interface{}, uint, InternalAllocationType, SystemAllocationScope) interface{}
-type PFN_vkInternalFreeNotification *func(*interface{}, uint, InternalAllocationType, SystemAllocationScope) interface{}
+type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
+type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
+type PFN_vkFreeFunction *func(unsafe.Pointer, unsafe.Pointer)
+type PFN_vkInternalAllocationNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
+type PFN_vkInternalFreeNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
 type AllocationCallbacks struct {
-	_pUserData             *interface{}
+	_pUserData             unsafe.Pointer
 	_pfnAllocation         PFN_vkAllocationFunction
 	_pfnReallocation       PFN_vkReallocationFunction
 	_pfnFree               PFN_vkFreeFunction
@@ -1922,7 +1923,7 @@ type PhysicalDeviceMemoryProperties struct {
 }
 type DeviceQueueCreateInfo struct {
 	_sType            StructureType
-	_pNext            *interface{}
+	_pNext            unsafe.Pointer
 	_flags            DeviceQueueCreateFlags
 	_queueFamilyIndex uint32
 	_queueCount       uint32
@@ -1930,7 +1931,7 @@ type DeviceQueueCreateInfo struct {
 }
 type DeviceCreateInfo struct {
 	_sType                   StructureType
-	_pNext                   *interface{}
+	_pNext                   unsafe.Pointer
 	_flags                   DeviceCreateFlags
 	_queueCreateInfoCount    uint32
 	_pQueueCreateInfos       *DeviceQueueCreateInfo
@@ -1952,7 +1953,7 @@ type LayerProperties struct {
 }
 type SubmitInfo struct {
 	_sType                StructureType
-	_pNext                *interface{}
+	_pNext                unsafe.Pointer
 	_waitSemaphoreCount   uint32
 	_pWaitSemaphores      *Semaphore
 	_pWaitDstStageMask    *PipelineStageFlags
@@ -1963,13 +1964,13 @@ type SubmitInfo struct {
 }
 type MemoryAllocateInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_allocationSize  DeviceSize
 	_memoryTypeIndex uint32
 }
 type MappedMemoryRange struct {
 	_sType  StructureType
-	_pNext  *interface{}
+	_pNext  unsafe.Pointer
 	_memory DeviceMemory
 	_offset DeviceSize
 	_size   DeviceSize
@@ -2033,7 +2034,7 @@ type SparseImageMemoryBindInfo struct {
 }
 type BindSparseInfo struct {
 	_sType                StructureType
-	_pNext                *interface{}
+	_pNext                unsafe.Pointer
 	_waitSemaphoreCount   uint32
 	_pWaitSemaphores      *Semaphore
 	_bufferBindCount      uint32
@@ -2047,22 +2048,22 @@ type BindSparseInfo struct {
 }
 type FenceCreateInfo struct {
 	_sType StructureType
-	_pNext *interface{}
+	_pNext unsafe.Pointer
 	_flags FenceCreateFlags
 }
 type SemaphoreCreateInfo struct {
 	_sType StructureType
-	_pNext *interface{}
+	_pNext unsafe.Pointer
 	_flags SemaphoreCreateFlags
 }
 type EventCreateInfo struct {
 	_sType StructureType
-	_pNext *interface{}
+	_pNext unsafe.Pointer
 	_flags EventCreateFlags
 }
 type QueryPoolCreateInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_flags              QueryPoolCreateFlags
 	_queryType          QueryType
 	_queryCount         uint32
@@ -2070,7 +2071,7 @@ type QueryPoolCreateInfo struct {
 }
 type BufferCreateInfo struct {
 	_sType                 StructureType
-	_pNext                 *interface{}
+	_pNext                 unsafe.Pointer
 	_flags                 BufferCreateFlags
 	_size                  DeviceSize
 	_usage                 BufferUsageFlags
@@ -2080,7 +2081,7 @@ type BufferCreateInfo struct {
 }
 type BufferViewCreateInfo struct {
 	_sType  StructureType
-	_pNext  *interface{}
+	_pNext  unsafe.Pointer
 	_flags  BufferViewCreateFlags
 	_buffer Buffer
 	_format Format
@@ -2089,7 +2090,7 @@ type BufferViewCreateInfo struct {
 }
 type ImageCreateInfo struct {
 	_sType                 StructureType
-	_pNext                 *interface{}
+	_pNext                 unsafe.Pointer
 	_flags                 ImageCreateFlags
 	_imageType             ImageType
 	_format                Format
@@ -2126,7 +2127,7 @@ type ImageSubresourceRange struct {
 }
 type ImageViewCreateInfo struct {
 	_sType            StructureType
-	_pNext            *interface{}
+	_pNext            unsafe.Pointer
 	_flags            ImageViewCreateFlags
 	_image            Image
 	_viewType         ImageViewType
@@ -2136,17 +2137,17 @@ type ImageViewCreateInfo struct {
 }
 type ShaderModuleCreateInfo struct {
 	_sType    StructureType
-	_pNext    *interface{}
+	_pNext    unsafe.Pointer
 	_flags    ShaderModuleCreateFlags
 	_codeSize uint
 	_pCode    *uint32
 }
 type PipelineCacheCreateInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_flags           PipelineCacheCreateFlags
 	_initialDataSize uint
-	_pInitialData    *interface{}
+	_pInitialData    unsafe.Pointer
 }
 type SpecializationMapEntry struct {
 	_constantID uint32
@@ -2157,11 +2158,11 @@ type SpecializationInfo struct {
 	_mapEntryCount uint32
 	_pMapEntries   *SpecializationMapEntry
 	_dataSize      uint
-	_pData         *interface{}
+	_pData         unsafe.Pointer
 }
 type PipelineShaderStageCreateInfo struct {
 	_sType               StructureType
-	_pNext               *interface{}
+	_pNext               unsafe.Pointer
 	_flags               PipelineShaderStageCreateFlags
 	_stage               ShaderStageFlags
 	_module              ShaderModule
@@ -2181,7 +2182,7 @@ type VertexInputAttributeDescription struct {
 }
 type PipelineVertexInputStateCreateInfo struct {
 	_sType                           StructureType
-	_pNext                           *interface{}
+	_pNext                           unsafe.Pointer
 	_flags                           PipelineVertexInputStateCreateFlags
 	_vertexBindingDescriptionCount   uint32
 	_pVertexBindingDescriptions      *VertexInputBindingDescription
@@ -2190,14 +2191,14 @@ type PipelineVertexInputStateCreateInfo struct {
 }
 type PipelineInputAssemblyStateCreateInfo struct {
 	_sType                  StructureType
-	_pNext                  *interface{}
+	_pNext                  unsafe.Pointer
 	_flags                  PipelineInputAssemblyStateCreateFlags
 	_topology               PrimitiveTopology
 	_primitiveRestartEnable Bool32
 }
 type PipelineTessellationStateCreateInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_flags              PipelineTessellationStateCreateFlags
 	_patchControlPoints uint32
 }
@@ -2223,7 +2224,7 @@ type Rect2D struct {
 }
 type PipelineViewportStateCreateInfo struct {
 	_sType         StructureType
-	_pNext         *interface{}
+	_pNext         unsafe.Pointer
 	_flags         PipelineViewportStateCreateFlags
 	_viewportCount uint32
 	_pViewports    *Viewport
@@ -2232,7 +2233,7 @@ type PipelineViewportStateCreateInfo struct {
 }
 type PipelineRasterizationStateCreateInfo struct {
 	_sType                   StructureType
-	_pNext                   *interface{}
+	_pNext                   unsafe.Pointer
 	_flags                   PipelineRasterizationStateCreateFlags
 	_depthClampEnable        Bool32
 	_rasterizerDiscardEnable Bool32
@@ -2247,7 +2248,7 @@ type PipelineRasterizationStateCreateInfo struct {
 }
 type PipelineMultisampleStateCreateInfo struct {
 	_sType                 StructureType
-	_pNext                 *interface{}
+	_pNext                 unsafe.Pointer
 	_flags                 PipelineMultisampleStateCreateFlags
 	_rasterizationSamples  SampleCountFlags
 	_sampleShadingEnable   Bool32
@@ -2267,7 +2268,7 @@ type StencilOpState struct {
 }
 type PipelineDepthStencilStateCreateInfo struct {
 	_sType                 StructureType
-	_pNext                 *interface{}
+	_pNext                 unsafe.Pointer
 	_flags                 PipelineDepthStencilStateCreateFlags
 	_depthTestEnable       Bool32
 	_depthWriteEnable      Bool32
@@ -2291,7 +2292,7 @@ type PipelineColorBlendAttachmentState struct {
 }
 type PipelineColorBlendStateCreateInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_flags           PipelineColorBlendStateCreateFlags
 	_logicOpEnable   Bool32
 	_logicOp         LogicOp
@@ -2301,14 +2302,14 @@ type PipelineColorBlendStateCreateInfo struct {
 }
 type PipelineDynamicStateCreateInfo struct {
 	_sType             StructureType
-	_pNext             *interface{}
+	_pNext             unsafe.Pointer
 	_flags             PipelineDynamicStateCreateFlags
 	_dynamicStateCount uint32
 	_pDynamicStates    *DynamicState
 }
 type GraphicsPipelineCreateInfo struct {
 	_sType               StructureType
-	_pNext               *interface{}
+	_pNext               unsafe.Pointer
 	_flags               PipelineCreateFlags
 	_stageCount          uint32
 	_pStages             *PipelineShaderStageCreateInfo
@@ -2329,7 +2330,7 @@ type GraphicsPipelineCreateInfo struct {
 }
 type ComputePipelineCreateInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_flags              PipelineCreateFlags
 	_stage              PipelineShaderStageCreateInfo
 	_layout             PipelineLayout
@@ -2343,7 +2344,7 @@ type PushConstantRange struct {
 }
 type PipelineLayoutCreateInfo struct {
 	_sType                  StructureType
-	_pNext                  *interface{}
+	_pNext                  unsafe.Pointer
 	_flags                  PipelineLayoutCreateFlags
 	_setLayoutCount         uint32
 	_pSetLayouts            *DescriptorSetLayout
@@ -2352,7 +2353,7 @@ type PipelineLayoutCreateInfo struct {
 }
 type SamplerCreateInfo struct {
 	_sType                   StructureType
-	_pNext                   *interface{}
+	_pNext                   unsafe.Pointer
 	_flags                   SamplerCreateFlags
 	_magFilter               Filter
 	_minFilter               Filter
@@ -2379,7 +2380,7 @@ type DescriptorSetLayoutBinding struct {
 }
 type DescriptorSetLayoutCreateInfo struct {
 	_sType        StructureType
-	_pNext        *interface{}
+	_pNext        unsafe.Pointer
 	_flags        DescriptorSetLayoutCreateFlags
 	_bindingCount uint32
 	_pBindings    *DescriptorSetLayoutBinding
@@ -2390,7 +2391,7 @@ type DescriptorPoolSize struct {
 }
 type DescriptorPoolCreateInfo struct {
 	_sType         StructureType
-	_pNext         *interface{}
+	_pNext         unsafe.Pointer
 	_flags         DescriptorPoolCreateFlags
 	_maxSets       uint32
 	_poolSizeCount uint32
@@ -2398,7 +2399,7 @@ type DescriptorPoolCreateInfo struct {
 }
 type DescriptorSetAllocateInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_descriptorPool     DescriptorPool
 	_descriptorSetCount uint32
 	_pSetLayouts        *DescriptorSetLayout
@@ -2415,7 +2416,7 @@ type DescriptorBufferInfo struct {
 }
 type WriteDescriptorSet struct {
 	_sType            StructureType
-	_pNext            *interface{}
+	_pNext            unsafe.Pointer
 	_dstSet           DescriptorSet
 	_dstBinding       uint32
 	_dstArrayElement  uint32
@@ -2427,7 +2428,7 @@ type WriteDescriptorSet struct {
 }
 type CopyDescriptorSet struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_srcSet          DescriptorSet
 	_srcBinding      uint32
 	_srcArrayElement uint32
@@ -2438,7 +2439,7 @@ type CopyDescriptorSet struct {
 }
 type FramebufferCreateInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_flags           FramebufferCreateFlags
 	_renderPass      RenderPass
 	_attachmentCount uint32
@@ -2485,7 +2486,7 @@ type SubpassDependency struct {
 }
 type RenderPassCreateInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_flags           RenderPassCreateFlags
 	_attachmentCount uint32
 	_pAttachments    *AttachmentDescription
@@ -2496,20 +2497,20 @@ type RenderPassCreateInfo struct {
 }
 type CommandPoolCreateInfo struct {
 	_sType            StructureType
-	_pNext            *interface{}
+	_pNext            unsafe.Pointer
 	_flags            CommandPoolCreateFlags
 	_queueFamilyIndex uint32
 }
 type CommandBufferAllocateInfo struct {
 	_sType              StructureType
-	_pNext              *interface{}
+	_pNext              unsafe.Pointer
 	_commandPool        CommandPool
 	_level              CommandBufferLevel
 	_commandBufferCount uint32
 }
 type CommandBufferInheritanceInfo struct {
 	_sType                StructureType
-	_pNext                *interface{}
+	_pNext                unsafe.Pointer
 	_renderPass           RenderPass
 	_subpass              uint32
 	_framebuffer          Framebuffer
@@ -2519,7 +2520,7 @@ type CommandBufferInheritanceInfo struct {
 }
 type CommandBufferBeginInfo struct {
 	_sType            StructureType
-	_pNext            *interface{}
+	_pNext            unsafe.Pointer
 	_flags            CommandBufferUsageFlags
 	_pInheritanceInfo *CommandBufferInheritanceInfo
 }
@@ -2587,13 +2588,13 @@ type ImageResolve struct {
 }
 type MemoryBarrier struct {
 	_sType         StructureType
-	_pNext         *interface{}
+	_pNext         unsafe.Pointer
 	_srcAccessMask AccessFlags
 	_dstAccessMask AccessFlags
 }
 type BufferMemoryBarrier struct {
 	_sType               StructureType
-	_pNext               *interface{}
+	_pNext               unsafe.Pointer
 	_srcAccessMask       AccessFlags
 	_dstAccessMask       AccessFlags
 	_srcQueueFamilyIndex uint32
@@ -2604,7 +2605,7 @@ type BufferMemoryBarrier struct {
 }
 type ImageMemoryBarrier struct {
 	_sType               StructureType
-	_pNext               *interface{}
+	_pNext               unsafe.Pointer
 	_srcAccessMask       AccessFlags
 	_dstAccessMask       AccessFlags
 	_oldLayout           ImageLayout
@@ -2616,7 +2617,7 @@ type ImageMemoryBarrier struct {
 }
 type RenderPassBeginInfo struct {
 	_sType           StructureType
-	_pNext           *interface{}
+	_pNext           unsafe.Pointer
 	_renderPass      RenderPass
 	_framebuffer     Framebuffer
 	_renderArea      Rect2D
