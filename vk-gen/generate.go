@@ -196,6 +196,8 @@ func convComplexType(m *mapping, cn cast.Node) goast.Expr {
 			} else if v.Type == "char" {
 				return &goast.Ident{Name: m.mustGetType("char *")}
 			}
+		} else if _, ok := n.ChildNodes[0].(*cast.FunctionProtoType); ok {
+			return &goast.Ident{Name: m.mustGetType("void *")}
 		}
 		return &goast.StarExpr{
 			Star: token.Pos(1),
@@ -208,26 +210,7 @@ func convComplexType(m *mapping, cn cast.Node) goast.Expr {
 			Elt:    convComplexType(m, n.ChildNodes[0]),
 		}
 	case *cast.FunctionProtoType:
-		params := []*goast.Field{}
-		for _, pn := range n.ChildNodes[1:] {
-			params = append(params, &goast.Field{
-				Type: convComplexType(m, pn),
-			})
-		}
-		results := []*goast.Field{}
-		{
-			result := convComplexType(m, n.ChildNodes[0])
-			if result != nil {
-				results = append(results, &goast.Field{
-					Type: result,
-				})
-			}
-		}
-		return &goast.FuncType{
-			Func:    token.Pos(1),
-			Params:  &goast.FieldList{List: params},
-			Results: &goast.FieldList{List: results},
-		}
+		return &goast.Ident{Name: "interface{}"}
 	}
 	halt("Unkown c complex type node", cn)
 	return nil
@@ -313,8 +296,6 @@ type workspace struct {
 	target  Target
 	source  map[string]cast.Node
 	mapping mapping
-
-	sTypes map[string]int
 }
 
 func (ws *workspace) init(nodes []cast.Node) {
@@ -324,7 +305,6 @@ func (ws *workspace) init(nodes []cast.Node) {
 	ws.mapping.funcGenFn = ws.gen
 
 	ws.source = make(map[string]cast.Node, 2048)
-	ws.sTypes = make(map[string]int, 128)
 
 	for _, node := range nodes {
 		name := getNodeName(node)
@@ -335,25 +315,6 @@ func (ws *workspace) init(nodes []cast.Node) {
 			halt("Nodes conflicts", node)
 		}
 		ws.source[name] = node
-
-		if name == "enum VkStructureType" {
-			// for _, child := range node.ChildNodes {
-			// 	con := child.(*cast.EnumConstantDecl)
-			// 	var expr = convConst(&ws.mapping, con.ChildNodes[0])
-			//
-			// 	if expr != nil {
-			// 		gcon := toGoName(con.Name)
-			// 		specs = append(specs, &goast.ValueSpec{
-			// 			Names: []*goast.Ident{
-			// 				&goast.Ident{Name: gcon},
-			// 			},
-			// 			Type:   &goast.Ident{Name: goname},
-			// 			Values: []goast.Expr{expr},
-			// 		})
-			// 		ws.mapping.setConst(con.Name, gcon)
-			// 	}
-			// }
-		}
 	}
 }
 
@@ -406,11 +367,17 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 		return
 	}
 
+	match := func(str, r string) bool {
+		re := regexp.MustCompile(r)
+		return re.MatchString(str)
+	}
+
 	var t goast.Expr
 	//Is this type is an opaque type? Use C.xxx or yyy?
-	re := regexp.MustCompile("^struct\\s[a-z|A-Z]*_T \\*$")
-	if re.MatchString(node.Type) {
-		t = &goast.Ident{token.NoPos, "C." + cname, nil}
+	if match(node.Type, "^struct\\s[a-z|A-Z]*_T \\*$") { // vulkan handle
+		t = &goast.Ident{Name: "C." + cname}
+	} else if match(node.Type, "\\(\\*") { // c function pointer
+		t = &goast.Ident{Name: "struct { raw C." + cname + " }"}
 	} else {
 		t = ws.transType(node.Type)
 	}
@@ -425,6 +392,104 @@ func (ws *workspace) genTypedefDecl(node *cast.TypedefDecl) {
 		},
 	})
 	ws.mapping.setType(cname, goname)
+
+	if match(node.Type, "\\(\\*") {
+		ws.genBridgeCallMethod(goname, node)
+	}
+}
+
+func (ws *workspace) genBridgeCallMethod(goname string, node *cast.TypedefDecl) {
+	pt := parseComplexCType(node.Type, nil).(*cast.PointerType)
+	fpt := pt.ChildNodes[0].(*cast.FunctionProtoType)
+
+	var paramFields []*goast.Field
+	var resultFields []*goast.Field
+	var args []goast.Expr
+	for i, f := range fpt.ChildNodes {
+		gf := convComplexType(&ws.mapping, f)
+		if i == 0 {
+			if gf != nil {
+				resultFields = append(resultFields, &goast.Field{Type: gf})
+			}
+		} else {
+			arg := "arg" + strconv.Itoa(i-1)
+			args = append(args, &goast.Ident{Name: arg})
+			paramFields = append(paramFields, &goast.Field{
+				Names: []*goast.Ident{
+					&goast.Ident{Name: arg},
+				},
+				Type: gf,
+			})
+		}
+	}
+
+	//print.go will generate bridge call directly form these typedefs.
+	ws.target.addC(node)
+
+	warpReturnStmtIf := func(expr goast.Expr, cond bool) goast.Stmt {
+		rs := &goast.ReturnStmt{
+			Return: token.Pos(1),
+		}
+
+		if cond {
+			rs.Results = append(rs.Results, expr)
+			return rs
+		} else {
+			return &goast.ExprStmt{
+				X: expr,
+			}
+		}
+	}
+
+	ws.target.addGo(&goast.FuncDecl{
+		Recv: &goast.FieldList{
+			Opening: token.Pos(1),
+			List: []*goast.Field{
+				&goast.Field{
+					Names: []*goast.Ident{
+						&goast.Ident{Name: "p"},
+					},
+					Type: &goast.Ident{Name: goname},
+				},
+			},
+			Closing: token.Pos(1),
+		},
+		Name: &goast.Ident{Name: "Call"},
+		Type: &goast.FuncType{
+			Func: token.Pos(1),
+			Params: &goast.FieldList{
+				Opening: token.Pos(1),
+				List:    paramFields,
+				Closing: token.Pos(1),
+			},
+			Results: &goast.FieldList{
+				Opening: token.Pos(1),
+				List:    resultFields,
+				Closing: token.Pos(1),
+			},
+		},
+		Body: &goast.BlockStmt{
+			Lbrace: token.Pos(1),
+			List: []goast.Stmt{
+				warpReturnStmtIf(&goast.CallExpr{
+					Fun:    &goast.Ident{Name: "C.call" + node.Name},
+					Lparen: token.Pos(1),
+					Args: append([]goast.Expr{
+						&goast.CallExpr{
+							Fun:    &goast.Ident{Name: "C." + node.Name},
+							Lparen: token.Pos(1),
+							Args: []goast.Expr{
+								&goast.Ident{Name: "p.raw"},
+							},
+							Rparen: token.Pos(1),
+						},
+					}, args...),
+					Rparen: token.Pos(1),
+				}, len(resultFields) > 0),
+			},
+			Rbrace: token.Pos(1),
+		},
+	})
 }
 
 func (ws *workspace) genEnumDecl(node *cast.EnumDecl) {
@@ -804,6 +869,15 @@ func toGoName(n string) string {
 	re = regexp.MustCompile("^s[A-Z]+")
 	if re.MatchString(n) {
 		n = strings.TrimPrefix(n, "s")
+	}
+
+	re = regexp.MustCompile("^pfn[A-Z]+")
+	if re.MatchString(n) {
+		n = strings.TrimPrefix(n, "pfn")
+	}
+
+	if strings.HasPrefix(n, "PFN_vk") {
+		n = strings.Replace(n, "PFN_vk", "PFN", 1)
 	}
 
 	n = strings.Title(n)

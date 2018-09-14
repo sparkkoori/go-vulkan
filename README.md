@@ -28,5 +28,7 @@ Go binding for Vulkan
 
 - Map `void *` to `Structure` in `pNext` field.
 
+- Map function pointer types to structs with Call() method which calls bridge function.
+
 ## License
 MIT

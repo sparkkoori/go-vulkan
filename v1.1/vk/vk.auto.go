@@ -1,6 +1,7 @@
 package vk
 
 //#include "vulkan/vulkan.h"
+//#include "bridges.auto.h"
 import "C"
 import "unsafe"
 
@@ -1387,18 +1388,47 @@ func (s *InstanceCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
 
-type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
-type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
-type PFN_vkFreeFunction *func(unsafe.Pointer, unsafe.Pointer)
-type PFN_vkInternalAllocationNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
-type PFN_vkInternalFreeNotification *func(unsafe.Pointer, uint, InternalAllocationType, SystemAllocationScope)
+type PFNAllocationFunction struct{ raw C.PFN_vkAllocationFunction }
+
+func (p PFNAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 SystemAllocationScope) unsafe.Pointer {
+	return C.callPFN_vkAllocationFunction(C.PFN_vkAllocationFunction(p.raw), arg0, arg1, arg2, arg3)
+}
+
+type PFNReallocationFunction struct{ raw C.PFN_vkReallocationFunction }
+
+func (p PFNReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 SystemAllocationScope) unsafe.Pointer {
+	return C.callPFN_vkReallocationFunction(C.PFN_vkReallocationFunction(p.raw), arg0, arg1, arg2, arg3, arg4)
+}
+
+type PFNFreeFunction struct{ raw C.PFN_vkFreeFunction }
+
+func (p PFNFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
+	C.callPFN_vkFreeFunction(C.PFN_vkFreeFunction(p.raw), arg0, arg1)
+}
+
+type PFNInternalAllocationNotification struct {
+	raw C.PFN_vkInternalAllocationNotification
+}
+
+func (p PFNInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+	C.callPFN_vkInternalAllocationNotification(C.PFN_vkInternalAllocationNotification(p.raw), arg0, arg1, arg2, arg3)
+}
+
+type PFNInternalFreeNotification struct {
+	raw C.PFN_vkInternalFreeNotification
+}
+
+func (p PFNInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+	C.callPFN_vkInternalFreeNotification(C.PFN_vkInternalFreeNotification(p.raw), arg0, arg1, arg2, arg3)
+}
+
 type AllocationCallbacks struct {
-	UserData              unsafe.Pointer
-	PfnAllocation         PFN_vkAllocationFunction
-	PfnReallocation       PFN_vkReallocationFunction
-	PfnFree               PFN_vkFreeFunction
-	PfnInternalAllocation PFN_vkInternalAllocationNotification
-	PfnInternalFree       PFN_vkInternalFreeNotification
+	UserData           unsafe.Pointer
+	Allocation         PFNAllocationFunction
+	Reallocation       PFNReallocationFunction
+	Free               PFNFreeFunction
+	InternalAllocation PFNInternalAllocationNotification
+	InternalFree       PFNInternalFreeNotification
 }
 type PhysicalDeviceFeatures struct {
 	RobustBufferAccess                      bool

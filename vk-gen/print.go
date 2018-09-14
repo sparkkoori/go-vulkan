@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	goast "go/ast"
 	"go/format"
@@ -8,22 +9,108 @@ import (
 	"go/token"
 	"os"
 	"path"
+	"regexp"
+	"strconv"
+	"strings"
+
+	cast "github.com/elliotchance/c2go/ast"
 )
 
 func print(target Target) {
-	// 	src := `
-	// package main
-	// func main() {
-	// 	println("Hello, World!")
-	// }
-	// `
-	//
-	// 	fset := token.NewFileSet() // positions are relative to fset
-	// 	goAst, err := parser.ParseFile(fset, "", src, 0)
-	// 	if err != nil {
-	// 		panic(err)
-	// 	}
+	printC(target.targetC)
 	printGo(target.targetGo)
+}
+
+func printC(nodes []cast.Node) {
+	cf, err := os.Create(path.Join(pkgdir(), "bridges.auto.c"))
+	if err != nil {
+		panic(err)
+	}
+	defer cf.Close()
+
+	hf, err := os.Create(path.Join(pkgdir(), "bridges.auto.h"))
+	if err != nil {
+		panic(err)
+	}
+	defer hf.Close()
+
+	cw := bufio.NewWriter(cf)
+	writec := func(str string) {
+		_, err = cw.WriteString(str)
+		if err != nil {
+			cw.Flush()
+			panic(err)
+		}
+	}
+
+	writeh := func(str string) {
+		_, err = hf.WriteString(str)
+		if err != nil {
+			hf.Sync()
+			panic(err)
+		}
+	}
+
+	writech := func(str string) {
+		writec(str)
+		writeh(str)
+	}
+
+	writec("#include \"bridges.auto.h\"\n")
+	writec("\n")
+
+	writeh("#pragma once\n")
+	writeh("#include \"vulkan/vulkan.h\"\n")
+	writeh("\n")
+
+	for _, node := range nodes {
+		decl := node.(*cast.TypedefDecl)
+		vars := splitFuncPointerProtoType(decl.Type)
+		writech(vars[0])
+		writech("call")
+		writech(decl.Name)
+		writech("(")
+		writech(decl.Name)
+		writech(" ")
+		writech("f")
+		for i, arg := range vars[1:] {
+			writech(", ")
+			writech(arg)
+			writech(" ")
+			writech("arg")
+			writech(strconv.Itoa(i))
+		}
+		writech(")")
+		writeh(";\n")
+		writec("\n{\n")
+		writec("  return f(")
+		for i, _ := range vars[1:] {
+			if i != 0 {
+				writec(", ")
+			}
+			writec("arg")
+			writec(strconv.Itoa(i))
+		}
+		writec(");\n")
+		writec("};\n")
+		writech("\n")
+	}
+
+	cw.Flush()
+	hf.Sync()
+}
+
+func splitFuncPointerProtoType(p string) []string {
+	vars := []string{}
+
+	rg := regexp.MustCompile("^(.*)\\s?\\(\\s?\\*\\s?\\)\\s?\\((.*)\\)$")
+	subs := rg.FindStringSubmatch(p)
+
+	vars = append(vars, subs[1])
+	for _, param := range strings.Split(subs[2], ",") {
+		vars = append(vars, param)
+	}
+	return vars
 }
 
 func printGo(nodes []goast.Node) {
@@ -46,6 +133,9 @@ func printGo(nodes []goast.Node) {
 				List: []*goast.Comment{
 					&goast.Comment{
 						Text: "//#include \"vulkan/vulkan.h\"",
+					},
+					&goast.Comment{
+						Text: "//#include \"bridges.auto.h\"",
 					},
 				},
 			},
