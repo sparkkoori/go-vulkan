@@ -1671,9 +1671,9 @@ const (
 type ApplicationInfo struct {
 	Type               StructureType
 	Next               unsafe.Pointer
-	ApplicationName    *byte
+	ApplicationName    string
 	ApplicationVersion uint32
-	EngineName         *byte
+	EngineName         string
 	EngineVersion      uint32
 	ApiVersion         uint32
 }
@@ -1683,9 +1683,9 @@ type InstanceCreateInfo struct {
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
 	EnabledLayerCount     uint32
-	EnabledLayerNames     **byte
+	EnabledLayerNames     *string
 	EnabledExtensionCount uint32
-	EnabledExtensionNames **byte
+	EnabledExtensionNames *string
 }
 type PFN_vkAllocationFunction *func(unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
 type PFN_vkReallocationFunction *func(unsafe.Pointer, unsafe.Pointer, uint, uint, SystemAllocationScope) unsafe.Pointer
@@ -1935,9 +1935,9 @@ type DeviceCreateInfo struct {
 	QueueCreateInfoCount  uint32
 	QueueCreateInfos      *DeviceQueueCreateInfo
 	EnabledLayerCount     uint32
-	EnabledLayerNames     **byte
+	EnabledLayerNames     *string
 	EnabledExtensionCount uint32
-	EnabledExtensionNames **byte
+	EnabledExtensionNames *string
 	EnabledFeatures       *PhysicalDeviceFeatures
 }
 type ExtensionProperties struct {
@@ -2165,7 +2165,7 @@ type PipelineShaderStageCreateInfo struct {
 	Flags              PipelineShaderStageCreateFlags
 	Stage              ShaderStageFlags
 	Module             ShaderModule
-	Name               *byte
+	Name               string
 	SpecializationInfo *SpecializationInfo
 }
 type VertexInputBindingDescription struct {

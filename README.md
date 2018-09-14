@@ -15,7 +15,9 @@ Go binding for Vulkan
 
 - Merge Vk\*FlagBit to Vk\*Flags.
 
-- Use bool instead of Bool32.
+- Use bool for Bool32.
+
+- Use string for char *
 
 
 ## License

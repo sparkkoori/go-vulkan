@@ -186,6 +186,8 @@ func convComplexType(m *mapping, cn cast.Node) goast.Expr {
 		if v, ok := n.ChildNodes[0].(*cast.Typedef); ok {
 			if v.Type == "void" {
 				return &goast.Ident{Name: m.mustGetType("void *")}
+			} else if v.Type == "char" {
+				return &goast.Ident{Name: "string"}
 			}
 		}
 		return &goast.StarExpr{
