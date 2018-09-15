@@ -3,12 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 
 	goast "go/ast"
 
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/logrusorgru/aurora"
 )
+
+func init() {
+	log.SetFlags(0)
+}
 
 type Source []cast.Node
 

@@ -18,7 +18,7 @@ func parse() Source {
 		headerPath = path.Join(pkgdir(), "vulkan", "vulkan.h")
 		_, err := os.Stat(headerPath)
 		if err != nil {
-			log.Fatalln("%s isn't found")
+			log.Fatalf("%s isn't found \n", headerPath)
 		}
 	}
 
