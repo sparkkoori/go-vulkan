@@ -55,10 +55,11 @@ func parse() Source {
 		panic("clang failed: " + err.Error() + ":\n\n" + string(errBody))
 	}
 
-	return parseClangAstDump(string(ast))
+	unit := parseAstDump(string(ast))
+	return Source(unit.Children())
 }
 
-func parseClangAstDump(dump string) Source {
+func parseAstDump(dump string) *ast.TranslationUnitDecl {
 	lines := strings.Split(string(dump), "\n")
 
 	var nodes []ast.Node
@@ -95,6 +96,5 @@ func parseClangAstDump(dump string) Source {
 	}
 
 	unit := nodes[0].(*ast.TranslationUnitDecl)
-	src := Source(unit.Children())
-	return src
+	return unit
 }
