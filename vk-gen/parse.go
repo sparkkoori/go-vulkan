@@ -46,17 +46,57 @@ func parse() Source {
 		}
 	}
 
+	dump := execClangAstDump(ppPath)
+	unit := parseAstDump(dump)
+	return Source(unit.Children())
+}
+
+func findCTypeIdentIndex(typeStr string) int {
+	return 0
+}
+
+func parseTypeString(typeStr string) ast.Node {
+	const id = "XXX"
+
+	declStr := "typedef " + typeStr + " " + id + ";"
+
+	var tmpPath string
+	{
+		dir, err := ioutil.TempDir(".", ".vk-gen-temp")
+		if err != nil {
+			log.Fatalf("Cannot create temp folder: %v\n", err)
+		}
+		defer os.RemoveAll(dir)
+		tmpPath = path.Join(dir, "typedef-dump.h")
+		err = ioutil.WriteFile(tmpPath, []byte(declStr), 0644)
+		if err != nil {
+			log.Fatalf("writing to %s failed: %v\n", tmpPath, err)
+		}
+	}
+	dump := execClangAstDump(tmpPath)
+	unit := parseAstDump(dump)
+
+	var def *ast.TypedefDecl
+	for _, child := range unit.Children() {
+		_def, ok := child.(*ast.TypedefDecl)
+		if ok && _def.Name == id {
+			def = _def
+			break
+		}
+	}
+	return def
+}
+
+func execClangAstDump(p string) string {
 	ast, err := exec.Command("clang", "-Xclang", "-ast-dump",
-		"-fsyntax-only", "-fno-color-diagnostics", ppPath).Output()
+		"-fsyntax-only", "-fno-color-diagnostics", p).Output()
 	if err != nil {
 		// If clang fails it still prints out the AST, so we have to run it
 		// again to get the real error.
-		errBody, _ := exec.Command("clang", ppPath).CombinedOutput()
+		errBody, _ := exec.Command("clang", p).CombinedOutput()
 		panic("clang failed: " + err.Error() + ":\n\n" + string(errBody))
 	}
-
-	unit := parseAstDump(string(ast))
-	return Source(unit.Children())
+	return string(ast)
 }
 
 func parseAstDump(dump string) *ast.TranslationUnitDecl {

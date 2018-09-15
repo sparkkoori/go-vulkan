@@ -884,20 +884,3 @@ func toGoName(n string) string {
 
 	return n
 }
-
-func deepPrint(node cast.Node, level int) {
-	if node == nil {
-		return
-	}
-	header := ""
-	for i := 0; i < level; i++ {
-		header += " - "
-	}
-	header += reflect.TypeOf(node).String()
-	fmt.Println(aurora.Blue(header))
-	fmt.Printf("%#v\n", node)
-
-	for _, child := range node.Children() {
-		deepPrint(child, level+1)
-	}
-}

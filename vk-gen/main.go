@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"reflect"
 
 	goast "go/ast"
 
@@ -46,4 +47,21 @@ func pkgdir() string {
 		dir = "."
 	}
 	return dir
+}
+
+func deepPrint(node cast.Node, level int) {
+	if node == nil {
+		return
+	}
+	header := ""
+	for i := 0; i < level; i++ {
+		header += " - "
+	}
+	header += reflect.TypeOf(node).String()
+	fmt.Println(aurora.Blue(header))
+	fmt.Printf("%#v\n", node)
+
+	for _, child := range node.Children() {
+		deepPrint(child, level+1)
+	}
 }
