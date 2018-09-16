@@ -18,11 +18,11 @@ func parse() Source {
 	/*
 		Because the ast dump produced by clang lacks of type ast tree in ParmVarDecl
 		and FieldDecl.
-		So a tick must be used.
+		So a trick must be used.
 
 		1. Parse source file to get all type strings in ParmVarDecls and FieldDecls.
 		2. Append new typedefs to source file for every encoded type strings.
-		3. Parse source file agian
+		3. Parse source file again.
 		4. Fix all ParmVarDecls and FieldDecls use type strings to node mapping.
 	*/
 
