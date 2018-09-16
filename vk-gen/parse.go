@@ -14,62 +14,175 @@ import (
 )
 
 func parse() Source {
-	var headerPath string
+	/*
+		Because the ast dump produced by clang lacks of type ast tree in ParmVarDecl
+		and FieldDecl.
+		So a tick must be used.
+
+		1. Parse source file to get all type strings in ParmVarDecls and FieldDecls.
+		2. Append new typedefs to source file for every encoded type strings.
+		3. Parse source file agian
+		4. Fix all ParmVarDecls and FieldDecls use type strings to node mapping.
+	*/
+
+	ppvk := ""
+	var unit *ast.TranslationUnitDecl
+	typeStrs := make([]string, 0, 128)
+	encodedTypeStrs := make(map[string]ast.Node, 128)
+	//step 1
 	{
-		headerPath = path.Join(pkgdir(), "vulkan", "vulkan.h")
-		_, err := os.Stat(headerPath)
-		if err != nil {
-			log.Fatalf("%s isn't found \n", headerPath)
+		ppvk = makePreprocessedVulkan()
+		unit = parseSourceFileToAst(ppvk)
+		for _, node := range unit.ChildNodes {
+			switch n := node.(type) {
+			case *ast.FunctionDecl:
+				for _, cnode := range n.ChildNodes {
+					cn, ok := cnode.(*ast.ParmVarDecl)
+					if ok {
+						typeStrs = append(typeStrs, cn.Type)
+					}
+				}
+			case *ast.RecordDecl:
+				for _, cnode := range n.ChildNodes {
+					cn, ok := cnode.(*ast.FieldDecl)
+					if ok {
+						typeStrs = append(typeStrs, cn.Type)
+					}
+				}
+			}
 		}
 	}
 
-	var proprossed []byte
+	//step 2
 	{
-		flags := []string{}
-		pp, _, _, err := preprocessor.Analyze([]string{headerPath}, flags)
+		f, err := os.OpenFile(ppvk, os.O_APPEND|os.O_WRONLY, 0600)
 		if err != nil {
 			panic(err)
 		}
-		proprossed = pp
+
+		defer f.Close()
+
+		for _, str := range typeStrs {
+			if strings.Contains(str, " ") {
+				//means it's compound type
+				ident := encodeCTypeString(str)
+				declStr := "typedef " + getCVarDeclString(ident, str) + ";\n"
+				f.WriteString(declStr)
+				// println(ident)
+			}
+		}
+		f.Sync()
 	}
 
-	var ppPath string
+	//step 3
 	{
-		ppPath = path.Join(tempDir, "vulkan.pp.h")
-		err := ioutil.WriteFile(ppPath, proprossed, 0644)
-		if err != nil {
-			log.Fatalf("writing to %s failed: %v\n", ppPath, err)
+		unit = parseSourceFileToAst(ppvk)
+		for i := len(unit.ChildNodes) - 1; i >= 0; i-- {
+			switch n := unit.ChildNodes[i].(type) {
+			case *ast.TypedefDecl:
+				if strings.HasPrefix(n.Name, "XXX") {
+					encodedTypeStrs[n.Name] = n.ChildNodes[0]
+					unit.ChildNodes = append(unit.ChildNodes[:i], unit.ChildNodes[i+1:]...)
+				}
+			}
 		}
 	}
 
-	dump := execClangAstDump(ppPath)
-	unit := parseAstDump(dump)
-	nodes := unit.Children()
-	fixTypeMiss(nodes)
-	return Source(nodes)
+	//step 4
+	{
+		unit := parseSourceFileToAst(ppvk)
+		for _, node := range unit.ChildNodes {
+			switch n := node.(type) {
+			case *ast.FunctionDecl:
+				for _, cnode := range n.ChildNodes {
+					cn, ok := cnode.(*ast.ParmVarDecl)
+					if ok && strings.Contains(cn.Type, " ") {
+						et := encodeCTypeString(cn.Type)
+						cn.AddChild(encodedTypeStrs[et])
+						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+					}
+				}
+			case *ast.RecordDecl:
+				for _, cnode := range n.ChildNodes {
+					cn, ok := cnode.(*ast.FieldDecl)
+					if ok && strings.Contains(cn.Type, " ") {
+						et := encodeCTypeString(cn.Type)
+						cn.AddChild(encodedTypeStrs[et])
+						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+					}
+				}
+			}
+		}
+	}
+
+	//Debug:
+	// for _, node := range unit.ChildNodes {
+	// 	i := 0
+	// 	switch n := node.(type) {
+	// 	case *ast.FunctionDecl:
+	// 		for _, cnode := range n.ChildNodes {
+	// 			_, ok := cnode.(*ast.ParmVarDecl)
+	// 			if ok {
+	// 				i++
+	// 			}
+	// 		}
+	// 	case *ast.RecordDecl:
+	// 		for _, cnode := range n.ChildNodes {
+	// 			_, ok := cnode.(*ast.ParmVarDecl)
+	// 			if ok {
+	// 				i++
+	// 			}
+	// 			i++
+	// 		}
+	// 	}
+	// 	println(i)
+	// }
+	return Source(unit.ChildNodes)
 }
 
-func fixTypeMiss(nodes []ast.Node) {
-	for _, node := range nodes {
-		switch n := node.(type) {
-		case *ast.FunctionDecl:
-			for _, cnode := range n.ChildNodes {
-				cn, ok := cnode.(*ast.ParmVarDecl)
-				if ok {
-					t := parseTypeString(cn.Type)
-					n.AddChild(t)
-				}
-			}
-		case *ast.RecordDecl:
-			for _, cnode := range n.ChildNodes {
-				cn, ok := cnode.(*ast.FieldDecl)
-				if ok {
-					t := parseTypeString(cn.Type)
-					n.AddChild(t)
-				}
-			}
-		}
+func encodeCTypeString(str string) string {
+	str = strings.Replace(str, " ", "SPACE", -1)
+	str = strings.Replace(str, "*", "STAR", -1)
+	str = strings.Replace(str, "(", "LPAREN", -1)
+	str = strings.Replace(str, ")", "RPAREN", -1)
+	str = strings.Replace(str, "[", "LBRACK", -1)
+	str = strings.Replace(str, "]", "RBRACK", -1)
+	return "XXX" + str
+}
+
+func getVulkanPath() string {
+	headerPath := path.Join(pkgdir(), "vulkan", "vulkan.h")
+	_, err := os.Stat(headerPath)
+	if err != nil {
+		log.Fatalf("%s isn't found \n", headerPath)
 	}
+	return headerPath
+}
+
+func cpreprocess(srcPath string) []byte {
+	flags := []string{}
+	pp, _, _, err := preprocessor.Analyze([]string{srcPath}, flags)
+	if err != nil {
+		panic(err)
+	}
+	return pp
+}
+
+func makePreprocessedVulkan() string {
+	p := getVulkanPath()
+	code := cpreprocess(p)
+	ppPath := path.Join(tempDir, "vulkan.pp.h")
+	err := ioutil.WriteFile(ppPath, code, 0644)
+	if err != nil {
+		log.Fatalf("writing to %s failed: %v\n", ppPath, err)
+	}
+	return ppPath
+}
+
+func parseSourceFileToAst(srcPath string) *ast.TranslationUnitDecl {
+	dump := execClangAstDump(srcPath)
+	unit := parseAstDump(dump)
+	return unit
 }
 
 func findCTypeIdentIndex(typeStr string) int {
@@ -104,38 +217,13 @@ func findCTypeIdentIndex(typeStr string) int {
 	return i + baseIdx
 }
 
-func getVarString(varIdent string, typeStr string) string {
+func getCVarDeclString(varIdent string, typeStr string) string {
 	idx := findCTypeIdentIndex(typeStr)
 	if idx > len(typeStr) {
 		return typeStr[0:idx] + " " + varIdent
 	} else {
 		return typeStr[0:idx] + " " + varIdent + " " + typeStr[idx:]
 	}
-}
-
-func parseTypeString(typeStr string) ast.Node {
-	const ident = "XXX"
-	declStr := "typedef " + getVarString(ident, typeStr) + ";"
-	var tmp string
-	{
-		tmp = path.Join(tempDir, "typedef-dump.h")
-		err := ioutil.WriteFile(tmp, []byte(declStr), 0644)
-		if err != nil {
-			log.Fatalf("writing to %s failed: %v\n", tmp, err)
-		}
-	}
-	dump := execClangAstDump(tmp)
-	unit := parseAstDump(dump)
-
-	var def *ast.TypedefDecl
-	for _, child := range unit.Children() {
-		_def, ok := child.(*ast.TypedefDecl)
-		if ok && _def.Name == ident {
-			def = _def
-			break
-		}
-	}
-	return def.ChildNodes[0]
 }
 
 func execClangAstDump(p string) string {
