@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"regexp"
 	"strings"
 
 	"github.com/elliotchance/c2go/ast"
@@ -72,14 +73,35 @@ func fixTypeMiss(nodes []ast.Node) {
 }
 
 func findCTypeIdentIndex(typeStr string) int {
+	// Using the syntax rules, we know that:
+	// to the right of all the "pointer to" derived type tokens
+	// to the left of all "array of" derived type tokens
+	// to the left of all "function returning" derived type tokens
+	// inside all the grouping parentheses
+
+	var baseIdx int
+	// inside all the grouping parentheses
+	{
+		re := regexp.MustCompile("\\(\\s?\\*(.*?)\\)")
+		for {
+			subidx := re.FindStringSubmatchIndex(typeStr)
+			if subidx == nil {
+				break
+			}
+			typeStr = typeStr[subidx[2]:subidx[3]]
+			baseIdx = subidx[2]
+		}
+	}
+
 	var i int
 	if i = strings.Index(typeStr, "["); i >= 0 {
-		return i
+		// i = i
 	} else if i = strings.LastIndex(typeStr, "*"); i >= 0 {
-		return i + 1
+		i = i + 1
 	} else {
-		return len(typeStr)
+		i = len(typeStr)
 	}
+	return i + baseIdx
 }
 
 func getVarString(varIdent string, typeStr string) string {
