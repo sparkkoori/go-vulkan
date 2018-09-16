@@ -88,7 +88,7 @@ func parseTypeString(typeStr string) ast.Node {
 			break
 		}
 	}
-	return def
+	return def.ChildNodes[0]
 }
 
 func execClangAstDump(p string) string {
