@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -27,7 +28,7 @@ func parse() Source {
 
 	ppvk := ""
 	var unit *ast.TranslationUnitDecl
-	typeStrs := make([]string, 0, 128)
+	typeStrs := make(map[string]bool, 128)
 	encodedTypeStrs := make(map[string]ast.Node, 128)
 	//step 1
 	{
@@ -39,14 +40,14 @@ func parse() Source {
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.ParmVarDecl)
 					if ok {
-						typeStrs = append(typeStrs, cn.Type)
+						typeStrs[cn.Type] = true
 					}
 				}
 			case *ast.RecordDecl:
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.FieldDecl)
 					if ok {
-						typeStrs = append(typeStrs, cn.Type)
+						typeStrs[cn.Type] = true
 					}
 				}
 			}
@@ -62,14 +63,10 @@ func parse() Source {
 
 		defer f.Close()
 
-		for _, str := range typeStrs {
-			if strings.Contains(str, " ") {
-				//means it's compound type
-				ident := encodeCTypeString(str)
-				declStr := "typedef " + getCVarDeclString(ident, str) + ";\n"
-				f.WriteString(declStr)
-				// println(ident)
-			}
+		for str, _ := range typeStrs {
+			ident := encodeCTypeString(str)
+			declStr := "typedef " + getCVarDeclString(ident, str) + ";\n"
+			f.WriteString(declStr)
 		}
 		f.Sync()
 	}
@@ -90,52 +87,35 @@ func parse() Source {
 
 	//step 4
 	{
-		unit := parseSourceFileToAst(ppvk)
 		for _, node := range unit.ChildNodes {
 			switch n := node.(type) {
 			case *ast.FunctionDecl:
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.ParmVarDecl)
-					if ok && strings.Contains(cn.Type, " ") {
+					if ok {
 						et := encodeCTypeString(cn.Type)
 						cn.AddChild(encodedTypeStrs[et])
-						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+						println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
 					}
 				}
 			case *ast.RecordDecl:
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.FieldDecl)
-					if ok && strings.Contains(cn.Type, " ") {
+					if ok {
 						et := encodeCTypeString(cn.Type)
 						cn.AddChild(encodedTypeStrs[et])
-						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+						println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
 					}
 				}
 			}
 		}
 	}
 
-	//Debug:
+	// Debug:
 	// for _, node := range unit.ChildNodes {
-	// 	i := 0
-	// 	switch n := node.(type) {
-	// 	case *ast.FunctionDecl:
-	// 		for _, cnode := range n.ChildNodes {
-	// 			_, ok := cnode.(*ast.ParmVarDecl)
-	// 			if ok {
-	// 				i++
-	// 			}
-	// 		}
-	// 	case *ast.RecordDecl:
-	// 		for _, cnode := range n.ChildNodes {
-	// 			_, ok := cnode.(*ast.ParmVarDecl)
-	// 			if ok {
-	// 				i++
-	// 			}
-	// 			i++
-	// 		}
+	// 	if _, ok := node.(*ast.RecordDecl); ok {
+	// 		deepPrint(node, 0)
 	// 	}
-	// 	println(i)
 	// }
 	return Source(unit.ChildNodes)
 }
