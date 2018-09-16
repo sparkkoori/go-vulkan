@@ -43,7 +43,32 @@ func parse() Source {
 
 	dump := execClangAstDump(ppPath)
 	unit := parseAstDump(dump)
-	return Source(unit.Children())
+	nodes := unit.Children()
+	fixTypeMiss(nodes)
+	return Source(nodes)
+}
+
+func fixTypeMiss(nodes []ast.Node) {
+	for _, node := range nodes {
+		switch n := node.(type) {
+		case *ast.FunctionDecl:
+			for _, cnode := range n.ChildNodes {
+				cn, ok := cnode.(*ast.ParmVarDecl)
+				if ok {
+					t := parseTypeString(cn.Type)
+					n.AddChild(t)
+				}
+			}
+		case *ast.RecordDecl:
+			for _, cnode := range n.ChildNodes {
+				cn, ok := cnode.(*ast.FieldDecl)
+				if ok {
+					t := parseTypeString(cn.Type)
+					n.AddChild(t)
+				}
+			}
+		}
+	}
 }
 
 func findCTypeIdentIndex(typeStr string) int {
