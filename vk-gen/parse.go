@@ -52,14 +52,28 @@ func parse() Source {
 }
 
 func findCTypeIdentIndex(typeStr string) int {
-	return 0
+	var i int
+	if i = strings.Index(typeStr, "["); i >= 0 {
+		return i
+	} else if i = strings.LastIndex(typeStr, "*"); i >= 0 {
+		return i + 1
+	} else {
+		return len(typeStr)
+	}
+}
+
+func getVarString(varIdent string, typeStr string) string {
+	idx := findCTypeIdentIndex(typeStr)
+	if idx > len(typeStr) {
+		return typeStr[0:idx] + " " + varIdent
+	} else {
+		return typeStr[0:idx] + " " + varIdent + " " + typeStr[idx:]
+	}
 }
 
 func parseTypeString(typeStr string) ast.Node {
-	const id = "XXX"
-
-	declStr := "typedef " + typeStr + " " + id + ";"
-
+	const ident = "XXX"
+	declStr := "typedef " + getVarString(ident, typeStr) + ";"
 	var tmpPath string
 	{
 		dir, err := ioutil.TempDir(".", ".vk-gen-temp")
@@ -79,7 +93,7 @@ func parseTypeString(typeStr string) ast.Node {
 	var def *ast.TypedefDecl
 	for _, child := range unit.Children() {
 		_def, ok := child.(*ast.TypedefDecl)
-		if ok && _def.Name == id {
+		if ok && _def.Name == ident {
 			def = _def
 			break
 		}
