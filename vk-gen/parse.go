@@ -34,12 +34,7 @@ func parse() Source {
 
 	var ppPath string
 	{
-		// dir, err := ioutil.TempDir("", "vk-gen")
-		// if err != nil {
-		// 	log.Fatalf("Cannot create temp folder: %v\n", err)
-		// }
-		// defer os.RemoveAll(dir)
-		ppPath = path.Join("", "vulkan.auto.h")
+		ppPath = path.Join(tempDir, "vulkan.pp.h")
 		err := ioutil.WriteFile(ppPath, proprossed, 0644)
 		if err != nil {
 			log.Fatalf("writing to %s failed: %v\n", ppPath, err)
@@ -74,20 +69,15 @@ func getVarString(varIdent string, typeStr string) string {
 func parseTypeString(typeStr string) ast.Node {
 	const ident = "XXX"
 	declStr := "typedef " + getVarString(ident, typeStr) + ";"
-	var tmpPath string
+	var tmp string
 	{
-		dir, err := ioutil.TempDir(".", ".vk-gen-temp")
+		tmp = path.Join(tempDir, "typedef-dump.h")
+		err := ioutil.WriteFile(tmp, []byte(declStr), 0644)
 		if err != nil {
-			log.Fatalf("Cannot create temp folder: %v\n", err)
-		}
-		defer os.RemoveAll(dir)
-		tmpPath = path.Join(dir, "typedef-dump.h")
-		err = ioutil.WriteFile(tmpPath, []byte(declStr), 0644)
-		if err != nil {
-			log.Fatalf("writing to %s failed: %v\n", tmpPath, err)
+			log.Fatalf("writing to %s failed: %v\n", tmp, err)
 		}
 	}
-	dump := execClangAstDump(tmpPath)
+	dump := execClangAstDump(tmp)
 	unit := parseAstDump(dump)
 
 	var def *ast.TypedefDecl

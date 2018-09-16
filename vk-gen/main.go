@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"os"
+	"path"
 	"reflect"
 
 	goast "go/ast"
@@ -12,8 +14,16 @@ import (
 	"github.com/logrusorgru/aurora"
 )
 
+var tempDir string
+
 func init() {
 	log.SetFlags(0)
+
+	dir := path.Join(".", ".vk-gen-temp")
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		os.Mkdir(dir, os.ModePerm)
+	}
+	tempDir = dir
 }
 
 type Source []cast.Node

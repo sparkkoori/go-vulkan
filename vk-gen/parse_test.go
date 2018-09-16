@@ -1,8 +1,16 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"os"
+	"testing"
+)
 
 func TestParseTypeString(t *testing.T) {
+	if err := os.Chdir("testdata"); err != nil {
+		fmt.Println("Chdir error:", err)
+	}
+
 	def := parseTypeString("void const *")
 	deepPrint(def, 0)
 
