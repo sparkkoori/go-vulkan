@@ -1,4 +1,5 @@
 package vk
+
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
 import "C"
@@ -33,7 +34,11 @@ func setArray(a *int32) {
 	*a = int32(*c_a)
 	return
 }
-func setbigN() {
-	C.setbigN()
+
+type bigN uint32
+
+func setbigN(n bigN) {
+	c_n := C.uint(n)
+	C.setbigN(c_n)
 	return
 }

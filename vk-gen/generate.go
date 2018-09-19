@@ -250,8 +250,107 @@ func (g *generator) genConstantArrayType(n *cast.ConstantArrayType) *typeInfo {
 }
 
 func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
-	deepPrint(n, 0)
-	return nil
+	if info, ok := g.types[n.Type]; ok {
+		return info
+	}
+
+	o := n.ChildNodes[1]
+	oinfo := g.genType(o)
+	checkTypeInfo(oinfo, o)
+
+	gotype := n.Type
+
+	g.target.addGo(&goast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []goast.Spec{
+			&goast.TypeSpec{
+				Name: &goast.Ident{Name: gotype},
+				Type: oinfo.gotype,
+			},
+		},
+	})
+
+	info := &typeInfo{
+		ctype:  n,
+		gotype: &goast.Ident{Name: gotype},
+		c2go: func(goname, cname string, define bool) []goast.Stmt {
+			stmts := []goast.Stmt{}
+			// stmts = append(stmts, &goast.AssignStmt{
+			// 	Lhs: []goast.Expr{&goast.Ident{Name: cname + "_inner"}},
+			// 	Tok: token.DEFINE,
+			// 	Rhs: []goast.Expr{
+			// 		&goast.CallExpr{
+			// 			Fun:    oinfo.cgotype(),
+			// 			Lparen: token.Pos(1),
+			// 			Args: []goast.Expr{
+			// 				&goast.Ident{Name: cname},
+			// 			},
+			// 			Rparen: token.Pos(1),
+			// 		},
+			// 	},
+			// })
+			stmts = append(stmts, oinfo.c2go(goname, cname, define)...)
+			// stmts = append(stmts, &goast.AssignStmt{
+			// 	Lhs: []goast.Expr{&goast.Ident{Name: goname}},
+			// 	Tok: tok,
+			// 	Rhs: []goast.Expr{
+			// 		&goast.CallExpr{
+			// 			Fun:    &goast.Ident{Name: gotype},
+			// 			Lparen: token.Pos(1),
+			// 			Args: []goast.Expr{
+			// 				&goast.Ident{Name: goname + "_inner"},
+			// 			},
+			// 			Rparen: token.Pos(1),
+			// 		},
+			// 	},
+			// })
+
+			return stmts
+		},
+
+		go2c: func(cname, goname string, define bool) []goast.Stmt {
+			// tok := token.ASSIGN
+			// if define {
+			// 	tok = token.DEFINE
+			// }
+
+			stmts := []goast.Stmt{}
+			// stmts = append(stmts, &goast.AssignStmt{
+			// 	Lhs: []goast.Expr{&goast.Ident{Name: goname + "_inner"}},
+			// 	Tok: token.DEFINE,
+			// 	Rhs: []goast.Expr{
+			// 		&goast.CallExpr{
+			// 			Fun:    oinfo.gotype,
+			// 			Lparen: token.Pos(1),
+			// 			Args: []goast.Expr{
+			// 				&goast.Ident{Name: goname},
+			// 			},
+			// 			Rparen: token.Pos(1),
+			// 		},
+			// 	},
+			// })
+			stmts = append(stmts, oinfo.go2c(cname, goname, define)...)
+			// stmts = append(stmts, &goast.AssignStmt{
+			// 	Lhs: []goast.Expr{&goast.Ident{Name: cname}},
+			// 	Tok: tok,
+			// 	Rhs: []goast.Expr{
+			// 		&goast.CallExpr{
+			// 			Fun:    &goast.Ident{Name: cgotype(n)},
+			// 			Lparen: token.Pos(1),
+			// 			Args: []goast.Expr{
+			// 				&goast.Ident{Name: cname + "_inner"},
+			// 			},
+			// 			Rparen: token.Pos(1),
+			// 		},
+			// 	},
+			// })
+
+			return stmts
+		},
+	}
+
+	g.types[n.Type] = info
+	return info
 }
 
 func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {

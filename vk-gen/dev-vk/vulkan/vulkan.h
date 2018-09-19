@@ -8,7 +8,7 @@ int** movePointer(int *a);
 
 void setArray(int a[]);
 
-typedef long long bigN;
+typedef unsigned int bigN;
 
 void setbigN(bigN n);
 
