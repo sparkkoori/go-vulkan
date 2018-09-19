@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"reflect"
 	"regexp"
 	"strings"
 
@@ -20,7 +19,8 @@ func parse() Source {
 		and FieldDecl.
 		So a trick must be used.
 
-		1. Parse source file to get all type strings in ParmVarDecls and FieldDecls.
+		1. Parse source file to get all type strings in FunctionDecl,ParmVarDecls
+		and FieldDecls.
 		2. Append new typedefs to source file for every encoded type strings.
 		3. Parse source file again.
 		4. Fix all ParmVarDecls and FieldDecls use type strings to node mapping.
@@ -37,6 +37,8 @@ func parse() Source {
 		for _, node := range unit.ChildNodes {
 			switch n := node.(type) {
 			case *ast.FunctionDecl:
+				ret := extractCFunctionReturnType(n.Type)
+				typeStrs[ret] = true
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.ParmVarDecl)
 					if ok {
@@ -90,12 +92,17 @@ func parse() Source {
 		for _, node := range unit.ChildNodes {
 			switch n := node.(type) {
 			case *ast.FunctionDecl:
+				{
+					ret := extractCFunctionReturnType(n.Type)
+					ret = encodeCTypeString(ret)
+					n.ChildNodes = append([]ast.Node{encodedTypeStrs[ret]}, n.ChildNodes...)
+				}
 				for _, cnode := range n.ChildNodes {
 					cn, ok := cnode.(*ast.ParmVarDecl)
 					if ok {
 						et := encodeCTypeString(cn.Type)
 						cn.AddChild(encodedTypeStrs[et])
-						println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
 					}
 				}
 			case *ast.RecordDecl:
@@ -104,7 +111,7 @@ func parse() Source {
 					if ok {
 						et := encodeCTypeString(cn.Type)
 						cn.AddChild(encodedTypeStrs[et])
-						println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
+						// println(cn.Type, reflect.TypeOf(encodedTypeStrs[et]).String())
 					}
 				}
 			}
@@ -113,7 +120,7 @@ func parse() Source {
 
 	// Debug:
 	// for _, node := range unit.ChildNodes {
-	// 	if _, ok := node.(*ast.RecordDecl); ok {
+	// 	if _, ok := node.(*ast.FunctionDecl); ok {
 	// 		deepPrint(node, 0)
 	// 	}
 	// }
@@ -195,6 +202,37 @@ func findCTypeIdentIndex(typeStr string) int {
 		i = len(typeStr)
 	}
 	return i + baseIdx
+}
+
+func extractCFunctionReturnType(str string) string {
+	//remove (param,...)
+	from := -1
+	to := -1
+	n := -1
+	for i, s := range str {
+		if n == -1 {
+			if s == '(' && str[i+1] != '*' {
+				n = 1
+				from = i
+				to = i
+			}
+			continue
+		}
+
+		to = i
+		if s == '(' {
+			n++
+		} else if s == ')' {
+			n--
+			if n == 0 {
+				break
+			}
+		}
+	}
+	to++
+	bs := []byte(str)
+	str2 := string(append(bs[:from], bs[to:]...))
+	return str2
 }
 
 func getCVarDeclString(varIdent string, typeStr string) string {
