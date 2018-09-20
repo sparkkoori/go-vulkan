@@ -48,12 +48,22 @@ func cgoType(node cast.Node) string {
 	case *cast.BuiltinType:
 		return "C." + cgobuiltin(n.Type)
 	case *cast.PointerType:
-		return "*" + cgoType(n.ChildNodes[0])
+		if n.Type == "void *" || n.Type == "void const *" {
+			return "unsafe.Pointer"
+		} else {
+			t := cgoType(n.ChildNodes[0])
+			if t == "" {
+				return "*[0]byte"
+			} else {
+				return "*" + t
+			}
+		}
 	case *cast.ConstantArrayType:
 	case *cast.TypedefType:
 		return "C." + n.Type
+	case *cast.ParenType:
 	default:
-		halt("Unkown type for cgotype()", node)
+		halt("Unkown type for cgoType()", node)
 	}
 	return ""
 }
@@ -63,12 +73,13 @@ func sizeofCgoType(node cast.Node) string {
 	case *cast.BuiltinType:
 		return "C.sizeof_" + cgobuiltin(n.Type)
 	case *cast.PointerType:
-		return "unsafe.Sizeof(unsafe.Pointer)"
+		return "unsafe.Sizeof(*[0]byte)"
 	case *cast.ConstantArrayType:
 	case *cast.TypedefType:
 		return "C.sizeof_" + n.Type
+	case *cast.ParenType:
 	default:
-		halt("Unkown type for sizeof_cgotype()", node)
+		halt("Unkown type for sizeofCgoType()", node)
 	}
 	return ""
 }
@@ -153,9 +164,8 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	if info, ok := g.types[n.Type]; ok {
 		return info
 	}
-	o := n.ChildNodes[0]
-	info := g.genType(o)
-	if info == nil {
+
+	if n.Type == "void *" || n.Type == "void const *" {
 		return &typeInfo{
 			ctype:  n,
 			gotype: &goast.Ident{Name: "unsafe.Pointer"},
@@ -168,19 +178,34 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 		}
 	}
 
-	return &typeInfo{
-		ctype:  n,
-		gotype: starExpr(info.gotype),
-		c2go: func(govar, cvar goast.Expr) goast.Stmt {
-			alloc := assignStmt1n1(govar, callExpr(ident("new"), info.gotype))
-			conv := info.c2go(starExpr(govar), starExpr(cvar))
-			return blockStmt(alloc, conv)
-		},
-		go2c: func(govar, cvar goast.Expr) goast.Stmt {
-			alloc := assignStmt1n1(cvar, saalloc(o))
-			conv := info.go2c(starExpr(govar), starExpr(cvar))
-			return blockStmt(alloc, conv)
-		},
+	o := n.ChildNodes[0]
+	info := g.genType(o)
+	if info == nil {
+		return &typeInfo{
+			ctype:  n,
+			gotype: &goast.Ident{Name: "*[0]byte"},
+			c2go: func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, cvar)
+			},
+			go2c: func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, govar)
+			},
+		}
+	} else {
+		return &typeInfo{
+			ctype:  n,
+			gotype: starExpr(info.gotype),
+			c2go: func(govar, cvar goast.Expr) goast.Stmt {
+				alloc := assignStmt1n1(govar, callExpr(ident("new"), info.gotype))
+				conv := info.c2go(starExpr(govar), starExpr(cvar))
+				return blockStmt(alloc, conv)
+			},
+			go2c: func(govar, cvar goast.Expr) goast.Stmt {
+				alloc := assignStmt1n1(cvar, saalloc(o))
+				conv := info.go2c(starExpr(govar), starExpr(cvar))
+				return blockStmt(alloc, conv)
+			},
+		}
 	}
 }
 
@@ -308,7 +333,6 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		carg := ident("c_" + goarg.Name)
 		gotype := info.gotype
 		ctype := info.cgoTypeExpr()
-
 		cargdefs = append(cargdefs, varDeclStmt(ctype, carg))
 		cargs = append(cargs, carg)
 		params = append(params, field(info.gotype, goarg))
