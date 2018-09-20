@@ -4,7 +4,6 @@ import (
 	"fmt"
 	goast "go/ast"
 	"go/token"
-	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/logrusorgru/aurora"
@@ -13,43 +12,38 @@ import (
 type typeInfo struct {
 	gotype goast.Expr
 	ctype  cast.Node
-	c2go   func(goname, cname string, define bool) []goast.Stmt
-	go2c   func(cname, goname string, define bool) []goast.Stmt
+	c2go   func(govar, cvar goast.Expr) goast.Stmt
+	go2c   func(govar, cvar goast.Expr) goast.Stmt
 }
 
-func (ti *typeInfo) cgotype() goast.Expr {
-	t := cgotype(ti.ctype)
+func (ti *typeInfo) cgoTypeExpr() goast.Expr {
+	t := cgoType(ti.ctype)
 	return &goast.Ident{Name: t}
 }
 
-func (ti *typeInfo) sizeof_cgotype() goast.Expr {
-	st := sizeof_cgotype(ti.ctype)
+func (ti *typeInfo) sizeofCgoTypeExpr() goast.Expr {
+	st := sizeofCgoType(ti.ctype)
 	return &goast.Ident{Name: st}
 }
 
-func allocType(node cast.Node) *goast.CallExpr {
-	return &goast.CallExpr{
-		Fun: &goast.ParenExpr{
-			X: &goast.StarExpr{
-				X: &goast.Ident{Name: cgotype(node)},
-			},
-		},
-		Lparen: token.Pos(1),
-		Rparen: token.Pos(1),
-		Args: []goast.Expr{
-			&goast.CallExpr{
-				Fun:    &goast.Ident{Name: "_sa.alloc"},
-				Lparen: token.Pos(1),
-				Rparen: token.Pos(1),
-				Args: []goast.Expr{
-					&goast.Ident{Name: sizeof_cgotype(node)},
-				},
-			},
-		},
-	}
+func saalloc(node cast.Node) *goast.CallExpr {
+	fun := parenExpr(starExpr(ident(cgoType(node))))
+	arg := callExpr(ident("_sa.alloc"), ident(sizeofCgoType(node)))
+	call := callExpr(fun, arg)
+	return call
 }
 
-func cgotype(node cast.Node) string {
+func cgoTypeExpr(node cast.Node) goast.Expr {
+	t := cgoType(node)
+	return &goast.Ident{Name: t}
+}
+
+func sizeofCgoTypeExpr(node cast.Node) goast.Expr {
+	st := sizeofCgoType(node)
+	return &goast.Ident{Name: st}
+}
+
+func cgoType(node cast.Node) string {
 	switch n := node.(type) {
 	case *cast.BuiltinType:
 		{
@@ -71,7 +65,7 @@ func cgotype(node cast.Node) string {
 			return m[n.Type]
 		}
 	case *cast.PointerType:
-		return "C." + n.Type
+		return "*" + cgoType(n.ChildNodes[0])
 	case *cast.ConstantArrayType:
 		return "C." + n.Type
 	case *cast.TypedefType:
@@ -82,7 +76,7 @@ func cgotype(node cast.Node) string {
 	}
 }
 
-func sizeof_cgotype(node cast.Node) string {
+func sizeofCgoType(node cast.Node) string {
 	switch n := node.(type) {
 	case *cast.BuiltinType:
 		return "C.sizeof_" + n.Type
@@ -159,87 +153,33 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	if info, ok := g.types[n.Type]; ok {
 		return info
 	}
-	obj := n.ChildNodes[0]
-	info := g.genType(obj)
+	o := n.ChildNodes[0]
+	info := g.genType(o)
 	if info == nil {
 		return &typeInfo{
 			ctype:  n,
 			gotype: &goast.Ident{Name: "unsafe.Pointer"},
-			c2go: func(goname, cname string, define bool) []goast.Stmt {
-				tok := token.ASSIGN
-				if define {
-					tok = token.DEFINE
-				}
-				return []goast.Stmt{
-					&goast.AssignStmt{
-						Lhs: []goast.Expr{&goast.Ident{Name: goname}},
-						Tok: tok,
-						Rhs: []goast.Expr{&goast.Ident{Name: cname}},
-					},
-				}
+			c2go: func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, cvar)
 			},
-			go2c: func(cname, goname string, define bool) []goast.Stmt {
-				tok := token.ASSIGN
-				if define {
-					tok = token.DEFINE
-				}
-				return []goast.Stmt{
-					&goast.AssignStmt{
-						Lhs: []goast.Expr{&goast.Ident{Name: cname}},
-						Tok: tok,
-						Rhs: []goast.Expr{&goast.Ident{Name: goname}},
-					},
-				}
+			go2c: func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, govar)
 			},
 		}
 	}
 
 	return &typeInfo{
 		ctype:  n,
-		gotype: &goast.StarExpr{X: info.gotype},
-		c2go: func(goname, cname string, define bool) []goast.Stmt {
-			tok := token.ASSIGN
-			if define {
-				tok = token.DEFINE
-			}
-			stmts := []goast.Stmt{}
-			stmts = append(stmts, &goast.AssignStmt{
-				Lhs: []goast.Expr{
-					&goast.Ident{Name: goname},
-				},
-				Tok: tok,
-				Rhs: []goast.Expr{
-					&goast.CallExpr{
-						Fun:    &goast.Ident{Name: "new"},
-						Lparen: token.Pos(1),
-						Rparen: token.Pos(1),
-						Args: []goast.Expr{
-							info.gotype,
-						},
-					},
-				},
-			})
-			stmts = append(stmts, info.c2go("*"+goname, "*"+cname, false)...)
-			return stmts
+		gotype: starExpr(info.gotype),
+		c2go: func(govar, cvar goast.Expr) goast.Stmt {
+			alloc := assignStmt1n1(govar, callExpr(ident("new"), info.gotype))
+			conv := info.c2go(starExpr(govar), starExpr(cvar))
+			return blockStmt(alloc, conv)
 		},
-		go2c: func(cname, goname string, define bool) []goast.Stmt {
-
-			tok := token.ASSIGN
-			if define {
-				tok = token.DEFINE
-			}
-			stmts := []goast.Stmt{}
-			stmts = append(stmts, &goast.AssignStmt{
-				Lhs: []goast.Expr{
-					&goast.Ident{Name: cname},
-				},
-				Tok: tok,
-				Rhs: []goast.Expr{
-					allocType(obj),
-				},
-			})
-			stmts = append(stmts, info.go2c("*"+cname, "*"+goname, false)...)
-			return stmts
+		go2c: func(govar, cvar goast.Expr) goast.Stmt {
+			alloc := assignStmt1n1(cvar, saalloc(o))
+			conv := info.go2c(starExpr(govar), starExpr(cvar))
+			return blockStmt(alloc, conv)
 		},
 	}
 }
@@ -258,13 +198,14 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	oinfo := g.genType(o)
 	checkTypeInfo(oinfo, o)
 
-	gotype := n.Type
+	gotype := ident(n.Type)
+	cgotype := cgoTypeExpr(n)
 
 	g.target.addGo(&goast.GenDecl{
 		Tok: token.TYPE,
 		Specs: []goast.Spec{
 			&goast.TypeSpec{
-				Name: &goast.Ident{Name: gotype},
+				Name: gotype,
 				Type: oinfo.gotype,
 			},
 		},
@@ -272,80 +213,21 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 
 	info := &typeInfo{
 		ctype:  n,
-		gotype: &goast.Ident{Name: gotype},
-		c2go: func(goname, cname string, define bool) []goast.Stmt {
-			stmts := []goast.Stmt{}
-			// stmts = append(stmts, &goast.AssignStmt{
-			// 	Lhs: []goast.Expr{&goast.Ident{Name: cname + "_inner"}},
-			// 	Tok: token.DEFINE,
-			// 	Rhs: []goast.Expr{
-			// 		&goast.CallExpr{
-			// 			Fun:    oinfo.cgotype(),
-			// 			Lparen: token.Pos(1),
-			// 			Args: []goast.Expr{
-			// 				&goast.Ident{Name: cname},
-			// 			},
-			// 			Rparen: token.Pos(1),
-			// 		},
-			// 	},
-			// })
-			stmts = append(stmts, oinfo.c2go(goname, cname, define)...)
-			// stmts = append(stmts, &goast.AssignStmt{
-			// 	Lhs: []goast.Expr{&goast.Ident{Name: goname}},
-			// 	Tok: tok,
-			// 	Rhs: []goast.Expr{
-			// 		&goast.CallExpr{
-			// 			Fun:    &goast.Ident{Name: gotype},
-			// 			Lparen: token.Pos(1),
-			// 			Args: []goast.Expr{
-			// 				&goast.Ident{Name: goname + "_inner"},
-			// 			},
-			// 			Rparen: token.Pos(1),
-			// 		},
-			// 	},
-			// })
-
-			return stmts
+		gotype: gotype,
+		c2go: func(govar, cvar goast.Expr) goast.Stmt {
+			_temp := ident("_temp")
+			def := varDeclStmt(oinfo.gotype, _temp)
+			convc := oinfo.c2go(_temp, callExpr(oinfo.cgoTypeExpr(), cvar))
+			convbase := assignStmt1n1(govar, callExpr(gotype, _temp))
+			return blockStmt(def, convc, convbase)
 		},
 
-		go2c: func(cname, goname string, define bool) []goast.Stmt {
-			// tok := token.ASSIGN
-			// if define {
-			// 	tok = token.DEFINE
-			// }
-
-			stmts := []goast.Stmt{}
-			// stmts = append(stmts, &goast.AssignStmt{
-			// 	Lhs: []goast.Expr{&goast.Ident{Name: goname + "_inner"}},
-			// 	Tok: token.DEFINE,
-			// 	Rhs: []goast.Expr{
-			// 		&goast.CallExpr{
-			// 			Fun:    oinfo.gotype,
-			// 			Lparen: token.Pos(1),
-			// 			Args: []goast.Expr{
-			// 				&goast.Ident{Name: goname},
-			// 			},
-			// 			Rparen: token.Pos(1),
-			// 		},
-			// 	},
-			// })
-			stmts = append(stmts, oinfo.go2c(cname, goname, define)...)
-			// stmts = append(stmts, &goast.AssignStmt{
-			// 	Lhs: []goast.Expr{&goast.Ident{Name: cname}},
-			// 	Tok: tok,
-			// 	Rhs: []goast.Expr{
-			// 		&goast.CallExpr{
-			// 			Fun:    &goast.Ident{Name: cgotype(n)},
-			// 			Lparen: token.Pos(1),
-			// 			Args: []goast.Expr{
-			// 				&goast.Ident{Name: cname + "_inner"},
-			// 			},
-			// 			Rparen: token.Pos(1),
-			// 		},
-			// 	},
-			// })
-
-			return stmts
+		go2c: func(govar, cvar goast.Expr) goast.Stmt {
+			_temp := ident("_temp")
+			def := varDeclStmt(oinfo.cgoTypeExpr(), _temp)
+			convc := oinfo.go2c(callExpr(oinfo.gotype, govar), _temp)
+			convbase := assignStmt1n1(cvar, callExpr(cgotype, _temp))
+			return blockStmt(def, convc, convbase)
 		},
 	}
 
@@ -374,52 +256,22 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 		"double":                 "float64", //C.double
 		"void":                   "",
 	}
-	gotype := m[n.Type]
-	if gotype == "" {
+	gotypestr := m[n.Type]
+	if gotypestr == "" {
 		return nil
 	}
+
+	gotype := ident(gotypestr)
+	cgotype := cgoTypeExpr(n)
+
 	return &typeInfo{
 		ctype:  n,
-		gotype: &goast.Ident{Name: gotype},
-		c2go: func(goname, cname string, define bool) []goast.Stmt {
-			tok := token.ASSIGN
-			if define {
-				tok = token.DEFINE
-			}
-			return []goast.Stmt{
-				&goast.AssignStmt{
-					Lhs: []goast.Expr{&goast.Ident{Name: goname}},
-					Tok: tok,
-					Rhs: []goast.Expr{&goast.CallExpr{
-						Fun:    &goast.Ident{Name: gotype},
-						Lparen: token.Pos(1),
-						Args: []goast.Expr{
-							&goast.Ident{Name: cname},
-						},
-						Rparen: token.Pos(1),
-					}},
-				},
-			}
+		gotype: gotype,
+		c2go: func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(govar, callExpr(gotype, cvar))
 		},
-		go2c: func(cname, goname string, define bool) []goast.Stmt {
-			tok := token.ASSIGN
-			if define {
-				tok = token.DEFINE
-			}
-			return []goast.Stmt{
-				&goast.AssignStmt{
-					Lhs: []goast.Expr{&goast.Ident{Name: cname}},
-					Tok: tok,
-					Rhs: []goast.Expr{&goast.CallExpr{
-						Fun:    &goast.Ident{Name: cgotype(n)},
-						Lparen: token.Pos(1),
-						Args: []goast.Expr{
-							&goast.Ident{Name: goname},
-						},
-						Rparen: token.Pos(1),
-					}},
-				},
-			}
+		go2c: func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(cvar, callExpr(cgotype, govar))
 		},
 	}
 }
@@ -433,39 +285,13 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		return
 	}
 
-	decl := &goast.FuncDecl{
-		Name: &goast.Ident{},
-		Type: &goast.FuncType{
-			Func: token.Pos(1),
-			Params: &goast.FieldList{
-				Opening: token.Pos(1),
-				Closing: token.Pos(1),
-				List:    []*goast.Field{},
-			},
-			Results: &goast.FieldList{
-				Opening: token.Pos(1),
-				Closing: token.Pos(1),
-				List:    []*goast.Field{},
-			},
-		},
-		Body: &goast.BlockStmt{
-			Lbrace: token.Pos(1),
-			List:   []goast.Stmt{},
-			Rbrace: token.Pos(1),
-		},
-	}
+	var params, results []*goast.Field
+	var hasPointerParam bool
 
-	//Name
-	{
-		name := fn.Name
-		name = strings.TrimPrefix(name, "vk")
-		decl.Name.Name = name
-	}
-
-	hasPointerParam := false
-	stmts := []goast.Stmt{}
-	_stmts := []goast.Stmt{}
-	args := []goast.Expr{}
+	cargdefs := []goast.Stmt{}
+	cargs := []goast.Expr{}
+	go2cs := []goast.Stmt{}
+	c2gos := []goast.Stmt{}
 	//Params
 	for _, param := range fn.ChildNodes[1:] {
 		pvd, ok := param.(*cast.ParmVarDecl)
@@ -478,90 +304,71 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			break //for void
 		}
 
-		goarg := pvd.Name
-		carg := "c_" + goarg
-		decl.Type.Params.List = append(decl.Type.Params.List, &goast.Field{
-			Names: []*goast.Ident{&goast.Ident{Name: goarg}},
-			Type:  info.gotype,
-		})
-		stmts = append(stmts, info.go2c(carg, goarg, true)...)
-		if _, ok := info.gotype.(*goast.StarExpr); ok {
-			subinfo := g.genType(node.(*cast.PointerType).ChildNodes[0])
-			_stmts = append(_stmts, subinfo.c2go("*"+goarg, "*"+carg, false)...)
+		goarg := ident(pvd.Name)
+		carg := ident("c_" + goarg.Name)
+		gotype := info.gotype
+		ctype := info.cgoTypeExpr()
+
+		cargdefs = append(cargdefs, varDeclStmt(ctype, carg))
+		cargs = append(cargs, carg)
+		params = append(params, field(info.gotype, goarg))
+		go2cs = append(go2cs, info.go2c(goarg, carg))
+		if _, ok := gotype.(*goast.StarExpr); ok {
 			hasPointerParam = true
+			oinfo := g.genType(node.(*cast.PointerType).ChildNodes[0])
+			c2gos = append(c2gos, oinfo.c2go(starExpr(goarg), starExpr(carg)))
 		}
-		args = append(args, &goast.Ident{Name: carg})
 	}
 
-	//Results
+	//Call and Results
+	var ccall goast.Stmt
+	var retstmt goast.Stmt
 	{
 		rs := fn.ChildNodes[0]
 		info := g.genType(rs)
+		arg := ident("ret")
+		carg := ident("c_ret")
 		if info != nil {
-			decl.Type.Results.List = append(decl.Type.Results.List, &goast.Field{
-				Names: []*goast.Ident{&goast.Ident{Name: "ret"}},
-				Type:  info.gotype,
-			})
-			stmts = append(stmts, &goast.AssignStmt{
-				Lhs: []goast.Expr{&goast.Ident{Name: "c_ret"}},
-				Tok: token.DEFINE,
-				Rhs: []goast.Expr{
-					&goast.CallExpr{
-						Fun:    &goast.Ident{Name: "C." + fn.Name},
-						Lparen: token.Pos(1),
-						Args:   args,
-						Rparen: token.Pos(1),
-					},
-				},
-			})
-			_stmts = append(_stmts, info.c2go("ret", "c_ret", false)...)
+			results = append(results, field(info.gotype, arg))
+			ccall = assignStmt1n1D(carg, callExpr(ident("C."+fn.Name), cargs...))
+			varDeclStmt(info.cgoTypeExpr(), carg)
+			c2gos = append(c2gos, info.c2go(arg, carg))
+			retstmt = &goast.ReturnStmt{}
 		} else {
-			stmts = append(stmts, &goast.ExprStmt{
-				X: &goast.CallExpr{
-					Fun:    &goast.Ident{Name: "C." + fn.Name},
-					Lparen: token.Pos(1),
-					Args:   args,
-					Rparen: token.Pos(1),
-				},
-			})
+			ccall = exprStmt(callExpr(ident("C."+fn.Name), cargs...))
 		}
 	}
 
 	//stackAllocator
+	sastmts := []goast.Stmt{}
 	if hasPointerParam {
-		stmts = append([]goast.Stmt{
-			&goast.AssignStmt{
-				Lhs: []goast.Expr{&goast.Ident{Name: "_sa"}},
-				Tok: token.DEFINE,
-				Rhs: []goast.Expr{
-					&goast.CallExpr{
-						Fun:    &goast.Ident{Name: "pool.take"},
-						Lparen: token.Pos(1),
-						Rparen: token.Pos(1),
-					},
-				},
-			},
-			&goast.DeferStmt{
-				Defer: token.Pos(1),
-				Call: &goast.CallExpr{
-					Fun:    &goast.Ident{Name: "pool.give"},
-					Lparen: token.Pos(1),
-					Args: []goast.Expr{
-						&goast.Ident{Name: "_sa"},
-					},
-					Rparen: token.Pos(1),
-				},
-			},
-		}, stmts...)
+		sa := ident("_sa")
+		sastmts = append(sastmts,
+			assignStmt1n1D(sa, callExpr(ident("pool.take"))))
+		sastmts = append(sastmts, &goast.DeferStmt{
+			Defer: token.Pos(1),
+			Call:  callExpr(ident("pool.give"), sa),
+		})
 	}
 
-	stmts = append(stmts, _stmts...)
-	stmts = append(stmts, &goast.ReturnStmt{
-		Return: token.Pos(1),
-	})
+	var stmts []goast.Stmt
+	{
+		stmts = append(stmts, sastmts...)
+		stmts = append(stmts, cargdefs...)
+		stmts = append(stmts, go2cs...)
+		stmts = append(stmts, ccall)
+		stmts = append(stmts, c2gos...)
+		if retstmt != nil {
+			stmts = append(stmts, retstmt)
+		}
+	}
 
-	decl.Body.List = stmts
-	g.target.addGo(decl)
+	{
+		name := ident(fn.Name)
+		typ := funcType(params, results)
+		fndef := funcDecl(name, nil, typ, stmts...)
+		g.target.addGo(fndef)
+	}
 }
 
 func (g *generator) process(src Source) {
@@ -581,6 +388,131 @@ func (g *generator) process(src Source) {
 func checkTypeInfo(info *typeInfo, node cast.Node) {
 	if info == nil {
 		halt("Type info is nil", node)
+	}
+}
+
+func ident(name string) *goast.Ident {
+	return &goast.Ident{
+		Name: name,
+	}
+}
+
+func starExpr(expr goast.Expr) *goast.StarExpr {
+	return &goast.StarExpr{
+		X: expr,
+	}
+}
+
+func parenExpr(expr goast.Expr) *goast.ParenExpr {
+	return &goast.ParenExpr{
+		X: expr,
+	}
+}
+
+func exprStmt(expr goast.Expr) *goast.ExprStmt {
+	return &goast.ExprStmt{
+		X: expr,
+	}
+}
+
+func callExpr(fn goast.Expr, args ...goast.Expr) *goast.CallExpr {
+	return &goast.CallExpr{
+		Fun:    fn,
+		Lparen: token.Pos(1),
+		Rparen: token.Pos(1),
+		Args:   args,
+	}
+}
+
+func blockStmt(stmts ...goast.Stmt) *goast.BlockStmt {
+	return &goast.BlockStmt{
+		Lbrace: token.Pos(1),
+		Rbrace: token.Pos(1),
+		List:   stmts,
+	}
+}
+
+func assignStmt1n1(lh, rh goast.Expr) *goast.AssignStmt {
+	return assignStmt([]goast.Expr{lh}, []goast.Expr{rh})
+}
+
+func assignStmt(lhs, rhs []goast.Expr) *goast.AssignStmt {
+	return &goast.AssignStmt{
+		Lhs: lhs,
+		Rhs: rhs,
+		Tok: token.ASSIGN,
+	}
+}
+
+func assignStmt1n1D(lh, rh goast.Expr) *goast.AssignStmt {
+	return assignStmtD([]goast.Expr{lh}, []goast.Expr{rh})
+}
+
+func assignStmtD(lhs, rhs []goast.Expr) *goast.AssignStmt {
+	return &goast.AssignStmt{
+		Lhs: lhs,
+		Rhs: rhs,
+		Tok: token.DEFINE,
+	}
+}
+
+func varDeclStmt(typ goast.Expr, names ...*goast.Ident) *goast.DeclStmt {
+	return &goast.DeclStmt{
+		Decl: &goast.GenDecl{
+			Tok: token.VAR,
+			Specs: []goast.Spec{
+				&goast.ValueSpec{
+					Names: names,
+					Type:  typ,
+				},
+			},
+		},
+	}
+}
+
+func field(typ goast.Expr, names ...*goast.Ident) *goast.Field {
+	return &goast.Field{
+		Names: names,
+		Type:  typ,
+	}
+}
+
+func funcType(params, results []*goast.Field) *goast.FuncType {
+	return &goast.FuncType{
+		Func: token.Pos(1),
+		Params: &goast.FieldList{
+			Opening: token.Pos(1),
+			Closing: token.Pos(1),
+			List:    params,
+		},
+		Results: &goast.FieldList{
+			Opening: token.Pos(1),
+			Closing: token.Pos(1),
+			List:    results,
+		},
+	}
+}
+
+func funcDecl(name *goast.Ident, recv *goast.Field, typ *goast.FuncType, stmts ...goast.Stmt) *goast.FuncDecl {
+	var list *goast.FieldList
+	if recv != nil {
+		list = &goast.FieldList{
+			Opening: token.Pos(1),
+			Closing: token.Pos(1),
+			List: []*goast.Field{
+				recv,
+			},
+		}
+	}
+	return &goast.FuncDecl{
+		Name: name,
+		Type: typ,
+		Recv: list,
+		Body: &goast.BlockStmt{
+			Lbrace: token.Pos(1),
+			List:   stmts,
+			Rbrace: token.Pos(1),
+		},
 	}
 }
 
