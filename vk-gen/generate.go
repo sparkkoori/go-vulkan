@@ -46,50 +46,50 @@ func sizeofCgoTypeExpr(node cast.Node) goast.Expr {
 func cgoType(node cast.Node) string {
 	switch n := node.(type) {
 	case *cast.BuiltinType:
-		{
-			var m = map[string]string{
-				"char":                   "C.char",
-				"singed char":            "C.schar",
-				"unsigned char":          "C.uchar",
-				"short":                  "C.short",
-				"unsigned short":         "C.ushort",
-				"int":                    "C.int",
-				"unsigned int":           "C.uint",
-				"long":                   "C.long",
-				"unsigned long":          "C.ulong",
-				"long long int":          "C.longlong",
-				"unsigned long long int": "C.ulonglong",
-				"float":                  "C.float",
-				"double":                 "C.double",
-			}
-			return m[n.Type]
-		}
+		return "C." + cgobuiltin(n.Type)
 	case *cast.PointerType:
 		return "*" + cgoType(n.ChildNodes[0])
 	case *cast.ConstantArrayType:
-		return "C." + n.Type
 	case *cast.TypedefType:
 		return "C." + n.Type
 	default:
 		halt("Unkown type for cgotype()", node)
-		return ""
 	}
+	return ""
 }
 
 func sizeofCgoType(node cast.Node) string {
 	switch n := node.(type) {
 	case *cast.BuiltinType:
-		return "C.sizeof_" + n.Type
+		return "C.sizeof_" + cgobuiltin(n.Type)
 	case *cast.PointerType:
-		return "C.sizeof_" + n.Type
+		return "unsafe.Sizeof(unsafe.Pointer)"
 	case *cast.ConstantArrayType:
-		return "C.sizeof_" + n.Type
 	case *cast.TypedefType:
 		return "C.sizeof_" + n.Type
 	default:
 		halt("Unkown type for sizeof_cgotype()", node)
-		return ""
 	}
+	return ""
+}
+
+func cgobuiltin(k string) string {
+	var m = map[string]string{
+		"char":                   "char",
+		"singed char":            "schar",
+		"unsigned char":          "uchar",
+		"short":                  "short",
+		"unsigned short":         "ushort",
+		"int":                    "int",
+		"unsigned int":           "uint",
+		"long":                   "long",
+		"unsigned long":          "ulong",
+		"long long int":          "longlong",
+		"unsigned long long int": "ulonglong",
+		"float":                  "float",
+		"double":                 "double",
+	}
+	return m[k]
 }
 
 type generator struct {
