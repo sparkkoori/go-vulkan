@@ -52,7 +52,7 @@ func setbigN(n bigN) {
 	var c_n C.bigN
 	{
 		var _temp C.uint
-		_temp = C.uint(uint32(n))
+		_temp = C.uint((uint32)(n))
 		c_n = C.bigN(_temp)
 	}
 	C.setbigN(c_n)
@@ -61,4 +61,22 @@ func setFn(fn *[0]byte) {
 	var c_fn *[0]byte
 	c_fn = fn
 	C.setFn(c_fn)
+}
+
+type FUNC *[0]byte
+
+func changeFunc(fun FUNC) (ret FUNC) {
+	var c_fun C.FUNC
+	{
+		var _temp *[0]byte
+		_temp = (*[0]byte)(fun)
+		c_fun = C.FUNC(_temp)
+	}
+	c_ret := C.changeFunc(c_fun)
+	{
+		var _temp *[0]byte
+		_temp = (*[0]byte)(c_ret)
+		ret = FUNC(_temp)
+	}
+	return
 }

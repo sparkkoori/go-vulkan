@@ -14,6 +14,7 @@ type typeInfo struct {
 	ctype  cast.Node
 	c2go   func(govar, cvar goast.Expr) goast.Stmt
 	go2c   func(govar, cvar goast.Expr) goast.Stmt
+	isRef  bool
 }
 
 func (ti *typeInfo) cgoTypeExpr() goast.Expr {
@@ -183,7 +184,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	if info == nil {
 		return &typeInfo{
 			ctype:  n,
-			gotype: &goast.Ident{Name: "*[0]byte"},
+			gotype: starExpr(ident("[0]byte")),
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			},
@@ -205,6 +206,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				conv := info.go2c(starExpr(govar), starExpr(cvar))
 				return blockStmt(alloc, conv)
 			},
+			isRef: true,
 		}
 	}
 }
@@ -242,7 +244,7 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		c2go: func(govar, cvar goast.Expr) goast.Stmt {
 			_temp := ident("_temp")
 			def := varDeclStmt(oinfo.gotype, _temp)
-			convc := oinfo.c2go(_temp, callExpr(oinfo.cgoTypeExpr(), cvar))
+			convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.cgoTypeExpr()), cvar))
 			convbase := assignStmt1n1(govar, callExpr(gotype, _temp))
 			return blockStmt(def, convc, convbase)
 		},
@@ -250,7 +252,7 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		go2c: func(govar, cvar goast.Expr) goast.Stmt {
 			_temp := ident("_temp")
 			def := varDeclStmt(oinfo.cgoTypeExpr(), _temp)
-			convc := oinfo.go2c(callExpr(oinfo.gotype, govar), _temp)
+			convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), _temp)
 			convbase := assignStmt1n1(cvar, callExpr(cgotype, _temp))
 			return blockStmt(def, convc, convbase)
 		},
@@ -311,7 +313,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 	}
 
 	var params, results []*goast.Field
-	var hasPointerParam bool
+	var hasRefParam bool
 
 	cargdefs := []goast.Stmt{}
 	cargs := []goast.Expr{}
@@ -333,12 +335,13 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		carg := ident("c_" + goarg.Name)
 		gotype := info.gotype
 		ctype := info.cgoTypeExpr()
+
 		cargdefs = append(cargdefs, varDeclStmt(ctype, carg))
 		cargs = append(cargs, carg)
-		params = append(params, field(info.gotype, goarg))
+		params = append(params, field(gotype, goarg))
 		go2cs = append(go2cs, info.go2c(goarg, carg))
-		if _, ok := gotype.(*goast.StarExpr); ok {
-			hasPointerParam = true
+		if info.isRef {
+			hasRefParam = true
 			oinfo := g.genType(node.(*cast.PointerType).ChildNodes[0])
 			c2gos = append(c2gos, oinfo.c2go(starExpr(goarg), starExpr(carg)))
 		}
@@ -365,7 +368,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 
 	//stackAllocator
 	sastmts := []goast.Stmt{}
-	if hasPointerParam {
+	if hasRefParam {
 		sa := ident("_sa")
 		sastmts = append(sastmts,
 			assignStmt1n1D(sa, callExpr(ident("pool.take"))))

@@ -11,3 +11,5 @@ void setArray(int a[]){};
 void setbigN(bigN n){};
 
 void setFn(int (*fn)(void)){};
+
+FUNC changeFunc(FUNC fun){return 0;};
