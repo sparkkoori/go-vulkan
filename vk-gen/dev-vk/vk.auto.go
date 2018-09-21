@@ -29,9 +29,13 @@ func movePointer(a *int32, b unsafe.Pointer) (_ret **int32) {
 	c.b = b
 	c._ret = C.movePointer(c.a, c.b)
 	{
-		_ret = new(*int32)
+		if _ret == nil {
+			_ret = new(*int32)
+		}
 		{
-			*_ret = new(int32)
+			if *_ret == nil {
+				*_ret = new(int32)
+			}
 			**_ret = int32(**c._ret)
 		}
 	}
@@ -86,4 +90,69 @@ func changeFunc(fun FUNC) (_ret FUNC) {
 		_ret = FUNC(_temp)
 	}
 	return
+}
+
+type Abc struct {
+	a int32
+	b int32
+	c int32
+}
+
+func (g *Abc) toC(c *C.Abc) {
+	c.a = C.int(g.a)
+	c.b = C.int(g.b)
+	c.c = C.int(g.c)
+}
+func (g *Abc) fromC(c *C.Abc) {
+	g.a = int32(c.a)
+	g.b = int32(c.b)
+	g.c = int32(c.c)
+}
+func setAbc(abc Abc) {
+	var c struct{ abc C.Abc }
+	abc.toC(&c.abc)
+	C.setAbc(c.abc)
+}
+func setPAbc(pAbc *Abc) {
+	var c struct{ pAbc *C.Abc }
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.pAbc = (*C.Abc)(_sa.alloc(C.sizeof_Abc))
+		pAbc.toC(c.pAbc)
+	}
+	C.setPAbc(c.pAbc)
+	pAbc.fromC(c.pAbc)
+}
+
+type ComplexAbc struct {
+	abc  Abc
+	pAbc *Abc
+}
+
+func (g *ComplexAbc) toC(c *C.ComplexAbc, _sa *stackAllocator) {
+	g.abc.toC(&c.abc)
+	{
+		c.pAbc = (*C.Abc)(_sa.alloc(C.sizeof_Abc))
+		g.pAbc.toC(c.pAbc)
+	}
+}
+func (g *ComplexAbc) fromC(c *C.ComplexAbc) {
+	g.abc.fromC(&c.abc)
+	{
+		if g.pAbc == nil {
+			g.pAbc = new(Abc)
+		}
+		g.pAbc.fromC(c.pAbc)
+	}
+}
+func setComplexAbc(xabc ComplexAbc) {
+	var c struct{ xabc C.ComplexAbc }
+	_sa := pool.take()
+	defer pool.give(_sa)
+	xabc.toC(&c.xabc, _sa)
+	C.setComplexAbc(c.xabc)
+	{
+		xabc.pAbc.fromC(c.xabc.pAbc)
+	}
 }

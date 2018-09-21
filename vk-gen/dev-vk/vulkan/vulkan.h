@@ -24,4 +24,13 @@ typedef struct Abc{
   int c;
 } Abc;
 
-void sumAbc(Abc abc, Abc *pAbc);
+void setAbc(Abc abc);
+
+void setPAbc(Abc *pAbc);
+
+typedef struct ComplexAbc{
+  Abc abc;
+  Abc *pAbc;
+} ComplexAbc;
+
+void setComplexAbc(ComplexAbc xabc);
