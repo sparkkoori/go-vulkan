@@ -8,75 +8,82 @@ import "unsafe"
 func print() {
 	C.print()
 }
-func num() (ret int32) {
-	c_ret := C.num()
-	ret = int32(c_ret)
+func num() (_ret int32) {
+	var c struct{ _ret C.int }
+	c._ret = C.num()
+	_ret = int32(c._ret)
 	return
 }
-func movePointer(a *int32, b unsafe.Pointer) (ret **int32) {
+func movePointer(a *int32, b unsafe.Pointer) (_ret **int32) {
+	var c struct {
+		a    *C.int
+		b    unsafe.Pointer
+		_ret **C.int
+	}
 	_sa := pool.take()
 	defer pool.give(_sa)
-	var c_a *C.int
-	var c_b unsafe.Pointer
 	{
-		c_a = (*C.int)(_sa.alloc(C.sizeof_int))
-		*c_a = C.int(*a)
+		c.a = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.a = C.int(*a)
 	}
-	c_b = b
-	c_ret := C.movePointer(c_a, c_b)
+	c.b = b
+	c._ret = C.movePointer(c.a, c.b)
 	{
-		ret = new(*int32)
+		_ret = new(*int32)
 		{
-			*ret = new(int32)
-			**ret = int32(**c_ret)
+			*_ret = new(int32)
+			**_ret = int32(**c._ret)
 		}
 	}
-	*a = int32(*c_a)
+	*a = int32(*c.a)
 	return
 }
 func setArray(a *int32) {
+	var c struct{ a *C.int }
 	_sa := pool.take()
 	defer pool.give(_sa)
-	var c_a *C.int
 	{
-		c_a = (*C.int)(_sa.alloc(C.sizeof_int))
-		*c_a = C.int(*a)
+		c.a = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.a = C.int(*a)
 	}
-	C.setArray(c_a)
-	*a = int32(*c_a)
+	C.setArray(c.a)
+	*a = int32(*c.a)
 }
 
 type bigN uint32
 
 func setbigN(n bigN) {
-	var c_n C.bigN
+	var c struct{ n C.bigN }
 	{
 		var _temp C.uint
 		_temp = C.uint((uint32)(n))
-		c_n = C.bigN(_temp)
+		c.n = C.bigN(_temp)
 	}
-	C.setbigN(c_n)
+	C.setbigN(c.n)
 }
 func setFn(fn *[0]byte) {
-	var c_fn *[0]byte
-	c_fn = fn
-	C.setFn(c_fn)
+	var c struct{ fn *[0]byte }
+	c.fn = fn
+	C.setFn(c.fn)
 }
 
 type FUNC *[0]byte
 
-func changeFunc(fun FUNC) (ret FUNC) {
-	var c_fun C.FUNC
+func changeFunc(fun FUNC) (_ret FUNC) {
+	var c struct {
+		fun  C.FUNC
+		_ret C.FUNC
+	}
 	{
 		var _temp *[0]byte
 		_temp = (*[0]byte)(fun)
-		c_fun = C.FUNC(_temp)
+		c.fun = C.FUNC(_temp)
 	}
-	c_ret := C.changeFunc(c_fun)
+	c._ret = C.changeFunc(c.fun)
 	{
 		var _temp *[0]byte
-		_temp = (*[0]byte)(c_ret)
-		ret = FUNC(_temp)
+		_temp = (*[0]byte)(c._ret)
+		_ret = FUNC(_temp)
 	}
 	return
 }

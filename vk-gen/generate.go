@@ -20,24 +20,12 @@ type typeInfo struct {
 }
 
 type compTypeInfo struct {
-	gofields []*goast.Field
-	cfields  []*goast.Field
-	c2go     func(goscope, cscope goast.Expr) []goast.Stmt
-	go2c     func(goscope, cscope goast.Expr) []goast.Stmt
-	refc2go  func(goscope, cscope goast.Expr) []goast.Stmt
-}
-
-type compType struct {
-	name string
-	typ  cast.Node
-}
-
-func mapCompType(compTypes []compType) *compTypeInfo {
-	// info := &compTypeInfo{}
-	// for _, compType := range compTypes {
-	//
-	// }
-	return nil
+	gofields  []*goast.Field
+	cfields   []*goast.Field
+	go2cAlloc bool
+	c2go      func(goscope, cscope goast.Expr) []goast.Stmt
+	go2c      func(goscope, cscope goast.Expr) []goast.Stmt
+	refc2go   func(goscope, cscope goast.Expr) []goast.Stmt
 }
 
 func saalloc(typ, size goast.Expr) *goast.CallExpr {
@@ -307,6 +295,61 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	}
 }
 
+func (g *generator) genCompType(fieldDecls []*cast.FieldDecl) *compTypeInfo {
+	info := &compTypeInfo{}
+
+	go2cFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
+	c2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
+	refc2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
+
+	for _, fieldDecl := range fieldDecls {
+		finfo := g.genType(fieldDecl.ChildNodes[0])
+		cname := ident(fieldDecl.Name)
+		goname := ident(fieldDecl.Name)
+		info.cfields = append(info.cfields, field(finfo.ctype, cname))
+		info.gofields = append(info.gofields, field(finfo.gotype, goname))
+		go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
+			return finfo.go2c(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+		})
+		c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+			return finfo.c2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+		})
+		if finfo.refc2go != nil {
+			refc2goFns = append(refc2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+				return finfo.refc2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+			})
+		}
+		if finfo.go2cAlloc {
+			info.go2cAlloc = true
+		}
+	}
+
+	info.c2go = func(goscope, cscope goast.Expr) []goast.Stmt {
+		stmts := []goast.Stmt{}
+		for _, fn := range c2goFns {
+			stmts = append(stmts, fn(goscope, cscope))
+		}
+		return stmts
+	}
+
+	info.go2c = func(goscope, cscope goast.Expr) []goast.Stmt {
+		stmts := []goast.Stmt{}
+		for _, fn := range go2cFns {
+			stmts = append(stmts, fn(goscope, cscope))
+		}
+		return stmts
+	}
+
+	info.refc2go = func(goscope, cscope goast.Expr) []goast.Stmt {
+		stmts := []goast.Stmt{}
+		for _, fn := range refc2goFns {
+			stmts = append(stmts, fn(goscope, cscope))
+		}
+		return stmts
+	}
+	return info
+}
+
 func (g *generator) genConst() {
 	// TODO:genConst
 }
@@ -316,93 +359,125 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		return
 	}
 
-	var params, results []*goast.Field
-	var needStackAllocator bool
+	var goparams, goresults []*goast.Field
+	var cparams, cresults []*goast.Field
 
-	cargdefs := []goast.Stmt{}
-	cargs := []goast.Expr{}
-	go2cs := []goast.Stmt{}
-	c2gos := []goast.Stmt{}
-	refc2gos := []goast.Stmt{}
+	var cdef goast.Stmt
+	var allocdefs []goast.Stmt
+	var pconvs []goast.Stmt
+	var call goast.Stmt
+	var rconvs []goast.Stmt
+	var prconvs []goast.Stmt
+	var retstmt goast.Stmt
+
 	//Params
-	for _, param := range fn.ChildNodes[1:] {
-		pvd, ok := param.(*cast.ParmVarDecl)
-		if !ok {
-			break
+	{
+		fieldDecls := []*cast.FieldDecl{}
+		for _, param := range fn.ChildNodes[1:] {
+			pvd, ok := param.(*cast.ParmVarDecl)
+			if !ok {
+				break
+			}
+			fieldDecl := &cast.FieldDecl{
+				Name:       pvd.Name,
+				ChildNodes: pvd.ChildNodes,
+			}
+			fieldDecls = append(fieldDecls, fieldDecl)
 		}
-		node := pvd.ChildNodes[0]
-		info := g.genType(node)
-		if info == nil {
-			break //for void
-		}
-
-		goarg := ident(pvd.Name)
-		carg := ident("c_" + goarg.Name)
-		gotype := info.gotype
-		ctype := info.ctype
-
-		cargdefs = append(cargdefs, varDeclStmt(ctype, carg))
-		cargs = append(cargs, carg)
-		params = append(params, field(gotype, goarg))
-		go2cs = append(go2cs, info.go2c(goarg, carg))
-		if info.refc2go != nil {
-			refc2gos = append(refc2gos, info.refc2go(goarg, carg))
-		}
+		info := g.genCompType(fieldDecls)
+		goparams = info.gofields
+		cparams = info.cfields
+		pconvs = info.go2c(nil, ident("c"))
+		prconvs = info.refc2go(nil, ident("c"))
 
 		if info.go2cAlloc {
-			needStackAllocator = true
+			sa := ident("_sa")
+			allocdefs = append(allocdefs,
+				assignStmt1n1D(sa, callExpr(ident("pool.take"))))
+			allocdefs = append(allocdefs, &goast.DeferStmt{
+				Defer: token.Pos(1),
+				Call:  callExpr(ident("pool.give"), sa),
+			})
 		}
 	}
 
-	//Call and Results
-	var ccall goast.Stmt
-	var retstmt goast.Stmt
+	//Results
 	{
-		rs := fn.ChildNodes[0]
-		info := g.genType(rs)
-		arg := ident("ret")
-		carg := ident("c_ret")
+		info := g.genType(fn.ChildNodes[0])
+		goname := ident("_ret")
+		cname := ident("_ret")
 		if info != nil {
-			results = append(results, field(info.gotype, arg))
-			ccall = assignStmt1n1D(carg, callExpr(ident("C."+fn.Name), cargs...))
-			varDeclStmt(info.ctype, carg)
-			c2gos = append(c2gos, info.c2go(arg, carg))
+			goresults = append(goresults, field(info.gotype, goname))
+			cresults = append(cresults, field(info.ctype, cname))
+			rconvs = append(rconvs, info.c2go(goname, selectorExpr(ident("c"), cname)))
+		}
+	}
+
+	//Call
+	{
+		args := []goast.Expr{}
+		for _, cparam := range cparams {
+			args = append(args, selectorExpr(ident("c"), cparam.Names[0]))
+		}
+		cfn := ident("C." + fn.Name)
+		if len(cresults) > 0 {
+			rs := selectorExpr(ident("c"), cresults[0].Names[0])
+			call = assignStmt1n1(rs, callExpr(cfn, args...))
 			retstmt = &goast.ReturnStmt{}
 		} else {
-			ccall = exprStmt(callExpr(ident("C."+fn.Name), cargs...))
+			call = exprStmt(callExpr(cfn, args...))
 		}
 	}
 
-	//stackAllocator
-	sastmts := []goast.Stmt{}
-	if needStackAllocator {
-		sa := ident("_sa")
-		sastmts = append(sastmts,
-			assignStmt1n1D(sa, callExpr(ident("pool.take"))))
-		sastmts = append(sastmts, &goast.DeferStmt{
-			Defer: token.Pos(1),
-			Call:  callExpr(ident("pool.give"), sa),
-		})
+	//cdef
+	{
+		fields := []*goast.Field{}
+		fields = append(fields, cparams...)
+		fields = append(fields, cresults...)
+
+		if len(fields) > 0 {
+			cdef = &goast.DeclStmt{
+				Decl: &goast.GenDecl{
+					Tok: token.VAR,
+					Specs: []goast.Spec{
+						&goast.ValueSpec{
+							Names: []*goast.Ident{
+								ident("c"),
+							},
+							Type: &goast.StructType{
+								Struct: token.Pos(1),
+								Fields: &goast.FieldList{
+									Opening: token.Pos(1),
+									List:    fields,
+									Closing: token.Pos(1),
+								},
+							},
+						},
+					},
+				},
+			}
+		}
 	}
 
-	var stmts []goast.Stmt
+	//Generate
 	{
-		stmts = append(stmts, sastmts...)
-		stmts = append(stmts, cargdefs...)
-		stmts = append(stmts, go2cs...)
-		stmts = append(stmts, ccall)
-		stmts = append(stmts, c2gos...)
-		stmts = append(stmts, refc2gos...)
+		var stmts []goast.Stmt
+		if cdef != nil {
+			stmts = append(stmts, cdef)
+		}
+		stmts = append(stmts, allocdefs...)
+		stmts = append(stmts, pconvs...)
+		stmts = append(stmts, call)
+		stmts = append(stmts, rconvs...)
+		stmts = append(stmts, prconvs...)
 		if retstmt != nil {
 			stmts = append(stmts, retstmt)
 		}
-	}
 
-	{
 		name := ident(fn.Name)
-		typ := funcType(params, results)
-		fndef := funcDecl(name, nil, typ, stmts...)
-		g.target.addGo(fndef)
+		gofntype := funcType(goparams, goresults)
+		gofndef := funcDecl(name, nil, gofntype, stmts...)
+		g.target.addGo(gofndef)
 	}
 }
 
@@ -479,6 +554,17 @@ func blockStmt(stmts ...goast.Stmt) *goast.BlockStmt {
 		Lbrace: token.Pos(1),
 		Rbrace: token.Pos(1),
 		List:   stmts,
+	}
+}
+
+func selectorExpr(x goast.Expr, name *goast.Ident) goast.Expr {
+	if x != nil {
+		return &goast.SelectorExpr{
+			X:   x,
+			Sel: name,
+		}
+	} else {
+		return name
 	}
 }
 
