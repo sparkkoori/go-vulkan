@@ -13,3 +13,6 @@ void setbigN(bigN n){};
 void setFn(int (*fn)(void)){};
 
 FUNC changeFunc(FUNC fun){return 0;};
+
+
+void sumAbc(Abc abc, Abc *pAbc){};

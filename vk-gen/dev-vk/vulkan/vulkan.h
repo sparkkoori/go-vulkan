@@ -18,10 +18,10 @@ typedef void (*FUNC)(void);
 
 FUNC changeFunc(FUNC fun);
 
-// typedef struct Abc{
-//   int a;
-//   int b;
-//   int c;
-// } Abc;
-//
-// int sumAbc(Abc *abc);
+typedef struct Abc{
+  int a;
+  int b;
+  int c;
+} Abc;
+
+void sumAbc(Abc abc, Abc *pAbc);

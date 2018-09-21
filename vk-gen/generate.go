@@ -10,98 +10,41 @@ import (
 )
 
 type typeInfo struct {
-	gotype goast.Expr
-	ctype  cast.Node
-	c2go   func(govar, cvar goast.Expr) goast.Stmt
-	go2c   func(govar, cvar goast.Expr) goast.Stmt
-	isRef  bool
+	gotype    goast.Expr
+	ctype     goast.Expr
+	csize     goast.Expr
+	go2cAlloc bool
+	c2go      func(govar, cvar goast.Expr) goast.Stmt
+	go2c      func(govar, cvar goast.Expr) goast.Stmt
+	refc2go   func(govar, cvar goast.Expr) goast.Stmt
 }
 
-func (ti *typeInfo) cgoTypeExpr() goast.Expr {
-	t := cgoType(ti.ctype)
-	return &goast.Ident{Name: t}
+type compTypeInfo struct {
+	gofields []*goast.Field
+	cfields  []*goast.Field
+	c2go     func(goscope, cscope goast.Expr) []goast.Stmt
+	go2c     func(goscope, cscope goast.Expr) []goast.Stmt
+	refc2go  func(goscope, cscope goast.Expr) []goast.Stmt
 }
 
-func (ti *typeInfo) sizeofCgoTypeExpr() goast.Expr {
-	st := sizeofCgoType(ti.ctype)
-	return &goast.Ident{Name: st}
+type compType struct {
+	name string
+	typ  cast.Node
 }
 
-func saalloc(node cast.Node) *goast.CallExpr {
-	fun := parenExpr(starExpr(ident(cgoType(node))))
-	arg := callExpr(ident("_sa.alloc"), ident(sizeofCgoType(node)))
+func mapCompType(compTypes []compType) *compTypeInfo {
+	// info := &compTypeInfo{}
+	// for _, compType := range compTypes {
+	//
+	// }
+	return nil
+}
+
+func saalloc(typ, size goast.Expr) *goast.CallExpr {
+	fun := parenExpr(starExpr(typ))
+	arg := callExpr(ident("_sa.alloc"), size)
 	call := callExpr(fun, arg)
 	return call
-}
-
-func cgoTypeExpr(node cast.Node) goast.Expr {
-	t := cgoType(node)
-	return &goast.Ident{Name: t}
-}
-
-func sizeofCgoTypeExpr(node cast.Node) goast.Expr {
-	st := sizeofCgoType(node)
-	return &goast.Ident{Name: st}
-}
-
-func cgoType(node cast.Node) string {
-	switch n := node.(type) {
-	case *cast.BuiltinType:
-		return "C." + cgobuiltin(n.Type)
-	case *cast.PointerType:
-		if n.Type == "void *" || n.Type == "void const *" {
-			return "unsafe.Pointer"
-		} else {
-			t := cgoType(n.ChildNodes[0])
-			if t == "" {
-				return "*[0]byte"
-			} else {
-				return "*" + t
-			}
-		}
-	case *cast.ConstantArrayType:
-	case *cast.TypedefType:
-		return "C." + n.Type
-	case *cast.ParenType:
-	default:
-		halt("Unkown type for cgoType()", node)
-	}
-	return ""
-}
-
-func sizeofCgoType(node cast.Node) string {
-	switch n := node.(type) {
-	case *cast.BuiltinType:
-		return "C.sizeof_" + cgobuiltin(n.Type)
-	case *cast.PointerType:
-		return "unsafe.Sizeof(*[0]byte)"
-	case *cast.ConstantArrayType:
-	case *cast.TypedefType:
-		return "C.sizeof_" + n.Type
-	case *cast.ParenType:
-	default:
-		halt("Unkown type for sizeofCgoType()", node)
-	}
-	return ""
-}
-
-func cgobuiltin(k string) string {
-	var m = map[string]string{
-		"char":                   "char",
-		"singed char":            "schar",
-		"unsigned char":          "uchar",
-		"short":                  "short",
-		"unsigned short":         "ushort",
-		"int":                    "int",
-		"unsigned int":           "uint",
-		"long":                   "long",
-		"unsigned long":          "ulong",
-		"long long int":          "longlong",
-		"unsigned long long int": "ulonglong",
-		"float":                  "float",
-		"double":                 "double",
-	}
-	return m[k]
 }
 
 type generator struct {
@@ -130,6 +73,8 @@ func (g *generator) genType(node cast.Node) *typeInfo {
 		return g.genConstantArrayType(n)
 	case *cast.TypedefType:
 		return g.genTypedefType(n)
+	case *cast.ElaboratedType:
+		return g.genElaboratedType(n)
 	case *cast.RecordType:
 		return g.genRecordType(n)
 	case *cast.EnumType:
@@ -146,7 +91,18 @@ func (g *generator) genType(node cast.Node) *typeInfo {
 }
 
 func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
-	return nil
+	if info, ok := g.types[n.Type]; ok {
+		return info
+	}
+	var info *typeInfo
+
+	decl := g.nodes[n.Type]
+	if decl == nil {
+		halt("No decl for record type", n)
+	}
+
+	g.types[n.Type] = info
+	return info
 }
 
 func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
@@ -168,8 +124,9 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 
 	if n.Type == "void *" || n.Type == "void const *" {
 		return &typeInfo{
-			ctype:  n,
-			gotype: &goast.Ident{Name: "unsafe.Pointer"},
+			ctype:  ident("unsafe.Pointer"),
+			gotype: ident("unsafe.Pointer"),
+			csize:  ident("unsafe.Sizeof(uintptr(0))"),
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			},
@@ -180,11 +137,13 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	}
 
 	o := n.ChildNodes[0]
-	info := g.genType(o)
-	if info == nil {
+	oinfo := g.genType(o)
+	if oinfo == nil {
+		typ := starExpr(ident("[0]byte"))
 		return &typeInfo{
-			ctype:  n,
-			gotype: starExpr(ident("[0]byte")),
+			ctype:  typ,
+			gotype: typ,
+			csize:  callExpr(ident("unsafe.Sizeof"), typ),
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			},
@@ -194,19 +153,23 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 		}
 	} else {
 		return &typeInfo{
-			ctype:  n,
-			gotype: starExpr(info.gotype),
+			ctype:  starExpr(oinfo.ctype),
+			gotype: starExpr(oinfo.gotype),
+			csize:  callExpr(ident("unsafe.Sizeof"), starExpr(oinfo.ctype)),
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
-				alloc := assignStmt1n1(govar, callExpr(ident("new"), info.gotype))
-				conv := info.c2go(starExpr(govar), starExpr(cvar))
+				alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
+				conv := oinfo.c2go(starExpr(govar), starExpr(cvar))
 				return blockStmt(alloc, conv)
 			},
+			go2cAlloc: true,
 			go2c: func(govar, cvar goast.Expr) goast.Stmt {
-				alloc := assignStmt1n1(cvar, saalloc(o))
-				conv := info.go2c(starExpr(govar), starExpr(cvar))
+				alloc := assignStmt1n1(cvar, saalloc(oinfo.ctype, oinfo.csize))
+				conv := oinfo.go2c(starExpr(govar), starExpr(cvar))
 				return blockStmt(alloc, conv)
 			},
-			isRef: true,
+			refc2go: func(govar, cvar goast.Expr) goast.Stmt {
+				return oinfo.c2go(starExpr(govar), starExpr(cvar))
+			},
 		}
 	}
 }
@@ -226,7 +189,8 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	checkTypeInfo(oinfo, o)
 
 	gotype := ident(n.Type)
-	cgotype := cgoTypeExpr(n)
+	ctype := ident("C." + n.Type)
+	csize := ident("C.sizeof_" + n.Type)
 
 	g.target.addGo(&goast.GenDecl{
 		Tok: token.TYPE,
@@ -239,25 +203,47 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	})
 
 	info := &typeInfo{
-		ctype:  n,
+		ctype:  ctype,
 		gotype: gotype,
+		csize:  csize,
 		c2go: func(govar, cvar goast.Expr) goast.Stmt {
 			_temp := ident("_temp")
 			def := varDeclStmt(oinfo.gotype, _temp)
-			convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.cgoTypeExpr()), cvar))
+			convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.ctype), cvar))
 			convbase := assignStmt1n1(govar, callExpr(gotype, _temp))
 			return blockStmt(def, convc, convbase)
 		},
 
 		go2c: func(govar, cvar goast.Expr) goast.Stmt {
 			_temp := ident("_temp")
-			def := varDeclStmt(oinfo.cgoTypeExpr(), _temp)
+			def := varDeclStmt(oinfo.ctype, _temp)
 			convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), _temp)
-			convbase := assignStmt1n1(cvar, callExpr(cgotype, _temp))
+			convbase := assignStmt1n1(cvar, callExpr(ctype, _temp))
 			return blockStmt(def, convc, convbase)
 		},
+		refc2go: oinfo.refc2go, //for pointer type case
 	}
 
+	g.types[n.Type] = info
+	return info
+}
+
+func (g *generator) genElaboratedType(n *cast.ElaboratedType) *typeInfo {
+	if info, ok := g.types[n.Type]; ok {
+		return info
+	}
+	var info *typeInfo
+
+	obj := n.ChildNodes[0]
+
+	switch o := obj.(type) {
+	case *cast.RecordType:
+		info = g.genRecordType(o)
+	case *cast.EnumType:
+		info = g.genEnumType(o)
+	default:
+		halt("Unkown elaborated type", o)
+	}
 	g.types[n.Type] = info
 	return info
 }
@@ -283,22 +269,40 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 		"double":                 "float64", //C.double
 		"void":                   "",
 	}
+	var m2 = map[string]string{
+		"char":                   "char",
+		"singed char":            "schar",
+		"unsigned char":          "uchar",
+		"short":                  "short",
+		"unsigned short":         "ushort",
+		"int":                    "int",
+		"unsigned int":           "uint",
+		"long":                   "long",
+		"unsigned long":          "ulong",
+		"long long int":          "longlong",
+		"unsigned long long int": "ulonglong",
+		"float":                  "float",
+		"double":                 "double",
+	}
 	gotypestr := m[n.Type]
-	if gotypestr == "" {
+	ctypestr := m2[n.Type]
+	if gotypestr == "" || ctypestr == "" {
 		return nil
 	}
 
 	gotype := ident(gotypestr)
-	cgotype := cgoTypeExpr(n)
+	ctype := ident("C." + ctypestr)
+	csize := ident("C.sizeof_" + ctypestr)
 
 	return &typeInfo{
-		ctype:  n,
+		ctype:  ctype,
 		gotype: gotype,
+		csize:  csize,
 		c2go: func(govar, cvar goast.Expr) goast.Stmt {
 			return assignStmt1n1(govar, callExpr(gotype, cvar))
 		},
 		go2c: func(govar, cvar goast.Expr) goast.Stmt {
-			return assignStmt1n1(cvar, callExpr(cgotype, govar))
+			return assignStmt1n1(cvar, callExpr(ctype, govar))
 		},
 	}
 }
@@ -313,12 +317,13 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 	}
 
 	var params, results []*goast.Field
-	var hasRefParam bool
+	var needStackAllocator bool
 
 	cargdefs := []goast.Stmt{}
 	cargs := []goast.Expr{}
 	go2cs := []goast.Stmt{}
 	c2gos := []goast.Stmt{}
+	refc2gos := []goast.Stmt{}
 	//Params
 	for _, param := range fn.ChildNodes[1:] {
 		pvd, ok := param.(*cast.ParmVarDecl)
@@ -334,16 +339,18 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		goarg := ident(pvd.Name)
 		carg := ident("c_" + goarg.Name)
 		gotype := info.gotype
-		ctype := info.cgoTypeExpr()
+		ctype := info.ctype
 
 		cargdefs = append(cargdefs, varDeclStmt(ctype, carg))
 		cargs = append(cargs, carg)
 		params = append(params, field(gotype, goarg))
 		go2cs = append(go2cs, info.go2c(goarg, carg))
-		if info.isRef {
-			hasRefParam = true
-			oinfo := g.genType(node.(*cast.PointerType).ChildNodes[0])
-			c2gos = append(c2gos, oinfo.c2go(starExpr(goarg), starExpr(carg)))
+		if info.refc2go != nil {
+			refc2gos = append(refc2gos, info.refc2go(goarg, carg))
+		}
+
+		if info.go2cAlloc {
+			needStackAllocator = true
 		}
 	}
 
@@ -358,7 +365,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		if info != nil {
 			results = append(results, field(info.gotype, arg))
 			ccall = assignStmt1n1D(carg, callExpr(ident("C."+fn.Name), cargs...))
-			varDeclStmt(info.cgoTypeExpr(), carg)
+			varDeclStmt(info.ctype, carg)
 			c2gos = append(c2gos, info.c2go(arg, carg))
 			retstmt = &goast.ReturnStmt{}
 		} else {
@@ -368,7 +375,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 
 	//stackAllocator
 	sastmts := []goast.Stmt{}
-	if hasRefParam {
+	if needStackAllocator {
 		sa := ident("_sa")
 		sastmts = append(sastmts,
 			assignStmt1n1D(sa, callExpr(ident("pool.take"))))
@@ -385,6 +392,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		stmts = append(stmts, go2cs...)
 		stmts = append(stmts, ccall)
 		stmts = append(stmts, c2gos...)
+		stmts = append(stmts, refc2gos...)
 		if retstmt != nil {
 			stmts = append(stmts, retstmt)
 		}
@@ -399,6 +407,21 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 }
 
 func (g *generator) process(src Source) {
+	for _, node := range src {
+		switch n := node.(type) {
+		case *cast.TypedefDecl:
+			g.nodes[n.Type] = n
+		case *cast.RecordDecl:
+			g.nodes["struct "+n.Name] = n
+		case *cast.EnumDecl:
+			g.nodes["enum "+n.Name] = n
+		case *cast.FunctionDecl:
+			g.nodes[n.Name] = n
+		default:
+			halt("Unkown node in source", node)
+		}
+	}
+
 	for _, node := range src {
 		switch n := node.(type) {
 		case *cast.TypedefDecl:

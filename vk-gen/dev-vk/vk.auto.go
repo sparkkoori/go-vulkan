@@ -24,7 +24,6 @@ func movePointer(a *int32, b unsafe.Pointer) (ret **int32) {
 	}
 	c_b = b
 	c_ret := C.movePointer(c_a, c_b)
-	*a = int32(*c_a)
 	{
 		ret = new(*int32)
 		{
@@ -32,6 +31,7 @@ func movePointer(a *int32, b unsafe.Pointer) (ret **int32) {
 			**ret = int32(**c_ret)
 		}
 	}
+	*a = int32(*c_a)
 	return
 }
 func setArray(a *int32) {
