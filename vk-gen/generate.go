@@ -478,6 +478,7 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 		"unsigned long long int": "ulonglong",
 		"float":                  "float",
 		"double":                 "double",
+		"void":                   "",
 	}
 	gotypestr := m[n.Type]
 	ctypestr := m2[n.Type]
