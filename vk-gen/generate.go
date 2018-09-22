@@ -328,7 +328,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	}
 
 	if n.Type == "void *" || n.Type == "void const *" {
-		return &typeInfo{
+		info := &typeInfo{
 			ctype:  ident("unsafe.Pointer"),
 			gotype: ident("unsafe.Pointer"),
 			csize:  ident("unsafe.Sizeof(uintptr(0))"),
@@ -339,18 +339,21 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			},
 		}
+		g.types[n.Type] = info
+		return info
 	}
 
 	o := n.ChildNodes[0]
 	oinfo := g.genType(o)
 	if oinfo == nil {
+		//Pure pointer
 		var typ goast.Expr
 		if _, ok := o.(*cast.ElaboratedType); ok {
 			typ = starExpr(ident("struct{}"))
 		} else {
 			typ = starExpr(ident("[0]byte"))
 		}
-		return &typeInfo{
+		info := &typeInfo{
 			ctype:  typ,
 			gotype: typ,
 			csize:  callExpr(ident("unsafe.Sizeof"), typ),
@@ -361,13 +364,17 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			},
 		}
+		g.types[n.Type] = info
+		return info
 	} else {
+		//Reference pointer
 		info := &typeInfo{
 			ctype:  starExpr(oinfo.ctype),
 			gotype: starExpr(oinfo.gotype),
 			csize:  callExpr(ident("unsafe.Sizeof"), starExpr(oinfo.ctype)),
 		}
 		if oinfo.csize != nil {
+			//Size is not 0
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
 				ifstmt := &goast.IfStmt{
@@ -392,6 +399,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return oinfo.c2go(starExpr(govar), starExpr(cvar))
 			}
 		} else {
+			//No size,so no alloc
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			}
@@ -399,6 +407,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			}
 		}
+		g.types[n.Type] = info
 		return info
 	}
 }
