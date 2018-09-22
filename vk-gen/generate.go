@@ -491,10 +491,16 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	o := n.ChildNodes[1]
 	oinfo := g.genType(o)
 	checkTypeInfo(oinfo, o)
-	//Skip struct/enum/union typedef
-	if _, ok := o.(*cast.ElaboratedType); ok {
-		*info = *oinfo
-		return info
+	//Skip same name struct/enum/union typedef
+	if et, ok := o.(*cast.ElaboratedType); ok {
+		name := et.Type
+		name = strings.TrimPrefix(name, "enum ")
+		name = strings.TrimPrefix(name, "struct ")
+		name = strings.TrimPrefix(name, "union ")
+		if name == n.Type {
+			*info = *oinfo
+			return info
+		}
 	}
 
 	info.gotype = ident(n.Type)
