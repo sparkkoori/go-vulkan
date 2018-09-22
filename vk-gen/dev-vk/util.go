@@ -6,6 +6,7 @@ package vk
 */
 import "C"
 import (
+	"bytes"
 	"math/rand"
 	"sync"
 	"unsafe"
@@ -146,53 +147,66 @@ func calculatePaddingWithOneByteHeader(base, alignment uintptr) uintptr {
 	return padding
 }
 
-func newCString(s string, al allocator) *C.char {
+func toCString(s string, al allocator) *C.char {
 	if s == "" {
 		return nil
 	}
-	n := len(s) + 1
-	p := al.alloc(uint(n))
-	slice := (*[1 << 31]C.char)(p)[0:n]
+	n := len(s)
+	p := al.alloc(uint(n + 1))
+	slice := (*[1 << 31]C.char)(p)[0 : n+1]
 
-	for i := 0; i < n-1; i++ {
+	for i := 0; i < n; i++ {
 		slice[i] = C.char(s[i])
 	}
-	slice[n-1] = 0
+	slice[n] = 0
 
 	_s := (*C.char)(p)
 	return _s
 }
 
-func freeCString(s *C.char, al allocator) {
-	al.free(unsafe.Pointer(s))
+func toGoString(p *C.char) string {
+	if p == nil {
+		return ""
+	}
+	slice := (*[1 << 31]C.char)(unsafe.Pointer(p))
+	var buffer bytes.Buffer
+
+	for i := 0; ; i++ {
+		if slice[i] == 0 {
+			break
+		}
+		buffer.WriteByte(byte(slice[i]))
+	}
+	return buffer.String()
 }
 
-func newCStringArray(ss []string, al allocator) (**C.char, C.uint32_t) {
-	n := len(ss)
-	if n == 0 {
-		return nil, 0
-	}
-
-	size := uintptr(n) * unsafe.Sizeof(uintptr(0))
-	_ss := (**C.char)(al.alloc(uint(size)))
-	slice := (*[1 << 31]*C.char)(unsafe.Pointer(_ss))[0:n]
-
-	for i := 0; i < n; i++ {
-		slice[i] = newCString(ss[i], al)
-	}
-
-	return _ss, C.uint32_t(n)
-}
-
-func freeCStringArray(ss **C.char, n C.uint32_t, al allocator) {
-	_n := int(n)
-	slice := (*[1 << 31]*C.char)(unsafe.Pointer(ss))[0:_n]
-
-	for i := 0; i < int(_n); i++ {
-		al.free(unsafe.Pointer(slice[i]))
-	}
-	al.free(unsafe.Pointer(ss))
-}
+//
+// func newCStringArray(ss []string, al allocator) (**C.char, C.uint32_t) {
+// 	n := len(ss)
+// 	if n == 0 {
+// 		return nil, 0
+// 	}
+//
+// 	size := uintptr(n) * unsafe.Sizeof(uintptr(0))
+// 	_ss := (**C.char)(al.alloc(uint(size)))
+// 	slice := (*[1 << 31]*C.char)(unsafe.Pointer(_ss))[0:n]
+//
+// 	for i := 0; i < n; i++ {
+// 		slice[i] = newCString(ss[i], al)
+// 	}
+//
+// 	return _ss, C.uint32_t(n)
+// }
+//
+// func freeCStringArray(ss **C.char, n C.uint32_t, al allocator) {
+// 	_n := int(n)
+// 	slice := (*[1 << 31]*C.char)(unsafe.Pointer(ss))[0:_n]
+//
+// 	for i := 0; i < int(_n); i++ {
+// 		al.free(unsafe.Pointer(slice[i]))
+// 	}
+// 	al.free(unsafe.Pointer(ss))
+// }
 
 type disposer []func()
 

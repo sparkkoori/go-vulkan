@@ -1,4 +1,5 @@
 #pragma once
+#include "stddef.h"
 
 void print();
 
@@ -61,3 +62,7 @@ typedef struct Code{
 } Code;
 
 void setCode(Code code);
+
+const char * readString(const char *str);
+
+void writeString(size_t count, char *str);

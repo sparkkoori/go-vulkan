@@ -30,3 +30,7 @@ void read(const int* con){};
 void setInt4(int4 n){};
 
 void setCode(Code c){};
+
+const char * readString(const char *str){return 0;};
+
+void writeString(size_t count, char *str){};

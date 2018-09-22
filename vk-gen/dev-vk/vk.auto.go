@@ -251,3 +251,37 @@ func setCode(code Code) {
 		}
 	}
 }
+func readString(str string) (_ret string) {
+	var c struct {
+		str  *C.char
+		_ret *C.char
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.str = toCString(str, _sa)
+	c._ret = C.readString(c.str)
+	_ret = toGoString(c._ret)
+	return
+}
+
+type size_t uint32
+
+func writeString(count size_t, str *byte) {
+	var c struct {
+		count C.size_t
+		str   *C.char
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		var _temp C.ulong
+		_temp = C.ulong((uint32)(count))
+		c.count = C.size_t(_temp)
+	}
+	{
+		c.str = (*C.char)(_sa.alloc(C.sizeof_char))
+		*c.str = C.char(*str)
+	}
+	C.writeString(c.count, c.str)
+	*str = byte(*c.str)
+}

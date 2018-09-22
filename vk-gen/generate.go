@@ -327,7 +327,7 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 		return info
 	}
 
-	if n.Type == "void *" || n.Type == "void const *" {
+	if n.Type == "void *" {
 		info := &typeInfo{
 			ctype:  ident("unsafe.Pointer"),
 			gotype: ident("unsafe.Pointer"),
@@ -339,6 +339,21 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			},
 		}
+		g.types[n.Type] = info
+		return info
+	} else if n.Type == "const char *" {
+		info := &typeInfo{}
+		info.gotype = ident("string")
+		info.ctype = starExpr(ident("C.char"))
+		info.csize = ident("unsafe.Sizeof(uintptr(0))")
+		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(govar, callExpr(ident("toGoString"), cvar))
+		}
+		info.go2cAlloc = true
+		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(cvar, callExpr(ident("toCString"), govar, ident("_sa")))
+		}
+		info.refc2go = nil //Strings are immutable in Go
 		g.types[n.Type] = info
 		return info
 	}
