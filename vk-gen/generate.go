@@ -567,6 +567,7 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	if info, ok := g.types[n.Type]; ok {
 		return info
 	}
+	var info *typeInfo
 
 	var m = map[string]string{
 		"char":                   "byte",    //C.char
@@ -602,7 +603,9 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	}
 	gotypestr := m[n.Type]
 	ctypestr := m2[n.Type]
+
 	if gotypestr == "" || ctypestr == "" {
+		g.types[n.Type] = nil
 		return nil
 	}
 
@@ -610,7 +613,7 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	ctype := ident("C." + ctypestr)
 	csize := ident("C.sizeof_" + ctypestr)
 
-	return &typeInfo{
+	info = &typeInfo{
 		ctype:  ctype,
 		gotype: gotype,
 		csize:  csize,
@@ -621,6 +624,8 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 			return assignStmt1n1(cvar, callExpr(ctype, govar))
 		},
 	}
+	g.types[n.Type] = info
+	return info
 }
 
 func (g *generator) genCompType(fieldDecls []*cast.FieldDecl) *compTypeInfo {
