@@ -83,6 +83,8 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 	if info, ok := g.types[n.Type]; ok {
 		return info
 	}
+	var info *typeInfo = &typeInfo{}
+	g.types[n.Type] = info
 
 	var recordDecl *cast.RecordDecl
 	{
@@ -93,13 +95,16 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		recordDecl = node.(*cast.RecordDecl)
 	}
 
-	var info *typeInfo
-	{
-		info = &typeInfo{}
-		info.gotype = ident(recordDecl.Name)
-		info.ctype = ident("C." + recordDecl.Name)
-		info.csize = ident("C.sizeof_" + recordDecl.Name)
+	if !recordDecl.Definition {
+		info.gotype = ident("C.struct_" + recordDecl.Name)
+		info.ctype = ident("C.struct_" + recordDecl.Name)
+		info.csize = nil
+		return info
 	}
+
+	info.gotype = ident(recordDecl.Name)
+	info.ctype = ident("C." + recordDecl.Name)
+	info.csize = ident("C.sizeof_" + recordDecl.Name)
 
 	var cinfo *compTypeInfo
 	{
@@ -191,7 +196,6 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		}
 	}
 
-	g.types[n.Type] = info
 	return info
 }
 
@@ -320,7 +324,12 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 	o := n.ChildNodes[0]
 	oinfo := g.genType(o)
 	if oinfo == nil {
-		typ := starExpr(ident("[0]byte"))
+		var typ goast.Expr
+		if _, ok := o.(*cast.ElaboratedType); ok {
+			typ = starExpr(ident("struct{}"))
+		} else {
+			typ = starExpr(ident("[0]byte"))
+		}
 		return &typeInfo{
 			ctype:  typ,
 			gotype: typ,
@@ -333,11 +342,13 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 			},
 		}
 	} else {
-		return &typeInfo{
+		info := &typeInfo{
 			ctype:  starExpr(oinfo.ctype),
 			gotype: starExpr(oinfo.gotype),
 			csize:  callExpr(ident("unsafe.Sizeof"), starExpr(oinfo.ctype)),
-			c2go: func(govar, cvar goast.Expr) goast.Stmt {
+		}
+		if oinfo.csize != nil {
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
 				ifstmt := &goast.IfStmt{
 					If: token.Pos(1),
@@ -350,17 +361,25 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				}
 				conv := oinfo.c2go(starExpr(govar), starExpr(cvar))
 				return blockStmt(ifstmt, conv)
-			},
-			go2cAlloc: true,
-			go2c: func(govar, cvar goast.Expr) goast.Stmt {
+			}
+			info.go2cAlloc = true
+			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				alloc := assignStmt1n1(cvar, saalloc(oinfo.ctype, oinfo.csize))
 				conv := oinfo.go2c(starExpr(govar), starExpr(cvar))
 				return blockStmt(alloc, conv)
-			},
-			refc2go: func(govar, cvar goast.Expr) goast.Stmt {
+			}
+			info.refc2go = func(govar, cvar goast.Expr) goast.Stmt {
 				return oinfo.c2go(starExpr(govar), starExpr(cvar))
-			},
+			}
+		} else {
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, cvar)
+			}
+			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, govar)
+			}
 		}
+		return info
 	}
 }
 

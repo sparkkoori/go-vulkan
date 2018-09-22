@@ -171,3 +171,15 @@ func setColor(color int) {
 	c.color = C.Color(color)
 	C.setColor(c.color)
 }
+
+type Handle *C.struct_Handle_T
+
+func setHandle(h Handle) {
+	var c struct{ h C.Handle }
+	{
+		var _temp *C.struct_Handle_T
+		_temp = (*C.struct_Handle_T)(h)
+		c.h = C.Handle(_temp)
+	}
+	C.setHandle(c.h)
+}

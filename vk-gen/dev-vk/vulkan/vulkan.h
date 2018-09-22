@@ -43,3 +43,7 @@ typedef enum Color{
 } Color;
 
 void setColor(Color color);
+
+typedef struct Handle_T *Handle;
+
+void setHandle(Handle h);
