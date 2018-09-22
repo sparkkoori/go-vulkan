@@ -543,6 +543,36 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		return info
 	}
 
+	//function pointer typedef
+	if pt, ok := o.(*cast.PointerType); ok {
+		if ptt, ok := pt.ChildNodes[0].(*cast.ParenType); ok {
+			if fpt, ok := ptt.ChildNodes[0].(*cast.FunctionProtoType); ok {
+				info.gotype = ident(n.Type)
+				info.ctype = ident("C." + n.Type)
+				info.csize = ident("C.sizeof_" + n.Type)
+				info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+					return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
+				}
+				info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+					return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
+				}
+
+				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
+					Fields: &goast.FieldList{
+						List: []*goast.Field{
+							field(ident("C."+n.Type), ident("Raw")),
+						},
+					},
+				}))
+
+				decl := g.nodes[n.Type].(*cast.TypedefDecl)
+				g.genBridgeCall(decl, info, fpt)
+
+				return info
+			}
+		}
+	}
+
 	info.gotype = ident(n.Type)
 	info.ctype = ident("C." + n.Type)
 	info.csize = ident("C.sizeof_" + n.Type)
@@ -581,6 +611,127 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	}
 	info.refc2go = oinfo.refc2go //for pointer type case
 	return info
+}
+
+func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *cast.FunctionProtoType) {
+	var goparams, goresults []*goast.Field
+	var cparams, cresults []*goast.Field
+
+	var cdef goast.Stmt
+	var allocdefs []goast.Stmt
+	var pconvs []goast.Stmt
+	var call goast.Stmt
+	var rconvs []goast.Stmt
+	var prconvs []goast.Stmt
+	var retstmt goast.Stmt
+
+	//Param
+	{
+		fieldDecls := []*cast.FieldDecl{}
+		for i, cn := range fpt.ChildNodes[1:] {
+			fieldDecls = append(fieldDecls, &cast.FieldDecl{
+				Name:       "arg" + strconv.Itoa(i),
+				ChildNodes: []cast.Node{cn},
+			})
+		}
+
+		info := g.genCompType(fieldDecls)
+		goparams = info.gofields
+		cparams = info.cfields
+		pconvs = info.go2c(nil, ident("c"))
+		if info.refc2go != nil {
+			prconvs = info.refc2go(nil, ident("c"))
+		}
+
+		if info.go2cAlloc {
+			sa := ident("_sa")
+			allocdefs = append(allocdefs,
+				assignStmt1n1D(sa, callExpr(ident("pool.take"))))
+			allocdefs = append(allocdefs, &goast.DeferStmt{
+				Defer: token.Pos(1),
+				Call:  callExpr(ident("pool.give"), sa),
+			})
+		}
+	}
+
+	//Results
+	{
+		info := g.genType(fpt.ChildNodes[0])
+		goname := ident("_ret")
+		cname := ident("_ret")
+		if info != nil {
+			goresults = append(goresults, field(info.gotype, goname))
+			cresults = append(cresults, field(info.ctype, cname))
+			rconvs = append(rconvs, info.c2go(goname, selectorExpr(ident("c"), cname)))
+		}
+	}
+
+	//Call
+	{
+		args := []goast.Expr{}
+		args = append(args, selectorExpr(ident("p"), ident("Raw")))
+		for _, cparam := range cparams {
+			args = append(args, selectorExpr(ident("c"), cparam.Names[0]))
+		}
+		if len(cresults) > 0 {
+			rs := selectorExpr(ident("c"), cresults[0].Names[0])
+			call = assignStmt1n1(rs, callExpr(ident("C.call"+decl.Name), args...))
+			retstmt = &goast.ReturnStmt{}
+		} else {
+			call = exprStmt(callExpr(ident("C.call"+decl.Name), args...))
+		}
+	}
+
+	//cdef
+	{
+		fields := []*goast.Field{}
+		fields = append(fields, cparams...)
+		fields = append(fields, cresults...)
+
+		if len(fields) > 0 {
+			cdef = &goast.DeclStmt{
+				Decl: &goast.GenDecl{
+					Tok: token.VAR,
+					Specs: []goast.Spec{
+						&goast.ValueSpec{
+							Names: []*goast.Ident{
+								ident("c"),
+							},
+							Type: &goast.StructType{
+								Struct: token.Pos(1),
+								Fields: &goast.FieldList{
+									Opening: token.Pos(1),
+									List:    fields,
+									Closing: token.Pos(1),
+								},
+							},
+						},
+					},
+				},
+			}
+		}
+	}
+
+	//Generate
+	{
+		var stmts []goast.Stmt
+		if cdef != nil {
+			stmts = append(stmts, cdef)
+		}
+		stmts = append(stmts, allocdefs...)
+		stmts = append(stmts, pconvs...)
+		stmts = append(stmts, call)
+		stmts = append(stmts, rconvs...)
+		stmts = append(stmts, prconvs...)
+		if retstmt != nil {
+			stmts = append(stmts, retstmt)
+		}
+
+		g.target.addC(decl)
+		gofntype := funcType(goparams, goresults)
+		gofndef := funcDecl(ident("Call"), field(info.gotype, ident("p")), gofntype, stmts...)
+		g.target.addGo(gofndef)
+	}
 }
 
 func (g *generator) genElaboratedType(n *cast.ElaboratedType) *typeInfo {

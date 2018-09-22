@@ -108,6 +108,9 @@ func splitFuncPointerProtoType(p string) []string {
 
 	vars = append(vars, subs[1])
 	for _, param := range strings.Split(subs[2], ",") {
+		if param == "void" {
+			break
+		}
 		vars = append(vars, param)
 	}
 	return vars

@@ -34,3 +34,5 @@ void setCode(Code c){};
 const char * readString(const char *str){return 0;};
 
 void writeString(size_t count, char *str){};
+
+FooFunc getFooFunc(){return 0;};

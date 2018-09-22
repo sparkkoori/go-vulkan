@@ -71,16 +71,21 @@ func setFn(fn *[0]byte) {
 	C.setFn(c.fn)
 }
 
-type FUNC C.FUNC
+type FUNC struct {
+	Raw C.FUNC
+}
 
+func (p FUNC) Call() {
+	C.callFUNC(p.Raw)
+}
 func changeFunc(fun FUNC) (_ret FUNC) {
 	var c struct {
 		fun  C.FUNC
 		_ret C.FUNC
 	}
-	c.fun = C.FUNC(fun)
+	c.fun = fun.Raw
 	c._ret = C.changeFunc(c.fun)
-	_ret = FUNC(c._ret)
+	_ret.Raw = c._ret
 	return
 }
 
@@ -277,4 +282,27 @@ func writeString(count uint, str *byte) {
 	}
 	C.writeString(c.count, c.str)
 	*str = byte(*c.str)
+}
+
+type FooFunc struct {
+	Raw C.FooFunc
+}
+
+func (p FooFunc) Call(arg0 unsafe.Pointer, arg1 float32) (_ret int32) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 C.float
+		_ret C.int
+	}
+	c.arg0 = arg0
+	c.arg1 = C.float(arg1)
+	c._ret = C.callFooFunc(p.Raw, c.arg0, c.arg1)
+	_ret = int32(c._ret)
+	return
+}
+func getFooFunc() (_ret FooFunc) {
+	var c struct{ _ret C.FooFunc }
+	c._ret = C.getFooFunc()
+	_ret.Raw = c._ret
+	return
 }

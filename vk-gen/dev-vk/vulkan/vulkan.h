@@ -66,3 +66,7 @@ void setCode(Code code);
 const char * readString(const char *str);
 
 void writeString(size_t count, char *str);
+
+typedef int (*FooFunc)(void* data, float pers);
+
+FooFunc getFooFunc();
