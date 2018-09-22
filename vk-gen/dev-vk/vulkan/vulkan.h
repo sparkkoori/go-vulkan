@@ -49,3 +49,15 @@ typedef struct Handle_T *Handle;
 void setHandle(Handle h);
 
 void read(const int* con);
+
+typedef int int4[4];
+
+void setInt4(int4 n);
+
+typedef struct Code{
+  int4 n0;
+  float n1[2];
+  long* n3[8];
+} Code;
+
+void setCode(Code code);

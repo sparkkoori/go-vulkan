@@ -182,3 +182,72 @@ func read(con *int32) {
 	C.read(c.con)
 	*con = int32(*c.con)
 }
+func setInt4(n *int32) {
+	var c struct{ n *C.int }
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.n = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.n = C.int(*n)
+	}
+	C.setInt4(c.n)
+	*n = int32(*c.n)
+}
+
+type int4 [4]int32
+type Code struct {
+	n0 int4
+	n1 [2]float32
+	n3 [8]*int32
+}
+
+func (g *Code) toC(c *C.Code, _sa *stackAllocator) {
+	{
+		var _temp [4]C.int
+		for i, _ := range ([4]int32)(g.n0) {
+			_temp[i] = C.int(([4]int32)(g.n0)[i])
+		}
+		c.n0 = C.int4(_temp)
+	}
+	for i, _ := range g.n1 {
+		c.n1[i] = C.float(g.n1[i])
+	}
+	for i, _ := range g.n3 {
+		{
+			c.n3[i] = (*C.long)(_sa.alloc(C.sizeof_long))
+			*c.n3[i] = C.long(*g.n3[i])
+		}
+	}
+}
+func (g *Code) fromC(c *C.Code) {
+	{
+		var _temp [4]int32
+		for i, _ := range _temp {
+			_temp[i] = int32(([4]C.int)(c.n0)[i])
+		}
+		g.n0 = int4(_temp)
+	}
+	for i, _ := range g.n1 {
+		g.n1[i] = float32(c.n1[i])
+	}
+	for i, _ := range g.n3 {
+		{
+			if g.n3[i] == nil {
+				g.n3[i] = new(int32)
+			}
+			*g.n3[i] = int32(*c.n3[i])
+		}
+	}
+}
+func setCode(code Code) {
+	var c struct{ code C.Code }
+	_sa := pool.take()
+	defer pool.give(_sa)
+	code.toC(&c.code, _sa)
+	C.setCode(c.code)
+	{
+		for i, _ := range code.n3 {
+			*code.n3[i] = int32(*c.code.n3[i])
+		}
+	}
+}

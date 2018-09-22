@@ -26,3 +26,7 @@ void setColor(Color color){};
 void setHandle(Handle h){};
 
 void read(const int* con){};
+
+void setInt4(int4 n){};
+
+void setCode(Code c){};

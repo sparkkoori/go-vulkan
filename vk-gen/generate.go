@@ -4,6 +4,7 @@ import (
 	"fmt"
 	goast "go/ast"
 	"go/token"
+	"strconv"
 	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
@@ -384,8 +385,72 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 }
 
 func (g *generator) genConstantArrayType(n *cast.ConstantArrayType) *typeInfo {
-	deepPrint(n, 0)
-	return nil
+	if info, ok := g.types[n.Type]; ok {
+		return info
+	}
+	info := &typeInfo{}
+
+	oinfo := g.genType(n.ChildNodes[0])
+	if oinfo == nil {
+		g.types[n.Type] = nil
+		return nil
+	}
+
+	info.gotype = &goast.ArrayType{
+		Len: &goast.BasicLit{
+			Kind:  token.INT,
+			Value: strconv.Itoa(n.Size),
+		},
+		Elt: oinfo.gotype,
+	}
+	info.ctype = &goast.ArrayType{
+		Len: &goast.BasicLit{
+			Kind:  token.INT,
+			Value: strconv.Itoa(n.Size),
+		},
+		Elt: oinfo.ctype,
+	}
+	info.csize = &goast.BinaryExpr{
+		X:  oinfo.csize,
+		Op: token.MUL,
+		Y: &goast.BasicLit{
+			Kind:  token.INT,
+			Value: strconv.Itoa(n.Size),
+		},
+	}
+
+	rangeStmt := func(x goast.Expr, stmts ...goast.Stmt) *goast.RangeStmt {
+		return &goast.RangeStmt{
+			For:   token.Pos(1),
+			Key:   ident("i"),
+			Value: ident("_"),
+			Tok:   token.DEFINE,
+			X:     x,
+			Body:  blockStmt(stmts...),
+		}
+	}
+
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		stmt := oinfo.c2go(indexExpr(govar, ident("i")), indexExpr(cvar, ident("i")))
+		return rangeStmt(govar, stmt)
+	}
+
+	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+		stmt := oinfo.go2c(indexExpr(govar, ident("i")), indexExpr(cvar, ident("i")))
+		return rangeStmt(govar, stmt)
+	}
+
+	info.go2cAlloc = oinfo.go2cAlloc
+
+	if oinfo.refc2go != nil {
+		info.refc2go = func(govar, cvar goast.Expr) goast.Stmt {
+			stmt := oinfo.refc2go(indexExpr(govar, ident("i")), indexExpr(cvar, ident("i")))
+			return rangeStmt(govar, stmt)
+		}
+	}
+
+	g.types[n.Type] = info
+	return info
 }
 
 func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
@@ -841,6 +906,15 @@ func selectorExpr(x goast.Expr, name *goast.Ident) goast.Expr {
 		}
 	} else {
 		return name
+	}
+}
+
+func indexExpr(x goast.Expr, idx *goast.Ident) goast.Expr {
+	return &goast.IndexExpr{
+		X:      x,
+		Lbrack: token.Pos(1),
+		Index:  idx,
+		Rbrack: token.Pos(1),
 	}
 }
 
