@@ -263,21 +263,14 @@ func readString(str string) (_ret string) {
 	_ret = toGoString(c._ret)
 	return
 }
-
-type size_t uint32
-
-func writeString(count size_t, str *byte) {
+func writeString(count uint, str *byte) {
 	var c struct {
 		count C.size_t
 		str   *C.char
 	}
 	_sa := pool.take()
 	defer pool.give(_sa)
-	{
-		var _temp C.ulong
-		_temp = C.ulong((uint32)(count))
-		c.count = C.size_t(_temp)
-	}
+	c.count = C.size_t(count)
 	{
 		c.str = (*C.char)(_sa.alloc(C.sizeof_char))
 		*c.str = C.char(*str)

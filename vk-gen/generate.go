@@ -518,6 +518,31 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		}
 	}
 
+	//standard typedef
+	m := map[string]string{
+		"size_t":   "uint",
+		"int8_t":   "int8",
+		"uint8_t":  "uint8",
+		"int16_t":  "int16",
+		"uint16_t": "uint16",
+		"int32_t":  "int32",
+		"uint32_t": "uint32",
+		"int64_t":  "int64",
+		"uint64_t": "uint64",
+	}
+	if std, ok := m[n.Type]; ok {
+		info.gotype = ident(std)
+		info.ctype = ident("C." + n.Type)
+		info.csize = ident("C.sizeof_" + n.Type)
+		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(govar, callExpr(info.gotype, cvar))
+		}
+		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(cvar, callExpr(info.ctype, govar))
+		}
+		return info
+	}
+
 	info.gotype = ident(n.Type)
 	info.ctype = ident("C." + n.Type)
 	info.csize = ident("C.sizeof_" + n.Type)
