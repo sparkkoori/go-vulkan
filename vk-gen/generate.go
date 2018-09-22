@@ -299,7 +299,7 @@ func (g *generator) genFunctionProtoType(n *cast.FunctionProtoType) *typeInfo {
 }
 
 func (g *generator) genQualType(n *cast.QualType) *typeInfo {
-	return nil
+	return g.genType(n.ChildNodes[0])
 }
 
 func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {

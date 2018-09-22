@@ -171,3 +171,14 @@ func setHandle(h Handle) {
 	c.h = C.Handle(h)
 	C.setHandle(c.h)
 }
+func read(con *int32) {
+	var c struct{ con *C.int }
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.con = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.con = C.int(*con)
+	}
+	C.read(c.con)
+	*con = int32(*c.con)
+}

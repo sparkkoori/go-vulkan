@@ -24,3 +24,5 @@ void setComplexAbc(ComplexAbc xabc){};
 void setColor(Color color){};
 
 void setHandle(Handle h){};
+
+void read(const int* con){};
