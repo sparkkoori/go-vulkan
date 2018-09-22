@@ -392,53 +392,55 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	if info, ok := g.types[n.Type]; ok {
 		return info
 	}
+	info := &typeInfo{}
+	g.types[n.Type] = info
 
 	o := n.ChildNodes[1]
 	oinfo := g.genType(o)
 	checkTypeInfo(oinfo, o)
 	//Skip struct/enum/union typedef
 	if _, ok := o.(*cast.ElaboratedType); ok {
-		g.types[n.Type] = oinfo
-		return oinfo
+		*info = *oinfo
+		return info
 	}
 
-	gotype := ident(n.Type)
-	ctype := ident("C." + n.Type)
-	csize := ident("C.sizeof_" + n.Type)
+	info.gotype = ident(n.Type)
+	info.ctype = ident("C." + n.Type)
+	info.csize = ident("C.sizeof_" + n.Type)
 
-	g.target.addGo(&goast.GenDecl{
-		Tok: token.TYPE,
-		Specs: []goast.Spec{
-			&goast.TypeSpec{
-				Name: gotype,
-				Type: oinfo.gotype,
-			},
-		},
-	})
+	//forword style declaration
+	if _, ok := oinfo.gotype.(*goast.StarExpr); ok {
+		if oinfo.refc2go == nil {
+			//means it's a pure pointer
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, callExpr(info.gotype, cvar))
+			}
+			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, callExpr(info.ctype, govar))
+			}
 
-	info := &typeInfo{
-		ctype:  ctype,
-		gotype: gotype,
-		csize:  csize,
-		c2go: func(govar, cvar goast.Expr) goast.Stmt {
-			_temp := ident("_temp")
-			def := varDeclStmt(oinfo.gotype, _temp)
-			convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.ctype), cvar))
-			convbase := assignStmt1n1(govar, callExpr(gotype, _temp))
-			return blockStmt(def, convc, convbase)
-		},
-
-		go2c: func(govar, cvar goast.Expr) goast.Stmt {
-			_temp := ident("_temp")
-			def := varDeclStmt(oinfo.ctype, _temp)
-			convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), _temp)
-			convbase := assignStmt1n1(cvar, callExpr(ctype, _temp))
-			return blockStmt(def, convc, convbase)
-		},
-		refc2go: oinfo.refc2go, //for pointer type case
+			g.target.addGo(typeDecl(info.gotype.(*goast.Ident), info.ctype))
+			return info
+		}
 	}
 
-	g.types[n.Type] = info
+	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), oinfo.gotype))
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		_temp := ident("_temp")
+		def := varDeclStmt(oinfo.gotype, _temp)
+		convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.ctype), cvar))
+		convbase := assignStmt1n1(govar, callExpr(info.gotype, _temp))
+		return blockStmt(def, convc, convbase)
+	}
+
+	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+		_temp := ident("_temp")
+		def := varDeclStmt(oinfo.ctype, _temp)
+		convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), _temp)
+		convbase := assignStmt1n1(cvar, callExpr(info.ctype, _temp))
+		return blockStmt(def, convc, convbase)
+	}
+	info.refc2go = oinfo.refc2go //for pointer type case
 	return info
 }
 
@@ -793,6 +795,18 @@ func starExpr(expr goast.Expr) *goast.StarExpr {
 func parenExpr(expr goast.Expr) *goast.ParenExpr {
 	return &goast.ParenExpr{
 		X: expr,
+	}
+}
+
+func typeDecl(name *goast.Ident, typ goast.Expr) *goast.GenDecl {
+	return &goast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []goast.Spec{
+			&goast.TypeSpec{
+				Name: name,
+				Type: typ,
+			},
+		},
 	}
 }
 

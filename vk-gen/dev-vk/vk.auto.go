@@ -71,24 +71,16 @@ func setFn(fn *[0]byte) {
 	C.setFn(c.fn)
 }
 
-type FUNC *[0]byte
+type FUNC C.FUNC
 
 func changeFunc(fun FUNC) (_ret FUNC) {
 	var c struct {
 		fun  C.FUNC
 		_ret C.FUNC
 	}
-	{
-		var _temp *[0]byte
-		_temp = (*[0]byte)(fun)
-		c.fun = C.FUNC(_temp)
-	}
+	c.fun = C.FUNC(fun)
 	c._ret = C.changeFunc(c.fun)
-	{
-		var _temp *[0]byte
-		_temp = (*[0]byte)(c._ret)
-		_ret = FUNC(_temp)
-	}
+	_ret = FUNC(c._ret)
 	return
 }
 
@@ -172,14 +164,10 @@ func setColor(color int) {
 	C.setColor(c.color)
 }
 
-type Handle *C.struct_Handle_T
+type Handle C.Handle
 
 func setHandle(h Handle) {
 	var c struct{ h C.Handle }
-	{
-		var _temp *C.struct_Handle_T
-		_temp = (*C.struct_Handle_T)(h)
-		c.h = C.Handle(_temp)
-	}
+	c.h = C.Handle(h)
 	C.setHandle(c.h)
 }
