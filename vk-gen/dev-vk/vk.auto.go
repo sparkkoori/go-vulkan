@@ -1,9 +1,7 @@
 package vk
-
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
 import "C"
-import "unsafe"
 
 func print() {
 	C.print()

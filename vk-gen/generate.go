@@ -85,7 +85,6 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		return info
 	}
 	var info *typeInfo = &typeInfo{}
-	g.types[n.Type] = info
 
 	var recordDecl *cast.RecordDecl
 	{
@@ -100,12 +99,9 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		info.gotype = ident("C.struct_" + recordDecl.Name)
 		info.ctype = ident("C.struct_" + recordDecl.Name)
 		info.csize = nil
+		g.types[n.Type] = info
 		return info
 	}
-
-	info.gotype = ident(recordDecl.Name)
-	info.ctype = ident("C." + recordDecl.Name)
-	info.csize = ident("C.sizeof_" + recordDecl.Name)
 
 	var cinfo *compTypeInfo
 	{
@@ -116,23 +112,36 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		cinfo = g.genCompType(fieldDecls)
 	}
 
-	//Decl
-	g.target.addGo(&goast.GenDecl{
-		Tok: token.TYPE,
-		Specs: []goast.Spec{
-			&goast.TypeSpec{
-				Name: info.gotype.(*goast.Ident),
-				Type: &goast.StructType{
-					Struct: token.Pos(1),
-					Fields: &goast.FieldList{
-						Opening: token.Pos(1),
-						List:    cinfo.gofields,
-						Closing: token.Pos(1),
+	if recordDecl.Name != "" {
+		info.gotype = ident(recordDecl.Name)
+		if _, ok := g.nodes[recordDecl.Name]; ok {
+			//same name typedef exists
+			info.ctype = ident("C." + recordDecl.Name)
+			info.csize = ident("C.sizeof_" + recordDecl.Name)
+		} else {
+			info.ctype = ident("C.struct" + recordDecl.Name)
+			info.csize = ident("C.sizeof_struct_" + recordDecl.Name)
+		}
+
+		g.target.addGo(&goast.GenDecl{
+			Tok: token.TYPE,
+			Specs: []goast.Spec{
+				&goast.TypeSpec{
+					Name: info.gotype.(*goast.Ident),
+					Type: &goast.StructType{
+						Struct: token.Pos(1),
+						Fields: &goast.FieldList{
+							Opening: token.Pos(1),
+							List:    cinfo.gofields,
+							Closing: token.Pos(1),
+						},
 					},
 				},
 			},
-		},
-	})
+		})
+	} else {
+		halt("Unamed struct isn't implemented", n)
+	}
 
 	takeAddr := func(govar, cvar goast.Expr) (goast.Expr, goast.Expr) {
 		if starX, ok := govar.(*goast.StarExpr); ok {
@@ -197,6 +206,7 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		}
 	}
 
+	g.types[n.Type] = info
 	return info
 }
 
