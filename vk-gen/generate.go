@@ -4,6 +4,7 @@ import (
 	"fmt"
 	goast "go/ast"
 	"go/token"
+	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/logrusorgru/aurora"
@@ -39,14 +40,14 @@ type generator struct {
 	target Target
 	nodes  map[string]cast.Node //name node map
 	types  map[string]*typeInfo
-	consts map[string]bool
+	consts map[string]goast.Expr
 	funcs  map[string]bool
 }
 
 func (g *generator) init() {
 	g.nodes = make(map[string]cast.Node, 2048)
 	g.types = make(map[string]*typeInfo, 512)
-	g.consts = make(map[string]bool, 128)
+	g.consts = make(map[string]goast.Expr, 128)
 	g.funcs = make(map[string]bool, 128)
 }
 
@@ -194,8 +195,99 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 	return info
 }
 
-func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
+func (g *generator) mapConstExpr(node cast.Node) goast.Expr {
+	switch v := node.(type) {
+	case *cast.IntegerLiteral:
+		return &goast.BasicLit{Kind: token.INT, Value: v.Value}
+	case *cast.DeclRefExpr:
+		return g.consts[v.Name]
+	case *cast.ParenExpr:
+		return &goast.ParenExpr{
+			Lparen: token.Pos(1),
+			X:      g.mapConstExpr(v.ChildNodes[0]),
+			Rparen: token.Pos(1),
+		}
+	case *cast.BinaryOperator:
+		return &goast.BinaryExpr{
+			X:  g.mapConstExpr(v.ChildNodes[0]),
+			Op: mapOperator(v.Operator),
+			Y:  g.mapConstExpr(v.ChildNodes[1]),
+		}
+	case *cast.UnaryOperator:
+		return &goast.UnaryExpr{
+			X:  g.mapConstExpr(v.ChildNodes[0]),
+			Op: mapOperator(v.Operator),
+		}
+	default:
+		halt("convConst()", node)
+	}
 	return nil
+}
+
+func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
+	if info, ok := g.types[n.Name]; ok {
+		return info
+	}
+
+	var enumDecl *cast.EnumDecl
+	{
+		node := g.nodes[n.Name]
+		if node == nil {
+			halt("No decl for record type", n)
+		}
+		enumDecl = node.(*cast.EnumDecl)
+	}
+	name := strings.Trim(enumDecl.Name, "enum ")
+
+	info := &typeInfo{}
+	info.gotype = ident("int")
+	info.ctype = ident("C." + name)
+	info.csize = ident("C.sizeof_" + name)
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		return assignStmt1n1(govar, callExpr(info.gotype, cvar))
+	}
+	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+		return assignStmt1n1(cvar, callExpr(info.ctype, govar))
+	}
+
+	g.target.addGo(&goast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []goast.Spec{
+			&goast.TypeSpec{
+				Name: ident(name),
+				Type: info.gotype,
+			},
+		},
+	})
+
+	//Consts
+	{
+
+		specs := []goast.Spec{}
+		for _, child := range enumDecl.ChildNodes {
+			decl := child.(*cast.EnumConstantDecl)
+			goname := ident(decl.Name)
+			g.consts[decl.Name] = goname
+
+			var val = g.mapConstExpr(decl.ChildNodes[0])
+			if val != nil {
+				specs = append(specs, &goast.ValueSpec{
+					Names:  []*goast.Ident{goname},
+					Type:   info.gotype,
+					Values: []goast.Expr{val},
+				})
+			}
+		}
+		g.target.addGo(&goast.GenDecl{
+			Tok:    token.CONST,
+			Lparen: token.Pos(1),
+			Specs:  specs,
+			Rparen: token.Pos(1),
+		})
+	}
+
+	g.types[n.Name] = info
+	return info
 }
 
 func (g *generator) genFunctionProtoType(n *cast.FunctionProtoType) *typeInfo {
@@ -626,6 +718,37 @@ func (g *generator) process(src Source) {
 		default:
 			halt("Unkown node in source", node)
 		}
+	}
+}
+
+func mapOperator(op string) token.Token {
+	switch op {
+	case token.ADD.String():
+		return token.ADD
+	case token.SUB.String():
+		return token.SUB
+	case token.MUL.String():
+		return token.MUL
+	case token.QUO.String():
+		return token.QUO
+	case token.REM.String():
+		return token.REM
+
+	case token.AND.String():
+		return token.AND
+	case token.OR.String():
+		return token.OR
+	case token.XOR.String():
+		return token.XOR
+	case token.SHL.String():
+		return token.SHL
+	case token.SHR.String():
+		return token.SHR
+	case token.AND_NOT.String():
+		return token.AND_NOT
+
+	default:
+		return token.ILLEGAL
 	}
 }
 

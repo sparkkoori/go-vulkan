@@ -20,3 +20,5 @@ void setAbc(Abc abc){};
 void setPAbc(Abc *pAbc){};
 
 void setComplexAbc(ComplexAbc xabc){};
+
+void setColor(Color color){};

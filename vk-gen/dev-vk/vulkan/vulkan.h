@@ -34,3 +34,12 @@ typedef struct ComplexAbc{
 } ComplexAbc;
 
 void setComplexAbc(ComplexAbc xabc);
+
+typedef enum Color{
+  Red = 1,
+  Blue = 2,
+  Yellow = 3,
+  Green = (Red + Blue) - Yellow
+} Color;
+
+void setColor(Color color);

@@ -156,3 +156,18 @@ func setComplexAbc(xabc ComplexAbc) {
 		xabc.pAbc.fromC(c.xabc.pAbc)
 	}
 }
+
+type Color int
+
+const (
+	Red    int = 1
+	Blue   int = 2
+	Yellow int = 3
+	Green  int = (Red + Blue) - Yellow
+)
+
+func setColor(color int) {
+	var c struct{ color C.Color }
+	c.color = C.Color(color)
+	C.setColor(c.color)
+}
