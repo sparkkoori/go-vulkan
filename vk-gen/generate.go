@@ -253,11 +253,21 @@ func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
 		enumDecl = node.(*cast.EnumDecl)
 	}
 	name := strings.Trim(enumDecl.Name, "enum ")
-
 	info := &typeInfo{}
-	info.gotype = ident("int")
-	info.ctype = ident("C." + name)
-	info.csize = ident("C.sizeof_" + name)
+
+	if name != "" {
+		info.gotype = ident("int")
+		if _, ok := g.nodes[name]; ok {
+			info.ctype = ident("C." + name)
+			info.csize = ident("C.sizeof_" + name)
+		} else {
+			info.ctype = ident("C.enum" + name)
+			info.csize = ident("C.sizeof_enum_" + name)
+		}
+	} else {
+		halt("Unamed enum isn't implemented", n)
+	}
+
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 		return assignStmt1n1(govar, callExpr(info.gotype, cvar))
 	}
@@ -277,7 +287,6 @@ func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
 
 	//Consts
 	{
-
 		specs := []goast.Spec{}
 		for _, child := range enumDecl.ChildNodes {
 			decl := child.(*cast.EnumConstantDecl)
