@@ -17,7 +17,7 @@ FUNC changeFunc(FUNC fun){return 0;};
 
 void setAbc(Abc abc){};
 
-void setPAbc(Abc *pAbc){};
+void setPAbc(Abc *pAbc, const Abc *pcAbc){};
 
 void setComplexAbc(ComplexAbc xabc){};
 

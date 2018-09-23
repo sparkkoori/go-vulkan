@@ -827,7 +827,8 @@ func (g *generator) genCompType(fieldDecls []*cast.FieldDecl) *compTypeInfo {
 	refc2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
 
 	for _, fieldDecl := range fieldDecls {
-		finfo := g.genType(fieldDecl.ChildNodes[0])
+		ftn := fieldDecl.ChildNodes[0]
+		finfo := g.genType(ftn)
 		cname := ident(fieldDecl.Name)
 		goname := ident(fieldDecl.Name)
 		info.cfields = append(info.cfields, field(finfo.ctype, cname))
@@ -839,9 +840,20 @@ func (g *generator) genCompType(fieldDecls []*cast.FieldDecl) *compTypeInfo {
 			return finfo.c2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
 		})
 		if finfo.refc2go != nil {
-			refc2goFns = append(refc2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
-				return finfo.refc2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
-			})
+			isPointerToConst := false
+			if pt, ok := ftn.(*cast.PointerType); ok {
+				if qt, ok := pt.ChildNodes[0].(*cast.QualType); ok {
+					if qt.Kind == "const" {
+						isPointerToConst = true
+					}
+				}
+			}
+			//Not restict, but it fit most cases
+			if !isPointerToConst {
+				refc2goFns = append(refc2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+					return finfo.refc2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+				})
+			}
 		}
 		if finfo.go2cAlloc {
 			info.go2cAlloc = true

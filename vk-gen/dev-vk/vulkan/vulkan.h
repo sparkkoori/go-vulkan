@@ -27,7 +27,7 @@ typedef struct Abc{
 
 void setAbc(Abc abc);
 
-void setPAbc(Abc *pAbc);
+void setPAbc(Abc *pAbc, const Abc *pcAbc);
 
 typedef struct ComplexAbc{
   Abc abc;

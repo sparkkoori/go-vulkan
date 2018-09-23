@@ -110,15 +110,22 @@ func setAbc(abc Abc) {
 	abc.toC(&c.abc)
 	C.setAbc(c.abc)
 }
-func setPAbc(pAbc *Abc) {
-	var c struct{ pAbc *C.Abc }
+func setPAbc(pAbc *Abc, pcAbc *Abc) {
+	var c struct {
+		pAbc  *C.Abc
+		pcAbc *C.Abc
+	}
 	_sa := pool.take()
 	defer pool.give(_sa)
 	{
 		c.pAbc = (*C.Abc)(_sa.alloc(C.sizeof_Abc))
 		pAbc.toC(c.pAbc)
 	}
-	C.setPAbc(c.pAbc)
+	{
+		c.pcAbc = (*C.Abc)(_sa.alloc(C.sizeof_Abc))
+		pcAbc.toC(c.pcAbc)
+	}
+	C.setPAbc(c.pAbc, c.pcAbc)
 	pAbc.fromC(c.pAbc)
 }
 
@@ -185,7 +192,6 @@ func read(con *int32) {
 		*c.con = C.int(*con)
 	}
 	C.read(c.con)
-	*con = int32(*c.con)
 }
 func setInt4(n *int32) {
 	var c struct{ n *C.int }
