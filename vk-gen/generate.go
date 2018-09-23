@@ -37,19 +37,31 @@ func saalloc(typ, size goast.Expr) *goast.CallExpr {
 	return call
 }
 
+type fieldHint int
+
+const (
+	hintNone fieldHint = iota
+	hintSize
+	hintArray
+)
+
 type generator struct {
 	target Target
 	nodes  map[string]cast.Node //name node map
 	types  map[string]*typeInfo
 	consts map[string]goast.Expr
 	funcs  map[string]bool
+
+	hints map[string][]fieldHint
 }
 
 func (g *generator) init() {
 	g.nodes = make(map[string]cast.Node, 2048)
 	g.types = make(map[string]*typeInfo, 512)
 	g.consts = make(map[string]goast.Expr, 128)
-	g.funcs = make(map[string]bool, 128)
+	g.funcs = make(map[string]bool, 512)
+
+	g.hints = make(map[string][]fieldHint, 512)
 }
 
 func (g *generator) genType(node cast.Node) *typeInfo {
@@ -109,7 +121,7 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		for _, child := range recordDecl.ChildNodes {
 			fieldDecls = append(fieldDecls, child.(*cast.FieldDecl))
 		}
-		cinfo = g.genCompType(fieldDecls)
+		cinfo = g.genCompType(fieldDecls, g.hints[n.Type])
 	}
 
 	if recordDecl.Name != "" {
@@ -635,7 +647,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 			})
 		}
 
-		info := g.genCompType(fieldDecls)
+		info := g.genCompType(fieldDecls, g.hints[decl.Name])
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -819,7 +831,11 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	return info
 }
 
-func (g *generator) genCompType(fieldDecls []*cast.FieldDecl) *compTypeInfo {
+func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint) *compTypeInfo {
+	if len(fieldDecls) != len(hints) {
+		halt("Length of hints is not match of fields", nil)
+	}
+
 	info := &compTypeInfo{}
 
 	go2cFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
@@ -922,7 +938,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			}
 			fieldDecls = append(fieldDecls, fieldDecl)
 		}
-		info := g.genCompType(fieldDecls)
+		info := g.genCompType(fieldDecls, g.hints[fn.Name])
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
