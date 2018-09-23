@@ -35,10 +35,10 @@ const char * readString(const char *str){return 0;};
 
 void writeString(size_t count, char *str){};
 
-int fooFunc (void* data, float pers){return 0};
+int fooFunc (void* data, float pers){return 0;};
 
-PFN_FooFunc getFooFunc(){return 0;};
+PFN_fooFunc getFooFunc(){return 0;};
 
 void setArr (size_t imageCount, int *images){};
 
-PFN_setArr getSetArrFunc(){};
+PFN_setArr getSetArrFunc(){return 0;};

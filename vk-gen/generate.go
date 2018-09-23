@@ -106,7 +106,11 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		for _, child := range recordDecl.ChildNodes {
 			fieldDecls = append(fieldDecls, child.(*cast.FieldDecl))
 		}
-		cinfo = g.genCompType(fieldDecls, g.hints[n.Type])
+		hints := g.hints[recordDecl.Name]
+		if len(hints) != len(fieldDecls) {
+			halt("Length of hints is not match of fields in genRecord()", n)
+		}
+		cinfo = g.genCompType(fieldDecls, hints)
 	}
 
 	if recordDecl.Name != "" {
@@ -632,7 +636,14 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 			})
 		}
 
-		info := g.genCompType(fieldDecls, g.hints[decl.Name])
+		hints, ok := g.hints[decl.Name]
+		if !ok {
+			hints = make([]fieldHint, len(fieldDecls))
+		}
+		// if len(hints) != len(fieldDecls) {
+		// 	halt("Length of hints is not match of fields in genBridgeCall()", decl)
+		// }
+		info := g.genCompType(fieldDecls, hints)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -818,7 +829,7 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 
 func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint) *compTypeInfo {
 	if len(fieldDecls) != len(hints) {
-		halt("Length of hints is not match of fields", nil)
+		panic("Length of hints is not match of fields")
 	}
 
 	info := &compTypeInfo{}
@@ -829,9 +840,13 @@ func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint)
 
 	for _, fieldDecl := range fieldDecls {
 		ftn := fieldDecl.ChildNodes[0]
-		finfo := g.genType(ftn)
 		cname := ident(fieldDecl.Name)
 		goname := ident(fieldDecl.Name)
+
+		// hint := hints[i]
+		// TODO: use hint
+
+		finfo := g.genType(ftn)
 		info.cfields = append(info.cfields, field(finfo.ctype, cname))
 		info.gofields = append(info.gofields, field(finfo.gotype, goname))
 		go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
@@ -923,7 +938,11 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			}
 			fieldDecls = append(fieldDecls, fieldDecl)
 		}
-		info := g.genCompType(fieldDecls, g.hints[fn.Name])
+		hints := g.hints[fn.Name]
+		if len(hints) != len(fieldDecls) {
+			halt("Length of hints is not match of fields in genFunc()", fn)
+		}
+		info := g.genCompType(fieldDecls, hints)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))

@@ -3,6 +3,7 @@ package main
 import (
 	goast "go/ast"
 	"go/token"
+	"strconv"
 
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/jinzhu/inflection"
@@ -148,6 +149,13 @@ func checkTypeInfo(info *typeInfo, node cast.Node) {
 	}
 }
 
+func intLit(n int) *goast.BasicLit {
+	return &goast.BasicLit{
+		Kind:  token.INT,
+		Value: strconv.Itoa(n),
+	}
+}
+
 func ident(name string) *goast.Ident {
 	return &goast.Ident{
 		Name: name,
@@ -263,6 +271,14 @@ func field(typ goast.Expr, names ...*goast.Ident) *goast.Field {
 	return &goast.Field{
 		Names: names,
 		Type:  typ,
+	}
+}
+
+func arrayType(elt, n goast.Expr) *goast.ArrayType {
+	return &goast.ArrayType{
+		Elt:    elt,
+		Len:    n,
+		Lbrack: token.Pos(1),
 	}
 }
 

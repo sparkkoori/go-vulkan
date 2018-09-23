@@ -67,11 +67,11 @@ const char * readString(const char *str);
 
 void writeString(size_t count, char *str);
 
-typedef int (*PFN_FooFunc)(void* data, float pers);
+typedef int (*PFN_fooFunc)(void* data, float pers);
 
 int fooFunc (void* data, float pers);
 
-PFN_FooFunc getFooFunc();
+PFN_fooFunc getFooFunc();
 
 typedef void (*PFN_setArr)(size_t imageCount, int *images);
 
