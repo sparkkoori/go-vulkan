@@ -1,6 +1,6 @@
 #include "vulkan/vulkan.h"
 
-void print(){};
+void print(void){};
 
 int num(){return 0;};
 
@@ -12,7 +12,7 @@ void setbigN(bigN n){};
 
 void setFn(int (*fn)(void)){};
 
-FUNC changeFunc(FUNC fun){return 0;};
+PFN_print changeFunc(PFN_print fun){return 0;};
 
 
 void setAbc(Abc abc){};
@@ -35,4 +35,10 @@ const char * readString(const char *str){return 0;};
 
 void writeString(size_t count, char *str){};
 
-FooFunc getFooFunc(){return 0;};
+int fooFunc (void* data, float pers){return 0};
+
+PFN_FooFunc getFooFunc(){return 0;};
+
+void setArr (size_t imageCount, int *images){};
+
+PFN_setArr getSetArrFunc(){};

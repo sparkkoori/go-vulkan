@@ -30,14 +30,6 @@ type compTypeInfo struct {
 	refc2go   func(goscope, cscope goast.Expr) []goast.Stmt
 }
 
-type fieldHint int
-
-const (
-	hintNone fieldHint = iota
-	hintSize
-	hintArray
-)
-
 type generator struct {
 	target Target
 	nodes  map[string]cast.Node //name node map
@@ -1031,6 +1023,8 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 }
 
 func (g *generator) process(src Source) {
+	analyzeHints(g.hints, src)
+
 	for _, node := range src {
 		switch n := node.(type) {
 		case *cast.TypedefDecl:

@@ -5,6 +5,7 @@ import (
 	"go/token"
 
 	cast "github.com/elliotchance/c2go/ast"
+	"github.com/jinzhu/inflection"
 )
 
 type halting struct {
@@ -21,6 +22,93 @@ func saalloc(typ, size goast.Expr) *goast.CallExpr {
 	arg := callExpr(ident("_sa.alloc"), size)
 	call := callExpr(fun, arg)
 	return call
+}
+
+type fieldHint int
+
+const (
+	hintNone fieldHint = iota
+	hintSize
+	hintArray
+)
+
+func isMaybePlural(name string) bool {
+	return inflection.Plural(name) == name
+}
+
+func analyzeHints(m map[string][]fieldHint, src Source) {
+	analyze := func(decls []*cast.FieldDecl) []fieldHint {
+		hints := make([]fieldHint, len(decls))
+
+		/*HintArray Conditions:
+		- It's pointer type.
+		- It may be a plural name .
+		*/
+
+		/*HintSize Conditions:
+		- It's uint32_t or size_t type.
+		- What next to it is an array.
+		// - The name is singular form of array with suffix of "Size" or "Count".
+		*/
+
+		for i := len(decls) - 1; i >= 0; i-- {
+			decl := decls[i]
+			var hint fieldHint = hintNone
+
+			switch n := decl.ChildNodes[0].(type) {
+			case *cast.PointerType:
+				if isMaybePlural(decl.Name) {
+					hint = hintArray
+				}
+			case *cast.TypedefType:
+				if n.Type == "uint32_t" || n.Type == "size_t" {
+					if i < len(decls)-1 && hints[i+1] == hintArray {
+						hint = hintSize
+					}
+				}
+			default:
+			}
+			hints[i] = hint
+		}
+		return hints
+	}
+
+	for _, node := range src {
+		switch n := node.(type) {
+		case *cast.TypedefDecl:
+		case *cast.RecordDecl:
+			{
+				decls := []*cast.FieldDecl{}
+				for _, child := range n.ChildNodes {
+					decls = append(decls, child.(*cast.FieldDecl))
+				}
+				m[n.Name] = analyze(decls)
+			}
+		case *cast.EnumDecl:
+		case *cast.FunctionDecl:
+			{
+				decls := []*cast.FieldDecl{}
+				for _, param := range n.ChildNodes[1:] {
+					pvd, ok := param.(*cast.ParmVarDecl)
+					if !ok {
+						break
+					}
+					decls = append(decls, &cast.FieldDecl{
+						Name:       pvd.Name,
+						ChildNodes: pvd.ChildNodes,
+					})
+				}
+				m[n.Name] = analyze(decls)
+				m["PFN_"+n.Name] = m[n.Name]
+			}
+		default:
+			halt("Unkown node in source", node)
+		}
+	}
+	//
+	// for k, v := range m {
+	// 	fmt.Printf("%s: %#v \n", k, v)
+	// }
 }
 
 func mapOperator(op string) token.Token {

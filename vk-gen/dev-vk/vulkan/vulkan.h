@@ -1,7 +1,7 @@
 #pragma once
 #include "stddef.h"
 
-void print();
+void print(void);
 
 int num();
 
@@ -15,9 +15,9 @@ void setbigN(bigN n);
 
 void setFn(int (*fn)(void));
 
-typedef void (*FUNC)(void);
+typedef void (*PFN_print)(void);
 
-FUNC changeFunc(FUNC fun);
+PFN_print changeFunc(PFN_print fun);
 
 typedef struct Abc{
   int a;
@@ -67,6 +67,14 @@ const char * readString(const char *str);
 
 void writeString(size_t count, char *str);
 
-typedef int (*FooFunc)(void* data, float pers);
+typedef int (*PFN_FooFunc)(void* data, float pers);
 
-FooFunc getFooFunc();
+int fooFunc (void* data, float pers);
+
+PFN_FooFunc getFooFunc();
+
+typedef void (*PFN_setArr)(size_t imageCount, int *images);
+
+void setArr (size_t imageCount, int *images);
+
+PFN_setArr getSetArrFunc();
