@@ -30,6 +30,16 @@ type compTypeInfo struct {
 	refc2go   func(goscope, cscope goast.Expr) []goast.Stmt
 }
 
+type hint struct {
+	isPointer   map[string]bool
+	isArraySize map[string]bool
+}
+
+func (h *hint) init() {
+	h.isPointer = make(map[string]bool, 128)
+	h.isArraySize = make(map[string]bool, 128)
+}
+
 type generator struct {
 	target Target
 	nodes  map[string]cast.Node //name node map
@@ -37,7 +47,7 @@ type generator struct {
 	consts map[string]goast.Expr
 	funcs  map[string]bool
 
-	hints map[string][]fieldHint
+	hint hint
 }
 
 func (g *generator) init() {
@@ -46,7 +56,7 @@ func (g *generator) init() {
 	g.consts = make(map[string]goast.Expr, 128)
 	g.funcs = make(map[string]bool, 512)
 
-	g.hints = make(map[string][]fieldHint, 512)
+	g.hint.init()
 }
 
 func (g *generator) mapType(node cast.Node, pid string) *typeInfo {
@@ -825,15 +835,16 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 	c2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
 	refc2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
 
-	for _, fieldDecl := range fieldDecls {
+	for i, fieldDecl := range fieldDecls {
 		ftn := fieldDecl.ChildNodes[0]
+		id := pid + "." + strconv.Itoa(i)
 		cname := ident(fieldDecl.Name)
 		goname := ident(fieldDecl.Name)
 
 		// hint := hints[i]
 		// TODO: use hint
 
-		finfo := g.mapType(ftn, pid)
+		finfo := g.mapType(ftn, id)
 		info.cfields = append(info.cfields, field(finfo.ctype, cname))
 		info.gofields = append(info.gofields, field(finfo.gotype, goname))
 		go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
@@ -1021,7 +1032,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 }
 
 func (g *generator) process(src Source) {
-	analyzeHints(g.hints, src)
+	analyzeHint(&g.hint, src)
 
 	for _, node := range src {
 		switch n := node.(type) {

@@ -25,28 +25,18 @@ func saalloc(typ, size goast.Expr) *goast.CallExpr {
 	return call
 }
 
-type fieldHint int
-
-const (
-	hintNone fieldHint = iota
-	hintSize
-	hintArray
-)
-
 func isMaybePlural(name string) bool {
 	return inflection.Plural(name) == name
 }
 
-func analyzeHints(m map[string][]fieldHint, src Source) {
-	analyze := func(decls []*cast.FieldDecl) []fieldHint {
-		hints := make([]fieldHint, len(decls))
-
-		/*HintArray Conditions:
+func analyzeHint(h *hint, src Source) {
+	analyzeArrayAndSize := func(decls []*cast.FieldDecl, pid string) {
+		/*Array Conditions:
 		- It's pointer type.
 		- It may be a plural name .
 		*/
 
-		/*HintSize Conditions:
+		/*Size of Array Conditions:
 		- It's uint32_t or size_t type.
 		- What next to it is an array.
 		// - The name is singular form of array with suffix of "Size" or "Count".
@@ -54,24 +44,23 @@ func analyzeHints(m map[string][]fieldHint, src Source) {
 
 		for i := len(decls) - 1; i >= 0; i-- {
 			decl := decls[i]
-			var hint fieldHint = hintNone
+			id := pid + "." + strconv.Itoa(i)
 
 			switch n := decl.ChildNodes[0].(type) {
 			case *cast.PointerType:
-				if isMaybePlural(decl.Name) {
-					hint = hintArray
+				if !isMaybePlural(decl.Name) {
+					h.isPointer[id] = true
 				}
 			case *cast.TypedefType:
 				if n.Type == "uint32_t" || n.Type == "size_t" {
-					if i < len(decls)-1 && hints[i+1] == hintArray {
-						hint = hintSize
+					nid := pid + "." + strconv.Itoa(i+1)
+					if i < len(decls)-1 && !h.isPointer[nid] {
+						h.isArraySize[id] = true
 					}
 				}
 			default:
 			}
-			hints[i] = hint
 		}
-		return hints
 	}
 
 	for _, node := range src {
@@ -83,7 +72,7 @@ func analyzeHints(m map[string][]fieldHint, src Source) {
 				for _, child := range n.ChildNodes {
 					decls = append(decls, child.(*cast.FieldDecl))
 				}
-				m[n.Name] = analyze(decls)
+				analyzeArrayAndSize(decls, n.Name)
 			}
 		case *cast.EnumDecl:
 		case *cast.FunctionDecl:
@@ -99,8 +88,7 @@ func analyzeHints(m map[string][]fieldHint, src Source) {
 						ChildNodes: pvd.ChildNodes,
 					})
 				}
-				m[n.Name] = analyze(decls)
-				m["PFN_"+n.Name] = m[n.Name]
+				analyzeArrayAndSize(decls, n.Name)
 			}
 		default:
 			halt("Unkown node in source", node)
