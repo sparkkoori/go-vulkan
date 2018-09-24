@@ -1,7 +1,10 @@
 package vk
+
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
+//typedef void * void_pointer;
 import "C"
+import "unsafe"
 
 func print() {
 	C.print()
@@ -287,13 +290,21 @@ func writeString(count uint, str *byte) {
 	C.writeString(c.count, c.str)
 	*str = byte(*c.str)
 }
-func fooFunc(data unsafe.Pointer, pers float32) (_ret int32) {
+func fooFunc(data []byte, pers float32) (_ret int32) {
 	var c struct {
 		data unsafe.Pointer
 		pers C.float
 		_ret C.int
 	}
-	c.data = data
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.data = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
+		slice3 := (*[1 << 31]byte)(c.data)[:len(data):len(data)]
+		for i3, _ := range data {
+			slice3[i3] = data[i3]
+		}
+	}
 	c.pers = C.float(pers)
 	c._ret = C.fooFunc(c.data, c.pers)
 	_ret = int32(c._ret)
@@ -304,13 +315,21 @@ type PFN_fooFunc struct {
 	Raw C.PFN_fooFunc
 }
 
-func (p PFN_fooFunc) Call(arg0 unsafe.Pointer, arg1 float32) (_ret int32) {
+func (p PFN_fooFunc) Call(arg0 []byte, arg1 float32) (_ret int32) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 C.float
 		_ret C.int
 	}
-	c.arg0 = arg0
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.arg0 = _sa.alloc(C.sizeof_void_pointer * uint(len(arg0)))
+		slice3 := (*[1 << 31]byte)(c.arg0)[:len(arg0):len(arg0)]
+		for i3, _ := range arg0 {
+			slice3[i3] = arg0[i3]
+		}
+	}
 	c.arg1 = C.float(arg1)
 	c._ret = C.callPFN_fooFunc(p.Raw, c.arg0, c.arg1)
 	_ret = int32(c._ret)
@@ -322,7 +341,7 @@ func getFooFunc() (_ret PFN_fooFunc) {
 	_ret.Raw = c._ret
 	return
 }
-func setArr(imageCount uint, images *int32) {
+func setArr(imageCount uint, images []int32) {
 	var c struct {
 		imageCount C.size_t
 		images     *C.int
@@ -331,18 +350,20 @@ func setArr(imageCount uint, images *int32) {
 	defer pool.give(_sa)
 	c.imageCount = C.size_t(imageCount)
 	{
-		c.images = (*C.int)(_sa.alloc(C.sizeof_int))
-		*c.images = C.int(*images)
+		c.images = (*C.int)(_sa.alloc(C.sizeof_void_pointer * uint(len(images))))
+		slice3 := (*[1 << 31]C.int)(unsafe.Pointer(c.images))[:len(images):len(images)]
+		for i3, _ := range images {
+			slice3[i3] = C.int(images[i3])
+		}
 	}
 	C.setArr(c.imageCount, c.images)
-	*images = int32(*c.images)
 }
 
 type PFN_setArr struct {
 	Raw C.PFN_setArr
 }
 
-func (p PFN_setArr) Call(arg0 uint, arg1 *int32) {
+func (p PFN_setArr) Call(arg0 uint, arg1 []int32) {
 	var c struct {
 		arg0 C.size_t
 		arg1 *C.int
@@ -351,11 +372,13 @@ func (p PFN_setArr) Call(arg0 uint, arg1 *int32) {
 	defer pool.give(_sa)
 	c.arg0 = C.size_t(arg0)
 	{
-		c.arg1 = (*C.int)(_sa.alloc(C.sizeof_int))
-		*c.arg1 = C.int(*arg1)
+		c.arg1 = (*C.int)(_sa.alloc(C.sizeof_void_pointer * uint(len(arg1))))
+		slice3 := (*[1 << 31]C.int)(unsafe.Pointer(c.arg1))[:len(arg1):len(arg1)]
+		for i3, _ := range arg1 {
+			slice3[i3] = C.int(arg1[i3])
+		}
 	}
 	C.callPFN_setArr(p.Raw, c.arg0, c.arg1)
-	*arg1 = int32(*c.arg1)
 }
 func getSetArrFunc() (_ret PFN_setArr) {
 	var c struct{ _ret C.PFN_setArr }

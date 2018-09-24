@@ -19,10 +19,49 @@ func halt(msg string, node cast.Node) {
 }
 
 func saalloc(typ, size goast.Expr) *goast.CallExpr {
-	fun := parenExpr(starExpr(typ))
 	arg := callExpr(ident("_sa.alloc"), size)
-	call := callExpr(fun, arg)
-	return call
+	if typ != nil {
+		fun := parenExpr(starExpr(typ))
+		call := callExpr(fun, arg)
+		return call
+	} else {
+		return arg
+	}
+}
+
+func rangeStmti(x, i goast.Expr, stmts ...goast.Stmt) *goast.RangeStmt {
+	return &goast.RangeStmt{
+		For:   token.Pos(1),
+		Key:   i,
+		Value: ident("_"),
+		Tok:   token.DEFINE,
+		X:     x,
+		Body:  blockStmt(stmts...),
+	}
+}
+
+func asSliceExpr(ctype, cvar, n goast.Expr) goast.Expr {
+	// slice := (*[1 << 31]C.char)(unsafe.Pointer(p))[:n:n]
+	p := cvar
+	if ctype != nil {
+		p = callExpr(ident("unsafe.Pointer"), cvar)
+	}
+	T := ctype
+	if ctype == nil {
+		T = ident("byte")
+	}
+
+	arrT := arrayType(T, ident("1 << 31"))
+	arrPT := parenExpr(starExpr(arrT))
+	arr := callExpr(arrPT, p)
+
+	slice := &goast.SliceExpr{
+		X:    arr,
+		Low:  nil,
+		High: n,
+		Max:  n,
+	}
+	return slice
 }
 
 func isMaybePlural(name string) bool {
@@ -48,13 +87,13 @@ func analyzeHint(h *hint, src Source) {
 
 			switch n := decl.ChildNodes[0].(type) {
 			case *cast.PointerType:
-				if !isMaybePlural(decl.Name) {
-					h.isPointer[id] = true
+				if isMaybePlural(decl.Name) {
+					h.isArray[id] = true
 				}
 			case *cast.TypedefType:
 				if n.Type == "uint32_t" || n.Type == "size_t" {
 					nid := pid + "." + strconv.Itoa(i+1)
-					if i < len(decls)-1 && !h.isPointer[nid] {
+					if i < len(decls)-1 && h.isArray[nid] {
 						h.isArraySize[id] = true
 					}
 				}
@@ -88,7 +127,8 @@ func analyzeHint(h *hint, src Source) {
 						ChildNodes: pvd.ChildNodes,
 					})
 				}
-				analyzeArrayAndSize(decls, n.Name)
+				analyzeArrayAndSize(decls, n.Name+".params")
+				analyzeArrayAndSize(decls, "PFN_"+n.Name+".params")
 			}
 		default:
 			halt("Unkown node in source", node)
@@ -137,6 +177,12 @@ func checkTypeInfoNotNil(info *typeInfo, node cast.Node) {
 	}
 }
 
+func uintLen(x goast.Expr) goast.Expr {
+	n := callExpr(ident("len"), x)
+	un := callExpr(ident("uint"), n)
+	return un
+}
+
 func intLit(n int) *goast.BasicLit {
 	return &goast.BasicLit{
 		Kind:  token.INT,
@@ -147,6 +193,14 @@ func intLit(n int) *goast.BasicLit {
 func ident(name string) *goast.Ident {
 	return &goast.Ident{
 		Name: name,
+	}
+}
+
+func mulExpr(x, y goast.Expr) *goast.BinaryExpr {
+	return &goast.BinaryExpr{
+		X:  x,
+		Op: token.MUL,
+		Y:  y,
 	}
 }
 

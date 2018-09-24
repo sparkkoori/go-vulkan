@@ -140,6 +140,9 @@ func printGo(nodes []goast.Node) {
 					&goast.Comment{
 						Text: "//#include \"bridges.auto.h\"",
 					},
+					&goast.Comment{
+						Text: `//typedef void * void_pointer;`,
+					},
 				},
 			},
 			Tok: token.IMPORT,
