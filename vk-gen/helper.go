@@ -112,7 +112,7 @@ func analyzeHints(m map[string][]fieldHint, src Source) {
 	// }
 }
 
-func mapOperator(op string) token.Token {
+func convOperator(op string) token.Token {
 	switch op {
 	case token.ADD.String():
 		return token.ADD
@@ -143,7 +143,7 @@ func mapOperator(op string) token.Token {
 	}
 }
 
-func checkTypeInfo(info *typeInfo, node cast.Node) {
+func checkTypeInfoNotNil(info *typeInfo, node cast.Node) {
 	if info == nil {
 		halt("Type info is nil", node)
 	}

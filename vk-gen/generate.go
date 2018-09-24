@@ -49,100 +49,105 @@ func (g *generator) init() {
 	g.hints = make(map[string][]fieldHint, 512)
 }
 
-func (g *generator) genType(node cast.Node) *typeInfo {
-	// deepPrint(node, 0)
+func (g *generator) mapType(node cast.Node, pid string) *typeInfo {
 	switch n := node.(type) {
+	case *cast.ParenType:
+		return g.mapParenType(n, pid)
 	case *cast.BuiltinType:
-		return g.genBuiltinType(n)
+		return g.mapBuiltinType(n, pid)
 	case *cast.PointerType:
-		return g.genPointerType(n)
+		return g.mapPointerType(n, pid)
 	case *cast.ConstantArrayType:
-		return g.genConstantArrayType(n)
-	case *cast.TypedefType:
-		return g.genTypedefType(n)
-	case *cast.ElaboratedType:
-		return g.genElaboratedType(n)
-	case *cast.RecordType:
-		return g.genRecordType(n)
-	case *cast.EnumType:
-		return g.genEnumType(n)
-	case *cast.FunctionProtoType:
-		return g.genFunctionProtoType(n)
+		return g.mapConstantArrayType(n, pid)
 	case *cast.QualType:
-		return g.genQualType(n)
+		return g.mapQualType(n, pid)
+	case *cast.TypedefType:
+		return g.mapTypedefType(n, pid)
+	case *cast.ElaboratedType:
+		return g.mapElaboratedType(n, pid)
+	case *cast.RecordType:
+		return g.mapRecordType(n, pid)
+	case *cast.EnumType:
+		return g.mapEnumType(n, pid)
+	case *cast.FunctionProtoType:
+		return nil
 	case *cast.IncompleteArrayType:
 		return nil
 	default:
+		halt("Unkown type to map", n)
 		return nil
 	}
 }
 
-func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
-	var info *typeInfo = &typeInfo{}
-
-	var recordDecl *cast.RecordDecl
+func (g *generator) mapRecordType(n *cast.RecordType, pid string) *typeInfo {
+	var decl *cast.RecordDecl
 	{
 		node := g.nodes[n.Type]
 		if node == nil {
 			halt("No decl for record type", n)
 		}
-		recordDecl = node.(*cast.RecordDecl)
+		decl = node.(*cast.RecordDecl)
 	}
 
-	if !recordDecl.Definition {
-		info.gotype = ident("C.struct_" + recordDecl.Name)
-		info.ctype = ident("C.struct_" + recordDecl.Name)
+	//Incomplete Struct
+	if !decl.Definition {
+		info := &typeInfo{}
+		info.gotype = ident("C.struct_" + decl.Name)
+		info.ctype = ident("C.struct_" + decl.Name)
 		info.csize = nil
-		g.types[n.Type] = info
 		return info
 	}
 
+	if decl.Name != "" {
+		return g.genRecordType(decl)
+	} else {
+		halt("Unamed struct isn't implemented", n)
+		return nil
+	}
+}
+
+func (g *generator) genRecordType(decl *cast.RecordDecl) *typeInfo {
+	if info, ok := g.types[decl.Name]; ok {
+		return info
+	}
+	var info *typeInfo = &typeInfo{}
+	g.types[decl.Name] = info
+
 	var cinfo *compTypeInfo
 	{
-		fieldDecls := []*cast.FieldDecl{}
-		for _, child := range recordDecl.ChildNodes {
-			fieldDecls = append(fieldDecls, child.(*cast.FieldDecl))
+		fields := []*cast.FieldDecl{}
+		for _, child := range decl.ChildNodes {
+			fields = append(fields, child.(*cast.FieldDecl))
 		}
-		hints := g.hints[recordDecl.Name]
-		if len(hints) != len(fieldDecls) {
-			halt("Length of hints is not match of fields in genRecord()", n)
-		}
-		cinfo = g.genCompType(fieldDecls, hints)
+		cinfo = g.mapCompType(fields, decl.Name)
 	}
 
-	if recordDecl.Name != "" {
-		info.gotype = ident(recordDecl.Name)
-		if _, ok := g.nodes[recordDecl.Name]; ok {
-			//same name typedef exists
-			info.ctype = ident("C." + recordDecl.Name)
-			info.csize = ident("C.sizeof_" + recordDecl.Name)
-		} else {
-			info.ctype = ident("C.struct" + recordDecl.Name)
-			info.csize = ident("C.sizeof_struct_" + recordDecl.Name)
-		}
+	info.gotype = ident(decl.Name)
+	if _, ok := g.nodes[decl.Name]; ok {
+		//same name typedef exists
+		info.ctype = ident("C." + decl.Name)
+		info.csize = ident("C.sizeof_" + decl.Name)
+	} else {
+		info.ctype = ident("C.struct" + decl.Name)
+		info.csize = ident("C.sizeof_struct_" + decl.Name)
+	}
 
-		g.target.addGo(&goast.GenDecl{
-			Tok: token.TYPE,
-			Specs: []goast.Spec{
-				&goast.TypeSpec{
-					Name: info.gotype.(*goast.Ident),
-					Type: &goast.StructType{
-						Struct: token.Pos(1),
-						Fields: &goast.FieldList{
-							Opening: token.Pos(1),
-							List:    cinfo.gofields,
-							Closing: token.Pos(1),
-						},
+	g.target.addGo(&goast.GenDecl{
+		Tok: token.TYPE,
+		Specs: []goast.Spec{
+			&goast.TypeSpec{
+				Name: info.gotype.(*goast.Ident),
+				Type: &goast.StructType{
+					Struct: token.Pos(1),
+					Fields: &goast.FieldList{
+						Opening: token.Pos(1),
+						List:    cinfo.gofields,
+						Closing: token.Pos(1),
 					},
 				},
 			},
-		})
-	} else {
-		halt("Unamed struct isn't implemented", n)
-	}
+		},
+	})
 
 	takeAddr := func(govar, cvar goast.Expr) (goast.Expr, goast.Expr) {
 		if starX, ok := govar.(*goast.StarExpr); ok {
@@ -207,11 +212,10 @@ func (g *generator) genRecordType(n *cast.RecordType) *typeInfo {
 		}
 	}
 
-	g.types[n.Type] = info
 	return info
 }
 
-func (g *generator) mapConstExpr(node cast.Node) goast.Expr {
+func (g *generator) convConst(node cast.Node) goast.Expr {
 	switch v := node.(type) {
 	case *cast.IntegerLiteral:
 		return &goast.BasicLit{Kind: token.INT, Value: v.Value}
@@ -220,19 +224,19 @@ func (g *generator) mapConstExpr(node cast.Node) goast.Expr {
 	case *cast.ParenExpr:
 		return &goast.ParenExpr{
 			Lparen: token.Pos(1),
-			X:      g.mapConstExpr(v.ChildNodes[0]),
+			X:      g.convConst(v.ChildNodes[0]),
 			Rparen: token.Pos(1),
 		}
 	case *cast.BinaryOperator:
 		return &goast.BinaryExpr{
-			X:  g.mapConstExpr(v.ChildNodes[0]),
-			Op: mapOperator(v.Operator),
-			Y:  g.mapConstExpr(v.ChildNodes[1]),
+			X:  g.convConst(v.ChildNodes[0]),
+			Op: convOperator(v.Operator),
+			Y:  g.convConst(v.ChildNodes[1]),
 		}
 	case *cast.UnaryOperator:
 		return &goast.UnaryExpr{
-			X:  g.mapConstExpr(v.ChildNodes[0]),
-			Op: mapOperator(v.Operator),
+			X:  g.convConst(v.ChildNodes[0]),
+			Op: convOperator(v.Operator),
 		}
 	default:
 		halt("convConst()", node)
@@ -240,33 +244,40 @@ func (g *generator) mapConstExpr(node cast.Node) goast.Expr {
 	return nil
 }
 
-func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
-	if info, ok := g.types[n.Name]; ok {
-		return info
-	}
-
-	var enumDecl *cast.EnumDecl
+func (g *generator) mapEnumType(n *cast.EnumType, pid string) *typeInfo {
+	var decl *cast.EnumDecl
 	{
 		node := g.nodes[n.Name]
 		if node == nil {
 			halt("No decl for record type", n)
 		}
-		enumDecl = node.(*cast.EnumDecl)
+		decl = node.(*cast.EnumDecl)
 	}
-	name := strings.Trim(enumDecl.Name, "enum ")
-	info := &typeInfo{}
 
+	name := strings.Trim(decl.Name, "enum ")
 	if name != "" {
-		info.gotype = ident("int")
-		if _, ok := g.nodes[name]; ok {
-			info.ctype = ident("C." + name)
-			info.csize = ident("C.sizeof_" + name)
-		} else {
-			info.ctype = ident("C.enum" + name)
-			info.csize = ident("C.sizeof_enum_" + name)
-		}
+		return g.genEnumType(decl)
 	} else {
 		halt("Unamed enum isn't implemented", n)
+		return nil
+	}
+}
+
+func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
+	if info, ok := g.types[decl.Name]; ok {
+		return info
+	}
+	info := &typeInfo{}
+	g.types[decl.Name] = info
+
+	name := strings.Trim(decl.Name, "enum ")
+	info.gotype = ident("int")
+	if _, ok := g.nodes[name]; ok {
+		info.ctype = ident("C." + name)
+		info.csize = ident("C.sizeof_" + name)
+	} else {
+		info.ctype = ident("C.enum" + name)
+		info.csize = ident("C.sizeof_enum_" + name)
 	}
 
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
@@ -289,12 +300,12 @@ func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
 	//Consts
 	{
 		specs := []goast.Spec{}
-		for _, child := range enumDecl.ChildNodes {
-			decl := child.(*cast.EnumConstantDecl)
-			goname := ident(decl.Name)
-			g.consts[decl.Name] = goname
+		for _, child := range decl.ChildNodes {
+			d := child.(*cast.EnumConstantDecl)
+			goname := ident(d.Name)
+			g.consts[d.Name] = goname
 
-			var val = g.mapConstExpr(decl.ChildNodes[0])
+			var val = g.convConst(d.ChildNodes[0])
 			if val != nil {
 				specs = append(specs, &goast.ValueSpec{
 					Names:  []*goast.Ident{goname},
@@ -311,23 +322,19 @@ func (g *generator) genEnumType(n *cast.EnumType) *typeInfo {
 		})
 	}
 
-	g.types[n.Name] = info
 	return info
 }
 
-func (g *generator) genFunctionProtoType(n *cast.FunctionProtoType) *typeInfo {
-	return nil
+func (g *generator) mapQualType(n *cast.QualType, pid string) *typeInfo {
+	id := pid + "." + n.Kind
+	return g.mapType(n.ChildNodes[0], id)
 }
 
-func (g *generator) genQualType(n *cast.QualType) *typeInfo {
-	return g.genType(n.ChildNodes[0])
+func (g *generator) mapParenType(n *cast.ParenType, pid string) *typeInfo {
+	return g.mapType(n.ChildNodes[0], pid)
 }
 
-func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
-
+func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 	if n.Type == "void *" {
 		info := &typeInfo{
 			ctype:  ident("unsafe.Pointer"),
@@ -340,9 +347,10 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			},
 		}
-		g.types[n.Type] = info
 		return info
-	} else if n.Type == "const char *" {
+	}
+
+	if n.Type == "const char *" {
 		info := &typeInfo{}
 		info.gotype = ident("string")
 		info.ctype = starExpr(ident("C.char"))
@@ -355,14 +363,14 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 			return assignStmt1n1(cvar, callExpr(ident("toCString"), govar, ident("_sa")))
 		}
 		info.refc2go = nil //Strings are immutable in Go
-		g.types[n.Type] = info
 		return info
 	}
 
 	o := n.ChildNodes[0]
-	oinfo := g.genType(o)
+	oinfo := g.mapType(o, pid+".*")
+
+	//Pure pointer
 	if oinfo == nil {
-		//Pure pointer
 		var typ goast.Expr
 		if _, ok := o.(*cast.ElaboratedType); ok {
 			typ = starExpr(ident("struct{}"))
@@ -380,10 +388,11 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			},
 		}
-		g.types[n.Type] = info
 		return info
-	} else {
-		//Reference pointer
+	}
+
+	//Reference pointer
+	{
 		info := &typeInfo{
 			ctype:  starExpr(oinfo.ctype),
 			gotype: starExpr(oinfo.gotype),
@@ -423,23 +432,19 @@ func (g *generator) genPointerType(n *cast.PointerType) *typeInfo {
 				return assignStmt1n1(cvar, govar)
 			}
 		}
-		g.types[n.Type] = info
 		return info
 	}
 }
 
-func (g *generator) genConstantArrayType(n *cast.ConstantArrayType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
-	info := &typeInfo{}
+func (g *generator) mapConstantArrayType(n *cast.ConstantArrayType, pid string) *typeInfo {
+	id := pid + "." + fmt.Sprintf("[%d]", n.Size)
+	oinfo := g.mapType(n.ChildNodes[0], id)
 
-	oinfo := g.genType(n.ChildNodes[0])
 	if oinfo == nil {
-		g.types[n.Type] = nil
 		return nil
 	}
 
+	info := &typeInfo{}
 	info.gotype = &goast.ArrayType{
 		Len: &goast.BasicLit{
 			Kind:  token.INT,
@@ -493,33 +498,11 @@ func (g *generator) genConstantArrayType(n *cast.ConstantArrayType) *typeInfo {
 		}
 	}
 
-	g.types[n.Type] = info
 	return info
 }
 
-func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
-	info := &typeInfo{}
-	g.types[n.Type] = info
-
-	o := n.ChildNodes[1]
-	oinfo := g.genType(o)
-	checkTypeInfo(oinfo, o)
-	//Skip same name struct/enum/union typedef
-	if et, ok := o.(*cast.ElaboratedType); ok {
-		name := et.Type
-		name = strings.TrimPrefix(name, "enum ")
-		name = strings.TrimPrefix(name, "struct ")
-		name = strings.TrimPrefix(name, "union ")
-		if name == n.Type {
-			*info = *oinfo
-			return info
-		}
-	}
-
-	//standard typedef
+func (g *generator) mapTypedefType(n *cast.TypedefType, pid string) *typeInfo {
+	//Standard Typedef
 	m := map[string]string{
 		"size_t":   "uint",
 		"int8_t":   "int8",
@@ -532,6 +515,7 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		"uint64_t": "uint64",
 	}
 	if std, ok := m[n.Type]; ok {
+		info := &typeInfo{}
 		info.gotype = ident(std)
 		info.ctype = ident("C." + n.Type)
 		info.csize = ident("C.sizeof_" + n.Type)
@@ -544,41 +528,66 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		return info
 	}
 
-	//function pointer typedef
+	decl := g.nodes[n.Type].(*cast.TypedefDecl)
+	o := decl.ChildNodes[0]
+
+	//Same Name Typedef（struct/enum/union）
+	if et, ok := o.(*cast.ElaboratedType); ok {
+		name := et.Type
+		name = strings.TrimPrefix(name, "enum ")
+		name = strings.TrimPrefix(name, "struct ")
+		name = strings.TrimPrefix(name, "union ")
+		if name == decl.Name {
+			oinfo := g.mapType(o, "")
+			checkTypeInfoNotNil(oinfo, o)
+			info := &typeInfo{}
+			*info = *oinfo
+			return info
+		}
+	}
+
+	return g.genTypedefDecl(decl)
+}
+
+func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
+	if info, ok := g.types[decl.Name]; ok {
+		return info
+	}
+	info := &typeInfo{}
+	g.types[decl.Name] = info
+	info.gotype = ident(decl.Name)
+	info.ctype = ident("C." + decl.Name)
+	info.csize = ident("C.sizeof_" + decl.Name)
+
+	o := decl.ChildNodes[0]
+
+	//Function Pointer Typedef
 	if pt, ok := o.(*cast.PointerType); ok {
 		if ptt, ok := pt.ChildNodes[0].(*cast.ParenType); ok {
 			if fpt, ok := ptt.ChildNodes[0].(*cast.FunctionProtoType); ok {
-				info.gotype = ident(n.Type)
-				info.ctype = ident("C." + n.Type)
-				info.csize = ident("C.sizeof_" + n.Type)
+
 				info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 					return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
 				}
 				info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 					return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
 				}
-
 				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
 					Fields: &goast.FieldList{
 						List: []*goast.Field{
-							field(ident("C."+n.Type), ident("Raw")),
+							field(ident("C."+decl.Name), ident("Raw")),
 						},
 					},
 				}))
-
-				decl := g.nodes[n.Type].(*cast.TypedefDecl)
-				g.genBridgeCall(decl, info, fpt)
-
+				g.genBridgeCall(decl, info, fpt, decl.Name)
 				return info
 			}
 		}
 	}
 
-	info.gotype = ident(n.Type)
-	info.ctype = ident("C." + n.Type)
-	info.csize = ident("C.sizeof_" + n.Type)
+	oinfo := g.mapType(o, decl.Name)
 
-	//forword style declaration
+	//Forword Typedef
 	if _, ok := oinfo.gotype.(*goast.StarExpr); ok {
 		if oinfo.refc2go == nil {
 			//means it's a pure pointer
@@ -594,6 +603,7 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 		}
 	}
 
+	//Normal Typedef
 	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), oinfo.gotype))
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 		_temp := ident("_temp")
@@ -614,7 +624,7 @@ func (g *generator) genTypedefType(n *cast.TypedefType) *typeInfo {
 	return info
 }
 
-func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *cast.FunctionProtoType) {
+func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *cast.FunctionProtoType, id string) {
 	var goparams, goresults []*goast.Field
 	var cparams, cresults []*goast.Field
 
@@ -636,14 +646,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 			})
 		}
 
-		hints, ok := g.hints[decl.Name]
-		if !ok {
-			hints = make([]fieldHint, len(fieldDecls))
-		}
-		// if len(hints) != len(fieldDecls) {
-		// 	halt("Length of hints is not match of fields in genBridgeCall()", decl)
-		// }
-		info := g.genCompType(fieldDecls, hints)
+		info := g.mapCompType(fieldDecls, id)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -664,7 +667,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 
 	//Results
 	{
-		info := g.genType(fpt.ChildNodes[0])
+		info := g.mapType(fpt.ChildNodes[0], id)
 		goname := ident("_ret")
 		cname := ident("_ret")
 		if info != nil {
@@ -742,30 +745,20 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 	}
 }
 
-func (g *generator) genElaboratedType(n *cast.ElaboratedType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
+func (g *generator) mapElaboratedType(n *cast.ElaboratedType, pid string) *typeInfo {
 	var info *typeInfo
-
-	obj := n.ChildNodes[0]
-
-	switch o := obj.(type) {
+	switch o := n.ChildNodes[0].(type) {
 	case *cast.RecordType:
-		info = g.genRecordType(o)
+		info = g.mapRecordType(o, pid)
 	case *cast.EnumType:
-		info = g.genEnumType(o)
+		info = g.mapEnumType(o, pid)
 	default:
 		halt("Unkown elaborated type", o)
 	}
-	g.types[n.Type] = info
 	return info
 }
 
-func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
-	if info, ok := g.types[n.Type]; ok {
-		return info
-	}
+func (g *generator) mapBuiltinType(n *cast.BuiltinType, pid string) *typeInfo {
 	var info *typeInfo
 
 	var m = map[string]string{
@@ -804,7 +797,6 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 	ctypestr := m2[n.Type]
 
 	if gotypestr == "" || ctypestr == "" {
-		g.types[n.Type] = nil
 		return nil
 	}
 
@@ -823,15 +815,10 @@ func (g *generator) genBuiltinType(n *cast.BuiltinType) *typeInfo {
 			return assignStmt1n1(cvar, callExpr(ctype, govar))
 		},
 	}
-	g.types[n.Type] = info
 	return info
 }
 
-func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint) *compTypeInfo {
-	if len(fieldDecls) != len(hints) {
-		panic("Length of hints is not match of fields")
-	}
-
+func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compTypeInfo {
 	info := &compTypeInfo{}
 
 	go2cFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
@@ -846,7 +833,7 @@ func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint)
 		// hint := hints[i]
 		// TODO: use hint
 
-		finfo := g.genType(ftn)
+		finfo := g.mapType(ftn, pid)
 		info.cfields = append(info.cfields, field(finfo.ctype, cname))
 		info.gofields = append(info.gofields, field(finfo.gotype, goname))
 		go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
@@ -904,10 +891,6 @@ func (g *generator) genCompType(fieldDecls []*cast.FieldDecl, hints []fieldHint)
 	return info
 }
 
-func (g *generator) genConst() {
-	// TODO:genConst
-}
-
 func (g *generator) genFunc(fn *cast.FunctionDecl) {
 	if g.funcs[fn.Name] {
 		return
@@ -938,11 +921,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			}
 			fieldDecls = append(fieldDecls, fieldDecl)
 		}
-		hints := g.hints[fn.Name]
-		if len(hints) != len(fieldDecls) {
-			halt("Length of hints is not match of fields in genFunc()", fn)
-		}
-		info := g.genCompType(fieldDecls, hints)
+		info := g.mapCompType(fieldDecls, fn.Name)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -963,7 +942,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 
 	//Results
 	{
-		info := g.genType(fn.ChildNodes[0])
+		info := g.mapType(fn.ChildNodes[0], fn.Name)
 		goname := ident("_ret")
 		cname := ident("_ret")
 		if info != nil {
