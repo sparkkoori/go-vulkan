@@ -388,7 +388,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		} else {
 			info.gotype = arrayType(oinfo.gotype, nil)
 			info.ctype = starExpr(oinfo.ctype)
-			info.csize = ident("C.sizeof_void_pointer")
+			info.csize = oinfo.csize
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
 				i := ident("i" + level)
@@ -907,16 +907,38 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 	c2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
 	refc2goFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
 
+	var pending func(arrtype goast.Expr, arrname *goast.Ident)
 	for i, fieldDecl := range fieldDecls {
 		ftn := fieldDecl.ChildNodes[0]
 		id := pid + "." + strconv.Itoa(i)
 		cname := ident(fieldDecl.Name)
 		goname := ident(fieldDecl.Name)
-
-		// hint := hints[i]
-		// TODO: use hint
-
 		finfo := g.mapType(ftn, id)
+
+		if pending != nil {
+			pending(finfo.gotype, goname)
+			pending = nil
+		}
+
+		//Array Size
+		if g.hint.isArraySize[id] {
+			pending = func(arrtype goast.Expr, arrname *goast.Ident) {
+				info.cfields = append(info.cfields, field(finfo.ctype, cname))
+				//No go field
+				go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
+					n := callExpr(ident("len"), selectorExpr(goscope, arrname))
+					cn := callExpr(finfo.ctype, n)
+					return assignStmt1n1(selectorExpr(cscope, cname), cn)
+				})
+				c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+					n := callExpr(ident("int"), selectorExpr(cscope, cname))
+					make := callExpr(ident("make"), arrtype, n)
+					return assignStmt1n1(selectorExpr(goscope, arrname), make)
+				})
+			}
+			continue
+		}
+
 		info.cfields = append(info.cfields, field(finfo.ctype, cname))
 		info.gofields = append(info.gofields, field(finfo.gotype, goname))
 		go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
