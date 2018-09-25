@@ -140,7 +140,7 @@ func (g *generator) genRecordType(decl *cast.RecordDecl) *typeInfo {
 		cinfo = g.mapCompType(fields, decl.Name)
 	}
 
-	info.gotype = ident(decl.Name)
+	info.gotype = ident(trimPrefixs(decl.Name, "Vk"))
 	if _, ok := g.nodes[decl.Name]; ok {
 		//same name typedef exists
 		info.ctype = ident("C." + decl.Name)
@@ -289,7 +289,8 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 	g.types[decl.Name] = info
 
 	name := strings.TrimPrefix(decl.Name, "enum ")
-	info.gotype = ident(name)
+	goname := trimPrefixs(name, "Vk")
+	info.gotype = ident(goname)
 	if _, ok := g.nodes[name]; ok {
 		info.ctype = ident("C." + name)
 		info.csize = ident("C.sizeof_" + name)
@@ -320,7 +321,7 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 		specs := []goast.Spec{}
 		for _, child := range decl.ChildNodes {
 			d := child.(*cast.EnumConstantDecl)
-			goname := ident(d.Name)
+			goname := ident(trimPrefixs(d.Name, "VK_"))
 			g.consts[d.Name] = goname
 
 			var val = g.convConst(d.ChildNodes[0])
@@ -638,7 +639,7 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 	}
 	info := &typeInfo{}
 	g.types[decl.Name] = info
-	info.gotype = ident(decl.Name)
+	info.gotype = ident(trimPrefixs(decl.Name, "Vk"))
 	info.ctype = ident("C." + decl.Name)
 	info.csize = ident("C.sizeof_" + decl.Name)
 
@@ -925,8 +926,15 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 	for i, fieldDecl := range fieldDecls {
 		ftn := fieldDecl.ChildNodes[0]
 		id := pid + "." + strconv.Itoa(i)
-		cname := ident(fieldDecl.Name)
-		goname := ident(fieldDecl.Name)
+		cname := ident(avoidGoKeyword(fieldDecl.Name))
+		goname := ident("")
+		if strings.HasSuffix(pid, ".params") {
+			goname.Name = lowFirst(toGoFieldName(fieldDecl.Name))
+			goname.Name = avoidGoKeyword(goname.Name)
+		} else {
+			goname.Name = upFirst(toGoFieldName(fieldDecl.Name))
+		}
+
 		finfo := g.mapType(ftn, id)
 
 		if pending != nil {
@@ -1132,7 +1140,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			stmts = append(stmts, retstmt)
 		}
 
-		name := ident(fn.Name)
+		name := ident(trimPrefixs(fn.Name, "vk"))
 		gofntype := funcType(goparams, goresults)
 		gofndef := funcDecl(name, nil, gofntype, stmts...)
 		g.target.addGo(gofndef)

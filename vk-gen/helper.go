@@ -3,11 +3,64 @@ package main
 import (
 	goast "go/ast"
 	"go/token"
+	"regexp"
 	"strconv"
+	"strings"
+	"unicode"
 
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/jinzhu/inflection"
 )
+
+func upFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToUpper(v)) + str[i+1:]
+	}
+	return ""
+}
+
+func lowFirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
+}
+
+func toGoFieldName(n string) string {
+	re := regexp.MustCompile("^(p+)[A-Z]+")
+	if subs := re.FindStringSubmatch(n); subs != nil {
+		n = strings.TrimPrefix(n, subs[1])
+	}
+
+	re = regexp.MustCompile("^s[A-Z]+")
+	if re.MatchString(n) {
+		n = strings.TrimPrefix(n, "s")
+	}
+
+	re = regexp.MustCompile("^pfn[A-Z]+")
+	if re.MatchString(n) {
+		n = strings.TrimPrefix(n, "pfn")
+	}
+
+	return n
+}
+
+func avoidGoKeyword(s string) string {
+	switch s {
+	case "type":
+		return "typ"
+	case "range":
+		return "rang"
+	}
+	return s
+}
+
+func trimPrefixs(s string, pfx ...string) string {
+	for _, p := range pfx {
+		s = strings.TrimPrefix(s, p)
+	}
+	return s
+}
 
 type halting struct {
 	msg  string
