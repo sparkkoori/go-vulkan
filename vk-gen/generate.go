@@ -167,18 +167,6 @@ func (g *generator) genRecordType(decl *cast.RecordDecl) *typeInfo {
 		},
 	})
 
-	takeAddr := func(govar, cvar goast.Expr) (goast.Expr, goast.Expr) {
-		if starX, ok := govar.(*goast.StarExpr); ok {
-			govar = starX.X
-		}
-		if starX, ok := cvar.(*goast.StarExpr); ok {
-			cvar = starX.X
-		} else {
-			cvar = &goast.UnaryExpr{Op: token.AND, X: cvar}
-		}
-		return govar, cvar
-	}
-
 	//go2c
 	{
 		recv := field(starExpr(info.gotype), ident("g"))
@@ -689,22 +677,26 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 
 	//Normal Typedef
 	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), oinfo.gotype))
-	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-		_temp := ident("_temp")
-		def := varDeclStmt(oinfo.gotype, _temp)
-		convc := oinfo.c2go(_temp, callExpr(parenExpr(oinfo.ctype), cvar))
-		convbase := assignStmt1n1(govar, callExpr(info.gotype, _temp))
-		return blockStmt(def, convc, convbase)
-	}
 
 	info.go2cAlloc = oinfo.go2cAlloc
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-		_temp := ident("_temp")
-		def := varDeclStmt(oinfo.ctype, _temp)
-		convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), _temp)
-		convbase := assignStmt1n1(cvar, callExpr(info.ctype, _temp))
+		temp := ident("temp_in_" + decl.Name)
+		def := varDeclStmt(oinfo.ctype, temp)
+		convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), temp)
+		convbase := assignStmt1n1(cvar, callExpr(info.ctype, temp))
 		return blockStmt(def, convc, convbase)
+		// return oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), callExpr(parenExpr(oinfo.ctype), cvar))
 	}
+
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		temp := ident("temp_in_" + decl.Name)
+		def := varDeclStmt(oinfo.gotype, temp)
+		convc := oinfo.c2go(temp, callExpr(parenExpr(oinfo.ctype), cvar))
+		convbase := assignStmt1n1(govar, callExpr(info.gotype, temp))
+		return blockStmt(def, convc, convbase)
+		// return oinfo.c2go(callExpr(parenExpr(oinfo.gotype), govar), callExpr(parenExpr(oinfo.ctype), cvar))
+	}
+
 	info.refc2go = oinfo.refc2go //for pointer type case
 	return info
 }

@@ -368,13 +368,13 @@ func (g *InstanceCreateInfo) toC(c *C.VkInstanceCreateInfo, _sa *stackAllocator)
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkInstanceCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkInstanceCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkInstanceCreateFlags(_temp)
+		c.flags = C.VkInstanceCreateFlags(temp_in_VkInstanceCreateFlags)
 	}
 	{
 		c.pApplicationInfo = (*C.VkApplicationInfo)(_sa.alloc(C.sizeof_VkApplicationInfo))
@@ -401,13 +401,13 @@ func (g *InstanceCreateInfo) fromC(c *C.VkInstanceCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkInstanceCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkInstanceCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = InstanceCreateFlags(_temp)
+		g.Flags = InstanceCreateFlags(temp_in_VkInstanceCreateFlags)
 	}
 	{
 		if g.ApplicationInfo == nil {
@@ -756,556 +756,556 @@ type PhysicalDeviceFeatures struct {
 
 func (g *PhysicalDeviceFeatures) toC(c *C.VkPhysicalDeviceFeatures) {
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.RobustBufferAccess))
-		c.robustBufferAccess = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.RobustBufferAccess))
+		c.robustBufferAccess = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.FullDrawIndexUint32))
-		c.fullDrawIndexUint32 = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.FullDrawIndexUint32))
+		c.fullDrawIndexUint32 = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ImageCubeArray))
-		c.imageCubeArray = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ImageCubeArray))
+		c.imageCubeArray = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.IndependentBlend))
-		c.independentBlend = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.IndependentBlend))
+		c.independentBlend = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.GeometryShader))
-		c.geometryShader = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.GeometryShader))
+		c.geometryShader = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.TessellationShader))
-		c.tessellationShader = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.TessellationShader))
+		c.tessellationShader = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SampleRateShading))
-		c.sampleRateShading = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SampleRateShading))
+		c.sampleRateShading = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DualSrcBlend))
-		c.dualSrcBlend = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DualSrcBlend))
+		c.dualSrcBlend = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.LogicOp))
-		c.logicOp = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.LogicOp))
+		c.logicOp = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.MultiDrawIndirect))
-		c.multiDrawIndirect = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.MultiDrawIndirect))
+		c.multiDrawIndirect = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DrawIndirectFirstInstance))
-		c.drawIndirectFirstInstance = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DrawIndirectFirstInstance))
+		c.drawIndirectFirstInstance = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthClamp))
-		c.depthClamp = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthClamp))
+		c.depthClamp = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthBiasClamp))
-		c.depthBiasClamp = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBiasClamp))
+		c.depthBiasClamp = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.FillModeNonSolid))
-		c.fillModeNonSolid = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.FillModeNonSolid))
+		c.fillModeNonSolid = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthBounds))
-		c.depthBounds = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBounds))
+		c.depthBounds = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.WideLines))
-		c.wideLines = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.WideLines))
+		c.wideLines = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.LargePoints))
-		c.largePoints = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.LargePoints))
+		c.largePoints = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.AlphaToOne))
-		c.alphaToOne = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToOne))
+		c.alphaToOne = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.MultiViewport))
-		c.multiViewport = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.MultiViewport))
+		c.multiViewport = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SamplerAnisotropy))
-		c.samplerAnisotropy = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SamplerAnisotropy))
+		c.samplerAnisotropy = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.TextureCompressionETC2))
-		c.textureCompressionETC2 = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionETC2))
+		c.textureCompressionETC2 = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.TextureCompressionASTC_LDR))
-		c.textureCompressionASTC_LDR = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionASTC_LDR))
+		c.textureCompressionASTC_LDR = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.TextureCompressionBC))
-		c.textureCompressionBC = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionBC))
+		c.textureCompressionBC = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.OcclusionQueryPrecise))
-		c.occlusionQueryPrecise = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.OcclusionQueryPrecise))
+		c.occlusionQueryPrecise = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.PipelineStatisticsQuery))
-		c.pipelineStatisticsQuery = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.PipelineStatisticsQuery))
+		c.pipelineStatisticsQuery = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.VertexPipelineStoresAndAtomics))
-		c.vertexPipelineStoresAndAtomics = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.VertexPipelineStoresAndAtomics))
+		c.vertexPipelineStoresAndAtomics = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.FragmentStoresAndAtomics))
-		c.fragmentStoresAndAtomics = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.FragmentStoresAndAtomics))
+		c.fragmentStoresAndAtomics = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderTessellationAndGeometryPointSize))
-		c.shaderTessellationAndGeometryPointSize = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderTessellationAndGeometryPointSize))
+		c.shaderTessellationAndGeometryPointSize = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderImageGatherExtended))
-		c.shaderImageGatherExtended = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderImageGatherExtended))
+		c.shaderImageGatherExtended = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageImageExtendedFormats))
-		c.shaderStorageImageExtendedFormats = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageExtendedFormats))
+		c.shaderStorageImageExtendedFormats = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageImageMultisample))
-		c.shaderStorageImageMultisample = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageMultisample))
+		c.shaderStorageImageMultisample = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageImageReadWithoutFormat))
-		c.shaderStorageImageReadWithoutFormat = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageReadWithoutFormat))
+		c.shaderStorageImageReadWithoutFormat = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageImageWriteWithoutFormat))
-		c.shaderStorageImageWriteWithoutFormat = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageWriteWithoutFormat))
+		c.shaderStorageImageWriteWithoutFormat = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderUniformBufferArrayDynamicIndexing))
-		c.shaderUniformBufferArrayDynamicIndexing = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderUniformBufferArrayDynamicIndexing))
+		c.shaderUniformBufferArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderSampledImageArrayDynamicIndexing))
-		c.shaderSampledImageArrayDynamicIndexing = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderSampledImageArrayDynamicIndexing))
+		c.shaderSampledImageArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageBufferArrayDynamicIndexing))
-		c.shaderStorageBufferArrayDynamicIndexing = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageBufferArrayDynamicIndexing))
+		c.shaderStorageBufferArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderStorageImageArrayDynamicIndexing))
-		c.shaderStorageImageArrayDynamicIndexing = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageArrayDynamicIndexing))
+		c.shaderStorageImageArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderClipDistance))
-		c.shaderClipDistance = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderClipDistance))
+		c.shaderClipDistance = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderCullDistance))
-		c.shaderCullDistance = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderCullDistance))
+		c.shaderCullDistance = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderFloat64))
-		c.shaderFloat64 = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderFloat64))
+		c.shaderFloat64 = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderInt64))
-		c.shaderInt64 = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderInt64))
+		c.shaderInt64 = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderInt16))
-		c.shaderInt16 = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderInt16))
+		c.shaderInt16 = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderResourceResidency))
-		c.shaderResourceResidency = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderResourceResidency))
+		c.shaderResourceResidency = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ShaderResourceMinLod))
-		c.shaderResourceMinLod = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderResourceMinLod))
+		c.shaderResourceMinLod = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseBinding))
-		c.sparseBinding = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseBinding))
+		c.sparseBinding = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidencyBuffer))
-		c.sparseResidencyBuffer = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyBuffer))
+		c.sparseResidencyBuffer = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidencyImage2D))
-		c.sparseResidencyImage2D = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyImage2D))
+		c.sparseResidencyImage2D = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidencyImage3D))
-		c.sparseResidencyImage3D = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyImage3D))
+		c.sparseResidencyImage3D = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidency2Samples))
-		c.sparseResidency2Samples = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency2Samples))
+		c.sparseResidency2Samples = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidency4Samples))
-		c.sparseResidency4Samples = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency4Samples))
+		c.sparseResidency4Samples = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidency8Samples))
-		c.sparseResidency8Samples = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency8Samples))
+		c.sparseResidency8Samples = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidency16Samples))
-		c.sparseResidency16Samples = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency16Samples))
+		c.sparseResidency16Samples = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SparseResidencyAliased))
-		c.sparseResidencyAliased = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyAliased))
+		c.sparseResidencyAliased = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.VariableMultisampleRate))
-		c.variableMultisampleRate = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.VariableMultisampleRate))
+		c.variableMultisampleRate = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.InheritedQueries))
-		c.inheritedQueries = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.InheritedQueries))
+		c.inheritedQueries = C.VkBool32(temp_in_VkBool32)
 	}
 }
 func (g *PhysicalDeviceFeatures) fromC(c *C.VkPhysicalDeviceFeatures) {
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.robustBufferAccess))
-		g.RobustBufferAccess = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.robustBufferAccess))
+		g.RobustBufferAccess = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.fullDrawIndexUint32))
-		g.FullDrawIndexUint32 = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.fullDrawIndexUint32))
+		g.FullDrawIndexUint32 = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.imageCubeArray))
-		g.ImageCubeArray = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.imageCubeArray))
+		g.ImageCubeArray = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.independentBlend))
-		g.IndependentBlend = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.independentBlend))
+		g.IndependentBlend = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.geometryShader))
-		g.GeometryShader = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.geometryShader))
+		g.GeometryShader = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.tessellationShader))
-		g.TessellationShader = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.tessellationShader))
+		g.TessellationShader = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sampleRateShading))
-		g.SampleRateShading = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sampleRateShading))
+		g.SampleRateShading = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.dualSrcBlend))
-		g.DualSrcBlend = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.dualSrcBlend))
+		g.DualSrcBlend = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.logicOp))
-		g.LogicOp = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.logicOp))
+		g.LogicOp = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.multiDrawIndirect))
-		g.MultiDrawIndirect = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.multiDrawIndirect))
+		g.MultiDrawIndirect = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.drawIndirectFirstInstance))
-		g.DrawIndirectFirstInstance = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.drawIndirectFirstInstance))
+		g.DrawIndirectFirstInstance = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthClamp))
-		g.DepthClamp = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthClamp))
+		g.DepthClamp = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthBiasClamp))
-		g.DepthBiasClamp = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBiasClamp))
+		g.DepthBiasClamp = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.fillModeNonSolid))
-		g.FillModeNonSolid = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.fillModeNonSolid))
+		g.FillModeNonSolid = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthBounds))
-		g.DepthBounds = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBounds))
+		g.DepthBounds = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.wideLines))
-		g.WideLines = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.wideLines))
+		g.WideLines = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.largePoints))
-		g.LargePoints = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.largePoints))
+		g.LargePoints = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.alphaToOne))
-		g.AlphaToOne = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToOne))
+		g.AlphaToOne = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.multiViewport))
-		g.MultiViewport = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.multiViewport))
+		g.MultiViewport = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.samplerAnisotropy))
-		g.SamplerAnisotropy = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.samplerAnisotropy))
+		g.SamplerAnisotropy = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.textureCompressionETC2))
-		g.TextureCompressionETC2 = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionETC2))
+		g.TextureCompressionETC2 = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.textureCompressionASTC_LDR))
-		g.TextureCompressionASTC_LDR = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionASTC_LDR))
+		g.TextureCompressionASTC_LDR = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.textureCompressionBC))
-		g.TextureCompressionBC = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionBC))
+		g.TextureCompressionBC = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.occlusionQueryPrecise))
-		g.OcclusionQueryPrecise = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.occlusionQueryPrecise))
+		g.OcclusionQueryPrecise = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.pipelineStatisticsQuery))
-		g.PipelineStatisticsQuery = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.pipelineStatisticsQuery))
+		g.PipelineStatisticsQuery = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.vertexPipelineStoresAndAtomics))
-		g.VertexPipelineStoresAndAtomics = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.vertexPipelineStoresAndAtomics))
+		g.VertexPipelineStoresAndAtomics = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.fragmentStoresAndAtomics))
-		g.FragmentStoresAndAtomics = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.fragmentStoresAndAtomics))
+		g.FragmentStoresAndAtomics = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderTessellationAndGeometryPointSize))
-		g.ShaderTessellationAndGeometryPointSize = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderTessellationAndGeometryPointSize))
+		g.ShaderTessellationAndGeometryPointSize = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderImageGatherExtended))
-		g.ShaderImageGatherExtended = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderImageGatherExtended))
+		g.ShaderImageGatherExtended = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageImageExtendedFormats))
-		g.ShaderStorageImageExtendedFormats = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageExtendedFormats))
+		g.ShaderStorageImageExtendedFormats = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageImageMultisample))
-		g.ShaderStorageImageMultisample = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageMultisample))
+		g.ShaderStorageImageMultisample = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageImageReadWithoutFormat))
-		g.ShaderStorageImageReadWithoutFormat = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageReadWithoutFormat))
+		g.ShaderStorageImageReadWithoutFormat = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageImageWriteWithoutFormat))
-		g.ShaderStorageImageWriteWithoutFormat = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageWriteWithoutFormat))
+		g.ShaderStorageImageWriteWithoutFormat = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderUniformBufferArrayDynamicIndexing))
-		g.ShaderUniformBufferArrayDynamicIndexing = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderUniformBufferArrayDynamicIndexing))
+		g.ShaderUniformBufferArrayDynamicIndexing = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderSampledImageArrayDynamicIndexing))
-		g.ShaderSampledImageArrayDynamicIndexing = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderSampledImageArrayDynamicIndexing))
+		g.ShaderSampledImageArrayDynamicIndexing = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageBufferArrayDynamicIndexing))
-		g.ShaderStorageBufferArrayDynamicIndexing = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageBufferArrayDynamicIndexing))
+		g.ShaderStorageBufferArrayDynamicIndexing = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderStorageImageArrayDynamicIndexing))
-		g.ShaderStorageImageArrayDynamicIndexing = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageArrayDynamicIndexing))
+		g.ShaderStorageImageArrayDynamicIndexing = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderClipDistance))
-		g.ShaderClipDistance = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderClipDistance))
+		g.ShaderClipDistance = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderCullDistance))
-		g.ShaderCullDistance = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderCullDistance))
+		g.ShaderCullDistance = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderFloat64))
-		g.ShaderFloat64 = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderFloat64))
+		g.ShaderFloat64 = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderInt64))
-		g.ShaderInt64 = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderInt64))
+		g.ShaderInt64 = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderInt16))
-		g.ShaderInt16 = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderInt16))
+		g.ShaderInt16 = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderResourceResidency))
-		g.ShaderResourceResidency = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderResourceResidency))
+		g.ShaderResourceResidency = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.shaderResourceMinLod))
-		g.ShaderResourceMinLod = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderResourceMinLod))
+		g.ShaderResourceMinLod = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseBinding))
-		g.SparseBinding = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseBinding))
+		g.SparseBinding = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidencyBuffer))
-		g.SparseResidencyBuffer = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyBuffer))
+		g.SparseResidencyBuffer = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidencyImage2D))
-		g.SparseResidencyImage2D = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyImage2D))
+		g.SparseResidencyImage2D = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidencyImage3D))
-		g.SparseResidencyImage3D = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyImage3D))
+		g.SparseResidencyImage3D = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidency2Samples))
-		g.SparseResidency2Samples = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency2Samples))
+		g.SparseResidency2Samples = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidency4Samples))
-		g.SparseResidency4Samples = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency4Samples))
+		g.SparseResidency4Samples = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidency8Samples))
-		g.SparseResidency8Samples = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency8Samples))
+		g.SparseResidency8Samples = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidency16Samples))
-		g.SparseResidency16Samples = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency16Samples))
+		g.SparseResidency16Samples = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sparseResidencyAliased))
-		g.SparseResidencyAliased = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyAliased))
+		g.SparseResidencyAliased = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.variableMultisampleRate))
-		g.VariableMultisampleRate = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.variableMultisampleRate))
+		g.VariableMultisampleRate = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.inheritedQueries))
-		g.InheritedQueries = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.inheritedQueries))
+		g.InheritedQueries = Bool32(temp_in_VkBool32)
 	}
 }
 func GetPhysicalDeviceFeatures(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
@@ -1605,60 +1605,60 @@ type FormatProperties struct {
 
 func (g *FormatProperties) toC(c *C.VkFormatProperties) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkFormatFeatureFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.LinearTilingFeatures)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.LinearTilingFeatures)))
+			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.linearTilingFeatures = C.VkFormatFeatureFlags(_temp)
+		c.linearTilingFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkFormatFeatureFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.OptimalTilingFeatures)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.OptimalTilingFeatures)))
+			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.optimalTilingFeatures = C.VkFormatFeatureFlags(_temp)
+		c.optimalTilingFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkFormatFeatureFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.BufferFeatures)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.BufferFeatures)))
+			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.bufferFeatures = C.VkFormatFeatureFlags(_temp)
+		c.bufferFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 }
 func (g *FormatProperties) fromC(c *C.VkFormatProperties) {
 	{
-		var _temp Flags
+		var temp_in_VkFormatFeatureFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.linearTilingFeatures)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.linearTilingFeatures)))
+			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
 		}
-		g.LinearTilingFeatures = FormatFeatureFlags(_temp)
+		g.LinearTilingFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkFormatFeatureFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.optimalTilingFeatures)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.optimalTilingFeatures)))
+			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
 		}
-		g.OptimalTilingFeatures = FormatFeatureFlags(_temp)
+		g.OptimalTilingFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkFormatFeatureFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.bufferFeatures)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.bufferFeatures)))
+			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
 		}
-		g.BufferFeatures = FormatFeatureFlags(_temp)
+		g.BufferFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 }
 func GetPhysicalDeviceFormatProperties(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties) {
@@ -1738,18 +1738,18 @@ func (g *ImageFormatProperties) toC(c *C.VkImageFormatProperties) {
 	c.maxMipLevels = C.uint32_t(g.MaxMipLevels)
 	c.maxArrayLayers = C.uint32_t(g.MaxArrayLayers)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.sampleCounts = C.VkSampleCountFlags(_temp)
+		c.sampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MaxResourceSize))
-		c.maxResourceSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MaxResourceSize))
+		c.maxResourceSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
@@ -1757,18 +1757,18 @@ func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
 	g.MaxMipLevels = uint32(c.maxMipLevels)
 	g.MaxArrayLayers = uint32(c.maxArrayLayers)
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.sampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.SampleCounts = SampleCountFlags(_temp)
+		g.SampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.maxResourceSize))
-		g.MaxResourceSize = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.maxResourceSize))
+		g.MaxResourceSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, format Format, typ ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
@@ -1789,22 +1789,22 @@ func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, forma
 	c.typ = C.VkImageType(typ)
 	c.tiling = C.VkImageTiling(tiling)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageUsageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(usage)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.usage = C.VkImageUsageFlags(_temp)
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkImageCreateFlags(_temp)
+		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
 	{
 		c.pImageFormatProperties = (*C.VkImageFormatProperties)(_sa.alloc(C.sizeof_VkImageFormatProperties * uint(len(imageFormatProperties))))
@@ -1954,14 +1954,14 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.maxMemoryAllocationCount = C.uint32_t(g.MaxMemoryAllocationCount)
 	c.maxSamplerAllocationCount = C.uint32_t(g.MaxSamplerAllocationCount)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.BufferImageGranularity))
-		c.bufferImageGranularity = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.BufferImageGranularity))
+		c.bufferImageGranularity = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.SparseAddressSpaceSize))
-		c.sparseAddressSpaceSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SparseAddressSpaceSize))
+		c.sparseAddressSpaceSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.maxBoundDescriptorSets = C.uint32_t(g.MaxBoundDescriptorSets)
 	c.maxPerStageDescriptorSamplers = C.uint32_t(g.MaxPerStageDescriptorSamplers)
@@ -2026,19 +2026,19 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.viewportSubPixelBits = C.uint32_t(g.ViewportSubPixelBits)
 	c.minMemoryMapAlignment = C.size_t(g.MinMemoryMapAlignment)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MinTexelBufferOffsetAlignment))
-		c.minTexelBufferOffsetAlignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinTexelBufferOffsetAlignment))
+		c.minTexelBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MinUniformBufferOffsetAlignment))
-		c.minUniformBufferOffsetAlignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinUniformBufferOffsetAlignment))
+		c.minUniformBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MinStorageBufferOffsetAlignment))
-		c.minStorageBufferOffsetAlignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinStorageBufferOffsetAlignment))
+		c.minStorageBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.minTexelOffset = C.int32_t(g.MinTexelOffset)
 	c.maxTexelOffset = C.uint32_t(g.MaxTexelOffset)
@@ -2051,92 +2051,92 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.maxFramebufferHeight = C.uint32_t(g.MaxFramebufferHeight)
 	c.maxFramebufferLayers = C.uint32_t(g.MaxFramebufferLayers)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.FramebufferColorSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferColorSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.framebufferColorSampleCounts = C.VkSampleCountFlags(_temp)
+		c.framebufferColorSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.FramebufferDepthSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferDepthSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.framebufferDepthSampleCounts = C.VkSampleCountFlags(_temp)
+		c.framebufferDepthSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.FramebufferStencilSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferStencilSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.framebufferStencilSampleCounts = C.VkSampleCountFlags(_temp)
+		c.framebufferStencilSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.FramebufferNoAttachmentsSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferNoAttachmentsSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.framebufferNoAttachmentsSampleCounts = C.VkSampleCountFlags(_temp)
+		c.framebufferNoAttachmentsSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	c.maxColorAttachments = C.uint32_t(g.MaxColorAttachments)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SampledImageColorSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageColorSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.sampledImageColorSampleCounts = C.VkSampleCountFlags(_temp)
+		c.sampledImageColorSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SampledImageIntegerSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageIntegerSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.sampledImageIntegerSampleCounts = C.VkSampleCountFlags(_temp)
+		c.sampledImageIntegerSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SampledImageDepthSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageDepthSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.sampledImageDepthSampleCounts = C.VkSampleCountFlags(_temp)
+		c.sampledImageDepthSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SampledImageStencilSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageStencilSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.sampledImageStencilSampleCounts = C.VkSampleCountFlags(_temp)
+		c.sampledImageStencilSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSampleCountFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.StorageImageSampleCounts)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StorageImageSampleCounts)))
+			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.storageImageSampleCounts = C.VkSampleCountFlags(_temp)
+		c.storageImageSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	c.maxSampleMaskWords = C.uint32_t(g.MaxSampleMaskWords)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.TimestampComputeAndGraphics))
-		c.timestampComputeAndGraphics = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.TimestampComputeAndGraphics))
+		c.timestampComputeAndGraphics = C.VkBool32(temp_in_VkBool32)
 	}
 	c.timestampPeriod = C.float(g.TimestampPeriod)
 	c.maxClipDistances = C.uint32_t(g.MaxClipDistances)
@@ -2152,29 +2152,29 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.pointSizeGranularity = C.float(g.PointSizeGranularity)
 	c.lineWidthGranularity = C.float(g.LineWidthGranularity)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.StrictLines))
-		c.strictLines = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.StrictLines))
+		c.strictLines = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.StandardSampleLocations))
-		c.standardSampleLocations = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.StandardSampleLocations))
+		c.standardSampleLocations = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.OptimalBufferCopyOffsetAlignment))
-		c.optimalBufferCopyOffsetAlignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.OptimalBufferCopyOffsetAlignment))
+		c.optimalBufferCopyOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.OptimalBufferCopyRowPitchAlignment))
-		c.optimalBufferCopyRowPitchAlignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.OptimalBufferCopyRowPitchAlignment))
+		c.optimalBufferCopyRowPitchAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.NonCoherentAtomSize))
-		c.nonCoherentAtomSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.NonCoherentAtomSize))
+		c.nonCoherentAtomSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
@@ -2190,14 +2190,14 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.MaxMemoryAllocationCount = uint32(c.maxMemoryAllocationCount)
 	g.MaxSamplerAllocationCount = uint32(c.maxSamplerAllocationCount)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.bufferImageGranularity))
-		g.BufferImageGranularity = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.bufferImageGranularity))
+		g.BufferImageGranularity = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.sparseAddressSpaceSize))
-		g.SparseAddressSpaceSize = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sparseAddressSpaceSize))
+		g.SparseAddressSpaceSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.MaxBoundDescriptorSets = uint32(c.maxBoundDescriptorSets)
 	g.MaxPerStageDescriptorSamplers = uint32(c.maxPerStageDescriptorSamplers)
@@ -2262,19 +2262,19 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.ViewportSubPixelBits = uint32(c.viewportSubPixelBits)
 	g.MinMemoryMapAlignment = uint(c.minMemoryMapAlignment)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.minTexelBufferOffsetAlignment))
-		g.MinTexelBufferOffsetAlignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minTexelBufferOffsetAlignment))
+		g.MinTexelBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.minUniformBufferOffsetAlignment))
-		g.MinUniformBufferOffsetAlignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minUniformBufferOffsetAlignment))
+		g.MinUniformBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.minStorageBufferOffsetAlignment))
-		g.MinStorageBufferOffsetAlignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minStorageBufferOffsetAlignment))
+		g.MinStorageBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.MinTexelOffset = int32(c.minTexelOffset)
 	g.MaxTexelOffset = uint32(c.maxTexelOffset)
@@ -2287,92 +2287,92 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.MaxFramebufferHeight = uint32(c.maxFramebufferHeight)
 	g.MaxFramebufferLayers = uint32(c.maxFramebufferLayers)
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.framebufferColorSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferColorSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.FramebufferColorSampleCounts = SampleCountFlags(_temp)
+		g.FramebufferColorSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.framebufferDepthSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferDepthSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.FramebufferDepthSampleCounts = SampleCountFlags(_temp)
+		g.FramebufferDepthSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.framebufferStencilSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferStencilSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.FramebufferStencilSampleCounts = SampleCountFlags(_temp)
+		g.FramebufferStencilSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.framebufferNoAttachmentsSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferNoAttachmentsSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.FramebufferNoAttachmentsSampleCounts = SampleCountFlags(_temp)
+		g.FramebufferNoAttachmentsSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	g.MaxColorAttachments = uint32(c.maxColorAttachments)
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageColorSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageColorSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.SampledImageColorSampleCounts = SampleCountFlags(_temp)
+		g.SampledImageColorSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageIntegerSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageIntegerSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.SampledImageIntegerSampleCounts = SampleCountFlags(_temp)
+		g.SampledImageIntegerSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageDepthSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageDepthSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.SampledImageDepthSampleCounts = SampleCountFlags(_temp)
+		g.SampledImageDepthSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageStencilSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageStencilSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.SampledImageStencilSampleCounts = SampleCountFlags(_temp)
+		g.SampledImageStencilSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSampleCountFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.storageImageSampleCounts)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.storageImageSampleCounts)))
+			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
 		}
-		g.StorageImageSampleCounts = SampleCountFlags(_temp)
+		g.StorageImageSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	g.MaxSampleMaskWords = uint32(c.maxSampleMaskWords)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.timestampComputeAndGraphics))
-		g.TimestampComputeAndGraphics = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.timestampComputeAndGraphics))
+		g.TimestampComputeAndGraphics = Bool32(temp_in_VkBool32)
 	}
 	g.TimestampPeriod = float32(c.timestampPeriod)
 	g.MaxClipDistances = uint32(c.maxClipDistances)
@@ -2388,29 +2388,29 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.PointSizeGranularity = float32(c.pointSizeGranularity)
 	g.LineWidthGranularity = float32(c.lineWidthGranularity)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.strictLines))
-		g.StrictLines = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.strictLines))
+		g.StrictLines = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.standardSampleLocations))
-		g.StandardSampleLocations = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.standardSampleLocations))
+		g.StandardSampleLocations = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.optimalBufferCopyOffsetAlignment))
-		g.OptimalBufferCopyOffsetAlignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.optimalBufferCopyOffsetAlignment))
+		g.OptimalBufferCopyOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.optimalBufferCopyRowPitchAlignment))
-		g.OptimalBufferCopyRowPitchAlignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.optimalBufferCopyRowPitchAlignment))
+		g.OptimalBufferCopyRowPitchAlignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.nonCoherentAtomSize))
-		g.NonCoherentAtomSize = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.nonCoherentAtomSize))
+		g.NonCoherentAtomSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 
@@ -2424,56 +2424,56 @@ type PhysicalDeviceSparseProperties struct {
 
 func (g *PhysicalDeviceSparseProperties) toC(c *C.VkPhysicalDeviceSparseProperties) {
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ResidencyStandard2DBlockShape))
-		c.residencyStandard2DBlockShape = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard2DBlockShape))
+		c.residencyStandard2DBlockShape = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ResidencyStandard2DMultisampleBlockShape))
-		c.residencyStandard2DMultisampleBlockShape = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard2DMultisampleBlockShape))
+		c.residencyStandard2DMultisampleBlockShape = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ResidencyStandard3DBlockShape))
-		c.residencyStandard3DBlockShape = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard3DBlockShape))
+		c.residencyStandard3DBlockShape = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ResidencyAlignedMipSize))
-		c.residencyAlignedMipSize = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyAlignedMipSize))
+		c.residencyAlignedMipSize = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.ResidencyNonResidentStrict))
-		c.residencyNonResidentStrict = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyNonResidentStrict))
+		c.residencyNonResidentStrict = C.VkBool32(temp_in_VkBool32)
 	}
 }
 func (g *PhysicalDeviceSparseProperties) fromC(c *C.VkPhysicalDeviceSparseProperties) {
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.residencyStandard2DBlockShape))
-		g.ResidencyStandard2DBlockShape = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard2DBlockShape))
+		g.ResidencyStandard2DBlockShape = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.residencyStandard2DMultisampleBlockShape))
-		g.ResidencyStandard2DMultisampleBlockShape = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard2DMultisampleBlockShape))
+		g.ResidencyStandard2DMultisampleBlockShape = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.residencyStandard3DBlockShape))
-		g.ResidencyStandard3DBlockShape = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard3DBlockShape))
+		g.ResidencyStandard3DBlockShape = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.residencyAlignedMipSize))
-		g.ResidencyAlignedMipSize = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyAlignedMipSize))
+		g.ResidencyAlignedMipSize = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.residencyNonResidentStrict))
-		g.ResidencyNonResidentStrict = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyNonResidentStrict))
+		g.ResidencyNonResidentStrict = Bool32(temp_in_VkBool32)
 	}
 }
 
@@ -2547,13 +2547,13 @@ type QueueFamilyProperties struct {
 
 func (g *QueueFamilyProperties) toC(c *C.VkQueueFamilyProperties) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueueFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.QueueFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.QueueFlags)))
+			temp_in_VkQueueFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.queueFlags = C.VkQueueFlags(_temp)
+		c.queueFlags = C.VkQueueFlags(temp_in_VkQueueFlags)
 	}
 	c.queueCount = C.uint32_t(g.QueueCount)
 	c.timestampValidBits = C.uint32_t(g.TimestampValidBits)
@@ -2561,13 +2561,13 @@ func (g *QueueFamilyProperties) toC(c *C.VkQueueFamilyProperties) {
 }
 func (g *QueueFamilyProperties) fromC(c *C.VkQueueFamilyProperties) {
 	{
-		var _temp Flags
+		var temp_in_VkQueueFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.queueFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.queueFlags)))
+			temp_in_VkQueueFlags = Flags(temp_in_VkFlags)
 		}
-		g.QueueFlags = QueueFlags(_temp)
+		g.QueueFlags = QueueFlags(temp_in_VkQueueFlags)
 	}
 	g.QueueCount = uint32(c.queueCount)
 	g.TimestampValidBits = uint32(c.timestampValidBits)
@@ -2605,25 +2605,25 @@ type MemoryType struct {
 
 func (g *MemoryType) toC(c *C.VkMemoryType) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkMemoryPropertyFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.PropertyFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PropertyFlags)))
+			temp_in_VkMemoryPropertyFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.propertyFlags = C.VkMemoryPropertyFlags(_temp)
+		c.propertyFlags = C.VkMemoryPropertyFlags(temp_in_VkMemoryPropertyFlags)
 	}
 	c.heapIndex = C.uint32_t(g.HeapIndex)
 }
 func (g *MemoryType) fromC(c *C.VkMemoryType) {
 	{
-		var _temp Flags
+		var temp_in_VkMemoryPropertyFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.propertyFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.propertyFlags)))
+			temp_in_VkMemoryPropertyFlags = Flags(temp_in_VkFlags)
 		}
-		g.PropertyFlags = MemoryPropertyFlags(_temp)
+		g.PropertyFlags = MemoryPropertyFlags(temp_in_VkMemoryPropertyFlags)
 	}
 	g.HeapIndex = uint32(c.heapIndex)
 }
@@ -2636,34 +2636,34 @@ type MemoryHeap struct {
 
 func (g *MemoryHeap) toC(c *C.VkMemoryHeap) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkMemoryHeapFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkMemoryHeapFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkMemoryHeapFlags(_temp)
+		c.flags = C.VkMemoryHeapFlags(temp_in_VkMemoryHeapFlags)
 	}
 }
 func (g *MemoryHeap) fromC(c *C.VkMemoryHeap) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkMemoryHeapFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkMemoryHeapFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = MemoryHeapFlags(_temp)
+		g.Flags = MemoryHeapFlags(temp_in_VkMemoryHeapFlags)
 	}
 }
 
@@ -2765,13 +2765,13 @@ func (g *DeviceQueueCreateInfo) toC(c *C.VkDeviceQueueCreateInfo, _sa *stackAllo
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDeviceQueueCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkDeviceQueueCreateFlags(_temp)
+		c.flags = C.VkDeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
 	}
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 	c.queueCount = C.uint32_t(len(g.QueuePriorities))
@@ -2787,13 +2787,13 @@ func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkDeviceQueueCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDeviceQueueCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = DeviceQueueCreateFlags(_temp)
+		g.Flags = DeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
 	}
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 	g.QueuePriorities = make([]float32, int(c.queueCount))
@@ -2819,13 +2819,13 @@ func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, _sa *stackAllocator) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDeviceCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDeviceCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkDeviceCreateFlags(_temp)
+		c.flags = C.VkDeviceCreateFlags(temp_in_VkDeviceCreateFlags)
 	}
 	c.queueCreateInfoCount = C.uint32_t(len(g.QueueCreateInfos))
 	{
@@ -2863,13 +2863,13 @@ func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkDeviceCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDeviceCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = DeviceCreateFlags(_temp)
+		g.Flags = DeviceCreateFlags(temp_in_VkDeviceCreateFlags)
 	}
 	g.QueueCreateInfos = make([]DeviceQueueCreateInfo, int(c.queueCreateInfoCount))
 	{
@@ -3140,13 +3140,13 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, _sa *stackAllocator) {
 	{
 		c.pWaitDstStageMask = (*C.VkPipelineStageFlags)(_sa.alloc(C.sizeof_VkPipelineStageFlags))
 		{
-			var _temp C.VkFlags
+			var temp_in_VkPipelineStageFlags C.VkFlags
 			{
-				var _temp C.uint32_t
-				_temp = C.uint32_t((uint32)((Flags)(*g.WaitDstStageMask)))
-				_temp = C.VkFlags(_temp)
+				var temp_in_VkFlags C.uint32_t
+				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(*g.WaitDstStageMask)))
+				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
 			}
-			*c.pWaitDstStageMask = C.VkPipelineStageFlags(_temp)
+			*c.pWaitDstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 		}
 	}
 	c.commandBufferCount = C.uint32_t(len(g.CommandBuffers))
@@ -3181,13 +3181,13 @@ func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
 			g.WaitDstStageMask = new(PipelineStageFlags)
 		}
 		{
-			var _temp Flags
+			var temp_in_VkPipelineStageFlags Flags
 			{
-				var _temp uint32
-				_temp = uint32((C.uint32_t)((C.VkFlags)(*c.pWaitDstStageMask)))
-				_temp = Flags(_temp)
+				var temp_in_VkFlags uint32
+				temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(*c.pWaitDstStageMask)))
+				temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
 			}
-			*g.WaitDstStageMask = PipelineStageFlags(_temp)
+			*g.WaitDstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
 		}
 	}
 	g.CommandBuffers = make([]CommandBuffer, int(c.commandBufferCount))
@@ -3264,9 +3264,9 @@ func (g *MemoryAllocateInfo) toC(c *C.VkMemoryAllocateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.AllocationSize))
-		c.allocationSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.AllocationSize))
+		c.allocationSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.memoryTypeIndex = C.uint32_t(g.MemoryTypeIndex)
 }
@@ -3274,9 +3274,9 @@ func (g *MemoryAllocateInfo) fromC(c *C.VkMemoryAllocateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.allocationSize))
-		g.AllocationSize = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.allocationSize))
+		g.AllocationSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.MemoryTypeIndex = uint32(c.memoryTypeIndex)
 }
@@ -3345,23 +3345,23 @@ func MapMemory(device Device, memory DeviceMemory, offset DeviceSize, size Devic
 	c.device = C.VkDevice(device)
 	c.memory = C.VkDeviceMemory(memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkMemoryMapFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkMemoryMapFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkMemoryMapFlags(_temp)
+		c.flags = C.VkMemoryMapFlags(temp_in_VkMemoryMapFlags)
 	}
 	{
 		c.ppData = (*unsafe.Pointer)(_sa.alloc(C.sizeof_void_pointer * uint(len(data))))
@@ -3397,14 +3397,14 @@ func (g *MappedMemoryRange) toC(c *C.VkMappedMemoryRange) {
 	c.pNext = g.Next
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *MappedMemoryRange) fromC(c *C.VkMappedMemoryRange) {
@@ -3412,14 +3412,14 @@ func (g *MappedMemoryRange) fromC(c *C.VkMappedMemoryRange) {
 	g.Next = c.pNext
 	g.Memory = DeviceMemory(c.memory)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func FlushMappedMemoryRanges(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
@@ -3481,9 +3481,9 @@ func GetDeviceMemoryCommitment(device Device, memory DeviceMemory, committedMemo
 		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
 		for i3, _ := range committedMemoryInBytes {
 			{
-				var _temp C.uint64_t
-				_temp = C.uint64_t((uint64)(committedMemoryInBytes[i3]))
-				slice3[i3] = C.VkDeviceSize(_temp)
+				var temp_in_VkDeviceSize C.uint64_t
+				temp_in_VkDeviceSize = C.uint64_t((uint64)(committedMemoryInBytes[i3]))
+				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
 			}
 		}
 	}
@@ -3504,9 +3504,9 @@ func BindBufferMemory(device Device, buffer Buffer, memory DeviceMemory, memoryO
 	c.buffer = C.VkBuffer(buffer)
 	c.memory = C.VkDeviceMemory(memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(memoryOffset))
-		c.memoryOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c._ret = C.vkBindBufferMemory(c.device, c.buffer, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
@@ -3527,9 +3527,9 @@ func BindImageMemory(device Device, image Image, memory DeviceMemory, memoryOffs
 	c.image = C.VkImage(image)
 	c.memory = C.VkDeviceMemory(memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(memoryOffset))
-		c.memoryOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c._ret = C.vkBindImageMemory(c.device, c.image, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
@@ -3544,27 +3544,27 @@ type MemoryRequirements struct {
 
 func (g *MemoryRequirements) toC(c *C.VkMemoryRequirements) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Alignment))
-		c.alignment = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Alignment))
+		c.alignment = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
 }
 func (g *MemoryRequirements) fromC(c *C.VkMemoryRequirements) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.alignment))
-		g.Alignment = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.alignment))
+		g.Alignment = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
 }
@@ -3617,44 +3617,44 @@ type SparseImageFormatProperties struct {
 
 func (g *SparseImageFormatProperties) toC(c *C.VkSparseImageFormatProperties) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageAspectFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.aspectMask = C.VkImageAspectFlags(_temp)
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.ImageGranularity.toC(&c.imageGranularity)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSparseImageFormatFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSparseImageFormatFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSparseImageFormatFlags(_temp)
+		c.flags = C.VkSparseImageFormatFlags(temp_in_VkSparseImageFormatFlags)
 	}
 }
 func (g *SparseImageFormatProperties) fromC(c *C.VkSparseImageFormatProperties) {
 	{
-		var _temp Flags
+		var temp_in_VkImageAspectFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
 		}
-		g.AspectMask = ImageAspectFlags(_temp)
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.ImageGranularity.fromC(&c.imageGranularity)
 	{
-		var _temp Flags
+		var temp_in_VkSparseImageFormatFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSparseImageFormatFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SparseImageFormatFlags(_temp)
+		g.Flags = SparseImageFormatFlags(temp_in_VkSparseImageFormatFlags)
 	}
 }
 
@@ -3670,38 +3670,38 @@ func (g *SparseImageMemoryRequirements) toC(c *C.VkSparseImageMemoryRequirements
 	g.FormatProperties.toC(&c.formatProperties)
 	c.imageMipTailFirstLod = C.uint32_t(g.ImageMipTailFirstLod)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.ImageMipTailSize))
-		c.imageMipTailSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailSize))
+		c.imageMipTailSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.ImageMipTailOffset))
-		c.imageMipTailOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailOffset))
+		c.imageMipTailOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.ImageMipTailStride))
-		c.imageMipTailStride = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailStride))
+		c.imageMipTailStride = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *SparseImageMemoryRequirements) fromC(c *C.VkSparseImageMemoryRequirements) {
 	g.FormatProperties.fromC(&c.formatProperties)
 	g.ImageMipTailFirstLod = uint32(c.imageMipTailFirstLod)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.imageMipTailSize))
-		g.ImageMipTailSize = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailSize))
+		g.ImageMipTailSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.imageMipTailOffset))
-		g.ImageMipTailOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailOffset))
+		g.ImageMipTailOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.imageMipTailStride))
-		g.ImageMipTailStride = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailStride))
+		g.ImageMipTailStride = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func GetImageSparseMemoryRequirements(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements) {
@@ -3761,13 +3761,13 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 	c.typ = C.VkImageType(typ)
 	c.samples = C.VkSampleCountFlagBits(samples)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageUsageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(usage)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.usage = C.VkImageUsageFlags(_temp)
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 	c.tiling = C.VkImageTiling(tiling)
 	{
@@ -3796,56 +3796,56 @@ type SparseMemoryBind struct {
 
 func (g *SparseMemoryBind) toC(c *C.VkSparseMemoryBind) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.ResourceOffset))
-		c.resourceOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ResourceOffset))
+		c.resourceOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSparseMemoryBindFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSparseMemoryBindFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSparseMemoryBindFlags(_temp)
+		c.flags = C.VkSparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
 	}
 }
 func (g *SparseMemoryBind) fromC(c *C.VkSparseMemoryBind) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.resourceOffset))
-		g.ResourceOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.resourceOffset))
+		g.ResourceOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.Memory = DeviceMemory(c.memory)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
+		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSparseMemoryBindFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSparseMemoryBindFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SparseMemoryBindFlags(_temp)
+		g.Flags = SparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
 	}
 }
 
@@ -3911,26 +3911,26 @@ type ImageSubresource struct {
 
 func (g *ImageSubresource) toC(c *C.VkImageSubresource) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageAspectFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.aspectMask = C.VkImageAspectFlags(_temp)
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	c.mipLevel = C.uint32_t(g.MipLevel)
 	c.arrayLayer = C.uint32_t(g.ArrayLayer)
 }
 func (g *ImageSubresource) fromC(c *C.VkImageSubresource) {
 	{
-		var _temp Flags
+		var temp_in_VkImageAspectFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
 		}
-		g.AspectMask = ImageAspectFlags(_temp)
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.MipLevel = uint32(c.mipLevel)
 	g.ArrayLayer = uint32(c.arrayLayer)
@@ -3968,18 +3968,18 @@ func (g *SparseImageMemoryBind) toC(c *C.VkSparseImageMemoryBind) {
 	g.Extent.toC(&c.extent)
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSparseMemoryBindFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSparseMemoryBindFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSparseMemoryBindFlags(_temp)
+		c.flags = C.VkSparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
 	}
 }
 func (g *SparseImageMemoryBind) fromC(c *C.VkSparseImageMemoryBind) {
@@ -3988,18 +3988,18 @@ func (g *SparseImageMemoryBind) fromC(c *C.VkSparseImageMemoryBind) {
 	g.Extent.fromC(&c.extent)
 	g.Memory = DeviceMemory(c.memory)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
+		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkSparseMemoryBindFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSparseMemoryBindFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SparseMemoryBindFlags(_temp)
+		g.Flags = SparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
 	}
 }
 
@@ -4156,26 +4156,26 @@ func (g *FenceCreateInfo) toC(c *C.VkFenceCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkFenceCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkFenceCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkFenceCreateFlags(_temp)
+		c.flags = C.VkFenceCreateFlags(temp_in_VkFenceCreateFlags)
 	}
 }
 func (g *FenceCreateInfo) fromC(c *C.VkFenceCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkFenceCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkFenceCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = FenceCreateFlags(_temp)
+		g.Flags = FenceCreateFlags(temp_in_VkFenceCreateFlags)
 	}
 }
 func CreateFence(device Device, createInfo *FenceCreateInfo, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
@@ -4277,9 +4277,9 @@ func WaitForFences(device Device, fences []Fence, waitAll Bool32, timeout uint64
 		}
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(waitAll))
-		c.waitAll = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(waitAll))
+		c.waitAll = C.VkBool32(temp_in_VkBool32)
 	}
 	c.timeout = C.uint64_t(timeout)
 	c._ret = C.vkWaitForFences(c.device, c.fenceCount, c.pFences, c.waitAll, c.timeout)
@@ -4298,26 +4298,26 @@ func (g *SemaphoreCreateInfo) toC(c *C.VkSemaphoreCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSemaphoreCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSemaphoreCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSemaphoreCreateFlags(_temp)
+		c.flags = C.VkSemaphoreCreateFlags(temp_in_VkSemaphoreCreateFlags)
 	}
 }
 func (g *SemaphoreCreateInfo) fromC(c *C.VkSemaphoreCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkSemaphoreCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSemaphoreCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SemaphoreCreateFlags(_temp)
+		g.Flags = SemaphoreCreateFlags(temp_in_VkSemaphoreCreateFlags)
 	}
 }
 func CreateSemaphore(device Device, createInfo *SemaphoreCreateInfo, allocator *AllocationCallbacks, semaphore *Semaphore) (_ret Result) {
@@ -4376,26 +4376,26 @@ func (g *EventCreateInfo) toC(c *C.VkEventCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkEventCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkEventCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkEventCreateFlags(_temp)
+		c.flags = C.VkEventCreateFlags(temp_in_VkEventCreateFlags)
 	}
 }
 func (g *EventCreateInfo) fromC(c *C.VkEventCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkEventCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkEventCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = EventCreateFlags(_temp)
+		g.Flags = EventCreateFlags(temp_in_VkEventCreateFlags)
 	}
 }
 
@@ -4509,48 +4509,48 @@ func (g *QueryPoolCreateInfo) toC(c *C.VkQueryPoolCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueryPoolCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkQueryPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkQueryPoolCreateFlags(_temp)
+		c.flags = C.VkQueryPoolCreateFlags(temp_in_VkQueryPoolCreateFlags)
 	}
 	c.queryType = C.VkQueryType(g.QueryType)
 	c.queryCount = C.uint32_t(g.QueryCount)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueryPipelineStatisticFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
+			temp_in_VkQueryPipelineStatisticFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(_temp)
+		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
 }
 func (g *QueryPoolCreateInfo) fromC(c *C.VkQueryPoolCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkQueryPoolCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkQueryPoolCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = QueryPoolCreateFlags(_temp)
+		g.Flags = QueryPoolCreateFlags(temp_in_VkQueryPoolCreateFlags)
 	}
 	g.QueryType = QueryType(c.queryType)
 	g.QueryCount = uint32(c.queryCount)
 	{
-		var _temp Flags
+		var temp_in_VkQueryPipelineStatisticFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
+			temp_in_VkQueryPipelineStatisticFlags = Flags(temp_in_VkFlags)
 		}
-		g.PipelineStatistics = QueryPipelineStatisticFlags(_temp)
+		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
 }
 
@@ -4630,18 +4630,18 @@ func GetQueryPoolResults(device Device, queryPool QueryPool, firstQuery uint32, 
 		}
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(stride))
-		c.stride = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
+		c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueryResultFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkQueryResultFlags(_temp)
+		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
 	}
 	c._ret = C.vkGetQueryPoolResults(c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 	_ret = Result(c._ret)
@@ -4675,27 +4675,27 @@ func (g *BufferCreateInfo) toC(c *C.VkBufferCreateInfo, _sa *stackAllocator) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkBufferCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkBufferCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkBufferCreateFlags(_temp)
+		c.flags = C.VkBufferCreateFlags(temp_in_VkBufferCreateFlags)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkBufferUsageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Usage)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
+			temp_in_VkBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.usage = C.VkBufferUsageFlags(_temp)
+		c.usage = C.VkBufferUsageFlags(temp_in_VkBufferUsageFlags)
 	}
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
@@ -4711,27 +4711,27 @@ func (g *BufferCreateInfo) fromC(c *C.VkBufferCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkBufferCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkBufferCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = BufferCreateFlags(_temp)
+		g.Flags = BufferCreateFlags(temp_in_VkBufferCreateFlags)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkBufferUsageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+			temp_in_VkBufferUsageFlags = Flags(temp_in_VkFlags)
 		}
-		g.Usage = BufferUsageFlags(_temp)
+		g.Usage = BufferUsageFlags(temp_in_VkBufferUsageFlags)
 	}
 	g.SharingMode = SharingMode(c.sharingMode)
 	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
@@ -4802,50 +4802,50 @@ func (g *BufferViewCreateInfo) toC(c *C.VkBufferViewCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkBufferViewCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkBufferViewCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkBufferViewCreateFlags(_temp)
+		c.flags = C.VkBufferViewCreateFlags(temp_in_VkBufferViewCreateFlags)
 	}
 	c.buffer = C.VkBuffer(g.Buffer)
 	c.format = C.VkFormat(g.Format)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Range))
-		c.rang = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
+		c.rang = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkBufferViewCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkBufferViewCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = BufferViewCreateFlags(_temp)
+		g.Flags = BufferViewCreateFlags(temp_in_VkBufferViewCreateFlags)
 	}
 	g.Buffer = Buffer(c.buffer)
 	g.Format = Format(c.format)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.rang))
-		g.Range = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rang))
+		g.Range = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 
@@ -4941,13 +4941,13 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, _sa *stackAllocator) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkImageCreateFlags(_temp)
+		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
 	c.imageType = C.VkImageType(g.ImageType)
 	c.format = C.VkFormat(g.Format)
@@ -4957,13 +4957,13 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, _sa *stackAllocator) {
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
 	c.tiling = C.VkImageTiling(g.Tiling)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageUsageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Usage)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.usage = C.VkImageUsageFlags(_temp)
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
@@ -4980,13 +4980,13 @@ func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkImageCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkImageCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = ImageCreateFlags(_temp)
+		g.Flags = ImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
 	g.ImageType = ImageType(c.imageType)
 	g.Format = Format(c.format)
@@ -4996,13 +4996,13 @@ func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
 	g.Samples = SampleCountFlagBits(c.samples)
 	g.Tiling = ImageTiling(c.tiling)
 	{
-		var _temp Flags
+		var temp_in_VkImageUsageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
 		}
-		g.Usage = ImageUsageFlags(_temp)
+		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 	g.SharingMode = SharingMode(c.sharingMode)
 	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
@@ -5069,56 +5069,56 @@ type SubresourceLayout struct {
 
 func (g *SubresourceLayout) toC(c *C.VkSubresourceLayout) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.RowPitch))
-		c.rowPitch = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.RowPitch))
+		c.rowPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.ArrayPitch))
-		c.arrayPitch = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ArrayPitch))
+		c.arrayPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.DepthPitch))
-		c.depthPitch = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.DepthPitch))
+		c.depthPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *SubresourceLayout) fromC(c *C.VkSubresourceLayout) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.rowPitch))
-		g.RowPitch = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rowPitch))
+		g.RowPitch = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.arrayPitch))
-		g.ArrayPitch = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.arrayPitch))
+		g.ArrayPitch = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.depthPitch))
-		g.DepthPitch = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.depthPitch))
+		g.DepthPitch = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func GetImageSubresourceLayout(device Device, image Image, subresource *ImageSubresource, layout *SubresourceLayout) {
@@ -5207,13 +5207,13 @@ type ImageSubresourceRange struct {
 
 func (g *ImageSubresourceRange) toC(c *C.VkImageSubresourceRange) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageAspectFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.aspectMask = C.VkImageAspectFlags(_temp)
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	c.baseMipLevel = C.uint32_t(g.BaseMipLevel)
 	c.levelCount = C.uint32_t(g.LevelCount)
@@ -5222,13 +5222,13 @@ func (g *ImageSubresourceRange) toC(c *C.VkImageSubresourceRange) {
 }
 func (g *ImageSubresourceRange) fromC(c *C.VkImageSubresourceRange) {
 	{
-		var _temp Flags
+		var temp_in_VkImageAspectFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
 		}
-		g.AspectMask = ImageAspectFlags(_temp)
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.BaseMipLevel = uint32(c.baseMipLevel)
 	g.LevelCount = uint32(c.levelCount)
@@ -5251,13 +5251,13 @@ func (g *ImageViewCreateInfo) toC(c *C.VkImageViewCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageViewCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkImageViewCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkImageViewCreateFlags(_temp)
+		c.flags = C.VkImageViewCreateFlags(temp_in_VkImageViewCreateFlags)
 	}
 	c.image = C.VkImage(g.Image)
 	c.viewType = C.VkImageViewType(g.ViewType)
@@ -5269,13 +5269,13 @@ func (g *ImageViewCreateInfo) fromC(c *C.VkImageViewCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkImageViewCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkImageViewCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = ImageViewCreateFlags(_temp)
+		g.Flags = ImageViewCreateFlags(temp_in_VkImageViewCreateFlags)
 	}
 	g.Image = Image(c.image)
 	g.ViewType = ImageViewType(c.viewType)
@@ -5344,13 +5344,13 @@ func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, _sa *stackAl
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkShaderModuleCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkShaderModuleCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkShaderModuleCreateFlags(_temp)
+		c.flags = C.VkShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
 	}
 	c.codeSize = C.size_t(g.CodeSize)
 	{
@@ -5362,13 +5362,13 @@ func (g *ShaderModuleCreateInfo) fromC(c *C.VkShaderModuleCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkShaderModuleCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkShaderModuleCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = ShaderModuleCreateFlags(_temp)
+		g.Flags = ShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
 	}
 	g.CodeSize = uint(c.codeSize)
 	{
@@ -5438,13 +5438,13 @@ func (g *PipelineCacheCreateInfo) toC(c *C.VkPipelineCacheCreateInfo, _sa *stack
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineCacheCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineCacheCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineCacheCreateFlags(_temp)
+		c.flags = C.VkPipelineCacheCreateFlags(temp_in_VkPipelineCacheCreateFlags)
 	}
 	c.initialDataSize = C.size_t(len(g.InitialData))
 	{
@@ -5459,13 +5459,13 @@ func (g *PipelineCacheCreateInfo) fromC(c *C.VkPipelineCacheCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineCacheCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineCacheCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineCacheCreateFlags(_temp)
+		g.Flags = PipelineCacheCreateFlags(temp_in_VkPipelineCacheCreateFlags)
 	}
 	g.InitialData = make([]byte, int(c.initialDataSize))
 	{
@@ -5662,13 +5662,13 @@ func (g *PipelineShaderStageCreateInfo) toC(c *C.VkPipelineShaderStageCreateInfo
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineShaderStageCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineShaderStageCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineShaderStageCreateFlags(_temp)
+		c.flags = C.VkPipelineShaderStageCreateFlags(temp_in_VkPipelineShaderStageCreateFlags)
 	}
 	c.stage = C.VkShaderStageFlagBits(g.Stage)
 	c.module = C.VkShaderModule(g.Module)
@@ -5682,13 +5682,13 @@ func (g *PipelineShaderStageCreateInfo) fromC(c *C.VkPipelineShaderStageCreateIn
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineShaderStageCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineShaderStageCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineShaderStageCreateFlags(_temp)
+		g.Flags = PipelineShaderStageCreateFlags(temp_in_VkPipelineShaderStageCreateFlags)
 	}
 	g.Stage = ShaderStageFlagBits(c.stage)
 	g.Module = ShaderModule(c.module)
@@ -5762,13 +5762,13 @@ func (g *PipelineVertexInputStateCreateInfo) toC(c *C.VkPipelineVertexInputState
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineVertexInputStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineVertexInputStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineVertexInputStateCreateFlags(_temp)
+		c.flags = C.VkPipelineVertexInputStateCreateFlags(temp_in_VkPipelineVertexInputStateCreateFlags)
 	}
 	c.vertexBindingDescriptionCount = C.uint32_t(len(g.VertexBindingDescriptions))
 	{
@@ -5791,13 +5791,13 @@ func (g *PipelineVertexInputStateCreateInfo) fromC(c *C.VkPipelineVertexInputSta
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineVertexInputStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineVertexInputStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineVertexInputStateCreateFlags(_temp)
+		g.Flags = PipelineVertexInputStateCreateFlags(temp_in_VkPipelineVertexInputStateCreateFlags)
 	}
 	g.VertexBindingDescriptions = make([]VertexInputBindingDescription, int(c.vertexBindingDescriptionCount))
 	{
@@ -5848,38 +5848,38 @@ func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyS
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineInputAssemblyStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineInputAssemblyStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineInputAssemblyStateCreateFlags(_temp)
+		c.flags = C.VkPipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
 	}
 	c.topology = C.VkPrimitiveTopology(g.Topology)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.PrimitiveRestartEnable))
-		c.primitiveRestartEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.PrimitiveRestartEnable))
+		c.primitiveRestartEnable = C.VkBool32(temp_in_VkBool32)
 	}
 }
 func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssemblyStateCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineInputAssemblyStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineInputAssemblyStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineInputAssemblyStateCreateFlags(_temp)
+		g.Flags = PipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
 	}
 	g.Topology = PrimitiveTopology(c.topology)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.primitiveRestartEnable))
-		g.PrimitiveRestartEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.primitiveRestartEnable))
+		g.PrimitiveRestartEnable = Bool32(temp_in_VkBool32)
 	}
 }
 
@@ -5895,13 +5895,13 @@ func (g *PipelineTessellationStateCreateInfo) toC(c *C.VkPipelineTessellationSta
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineTessellationStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineTessellationStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineTessellationStateCreateFlags(_temp)
+		c.flags = C.VkPipelineTessellationStateCreateFlags(temp_in_VkPipelineTessellationStateCreateFlags)
 	}
 	c.patchControlPoints = C.uint32_t(g.PatchControlPoints)
 }
@@ -5909,13 +5909,13 @@ func (g *PipelineTessellationStateCreateInfo) fromC(c *C.VkPipelineTessellationS
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineTessellationStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineTessellationStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineTessellationStateCreateFlags(_temp)
+		g.Flags = PipelineTessellationStateCreateFlags(temp_in_VkPipelineTessellationStateCreateFlags)
 	}
 	g.PatchControlPoints = uint32(c.patchControlPoints)
 }
@@ -6001,13 +6001,13 @@ func (g *PipelineViewportStateCreateInfo) toC(c *C.VkPipelineViewportStateCreate
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineViewportStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineViewportStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineViewportStateCreateFlags(_temp)
+		c.flags = C.VkPipelineViewportStateCreateFlags(temp_in_VkPipelineViewportStateCreateFlags)
 	}
 	c.viewportCount = C.uint32_t(len(g.Viewports))
 	{
@@ -6030,13 +6030,13 @@ func (g *PipelineViewportStateCreateInfo) fromC(c *C.VkPipelineViewportStateCrea
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineViewportStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineViewportStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineViewportStateCreateFlags(_temp)
+		g.Flags = PipelineViewportStateCreateFlags(temp_in_VkPipelineViewportStateCreateFlags)
 	}
 	g.Viewports = make([]Viewport, int(c.viewportCount))
 	{
@@ -6100,39 +6100,39 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineRasterizationStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineRasterizationStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineRasterizationStateCreateFlags(_temp)
+		c.flags = C.VkPipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthClampEnable))
-		c.depthClampEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthClampEnable))
+		c.depthClampEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.RasterizerDiscardEnable))
-		c.rasterizerDiscardEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.RasterizerDiscardEnable))
+		c.rasterizerDiscardEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.polygonMode = C.VkPolygonMode(g.PolygonMode)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkCullModeFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.CullMode)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CullMode)))
+			temp_in_VkCullModeFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.cullMode = C.VkCullModeFlags(_temp)
+		c.cullMode = C.VkCullModeFlags(temp_in_VkCullModeFlags)
 	}
 	c.frontFace = C.VkFrontFace(g.FrontFace)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthBiasEnable))
-		c.depthBiasEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBiasEnable))
+		c.depthBiasEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.depthBiasConstantFactor = C.float(g.DepthBiasConstantFactor)
 	c.depthBiasClamp = C.float(g.DepthBiasClamp)
@@ -6143,39 +6143,39 @@ func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizatio
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineRasterizationStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineRasterizationStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineRasterizationStateCreateFlags(_temp)
+		g.Flags = PipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthClampEnable))
-		g.DepthClampEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthClampEnable))
+		g.DepthClampEnable = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.rasterizerDiscardEnable))
-		g.RasterizerDiscardEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.rasterizerDiscardEnable))
+		g.RasterizerDiscardEnable = Bool32(temp_in_VkBool32)
 	}
 	g.PolygonMode = PolygonMode(c.polygonMode)
 	{
-		var _temp Flags
+		var temp_in_VkCullModeFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.cullMode)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.cullMode)))
+			temp_in_VkCullModeFlags = Flags(temp_in_VkFlags)
 		}
-		g.CullMode = CullModeFlags(_temp)
+		g.CullMode = CullModeFlags(temp_in_VkCullModeFlags)
 	}
 	g.FrontFace = FrontFace(c.frontFace)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthBiasEnable))
-		g.DepthBiasEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBiasEnable))
+		g.DepthBiasEnable = Bool32(temp_in_VkBool32)
 	}
 	g.DepthBiasConstantFactor = float32(c.depthBiasConstantFactor)
 	g.DepthBiasClamp = float32(c.depthBiasClamp)
@@ -6201,57 +6201,57 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineMultisampleStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineMultisampleStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineMultisampleStateCreateFlags(_temp)
+		c.flags = C.VkPipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
 	}
 	c.rasterizationSamples = C.VkSampleCountFlagBits(g.RasterizationSamples)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.SampleShadingEnable))
-		c.sampleShadingEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SampleShadingEnable))
+		c.sampleShadingEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.minSampleShading = C.float(g.MinSampleShading)
 	{
 		c.pSampleMask = (*C.VkSampleMask)(_sa.alloc(C.sizeof_VkSampleMask))
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)(*g.SampleMask))
-			*c.pSampleMask = C.VkSampleMask(_temp)
+			var temp_in_VkSampleMask C.uint32_t
+			temp_in_VkSampleMask = C.uint32_t((uint32)(*g.SampleMask))
+			*c.pSampleMask = C.VkSampleMask(temp_in_VkSampleMask)
 		}
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.AlphaToCoverageEnable))
-		c.alphaToCoverageEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToCoverageEnable))
+		c.alphaToCoverageEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.AlphaToOneEnable))
-		c.alphaToOneEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToOneEnable))
+		c.alphaToOneEnable = C.VkBool32(temp_in_VkBool32)
 	}
 }
 func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleStateCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineMultisampleStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineMultisampleStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineMultisampleStateCreateFlags(_temp)
+		g.Flags = PipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
 	}
 	g.RasterizationSamples = SampleCountFlagBits(c.rasterizationSamples)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.sampleShadingEnable))
-		g.SampleShadingEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.sampleShadingEnable))
+		g.SampleShadingEnable = Bool32(temp_in_VkBool32)
 	}
 	g.MinSampleShading = float32(c.minSampleShading)
 	{
@@ -6259,20 +6259,20 @@ func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleSta
 			g.SampleMask = new(SampleMask)
 		}
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)(*c.pSampleMask))
-			*g.SampleMask = SampleMask(_temp)
+			var temp_in_VkSampleMask uint32
+			temp_in_VkSampleMask = uint32((C.uint32_t)(*c.pSampleMask))
+			*g.SampleMask = SampleMask(temp_in_VkSampleMask)
 		}
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.alphaToCoverageEnable))
-		g.AlphaToCoverageEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToCoverageEnable))
+		g.AlphaToCoverageEnable = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.alphaToOneEnable))
-		g.AlphaToOneEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToOneEnable))
+		g.AlphaToOneEnable = Bool32(temp_in_VkBool32)
 	}
 }
 
@@ -6359,34 +6359,34 @@ func (g *PipelineDepthStencilStateCreateInfo) toC(c *C.VkPipelineDepthStencilSta
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineDepthStencilStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineDepthStencilStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineDepthStencilStateCreateFlags(_temp)
+		c.flags = C.VkPipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthTestEnable))
-		c.depthTestEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthTestEnable))
+		c.depthTestEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthWriteEnable))
-		c.depthWriteEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthWriteEnable))
+		c.depthWriteEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.depthCompareOp = C.VkCompareOp(g.DepthCompareOp)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.DepthBoundsTestEnable))
-		c.depthBoundsTestEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBoundsTestEnable))
+		c.depthBoundsTestEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.StencilTestEnable))
-		c.stencilTestEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.StencilTestEnable))
+		c.stencilTestEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	g.Front.toC(&c.front)
 	g.Back.toC(&c.back)
@@ -6397,34 +6397,34 @@ func (g *PipelineDepthStencilStateCreateInfo) fromC(c *C.VkPipelineDepthStencilS
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineDepthStencilStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineDepthStencilStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineDepthStencilStateCreateFlags(_temp)
+		g.Flags = PipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthTestEnable))
-		g.DepthTestEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthTestEnable))
+		g.DepthTestEnable = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthWriteEnable))
-		g.DepthWriteEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthWriteEnable))
+		g.DepthWriteEnable = Bool32(temp_in_VkBool32)
 	}
 	g.DepthCompareOp = CompareOp(c.depthCompareOp)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.depthBoundsTestEnable))
-		g.DepthBoundsTestEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBoundsTestEnable))
+		g.DepthBoundsTestEnable = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.stencilTestEnable))
-		g.StencilTestEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.stencilTestEnable))
+		g.StencilTestEnable = Bool32(temp_in_VkBool32)
 	}
 	g.Front.fromC(&c.front)
 	g.Back.fromC(&c.back)
@@ -6560,9 +6560,9 @@ type PipelineColorBlendAttachmentState struct {
 
 func (g *PipelineColorBlendAttachmentState) toC(c *C.VkPipelineColorBlendAttachmentState) {
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.BlendEnable))
-		c.blendEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.BlendEnable))
+		c.blendEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.srcColorBlendFactor = C.VkBlendFactor(g.SrcColorBlendFactor)
 	c.dstColorBlendFactor = C.VkBlendFactor(g.DstColorBlendFactor)
@@ -6571,20 +6571,20 @@ func (g *PipelineColorBlendAttachmentState) toC(c *C.VkPipelineColorBlendAttachm
 	c.dstAlphaBlendFactor = C.VkBlendFactor(g.DstAlphaBlendFactor)
 	c.alphaBlendOp = C.VkBlendOp(g.AlphaBlendOp)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkColorComponentFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.ColorWriteMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ColorWriteMask)))
+			temp_in_VkColorComponentFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.colorWriteMask = C.VkColorComponentFlags(_temp)
+		c.colorWriteMask = C.VkColorComponentFlags(temp_in_VkColorComponentFlags)
 	}
 }
 func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttachmentState) {
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.blendEnable))
-		g.BlendEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.blendEnable))
+		g.BlendEnable = Bool32(temp_in_VkBool32)
 	}
 	g.SrcColorBlendFactor = BlendFactor(c.srcColorBlendFactor)
 	g.DstColorBlendFactor = BlendFactor(c.dstColorBlendFactor)
@@ -6593,13 +6593,13 @@ func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttac
 	g.DstAlphaBlendFactor = BlendFactor(c.dstAlphaBlendFactor)
 	g.AlphaBlendOp = BlendOp(c.alphaBlendOp)
 	{
-		var _temp Flags
+		var temp_in_VkColorComponentFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.colorWriteMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.colorWriteMask)))
+			temp_in_VkColorComponentFlags = Flags(temp_in_VkFlags)
 		}
-		g.ColorWriteMask = ColorComponentFlags(_temp)
+		g.ColorWriteMask = ColorComponentFlags(temp_in_VkColorComponentFlags)
 	}
 }
 
@@ -6617,18 +6617,18 @@ func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCr
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineColorBlendStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineColorBlendStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineColorBlendStateCreateFlags(_temp)
+		c.flags = C.VkPipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
 	}
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.LogicOpEnable))
-		c.logicOpEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.LogicOpEnable))
+		c.logicOpEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.logicOp = C.VkLogicOp(g.LogicOp)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
@@ -6647,18 +6647,18 @@ func (g *PipelineColorBlendStateCreateInfo) fromC(c *C.VkPipelineColorBlendState
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineColorBlendStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineColorBlendStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineColorBlendStateCreateFlags(_temp)
+		g.Flags = PipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
 	}
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.logicOpEnable))
-		g.LogicOpEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.logicOpEnable))
+		g.LogicOpEnable = Bool32(temp_in_VkBool32)
 	}
 	g.LogicOp = LogicOp(c.logicOp)
 	g.Attachments = make([]PipelineColorBlendAttachmentState, int(c.attachmentCount))
@@ -6706,13 +6706,13 @@ func (g *PipelineDynamicStateCreateInfo) toC(c *C.VkPipelineDynamicStateCreateIn
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineDynamicStateCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineDynamicStateCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineDynamicStateCreateFlags(_temp)
+		c.flags = C.VkPipelineDynamicStateCreateFlags(temp_in_VkPipelineDynamicStateCreateFlags)
 	}
 	c.dynamicStateCount = C.uint32_t(len(g.DynamicStates))
 	{
@@ -6727,13 +6727,13 @@ func (g *PipelineDynamicStateCreateInfo) fromC(c *C.VkPipelineDynamicStateCreate
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineDynamicStateCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineDynamicStateCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineDynamicStateCreateFlags(_temp)
+		g.Flags = PipelineDynamicStateCreateFlags(temp_in_VkPipelineDynamicStateCreateFlags)
 	}
 	g.DynamicStates = make([]DynamicState, int(c.dynamicStateCount))
 	{
@@ -6772,13 +6772,13 @@ func (g *GraphicsPipelineCreateInfo) toC(c *C.VkGraphicsPipelineCreateInfo, _sa 
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineCreateFlags(_temp)
+		c.flags = C.VkPipelineCreateFlags(temp_in_VkPipelineCreateFlags)
 	}
 	c.stageCount = C.uint32_t(len(g.Stages))
 	{
@@ -6834,13 +6834,13 @@ func (g *GraphicsPipelineCreateInfo) fromC(c *C.VkGraphicsPipelineCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineCreateFlags(_temp)
+		g.Flags = PipelineCreateFlags(temp_in_VkPipelineCreateFlags)
 	}
 	g.Stages = make([]PipelineShaderStageCreateInfo, int(c.stageCount))
 	{
@@ -6961,13 +6961,13 @@ func (g *ComputePipelineCreateInfo) toC(c *C.VkComputePipelineCreateInfo, _sa *s
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineCreateFlags(_temp)
+		c.flags = C.VkPipelineCreateFlags(temp_in_VkPipelineCreateFlags)
 	}
 	g.Stage.toC(&c.stage, _sa)
 	c.layout = C.VkPipelineLayout(g.Layout)
@@ -6978,13 +6978,13 @@ func (g *ComputePipelineCreateInfo) fromC(c *C.VkComputePipelineCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineCreateFlags(_temp)
+		g.Flags = PipelineCreateFlags(temp_in_VkPipelineCreateFlags)
 	}
 	g.Stage.fromC(&c.stage)
 	g.Layout = PipelineLayout(c.layout)
@@ -7056,26 +7056,26 @@ type PushConstantRange struct {
 
 func (g *PushConstantRange) toC(c *C.VkPushConstantRange) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkShaderStageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.StageFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StageFlags)))
+			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.stageFlags = C.VkShaderStageFlags(_temp)
+		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
 	c.offset = C.uint32_t(g.Offset)
 	c.size = C.uint32_t(g.Size)
 }
 func (g *PushConstantRange) fromC(c *C.VkPushConstantRange) {
 	{
-		var _temp Flags
+		var temp_in_VkShaderStageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
+			temp_in_VkShaderStageFlags = Flags(temp_in_VkFlags)
 		}
-		g.StageFlags = ShaderStageFlags(_temp)
+		g.StageFlags = ShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
 	g.Offset = uint32(c.offset)
 	g.Size = uint32(c.size)
@@ -7093,13 +7093,13 @@ func (g *PipelineLayoutCreateInfo) toC(c *C.VkPipelineLayoutCreateInfo, _sa *sta
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineLayoutCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkPipelineLayoutCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkPipelineLayoutCreateFlags(_temp)
+		c.flags = C.VkPipelineLayoutCreateFlags(temp_in_VkPipelineLayoutCreateFlags)
 	}
 	c.setLayoutCount = C.uint32_t(len(g.SetLayouts))
 	{
@@ -7122,13 +7122,13 @@ func (g *PipelineLayoutCreateInfo) fromC(c *C.VkPipelineLayoutCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkPipelineLayoutCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkPipelineLayoutCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = PipelineLayoutCreateFlags(_temp)
+		g.Flags = PipelineLayoutCreateFlags(temp_in_VkPipelineLayoutCreateFlags)
 	}
 	g.SetLayouts = make([]DescriptorSetLayout, int(c.setLayoutCount))
 	{
@@ -7268,13 +7268,13 @@ func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSamplerCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSamplerCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSamplerCreateFlags(_temp)
+		c.flags = C.VkSamplerCreateFlags(temp_in_VkSamplerCreateFlags)
 	}
 	c.magFilter = C.VkFilter(g.MagFilter)
 	c.minFilter = C.VkFilter(g.MinFilter)
@@ -7284,37 +7284,37 @@ func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
 	c.addressModeW = C.VkSamplerAddressMode(g.AddressModeW)
 	c.mipLodBias = C.float(g.MipLodBias)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.AnisotropyEnable))
-		c.anisotropyEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.AnisotropyEnable))
+		c.anisotropyEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.maxAnisotropy = C.float(g.MaxAnisotropy)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.CompareEnable))
-		c.compareEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.CompareEnable))
+		c.compareEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	c.compareOp = C.VkCompareOp(g.CompareOp)
 	c.minLod = C.float(g.MinLod)
 	c.maxLod = C.float(g.MaxLod)
 	c.borderColor = C.VkBorderColor(g.BorderColor)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.UnnormalizedCoordinates))
-		c.unnormalizedCoordinates = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.UnnormalizedCoordinates))
+		c.unnormalizedCoordinates = C.VkBool32(temp_in_VkBool32)
 	}
 }
 func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkSamplerCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSamplerCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SamplerCreateFlags(_temp)
+		g.Flags = SamplerCreateFlags(temp_in_VkSamplerCreateFlags)
 	}
 	g.MagFilter = Filter(c.magFilter)
 	g.MinFilter = Filter(c.minFilter)
@@ -7324,24 +7324,24 @@ func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
 	g.AddressModeW = SamplerAddressMode(c.addressModeW)
 	g.MipLodBias = float32(c.mipLodBias)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.anisotropyEnable))
-		g.AnisotropyEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.anisotropyEnable))
+		g.AnisotropyEnable = Bool32(temp_in_VkBool32)
 	}
 	g.MaxAnisotropy = float32(c.maxAnisotropy)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.compareEnable))
-		g.CompareEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.compareEnable))
+		g.CompareEnable = Bool32(temp_in_VkBool32)
 	}
 	g.CompareOp = CompareOp(c.compareOp)
 	g.MinLod = float32(c.minLod)
 	g.MaxLod = float32(c.maxLod)
 	g.BorderColor = BorderColor(c.borderColor)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.unnormalizedCoordinates))
-		g.UnnormalizedCoordinates = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.unnormalizedCoordinates))
+		g.UnnormalizedCoordinates = Bool32(temp_in_VkBool32)
 	}
 }
 
@@ -7426,13 +7426,13 @@ func (g *DescriptorSetLayoutBinding) toC(c *C.VkDescriptorSetLayoutBinding, _sa 
 	c.descriptorType = C.VkDescriptorType(g.DescriptorType)
 	c.descriptorCount = C.uint32_t(g.DescriptorCount)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkShaderStageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.StageFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StageFlags)))
+			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.stageFlags = C.VkShaderStageFlags(_temp)
+		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
 	{
 		c.pImmutableSamplers = (*C.VkSampler)(_sa.alloc(C.sizeof_VkSampler * uint(len(g.ImmutableSamplers))))
@@ -7447,13 +7447,13 @@ func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
 	g.DescriptorType = DescriptorType(c.descriptorType)
 	g.DescriptorCount = uint32(c.descriptorCount)
 	{
-		var _temp Flags
+		var temp_in_VkShaderStageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
+			temp_in_VkShaderStageFlags = Flags(temp_in_VkFlags)
 		}
-		g.StageFlags = ShaderStageFlags(_temp)
+		g.StageFlags = ShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
 	{
 		slice2 := (*[1 << 31]C.VkSampler)(unsafe.Pointer(c.pImmutableSamplers))[:len(g.ImmutableSamplers):len(g.ImmutableSamplers)]
@@ -7474,13 +7474,13 @@ func (g *DescriptorSetLayoutCreateInfo) toC(c *C.VkDescriptorSetLayoutCreateInfo
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDescriptorSetLayoutCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDescriptorSetLayoutCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkDescriptorSetLayoutCreateFlags(_temp)
+		c.flags = C.VkDescriptorSetLayoutCreateFlags(temp_in_VkDescriptorSetLayoutCreateFlags)
 	}
 	c.bindingCount = C.uint32_t(len(g.Bindings))
 	{
@@ -7495,13 +7495,13 @@ func (g *DescriptorSetLayoutCreateInfo) fromC(c *C.VkDescriptorSetLayoutCreateIn
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkDescriptorSetLayoutCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDescriptorSetLayoutCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = DescriptorSetLayoutCreateFlags(_temp)
+		g.Flags = DescriptorSetLayoutCreateFlags(temp_in_VkDescriptorSetLayoutCreateFlags)
 	}
 	g.Bindings = make([]DescriptorSetLayoutBinding, int(c.bindingCount))
 	{
@@ -7583,13 +7583,13 @@ func (g *DescriptorPoolCreateInfo) toC(c *C.VkDescriptorPoolCreateInfo, _sa *sta
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDescriptorPoolCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDescriptorPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkDescriptorPoolCreateFlags(_temp)
+		c.flags = C.VkDescriptorPoolCreateFlags(temp_in_VkDescriptorPoolCreateFlags)
 	}
 	c.maxSets = C.uint32_t(g.MaxSets)
 	c.poolSizeCount = C.uint32_t(len(g.PoolSizes))
@@ -7605,13 +7605,13 @@ func (g *DescriptorPoolCreateInfo) fromC(c *C.VkDescriptorPoolCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkDescriptorPoolCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDescriptorPoolCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = DescriptorPoolCreateFlags(_temp)
+		g.Flags = DescriptorPoolCreateFlags(temp_in_VkDescriptorPoolCreateFlags)
 	}
 	g.MaxSets = uint32(c.maxSets)
 	g.PoolSizes = make([]DescriptorPoolSize, int(c.poolSizeCount))
@@ -7682,13 +7682,13 @@ func ResetDescriptorPool(device Device, descriptorPool DescriptorPool, flags Des
 	c.device = C.VkDevice(device)
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDescriptorPoolResetFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkDescriptorPoolResetFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkDescriptorPoolResetFlags(_temp)
+		c.flags = C.VkDescriptorPoolResetFlags(temp_in_VkDescriptorPoolResetFlags)
 	}
 	c._ret = C.vkResetDescriptorPool(c.device, c.descriptorPool, c.flags)
 	_ret = Result(c._ret)
@@ -7806,27 +7806,27 @@ type DescriptorBufferInfo struct {
 func (g *DescriptorBufferInfo) toC(c *C.VkDescriptorBufferInfo) {
 	c.buffer = C.VkBuffer(g.Buffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Range))
-		c.rang = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
+		c.rang = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
 	g.Buffer = Buffer(c.buffer)
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.rang))
-		g.Range = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rang))
+		g.Range = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 
@@ -7972,13 +7972,13 @@ func (g *FramebufferCreateInfo) toC(c *C.VkFramebufferCreateInfo, _sa *stackAllo
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkFramebufferCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkFramebufferCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkFramebufferCreateFlags(_temp)
+		c.flags = C.VkFramebufferCreateFlags(temp_in_VkFramebufferCreateFlags)
 	}
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
@@ -7997,13 +7997,13 @@ func (g *FramebufferCreateInfo) fromC(c *C.VkFramebufferCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkFramebufferCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkFramebufferCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = FramebufferCreateFlags(_temp)
+		g.Flags = FramebufferCreateFlags(temp_in_VkFramebufferCreateFlags)
 	}
 	g.RenderPass = RenderPass(c.renderPass)
 	g.Attachments = make([]ImageView, int(c.attachmentCount))
@@ -8104,13 +8104,13 @@ type AttachmentDescription struct {
 
 func (g *AttachmentDescription) toC(c *C.VkAttachmentDescription) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkAttachmentDescriptionFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkAttachmentDescriptionFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkAttachmentDescriptionFlags(_temp)
+		c.flags = C.VkAttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
 	}
 	c.format = C.VkFormat(g.Format)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
@@ -8123,13 +8123,13 @@ func (g *AttachmentDescription) toC(c *C.VkAttachmentDescription) {
 }
 func (g *AttachmentDescription) fromC(c *C.VkAttachmentDescription) {
 	{
-		var _temp Flags
+		var temp_in_VkAttachmentDescriptionFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkAttachmentDescriptionFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = AttachmentDescriptionFlags(_temp)
+		g.Flags = AttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
 	}
 	g.Format = Format(c.format)
 	g.Samples = SampleCountFlagBits(c.samples)
@@ -8179,13 +8179,13 @@ type SubpassDescription struct {
 
 func (g *SubpassDescription) toC(c *C.VkSubpassDescription, _sa *stackAllocator) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkSubpassDescriptionFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSubpassDescriptionFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkSubpassDescriptionFlags(_temp)
+		c.flags = C.VkSubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
 	}
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
@@ -8226,13 +8226,13 @@ func (g *SubpassDescription) toC(c *C.VkSubpassDescription, _sa *stackAllocator)
 }
 func (g *SubpassDescription) fromC(c *C.VkSubpassDescription) {
 	{
-		var _temp Flags
+		var temp_in_VkSubpassDescriptionFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSubpassDescriptionFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = SubpassDescriptionFlags(_temp)
+		g.Flags = SubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
 	}
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
 	g.InputAttachments = make([]AttachmentReference, int(c.inputAttachmentCount))
@@ -8286,98 +8286,98 @@ func (g *SubpassDependency) toC(c *C.VkSubpassDependency) {
 	c.srcSubpass = C.uint32_t(g.SrcSubpass)
 	c.dstSubpass = C.uint32_t(g.DstSubpass)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineStageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.srcStageMask = C.VkPipelineStageFlags(_temp)
+		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkPipelineStageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.dstStageMask = C.VkPipelineStageFlags(_temp)
+		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkAccessFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.srcAccessMask = C.VkAccessFlags(_temp)
+		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkAccessFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.dstAccessMask = C.VkAccessFlags(_temp)
+		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkDependencyFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
+			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.dependencyFlags = C.VkDependencyFlags(_temp)
+		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
 	}
 }
 func (g *SubpassDependency) fromC(c *C.VkSubpassDependency) {
 	g.SrcSubpass = uint32(c.srcSubpass)
 	g.DstSubpass = uint32(c.dstSubpass)
 	{
-		var _temp Flags
+		var temp_in_VkPipelineStageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
+			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
 		}
-		g.SrcStageMask = PipelineStageFlags(_temp)
+		g.SrcStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkPipelineStageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
+			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
 		}
-		g.DstStageMask = PipelineStageFlags(_temp)
+		g.DstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkAccessFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
 		}
-		g.SrcAccessMask = AccessFlags(_temp)
+		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkAccessFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
 		}
-		g.DstAccessMask = AccessFlags(_temp)
+		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkDependencyFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
+			temp_in_VkDependencyFlags = Flags(temp_in_VkFlags)
 		}
-		g.DependencyFlags = DependencyFlags(_temp)
+		g.DependencyFlags = DependencyFlags(temp_in_VkDependencyFlags)
 	}
 }
 
@@ -8394,13 +8394,13 @@ func (g *RenderPassCreateInfo) toC(c *C.VkRenderPassCreateInfo, _sa *stackAlloca
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkRenderPassCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkRenderPassCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkRenderPassCreateFlags(_temp)
+		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
 	}
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
 	{
@@ -8431,13 +8431,13 @@ func (g *RenderPassCreateInfo) fromC(c *C.VkRenderPassCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkRenderPassCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkRenderPassCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = RenderPassCreateFlags(_temp)
+		g.Flags = RenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
 	}
 	g.Attachments = make([]AttachmentDescription, int(c.attachmentCount))
 	{
@@ -8535,13 +8535,13 @@ func (g *CommandPoolCreateInfo) toC(c *C.VkCommandPoolCreateInfo) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkCommandPoolCreateFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkCommandPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkCommandPoolCreateFlags(_temp)
+		c.flags = C.VkCommandPoolCreateFlags(temp_in_VkCommandPoolCreateFlags)
 	}
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 }
@@ -8549,13 +8549,13 @@ func (g *CommandPoolCreateInfo) fromC(c *C.VkCommandPoolCreateInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkCommandPoolCreateFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkCommandPoolCreateFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = CommandPoolCreateFlags(_temp)
+		g.Flags = CommandPoolCreateFlags(temp_in_VkCommandPoolCreateFlags)
 	}
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 }
@@ -8619,13 +8619,13 @@ func ResetCommandPool(device Device, commandPool CommandPool, flags CommandPoolR
 	c.device = C.VkDevice(device)
 	c.commandPool = C.VkCommandPool(commandPool)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkCommandPoolResetFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkCommandPoolResetFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkCommandPoolResetFlags(_temp)
+		c.flags = C.VkCommandPoolResetFlags(temp_in_VkCommandPoolResetFlags)
 	}
 	c._ret = C.vkResetCommandPool(c.device, c.commandPool, c.flags)
 	_ret = Result(c._ret)
@@ -8732,27 +8732,27 @@ func (g *CommandBufferInheritanceInfo) toC(c *C.VkCommandBufferInheritanceInfo) 
 	c.subpass = C.uint32_t(g.Subpass)
 	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
 	{
-		var _temp C.uint32_t
-		_temp = C.uint32_t((uint32)(g.OcclusionQueryEnable))
-		c.occlusionQueryEnable = C.VkBool32(_temp)
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.OcclusionQueryEnable))
+		c.occlusionQueryEnable = C.VkBool32(temp_in_VkBool32)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueryControlFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.QueryFlags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.QueryFlags)))
+			temp_in_VkQueryControlFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.queryFlags = C.VkQueryControlFlags(_temp)
+		c.queryFlags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
 	}
 	{
-		var _temp C.VkFlags
+		var temp_in_VkQueryPipelineStatisticFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
+			temp_in_VkQueryPipelineStatisticFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(_temp)
+		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
 }
 func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo) {
@@ -8762,27 +8762,27 @@ func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo
 	g.Subpass = uint32(c.subpass)
 	g.Framebuffer = Framebuffer(c.framebuffer)
 	{
-		var _temp uint32
-		_temp = uint32((C.uint32_t)(c.occlusionQueryEnable))
-		g.OcclusionQueryEnable = Bool32(_temp)
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.occlusionQueryEnable))
+		g.OcclusionQueryEnable = Bool32(temp_in_VkBool32)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkQueryControlFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.queryFlags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.queryFlags)))
+			temp_in_VkQueryControlFlags = Flags(temp_in_VkFlags)
 		}
-		g.QueryFlags = QueryControlFlags(_temp)
+		g.QueryFlags = QueryControlFlags(temp_in_VkQueryControlFlags)
 	}
 	{
-		var _temp Flags
+		var temp_in_VkQueryPipelineStatisticFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
+			temp_in_VkQueryPipelineStatisticFlags = Flags(temp_in_VkFlags)
 		}
-		g.PipelineStatistics = QueryPipelineStatisticFlags(_temp)
+		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
 }
 
@@ -8797,13 +8797,13 @@ func (g *CommandBufferBeginInfo) toC(c *C.VkCommandBufferBeginInfo, _sa *stackAl
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
 	{
-		var _temp C.VkFlags
+		var temp_in_VkCommandBufferUsageFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.Flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkCommandBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkCommandBufferUsageFlags(_temp)
+		c.flags = C.VkCommandBufferUsageFlags(temp_in_VkCommandBufferUsageFlags)
 	}
 	{
 		c.pInheritanceInfo = (*C.VkCommandBufferInheritanceInfo)(_sa.alloc(C.sizeof_VkCommandBufferInheritanceInfo))
@@ -8814,13 +8814,13 @@ func (g *CommandBufferBeginInfo) fromC(c *C.VkCommandBufferBeginInfo) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
 	{
-		var _temp Flags
+		var temp_in_VkCommandBufferUsageFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkCommandBufferUsageFlags = Flags(temp_in_VkFlags)
 		}
-		g.Flags = CommandBufferUsageFlags(_temp)
+		g.Flags = CommandBufferUsageFlags(temp_in_VkCommandBufferUsageFlags)
 	}
 	{
 		if g.InheritanceInfo == nil {
@@ -8867,13 +8867,13 @@ func ResetCommandBuffer(commandBuffer CommandBuffer, flags CommandBufferResetFla
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkCommandBufferResetFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(flags)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkCommandBufferResetFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.flags = C.VkCommandBufferResetFlags(_temp)
+		c.flags = C.VkCommandBufferResetFlags(temp_in_VkCommandBufferResetFlags)
 	}
 	c._ret = C.vkResetCommandBuffer(c.commandBuffer, c.flags)
 	_ret = Result(c._ret)
@@ -8993,13 +8993,13 @@ func CmdSetStencilCompareMask(commandBuffer CommandBuffer, faceMask StencilFaceF
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkStencilFaceFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(faceMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
+			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.faceMask = C.VkStencilFaceFlags(_temp)
+		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.compareMask = C.uint32_t(compareMask)
 	C.vkCmdSetStencilCompareMask(c.commandBuffer, c.faceMask, c.compareMask)
@@ -9012,13 +9012,13 @@ func CmdSetStencilWriteMask(commandBuffer CommandBuffer, faceMask StencilFaceFla
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkStencilFaceFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(faceMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
+			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.faceMask = C.VkStencilFaceFlags(_temp)
+		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.writeMask = C.uint32_t(writeMask)
 	C.vkCmdSetStencilWriteMask(c.commandBuffer, c.faceMask, c.writeMask)
@@ -9031,13 +9031,13 @@ func CmdSetStencilReference(commandBuffer CommandBuffer, faceMask StencilFaceFla
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	{
-		var _temp C.VkFlags
+		var temp_in_VkStencilFaceFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(faceMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
+			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.faceMask = C.VkStencilFaceFlags(_temp)
+		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.reference = C.uint32_t(reference)
 	C.vkCmdSetStencilReference(c.commandBuffer, c.faceMask, c.reference)
@@ -9099,9 +9099,9 @@ func CmdBindIndexBuffer(commandBuffer CommandBuffer, buffer Buffer, offset Devic
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.indexType = C.VkIndexType(indexType)
 	C.vkCmdBindIndexBuffer(c.commandBuffer, c.buffer, c.offset, c.indexType)
@@ -9131,9 +9131,9 @@ func CmdBindVertexBuffers(commandBuffer CommandBuffer, firstBinding uint32, buff
 		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pOffsets))[:len(offsets):len(offsets)]
 		for i3, _ := range offsets {
 			{
-				var _temp C.uint64_t
-				_temp = C.uint64_t((uint64)(offsets[i3]))
-				slice3[i3] = C.VkDeviceSize(_temp)
+				var temp_in_VkDeviceSize C.uint64_t
+				temp_in_VkDeviceSize = C.uint64_t((uint64)(offsets[i3]))
+				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
 			}
 		}
 	}
@@ -9182,9 +9182,9 @@ func CmdDrawIndirect(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSi
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
@@ -9201,9 +9201,9 @@ func CmdDrawIndexedIndirect(commandBuffer CommandBuffer, buffer Buffer, offset D
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
@@ -9231,9 +9231,9 @@ func CmdDispatchIndirect(commandBuffer CommandBuffer, buffer Buffer, offset Devi
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	C.vkCmdDispatchIndirect(c.commandBuffer, c.buffer, c.offset)
 }
@@ -9246,36 +9246,36 @@ type BufferCopy struct {
 
 func (g *BufferCopy) toC(c *C.VkBufferCopy) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.SrcOffset))
-		c.srcOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SrcOffset))
+		c.srcOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.DstOffset))
-		c.dstOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.DstOffset))
+		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *BufferCopy) fromC(c *C.VkBufferCopy) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.srcOffset))
-		g.SrcOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.srcOffset))
+		g.SrcOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.dstOffset))
-		g.DstOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.dstOffset))
+		g.DstOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func CmdCopyBuffer(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buffer, regions []BufferCopy) {
@@ -9311,13 +9311,13 @@ type ImageSubresourceLayers struct {
 
 func (g *ImageSubresourceLayers) toC(c *C.VkImageSubresourceLayers) {
 	{
-		var _temp C.VkFlags
+		var temp_in_VkImageAspectFlags C.VkFlags
 		{
-			var _temp C.uint32_t
-			_temp = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			_temp = C.VkFlags(_temp)
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
 		}
-		c.aspectMask = C.VkImageAspectFlags(_temp)
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	c.mipLevel = C.uint32_t(g.MipLevel)
 	c.baseArrayLayer = C.uint32_t(g.BaseArrayLayer)
@@ -9325,13 +9325,13 @@ func (g *ImageSubresourceLayers) toC(c *C.VkImageSubresourceLayers) {
 }
 func (g *ImageSubresourceLayers) fromC(c *C.VkImageSubresourceLayers) {
 	{
-		var _temp Flags
+		var temp_in_VkImageAspectFlags Flags
 		{
-			var _temp uint32
-			_temp = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			_temp = Flags(_temp)
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
 		}
-		g.AspectMask = ImageAspectFlags(_temp)
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.MipLevel = uint32(c.mipLevel)
 	g.BaseArrayLayer = uint32(c.baseArrayLayer)
@@ -9456,9 +9456,9 @@ type BufferImageCopy struct {
 
 func (g *BufferImageCopy) toC(c *C.VkBufferImageCopy) {
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(g.BufferOffset))
-		c.bufferOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.BufferOffset))
+		c.bufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.bufferRowLength = C.uint32_t(g.BufferRowLength)
 	c.bufferImageHeight = C.uint32_t(g.BufferImageHeight)
@@ -9468,9 +9468,9 @@ func (g *BufferImageCopy) toC(c *C.VkBufferImageCopy) {
 }
 func (g *BufferImageCopy) fromC(c *C.VkBufferImageCopy) {
 	{
-		var _temp uint64
-		_temp = uint64((C.uint64_t)(c.bufferOffset))
-		g.BufferOffset = DeviceSize(_temp)
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.bufferOffset))
+		g.BufferOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.BufferRowLength = uint32(c.bufferRowLength)
 	g.BufferImageHeight = uint32(c.bufferImageHeight)
@@ -9541,14 +9541,14 @@ func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset De
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(dstOffset))
-		c.dstOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
+		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(dataSize))
-		c.dataSize = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(dataSize))
+		c.dataSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
 		c.pData = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
@@ -9570,14 +9570,14 @@ func CmdFillBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset Devi
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(dstOffset))
-		c.dstOffset = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
+		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	{
-		var _temp C.uint64_t
-		_temp = C.uint64_t((uint64)(size))
-		c.size = C.VkDeviceSize(_temp)
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.data = C.uint32_t(data)
 	C.vkCmdFillBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)

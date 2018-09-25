@@ -62,6 +62,18 @@ func trimPrefixs(s string, pfx ...string) string {
 	return s
 }
 
+func takeAddr(govar, cvar goast.Expr) (goast.Expr, goast.Expr) {
+	if starX, ok := govar.(*goast.StarExpr); ok {
+		govar = starX.X
+	}
+	if starX, ok := cvar.(*goast.StarExpr); ok {
+		cvar = starX.X
+	} else {
+		cvar = &goast.UnaryExpr{Op: token.AND, X: cvar}
+	}
+	return govar, cvar
+}
+
 type halting struct {
 	msg  string
 	node cast.Node
