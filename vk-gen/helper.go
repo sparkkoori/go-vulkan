@@ -48,9 +48,9 @@ func toGoFieldName(n string) string {
 func avoidGoKeyword(s string) string {
 	switch s {
 	case "type":
-		return "typ"
+		return "_type"
 	case "range":
-		return "rang"
+		return "_range"
 	}
 	return s
 }

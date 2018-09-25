@@ -1771,11 +1771,11 @@ func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
 		g.MaxResourceSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, format Format, typ ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
+func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		format                 C.VkFormat
-		typ                    C.VkImageType
+		_type                  C.VkImageType
 		tiling                 C.VkImageTiling
 		usage                  C.VkImageUsageFlags
 		flags                  C.VkImageCreateFlags
@@ -1786,7 +1786,7 @@ func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, forma
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	c.typ = C.VkImageType(typ)
+	c._type = C.VkImageType(_type)
 	c.tiling = C.VkImageTiling(tiling)
 	{
 		var temp_in_VkImageUsageFlags C.VkFlags
@@ -1813,7 +1813,7 @@ func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, forma
 			imageFormatProperties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.vkGetPhysicalDeviceImageFormatProperties(c.physicalDevice, c.format, c.typ, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
+	c._ret = C.vkGetPhysicalDeviceImageFormatProperties(c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
 	_ret = Result(c._ret)
 	return
 }
@@ -3743,11 +3743,11 @@ const (
 	SAMPLE_COUNT_FLAG_BITS_MAX_ENUM SampleCountFlagBits = 2147483647
 )
 
-func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice, format Format, typ ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
+func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		format         C.VkFormat
-		typ            C.VkImageType
+		_type          C.VkImageType
 		samples        C.VkSampleCountFlagBits
 		usage          C.VkImageUsageFlags
 		tiling         C.VkImageTiling
@@ -3758,7 +3758,7 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	c.typ = C.VkImageType(typ)
+	c._type = C.VkImageType(_type)
 	c.samples = C.VkSampleCountFlagBits(samples)
 	{
 		var temp_in_VkImageUsageFlags C.VkFlags
@@ -3781,7 +3781,7 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	C.vkGetPhysicalDeviceSparseImageFormatProperties(c.physicalDevice, c.format, c.typ, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
+	C.vkGetPhysicalDeviceSparseImageFormatProperties(c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	*propertyCount = uint32(*c.pPropertyCount)
 }
 
@@ -4820,7 +4820,7 @@ func (g *BufferViewCreateInfo) toC(c *C.VkBufferViewCreateInfo) {
 	{
 		var temp_in_VkDeviceSize C.uint64_t
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
-		c.rang = C.VkDeviceSize(temp_in_VkDeviceSize)
+		c._range = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
@@ -4844,7 +4844,7 @@ func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
 	}
 	{
 		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rang))
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c._range))
 		g.Range = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
@@ -7563,11 +7563,11 @@ type DescriptorPoolSize struct {
 }
 
 func (g *DescriptorPoolSize) toC(c *C.VkDescriptorPoolSize) {
-	c.typ = C.VkDescriptorType(g.Type)
+	c._type = C.VkDescriptorType(g.Type)
 	c.descriptorCount = C.uint32_t(g.DescriptorCount)
 }
 func (g *DescriptorPoolSize) fromC(c *C.VkDescriptorPoolSize) {
-	g.Type = DescriptorType(c.typ)
+	g.Type = DescriptorType(c._type)
 	g.DescriptorCount = uint32(c.descriptorCount)
 }
 
@@ -7813,7 +7813,7 @@ func (g *DescriptorBufferInfo) toC(c *C.VkDescriptorBufferInfo) {
 	{
 		var temp_in_VkDeviceSize C.uint64_t
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
-		c.rang = C.VkDeviceSize(temp_in_VkDeviceSize)
+		c._range = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
@@ -7825,7 +7825,7 @@ func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
 	}
 	{
 		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rang))
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c._range))
 		g.Range = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
