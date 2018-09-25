@@ -446,19 +446,19 @@ const (
 	VK_SYSTEM_ALLOCATION_SCOPE_MAX_ENUM    VkSystemAllocationScope = 2147483647
 )
 
-func (p PFN_vkAllocationFunction) Call( unsafe.Pointer,  uint,  uint,  VkSystemAllocationScope) (_ret unsafe.Pointer) {
+func (p PFN_vkAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 VkSystemAllocationScope) (_ret unsafe.Pointer) {
 	var c struct {
-			unsafe.Pointer
-			C.size_t
-			C.size_t
-			C.VkSystemAllocationScope
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.size_t
+		arg3 C.VkSystemAllocationScope
 		_ret unsafe.Pointer
 	}
-	c. =
-	c. = C.size_t()
-	c. = C.size_t()
-	c. = C.VkSystemAllocationScope()
-	c._ret = C.callPFN_vkAllocationFunction(p.Raw, c., c., c., c.)
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.size_t(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	c._ret = C.callPFN_vkAllocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
 	_ret = c._ret
 	return
 }
@@ -467,21 +467,21 @@ type PFN_vkReallocationFunction struct {
 	Raw C.PFN_vkReallocationFunction
 }
 
-func (p PFN_vkReallocationFunction) Call( unsafe.Pointer,  unsafe.Pointer,  uint,  uint,  VkSystemAllocationScope) (_ret unsafe.Pointer) {
+func (p PFN_vkReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 VkSystemAllocationScope) (_ret unsafe.Pointer) {
 	var c struct {
-			unsafe.Pointer
-			unsafe.Pointer
-			C.size_t
-			C.size_t
-			C.VkSystemAllocationScope
+		arg0 unsafe.Pointer
+		arg1 unsafe.Pointer
+		arg2 C.size_t
+		arg3 C.size_t
+		arg4 C.VkSystemAllocationScope
 		_ret unsafe.Pointer
 	}
-	c. =
-	c. =
-	c. = C.size_t()
-	c. = C.size_t()
-	c. = C.VkSystemAllocationScope()
-	c._ret = C.callPFN_vkReallocationFunction(p.Raw, c., c., c., c., c.)
+	c.arg0 = arg0
+	c.arg1 = arg1
+	c.arg2 = C.size_t(arg2)
+	c.arg3 = C.size_t(arg3)
+	c.arg4 = C.VkSystemAllocationScope(arg4)
+	c._ret = C.callPFN_vkReallocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4)
 	_ret = c._ret
 	return
 }
@@ -490,14 +490,14 @@ type PFN_vkFreeFunction struct {
 	Raw C.PFN_vkFreeFunction
 }
 
-func (p PFN_vkFreeFunction) Call( unsafe.Pointer,  unsafe.Pointer) {
+func (p PFN_vkFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
 	var c struct {
-		unsafe.Pointer
-		unsafe.Pointer
+		arg0 unsafe.Pointer
+		arg1 unsafe.Pointer
 	}
-	c. =
-	c. =
-	C.callPFN_vkFreeFunction(p.Raw, c., c.)
+	c.arg0 = arg0
+	c.arg1 = arg1
+	C.callPFN_vkFreeFunction(p.Raw, c.arg0, c.arg1)
 }
 
 type PFN_vkInternalAllocationNotification struct {
@@ -513,36 +513,36 @@ const (
 	VK_INTERNAL_ALLOCATION_TYPE_MAX_ENUM    VkInternalAllocationType = 2147483647
 )
 
-func (p PFN_vkInternalAllocationNotification) Call( unsafe.Pointer,  uint,  VkInternalAllocationType,  VkSystemAllocationScope) {
+func (p PFN_vkInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 VkInternalAllocationType, arg3 VkSystemAllocationScope) {
 	var c struct {
-		unsafe.Pointer
-		C.size_t
-		C.VkInternalAllocationType
-		C.VkSystemAllocationScope
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.VkInternalAllocationType
+		arg3 C.VkSystemAllocationScope
 	}
-	c. =
-	c. = C.size_t()
-	c. = C.VkInternalAllocationType()
-	c. = C.VkSystemAllocationScope()
-	C.callPFN_vkInternalAllocationNotification(p.Raw, c., c., c., c.)
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.VkInternalAllocationType(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	C.callPFN_vkInternalAllocationNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
 }
 
 type PFN_vkInternalFreeNotification struct {
 	Raw C.PFN_vkInternalFreeNotification
 }
 
-func (p PFN_vkInternalFreeNotification) Call( unsafe.Pointer,  uint,  VkInternalAllocationType,  VkSystemAllocationScope) {
+func (p PFN_vkInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 VkInternalAllocationType, arg3 VkSystemAllocationScope) {
 	var c struct {
-		unsafe.Pointer
-		C.size_t
-		C.VkInternalAllocationType
-		C.VkSystemAllocationScope
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.VkInternalAllocationType
+		arg3 C.VkSystemAllocationScope
 	}
-	c. =
-	c. = C.size_t()
-	c. = C.VkInternalAllocationType()
-	c. = C.VkSystemAllocationScope()
-	C.callPFN_vkInternalFreeNotification(p.Raw, c., c., c., c.)
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.VkInternalAllocationType(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	C.callPFN_vkInternalFreeNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
 }
 
 type VkAllocationCallbacks struct {

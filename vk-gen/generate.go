@@ -725,6 +725,9 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 		argNames := g.hint.argNames[id+".params"]
 		if argNames == nil {
 			argNames = make([]string, len(fpt.ChildNodes[1:]))
+			for i, _ := range argNames {
+				argNames[i] = "arg" + strconv.Itoa(i)
+			}
 		}
 
 		fieldDecls := []*cast.FieldDecl{}
