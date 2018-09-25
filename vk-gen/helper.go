@@ -117,11 +117,13 @@ func analyzeHint(h *hint, src Source) {
 		case *cast.FunctionDecl:
 			{
 				decls := []*cast.FieldDecl{}
+				argNames := []string{}
 				for _, param := range n.ChildNodes[1:] {
 					pvd, ok := param.(*cast.ParmVarDecl)
 					if !ok {
 						break
 					}
+					argNames = append(argNames, pvd.Name)
 					decls = append(decls, &cast.FieldDecl{
 						Name:       pvd.Name,
 						ChildNodes: pvd.ChildNodes,
@@ -129,6 +131,7 @@ func analyzeHint(h *hint, src Source) {
 				}
 				analyzeArrayAndSize(decls, n.Name+".params")
 				analyzeArrayAndSize(decls, "PFN_"+n.Name+".params")
+				h.argNames["PFN_"+n.Name+".params"] = argNames
 			}
 		default:
 			halt("Unkown node in source", node)

@@ -33,11 +33,13 @@ type compTypeInfo struct {
 type hint struct {
 	isArray     map[string]bool
 	isArraySize map[string]bool
+	argNames    map[string][]string
 }
 
 func (h *hint) init() {
 	h.isArray = make(map[string]bool, 128)
 	h.isArraySize = make(map[string]bool, 128)
+	h.argNames = make(map[string][]string, 128)
 }
 
 type generator struct {
@@ -721,9 +723,10 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 	//Param
 	{
 		fieldDecls := []*cast.FieldDecl{}
+		argNames := g.hint.argNames[decl.Name+".params"]
 		for i, cn := range fpt.ChildNodes[1:] {
 			fieldDecls = append(fieldDecls, &cast.FieldDecl{
-				Name:       "arg" + strconv.Itoa(i),
+				Name:       argNames[i],
 				ChildNodes: []cast.Node{cn},
 			})
 		}
