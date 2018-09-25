@@ -328,7 +328,7 @@ type Flags uint32
 type InstanceCreateFlags Flags
 type ApplicationInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	ApplicationName    string
 	ApplicationVersion uint32
 	EngineName         string
@@ -357,7 +357,7 @@ func (g *ApplicationInfo) fromC(c *C.VkApplicationInfo) {
 
 type InstanceCreateInfo struct {
 	Type                  StructureType
-	Next                  *[0]byte
+	Next                  unsafe.Pointer
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
 	EnabledLayerNames     []string
@@ -2755,7 +2755,7 @@ type DeviceCreateFlags Flags
 type DeviceQueueCreateFlags Flags
 type DeviceQueueCreateInfo struct {
 	Type             StructureType
-	Next             *[0]byte
+	Next             unsafe.Pointer
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
 	QueuePriorities  []float32
@@ -2807,7 +2807,7 @@ func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
 
 type DeviceCreateInfo struct {
 	Type                  StructureType
-	Next                  *[0]byte
+	Next                  unsafe.Pointer
 	Flags                 DeviceCreateFlags
 	QueueCreateInfos      []DeviceQueueCreateInfo
 	EnabledLayerNames     []string
@@ -3119,7 +3119,7 @@ type PipelineStageFlags Flags
 type CommandBuffer C.VkCommandBuffer
 type SubmitInfo struct {
 	Type             StructureType
-	Next             *[0]byte
+	Next             unsafe.Pointer
 	WaitSemaphores   []Semaphore
 	WaitDstStageMask *PipelineStageFlags
 	CommandBuffers   []CommandBuffer
@@ -3255,7 +3255,7 @@ func DeviceWaitIdle(device Device) (_ret Result) {
 
 type MemoryAllocateInfo struct {
 	Type            StructureType
-	Next            *[0]byte
+	Next            unsafe.Pointer
 	AllocationSize  DeviceSize
 	MemoryTypeIndex uint32
 }
@@ -3386,7 +3386,7 @@ func UnmapMemory(device Device, memory DeviceMemory) {
 
 type MappedMemoryRange struct {
 	Type   StructureType
-	Next   *[0]byte
+	Next   unsafe.Pointer
 	Memory DeviceMemory
 	Offset DeviceSize
 	Size   DeviceSize
@@ -4032,7 +4032,7 @@ func (g *SparseImageMemoryBindInfo) fromC(c *C.VkSparseImageMemoryBindInfo) {
 
 type BindSparseInfo struct {
 	Type             StructureType
-	Next             *[0]byte
+	Next             unsafe.Pointer
 	WaitSemaphores   []Semaphore
 	BufferBinds      []SparseBufferMemoryBindInfo
 	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
@@ -4148,7 +4148,7 @@ func QueueBindSparse(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo
 type FenceCreateFlags Flags
 type FenceCreateInfo struct {
 	Type  StructureType
-	Next  *[0]byte
+	Next  unsafe.Pointer
 	Flags FenceCreateFlags
 }
 
@@ -4290,7 +4290,7 @@ func WaitForFences(device Device, fences []Fence, waitAll Bool32, timeout uint64
 type SemaphoreCreateFlags Flags
 type SemaphoreCreateInfo struct {
 	Type  StructureType
-	Next  *[0]byte
+	Next  unsafe.Pointer
 	Flags SemaphoreCreateFlags
 }
 
@@ -4368,7 +4368,7 @@ func DestroySemaphore(device Device, semaphore Semaphore, allocator *AllocationC
 type EventCreateFlags Flags
 type EventCreateInfo struct {
 	Type  StructureType
-	Next  *[0]byte
+	Next  unsafe.Pointer
 	Flags EventCreateFlags
 }
 
@@ -4498,7 +4498,7 @@ const (
 type QueryPipelineStatisticFlags Flags
 type QueryPoolCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              QueryPoolCreateFlags
 	QueryType          QueryType
 	QueryCount         uint32
@@ -4663,7 +4663,7 @@ const (
 
 type BufferCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              BufferCreateFlags
 	Size               DeviceSize
 	Usage              BufferUsageFlags
@@ -4790,7 +4790,7 @@ func DestroyBuffer(device Device, buffer Buffer, allocator *AllocationCallbacks)
 type BufferViewCreateFlags Flags
 type BufferViewCreateInfo struct {
 	Type   StructureType
-	Next   *[0]byte
+	Next   unsafe.Pointer
 	Flags  BufferViewCreateFlags
 	Buffer Buffer
 	Format Format
@@ -4922,7 +4922,7 @@ const (
 
 type ImageCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              ImageCreateFlags
 	ImageType          ImageType
 	Format             Format
@@ -5238,7 +5238,7 @@ func (g *ImageSubresourceRange) fromC(c *C.VkImageSubresourceRange) {
 
 type ImageViewCreateInfo struct {
 	Type             StructureType
-	Next             *[0]byte
+	Next             unsafe.Pointer
 	Flags            ImageViewCreateFlags
 	Image            Image
 	ViewType         ImageViewType
@@ -5334,7 +5334,7 @@ func DestroyImageView(device Device, imageView ImageView, allocator *AllocationC
 type ShaderModuleCreateFlags Flags
 type ShaderModuleCreateInfo struct {
 	Type     StructureType
-	Next     *[0]byte
+	Next     unsafe.Pointer
 	Flags    ShaderModuleCreateFlags
 	CodeSize uint
 	Code     *uint32
@@ -5429,7 +5429,7 @@ func DestroyShaderModule(device Device, shaderModule ShaderModule, allocator *Al
 type PipelineCacheCreateFlags Flags
 type PipelineCacheCreateInfo struct {
 	Type        StructureType
-	Next        *[0]byte
+	Next        unsafe.Pointer
 	Flags       PipelineCacheCreateFlags
 	InitialData []byte
 }
@@ -5650,7 +5650,7 @@ func (g *SpecializationInfo) fromC(c *C.VkSpecializationInfo) {
 
 type PipelineShaderStageCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              PipelineShaderStageCreateFlags
 	Stage              ShaderStageFlagBits
 	Module             ShaderModule
@@ -5752,7 +5752,7 @@ func (g *VertexInputAttributeDescription) fromC(c *C.VkVertexInputAttributeDescr
 
 type PipelineVertexInputStateCreateInfo struct {
 	Type                        StructureType
-	Next                        *[0]byte
+	Next                        unsafe.Pointer
 	Flags                       PipelineVertexInputStateCreateFlags
 	VertexBindingDescriptions   []VertexInputBindingDescription
 	VertexAttributeDescriptions []VertexInputAttributeDescription
@@ -5838,7 +5838,7 @@ const (
 
 type PipelineInputAssemblyStateCreateInfo struct {
 	Type                   StructureType
-	Next                   *[0]byte
+	Next                   unsafe.Pointer
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
 	PrimitiveRestartEnable Bool32
@@ -5886,7 +5886,7 @@ func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssembl
 type PipelineTessellationStateCreateFlags Flags
 type PipelineTessellationStateCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              PipelineTessellationStateCreateFlags
 	PatchControlPoints uint32
 }
@@ -5991,7 +5991,7 @@ func (g *Rect2D) fromC(c *C.VkRect2D) {
 
 type PipelineViewportStateCreateInfo struct {
 	Type      StructureType
-	Next      *[0]byte
+	Next      unsafe.Pointer
 	Flags     PipelineViewportStateCreateFlags
 	Viewports []Viewport
 	Scissors  []Rect2D
@@ -6082,7 +6082,7 @@ const (
 
 type PipelineRasterizationStateCreateInfo struct {
 	Type                    StructureType
-	Next                    *[0]byte
+	Next                    unsafe.Pointer
 	Flags                   PipelineRasterizationStateCreateFlags
 	DepthClampEnable        Bool32
 	RasterizerDiscardEnable Bool32
@@ -6187,7 +6187,7 @@ type PipelineMultisampleStateCreateFlags Flags
 type SampleMask uint32
 type PipelineMultisampleStateCreateInfo struct {
 	Type                  StructureType
-	Next                  *[0]byte
+	Next                  unsafe.Pointer
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlagBits
 	SampleShadingEnable   Bool32
@@ -6342,7 +6342,7 @@ func (g *StencilOpState) fromC(c *C.VkStencilOpState) {
 
 type PipelineDepthStencilStateCreateInfo struct {
 	Type                  StructureType
-	Next                  *[0]byte
+	Next                  unsafe.Pointer
 	Flags                 PipelineDepthStencilStateCreateFlags
 	DepthTestEnable       Bool32
 	DepthWriteEnable      Bool32
@@ -6605,7 +6605,7 @@ func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttac
 
 type PipelineColorBlendStateCreateInfo struct {
 	Type           StructureType
-	Next           *[0]byte
+	Next           unsafe.Pointer
 	Flags          PipelineColorBlendStateCreateFlags
 	LogicOpEnable  Bool32
 	LogicOp        LogicOp
@@ -6697,7 +6697,7 @@ const (
 
 type PipelineDynamicStateCreateInfo struct {
 	Type          StructureType
-	Next          *[0]byte
+	Next          unsafe.Pointer
 	Flags         PipelineDynamicStateCreateFlags
 	DynamicStates []DynamicState
 }
@@ -6749,7 +6749,7 @@ type RenderPass C.VkRenderPass
 type Pipeline C.VkPipeline
 type GraphicsPipelineCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              PipelineCreateFlags
 	Stages             []PipelineShaderStageCreateInfo
 	VertexInputState   *PipelineVertexInputStateCreateInfo
@@ -6949,7 +6949,7 @@ func CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, createI
 
 type ComputePipelineCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              PipelineCreateFlags
 	Stage              PipelineShaderStageCreateInfo
 	Layout             PipelineLayout
@@ -7083,7 +7083,7 @@ func (g *PushConstantRange) fromC(c *C.VkPushConstantRange) {
 
 type PipelineLayoutCreateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	Flags              PipelineLayoutCreateFlags
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
@@ -7245,7 +7245,7 @@ const (
 
 type SamplerCreateInfo struct {
 	Type                    StructureType
-	Next                    *[0]byte
+	Next                    unsafe.Pointer
 	Flags                   SamplerCreateFlags
 	MagFilter               Filter
 	MinFilter               Filter
@@ -7465,7 +7465,7 @@ func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
 
 type DescriptorSetLayoutCreateInfo struct {
 	Type     StructureType
-	Next     *[0]byte
+	Next     unsafe.Pointer
 	Flags    DescriptorSetLayoutCreateFlags
 	Bindings []DescriptorSetLayoutBinding
 }
@@ -7573,7 +7573,7 @@ func (g *DescriptorPoolSize) fromC(c *C.VkDescriptorPoolSize) {
 
 type DescriptorPoolCreateInfo struct {
 	Type      StructureType
-	Next      *[0]byte
+	Next      unsafe.Pointer
 	Flags     DescriptorPoolCreateFlags
 	MaxSets   uint32
 	PoolSizes []DescriptorPoolSize
@@ -7697,7 +7697,7 @@ func ResetDescriptorPool(device Device, descriptorPool DescriptorPool, flags Des
 
 type DescriptorSetAllocateInfo struct {
 	Type           StructureType
-	Next           *[0]byte
+	Next           unsafe.Pointer
 	DescriptorPool DescriptorPool
 	SetLayouts     []DescriptorSetLayout
 }
@@ -7832,7 +7832,7 @@ func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
 
 type WriteDescriptorSet struct {
 	Type            StructureType
-	Next            *[0]byte
+	Next            unsafe.Pointer
 	DstSet          DescriptorSet
 	DstBinding      uint32
 	DstArrayElement uint32
@@ -7894,7 +7894,7 @@ func (g *WriteDescriptorSet) fromC(c *C.VkWriteDescriptorSet) {
 
 type CopyDescriptorSet struct {
 	Type            StructureType
-	Next            *[0]byte
+	Next            unsafe.Pointer
 	SrcSet          DescriptorSet
 	SrcBinding      uint32
 	SrcArrayElement uint32
@@ -7959,7 +7959,7 @@ func UpdateDescriptorSets(device Device, descriptorWrites []WriteDescriptorSet, 
 type FramebufferCreateFlags Flags
 type FramebufferCreateInfo struct {
 	Type        StructureType
-	Next        *[0]byte
+	Next        unsafe.Pointer
 	Flags       FramebufferCreateFlags
 	RenderPass  RenderPass
 	Attachments []ImageView
@@ -8383,7 +8383,7 @@ func (g *SubpassDependency) fromC(c *C.VkSubpassDependency) {
 
 type RenderPassCreateInfo struct {
 	Type         StructureType
-	Next         *[0]byte
+	Next         unsafe.Pointer
 	Flags        RenderPassCreateFlags
 	Attachments  []AttachmentDescription
 	Subpasses    []SubpassDescription
@@ -8526,7 +8526,7 @@ func GetRenderAreaGranularity(device Device, renderPass RenderPass, granularity 
 type CommandPoolCreateFlags Flags
 type CommandPoolCreateInfo struct {
 	Type             StructureType
-	Next             *[0]byte
+	Next             unsafe.Pointer
 	Flags            CommandPoolCreateFlags
 	QueueFamilyIndex uint32
 }
@@ -8645,7 +8645,7 @@ const (
 
 type CommandBufferAllocateInfo struct {
 	Type               StructureType
-	Next               *[0]byte
+	Next               unsafe.Pointer
 	CommandPool        CommandPool
 	Level              CommandBufferLevel
 	CommandBufferCount uint32
@@ -8716,7 +8716,7 @@ type CommandBufferUsageFlags Flags
 type QueryControlFlags Flags
 type CommandBufferInheritanceInfo struct {
 	Type                 StructureType
-	Next                 *[0]byte
+	Next                 unsafe.Pointer
 	RenderPass           RenderPass
 	Subpass              uint32
 	Framebuffer          Framebuffer
@@ -8788,7 +8788,7 @@ func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo
 
 type CommandBufferBeginInfo struct {
 	Type            StructureType
-	Next            *[0]byte
+	Next            unsafe.Pointer
 	Flags           CommandBufferUsageFlags
 	InheritanceInfo *CommandBufferInheritanceInfo
 }

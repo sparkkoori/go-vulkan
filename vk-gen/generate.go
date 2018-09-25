@@ -418,7 +418,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 	}
 
 	//Map as unsafe.Pointer
-	if n.Type == "void *" {
+	if n.Type == "void *" || n.Type == "const void *" {
 		info := &typeInfo{
 			ctype:  ident("unsafe.Pointer"),
 			gotype: ident("unsafe.Pointer"),
