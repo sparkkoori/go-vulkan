@@ -272,7 +272,7 @@ func (g *generator) mapEnumType(n *cast.EnumType, pid string) *typeInfo {
 		decl = node.(*cast.EnumDecl)
 	}
 
-	name := strings.Trim(decl.Name, "enum ")
+	name := strings.TrimPrefix(decl.Name, "enum ")
 	if name != "" {
 		return g.genEnumType(decl)
 	} else {
@@ -288,8 +288,8 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 	info := &typeInfo{}
 	g.types[decl.Name] = info
 
-	name := strings.Trim(decl.Name, "enum ")
-	info.gotype = ident("int")
+	name := strings.TrimPrefix(decl.Name, "enum ")
+	info.gotype = ident(name)
 	if _, ok := g.nodes[name]; ok {
 		info.ctype = ident("C." + name)
 		info.csize = ident("C.sizeof_" + name)
@@ -309,8 +309,8 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 		Tok: token.TYPE,
 		Specs: []goast.Spec{
 			&goast.TypeSpec{
-				Name: ident(name),
-				Type: info.gotype,
+				Name: info.gotype.(*goast.Ident),
+				Type: ident("int"),
 			},
 		},
 	})
