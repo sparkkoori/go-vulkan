@@ -722,8 +722,16 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 
 	//Param
 	{
+		argNames := g.hint.argNames[id+".params"]
+		if argNames == nil {
+			argNames = make([]string, len(fpt.ChildNodes[1:]))
+		}
+
 		fieldDecls := []*cast.FieldDecl{}
-		argNames := g.hint.argNames[decl.Name+".params"]
+		if len(argNames) != len(fpt.ChildNodes[1:]) {
+			halt(fmt.Sprintf("The length of names hints %d are wrong", len(argNames)), decl)
+		}
+
 		for i, cn := range fpt.ChildNodes[1:] {
 			fieldDecls = append(fieldDecls, &cast.FieldDecl{
 				Name:       argNames[i],

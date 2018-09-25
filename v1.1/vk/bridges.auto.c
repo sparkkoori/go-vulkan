@@ -25,3 +25,8 @@ void callPFN_vkInternalFreeNotification(PFN_vkInternalFreeNotification f, void *
   return f(arg0, arg1, arg2, arg3);
 };
 
+void callPFN_vkVoidFunction(PFN_vkVoidFunction f)
+{
+  return f();
+};
+

@@ -11,3 +11,5 @@ void callPFN_vkInternalAllocationNotification(PFN_vkInternalAllocationNotificati
 
 void callPFN_vkInternalFreeNotification(PFN_vkInternalFreeNotification f, void * arg0,  size_t arg1,  VkInternalAllocationType arg2,  VkSystemAllocationScope arg3);
 
+void callPFN_vkVoidFunction(PFN_vkVoidFunction f);
+
