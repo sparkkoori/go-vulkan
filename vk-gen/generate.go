@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	cast "github.com/elliotchance/c2go/ast"
+	"github.com/iancoleman/strcase"
 	"github.com/logrusorgru/aurora"
 )
 
@@ -219,10 +220,15 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 	g.types[decl.Name] = info
 
 	var cinfo *compTypeInfo
+	var isStructure bool
 	{
 		fields := []*cast.FieldDecl{}
-		for _, child := range decl.ChildNodes {
-			fields = append(fields, child.(*cast.FieldDecl))
+		for i, child := range decl.ChildNodes {
+			fd := child.(*cast.FieldDecl)
+			if i == 0 && fd.Name == "sType" {
+				isStructure = true
+			}
+			fields = append(fields, fd)
 		}
 		cinfo = g.mapCompType(fields, decl.Name)
 	}
@@ -305,7 +311,45 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 		}
 	}
 
+	if isStructure {
+		g.genStructureMethods(decl.Name, info.gotype)
+	}
 	return info
+}
+
+func (g *generator) genStructureMethods(name string, gotype goast.Expr) {
+	/*VkStructureType value is obtained by taking the name of the structure,
+	  stripping the leading Vk, prefixing each capital letter with _,
+	  converting the entire resulting string to upper case,
+	  and prefixing it with VK_STRUCTURE_TYPE_.*/
+	sType := strings.TrimPrefix(name, "struct ")
+	sType = strings.TrimPrefix(sType, "Vk")
+	sType = strcase.ToScreamingSnake(sType)
+	sType = "VK_STRUCTURE_TYPE_" + sType
+
+	//sType()
+	{
+		fnT := funcType(nil, []*goast.Field{field(ident("C.VkStructureType"))})
+		ret := returnStmt(ident("C." + sType))
+		fn := funcDecl(ident("sType"), field(starExpr(gotype), ident("s")), fnT, ret)
+		g.target.addGo(fn)
+	}
+
+	//GetNext()
+	{
+		fnT := funcType(nil, []*goast.Field{field(ident("Structure"))})
+		ret := returnStmt(selectorExpr(ident("s"), ident("Next")))
+		fn := funcDecl(ident("GetNext"), field(starExpr(gotype), ident("s")), fnT, ret)
+		g.target.addGo(fn)
+	}
+
+	//SetNext()
+	{
+		fnT := funcType([]*goast.Field{field(ident("Structure"), ident("n"))}, nil)
+		ass := assignStmt1n1(selectorExpr(ident("s"), ident("Next")), ident("n"))
+		fn := funcDecl(ident("SetNext"), field(starExpr(gotype), ident("s")), fnT, ass)
+		g.target.addGo(fn)
+	}
 }
 
 func (g *generator) convConst(node cast.Node) goast.Expr {
@@ -1080,6 +1124,28 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 		}
 
 		finfo := g.mapType(ftn, id)
+
+		//sType
+		if i == 0 && fieldDecl.Name == "sType" {
+			info.cfields = append(info.cfields, field(finfo.ctype, cname))
+			go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
+				return assignStmt1n1(selectorExpr(cscope, ident("sType")), selectorExpr(goscope, ident("sType()")))
+			})
+			continue
+		}
+
+		//pNext
+		if i == 1 && fieldDecl.Name == "pNext" {
+			info.cfields = append(info.cfields, field(finfo.ctype, cname))
+			info.gofields = append(info.gofields, field(ident("Structure"), goname))
+			// go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
+			// 	return finfo.go2c(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+			// })
+			// c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+			// 	return finfo.c2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+			// })
+			continue
+		}
 
 		if pending != nil {
 			pending(finfo.gotype, goname)

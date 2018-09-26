@@ -94,6 +94,13 @@ func saalloc(typ, size goast.Expr) *goast.CallExpr {
 	}
 }
 
+func returnStmt(exprs ...goast.Expr) *goast.ReturnStmt {
+	return &goast.ReturnStmt{
+		Return:  token.Pos(1),
+		Results: exprs,
+	}
+}
+
 func rangeStmti(x, i goast.Expr, stmts ...goast.Stmt) *goast.RangeStmt {
 	return &goast.RangeStmt{
 		For:   token.Pos(1),

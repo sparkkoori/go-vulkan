@@ -454,8 +454,7 @@ const (
 type Flags uint32
 type InstanceCreateFlags Flags
 type ApplicationInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	ApplicationName    string
 	ApplicationVersion uint32
 	EngineName         string
@@ -464,8 +463,7 @@ type ApplicationInfo struct {
 }
 
 func (g *ApplicationInfo) toC(c *C.VkApplicationInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.pApplicationName = toCString(g.ApplicationName, _sa)
 	c.applicationVersion = C.uint32_t(g.ApplicationVersion)
 	c.pEngineName = toCString(g.EngineName, _sa)
@@ -473,18 +471,24 @@ func (g *ApplicationInfo) toC(c *C.VkApplicationInfo, _sa *stackAllocator) {
 	c.apiVersion = C.uint32_t(g.ApiVersion)
 }
 func (g *ApplicationInfo) fromC(c *C.VkApplicationInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ApplicationName = toGoString(c.pApplicationName)
 	g.ApplicationVersion = uint32(c.applicationVersion)
 	g.EngineName = toGoString(c.pEngineName)
 	g.EngineVersion = uint32(c.engineVersion)
 	g.ApiVersion = uint32(c.apiVersion)
 }
+func (s *ApplicationInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_APPLICATION_INFO
+}
+func (s *ApplicationInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ApplicationInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type InstanceCreateInfo struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 InstanceCreateFlags
 	ApplicationInfo       *ApplicationInfo
 	EnabledLayerNames     []string
@@ -492,8 +496,7 @@ type InstanceCreateInfo struct {
 }
 
 func (g *InstanceCreateInfo) toC(c *C.VkInstanceCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkInstanceCreateFlags C.VkFlags
 		{
@@ -525,8 +528,6 @@ func (g *InstanceCreateInfo) toC(c *C.VkInstanceCreateInfo, _sa *stackAllocator)
 	}
 }
 func (g *InstanceCreateInfo) fromC(c *C.VkInstanceCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkInstanceCreateFlags Flags
 		{
@@ -556,6 +557,15 @@ func (g *InstanceCreateInfo) fromC(c *C.VkInstanceCreateInfo) {
 			g.EnabledExtensionNames[i2] = toGoString(slice2[i2])
 		}
 	}
+}
+func (s *InstanceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO
+}
+func (s *InstanceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *InstanceCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type AllocationCallbacks struct {
@@ -2541,16 +2551,14 @@ type PFN_vkCreateDevice struct {
 type DeviceCreateFlags Flags
 type DeviceQueueCreateFlags Flags
 type DeviceQueueCreateInfo struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
 	QueuePriorities  []float32
 }
 
 func (g *DeviceQueueCreateInfo) toC(c *C.VkDeviceQueueCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
 		{
@@ -2571,8 +2579,6 @@ func (g *DeviceQueueCreateInfo) toC(c *C.VkDeviceQueueCreateInfo, _sa *stackAllo
 	}
 }
 func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDeviceQueueCreateFlags Flags
 		{
@@ -2591,10 +2597,18 @@ func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
 		}
 	}
 }
+func (s *DeviceQueueCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO
+}
+func (s *DeviceQueueCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceQueueCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DeviceCreateInfo struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 DeviceCreateFlags
 	QueueCreateInfos      []DeviceQueueCreateInfo
 	EnabledLayerNames     []string
@@ -2603,8 +2617,7 @@ type DeviceCreateInfo struct {
 }
 
 func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDeviceCreateFlags C.VkFlags
 		{
@@ -2647,8 +2660,6 @@ func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, _sa *stackAllocator) {
 	}
 }
 func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDeviceCreateFlags Flags
 		{
@@ -2685,6 +2696,15 @@ func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
 			g.EnabledFeatures[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *DeviceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO
+}
+func (s *DeviceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateDevice) Call(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, allocator *AllocationCallbacks, device *Device) (_ret Result) {
 	var c struct {
@@ -2932,8 +2952,7 @@ type Semaphore C.VkSemaphore
 type PipelineStageFlags Flags
 type CommandBuffer C.VkCommandBuffer
 type SubmitInfo struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	WaitSemaphores   []Semaphore
 	WaitDstStageMask *PipelineStageFlags
 	CommandBuffers   []CommandBuffer
@@ -2941,8 +2960,7 @@ type SubmitInfo struct {
 }
 
 func (g *SubmitInfo) toC(c *C.VkSubmitInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
 	{
 		c.pWaitSemaphores = (*C.VkSemaphore)(_sa.alloc(C.sizeof_void_pointer * uint(len(g.WaitSemaphores))))
@@ -2981,8 +2999,6 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, _sa *stackAllocator) {
 	}
 }
 func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.WaitSemaphores = make([]Semaphore, int(c.waitSemaphoreCount))
 	{
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
@@ -3018,6 +3034,15 @@ func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
 			g.SignalSemaphores[i2] = Semaphore(slice2[i2])
 		}
 	}
+}
+func (s *SubmitInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBMIT_INFO
+}
+func (s *SubmitInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SubmitInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type Fence C.VkFence
@@ -3081,15 +3106,13 @@ type PFN_vkAllocateMemory struct {
 	Raw C.PFN_vkAllocateMemory
 }
 type MemoryAllocateInfo struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	AllocationSize  DeviceSize
 	MemoryTypeIndex uint32
 }
 
 func (g *MemoryAllocateInfo) toC(c *C.VkMemoryAllocateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDeviceSize C.uint64_t
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.AllocationSize))
@@ -3098,14 +3121,21 @@ func (g *MemoryAllocateInfo) toC(c *C.VkMemoryAllocateInfo) {
 	c.memoryTypeIndex = C.uint32_t(g.MemoryTypeIndex)
 }
 func (g *MemoryAllocateInfo) fromC(c *C.VkMemoryAllocateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDeviceSize uint64
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.allocationSize))
 		g.AllocationSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 	g.MemoryTypeIndex = uint32(c.memoryTypeIndex)
+}
+func (s *MemoryAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO
+}
+func (s *MemoryAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryAllocateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DeviceMemory C.VkDeviceMemory
@@ -3228,16 +3258,14 @@ type PFN_vkFlushMappedMemoryRanges struct {
 	Raw C.PFN_vkFlushMappedMemoryRanges
 }
 type MappedMemoryRange struct {
-	SType  StructureType
-	Next   unsafe.Pointer
+	Next   Structure
 	Memory DeviceMemory
 	Offset DeviceSize
 	Size   DeviceSize
 }
 
 func (g *MappedMemoryRange) toC(c *C.VkMappedMemoryRange) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
 		var temp_in_VkDeviceSize C.uint64_t
@@ -3251,8 +3279,6 @@ func (g *MappedMemoryRange) toC(c *C.VkMappedMemoryRange) {
 	}
 }
 func (g *MappedMemoryRange) fromC(c *C.VkMappedMemoryRange) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Memory = DeviceMemory(c.memory)
 	{
 		var temp_in_VkDeviceSize uint64
@@ -3264,6 +3290,15 @@ func (g *MappedMemoryRange) fromC(c *C.VkMappedMemoryRange) {
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
 		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
+}
+func (s *MappedMemoryRange) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
+}
+func (s *MappedMemoryRange) GetNext() Structure {
+	return s.Next
+}
+func (s *MappedMemoryRange) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkFlushMappedMemoryRanges) Call(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
 	var c struct {
@@ -3907,8 +3942,7 @@ func (g *SparseImageMemoryBindInfo) fromC(c *C.VkSparseImageMemoryBindInfo) {
 }
 
 type BindSparseInfo struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	WaitSemaphores   []Semaphore
 	BufferBinds      []SparseBufferMemoryBindInfo
 	ImageOpaqueBinds []SparseImageOpaqueMemoryBindInfo
@@ -3917,8 +3951,7 @@ type BindSparseInfo struct {
 }
 
 func (g *BindSparseInfo) toC(c *C.VkBindSparseInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
 	{
 		c.pWaitSemaphores = (*C.VkSemaphore)(_sa.alloc(C.sizeof_void_pointer * uint(len(g.WaitSemaphores))))
@@ -3961,8 +3994,6 @@ func (g *BindSparseInfo) toC(c *C.VkBindSparseInfo, _sa *stackAllocator) {
 	}
 }
 func (g *BindSparseInfo) fromC(c *C.VkBindSparseInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.WaitSemaphores = make([]Semaphore, int(c.waitSemaphoreCount))
 	{
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
@@ -3999,6 +4030,15 @@ func (g *BindSparseInfo) fromC(c *C.VkBindSparseInfo) {
 		}
 	}
 }
+func (s *BindSparseInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BIND_SPARSE_INFO
+}
+func (s *BindSparseInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BindSparseInfo) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkQueueBindSparse) Call(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo, fence Fence) (_ret Result) {
 	var c struct {
 		queue         C.VkQueue
@@ -4026,14 +4066,12 @@ type PFN_vkCreateFence struct {
 }
 type FenceCreateFlags Flags
 type FenceCreateInfo struct {
-	SType StructureType
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags FenceCreateFlags
 }
 
 func (g *FenceCreateInfo) toC(c *C.VkFenceCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkFenceCreateFlags C.VkFlags
 		{
@@ -4045,8 +4083,6 @@ func (g *FenceCreateInfo) toC(c *C.VkFenceCreateInfo) {
 	}
 }
 func (g *FenceCreateInfo) fromC(c *C.VkFenceCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkFenceCreateFlags Flags
 		{
@@ -4056,6 +4092,15 @@ func (g *FenceCreateInfo) fromC(c *C.VkFenceCreateInfo) {
 		}
 		g.Flags = FenceCreateFlags(temp_in_VkFenceCreateFlags)
 	}
+}
+func (s *FenceCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
+}
+func (s *FenceCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *FenceCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateFence) Call(device Device, createInfo *FenceCreateInfo, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
@@ -4191,14 +4236,12 @@ type PFN_vkCreateSemaphore struct {
 }
 type SemaphoreCreateFlags Flags
 type SemaphoreCreateInfo struct {
-	SType StructureType
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags SemaphoreCreateFlags
 }
 
 func (g *SemaphoreCreateInfo) toC(c *C.VkSemaphoreCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkSemaphoreCreateFlags C.VkFlags
 		{
@@ -4210,8 +4253,6 @@ func (g *SemaphoreCreateInfo) toC(c *C.VkSemaphoreCreateInfo) {
 	}
 }
 func (g *SemaphoreCreateInfo) fromC(c *C.VkSemaphoreCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkSemaphoreCreateFlags Flags
 		{
@@ -4221,6 +4262,15 @@ func (g *SemaphoreCreateInfo) fromC(c *C.VkSemaphoreCreateInfo) {
 		}
 		g.Flags = SemaphoreCreateFlags(temp_in_VkSemaphoreCreateFlags)
 	}
+}
+func (s *SemaphoreCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
+}
+func (s *SemaphoreCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SemaphoreCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateSemaphore) Call(device Device, createInfo *SemaphoreCreateInfo, allocator *AllocationCallbacks, semaphore *Semaphore) (_ret Result) {
 	var c struct {
@@ -4277,14 +4327,12 @@ type PFN_vkCreateEvent struct {
 }
 type EventCreateFlags Flags
 type EventCreateInfo struct {
-	SType StructureType
-	Next  unsafe.Pointer
+	Next  Structure
 	Flags EventCreateFlags
 }
 
 func (g *EventCreateInfo) toC(c *C.VkEventCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkEventCreateFlags C.VkFlags
 		{
@@ -4296,8 +4344,6 @@ func (g *EventCreateInfo) toC(c *C.VkEventCreateInfo) {
 	}
 }
 func (g *EventCreateInfo) fromC(c *C.VkEventCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkEventCreateFlags Flags
 		{
@@ -4307,6 +4353,15 @@ func (g *EventCreateInfo) fromC(c *C.VkEventCreateInfo) {
 		}
 		g.Flags = EventCreateFlags(temp_in_VkEventCreateFlags)
 	}
+}
+func (s *EventCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
+}
+func (s *EventCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *EventCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type Event C.VkEvent
@@ -4430,8 +4485,7 @@ const (
 
 type QueryPipelineStatisticFlags Flags
 type QueryPoolCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              QueryPoolCreateFlags
 	QueryType          QueryType
 	QueryCount         uint32
@@ -4439,8 +4493,7 @@ type QueryPoolCreateInfo struct {
 }
 
 func (g *QueryPoolCreateInfo) toC(c *C.VkQueryPoolCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkQueryPoolCreateFlags C.VkFlags
 		{
@@ -4463,8 +4516,6 @@ func (g *QueryPoolCreateInfo) toC(c *C.VkQueryPoolCreateInfo) {
 	}
 }
 func (g *QueryPoolCreateInfo) fromC(c *C.VkQueryPoolCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkQueryPoolCreateFlags Flags
 		{
@@ -4485,6 +4536,15 @@ func (g *QueryPoolCreateInfo) fromC(c *C.VkQueryPoolCreateInfo) {
 		}
 		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
+}
+func (s *QueryPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
+}
+func (s *QueryPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *QueryPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type QueryPool C.VkQueryPool
@@ -4606,8 +4666,7 @@ const (
 )
 
 type BufferCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              BufferCreateFlags
 	Size               DeviceSize
 	Usage              BufferUsageFlags
@@ -4616,8 +4675,7 @@ type BufferCreateInfo struct {
 }
 
 func (g *BufferCreateInfo) toC(c *C.VkBufferCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkBufferCreateFlags C.VkFlags
 		{
@@ -4652,8 +4710,6 @@ func (g *BufferCreateInfo) toC(c *C.VkBufferCreateInfo, _sa *stackAllocator) {
 	}
 }
 func (g *BufferCreateInfo) fromC(c *C.VkBufferCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkBufferCreateFlags Flags
 		{
@@ -4685,6 +4741,15 @@ func (g *BufferCreateInfo) fromC(c *C.VkBufferCreateInfo) {
 			g.QueueFamilyIndices[i2] = uint32(slice2[i2])
 		}
 	}
+}
+func (s *BufferCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO
+}
+func (s *BufferCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateBuffer) Call(device Device, createInfo *BufferCreateInfo, allocator *AllocationCallbacks, buffer *Buffer) (_ret Result) {
 	var c struct {
@@ -4741,8 +4806,7 @@ type PFN_vkCreateBufferView struct {
 }
 type BufferViewCreateFlags Flags
 type BufferViewCreateInfo struct {
-	SType  StructureType
-	Next   unsafe.Pointer
+	Next   Structure
 	Flags  BufferViewCreateFlags
 	Buffer Buffer
 	Format Format
@@ -4751,8 +4815,7 @@ type BufferViewCreateInfo struct {
 }
 
 func (g *BufferViewCreateInfo) toC(c *C.VkBufferViewCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkBufferViewCreateFlags C.VkFlags
 		{
@@ -4776,8 +4839,6 @@ func (g *BufferViewCreateInfo) toC(c *C.VkBufferViewCreateInfo) {
 	}
 }
 func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkBufferViewCreateFlags Flags
 		{
@@ -4799,6 +4860,15 @@ func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c._range))
 		g.Range = DeviceSize(temp_in_VkDeviceSize)
 	}
+}
+func (s *BufferViewCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
+}
+func (s *BufferViewCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferViewCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type BufferView C.VkBufferView
@@ -4881,8 +4951,7 @@ const (
 )
 
 type ImageCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              ImageCreateFlags
 	ImageType          ImageType
 	Format             Format
@@ -4898,8 +4967,7 @@ type ImageCreateInfo struct {
 }
 
 func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkImageCreateFlags C.VkFlags
 		{
@@ -4937,8 +5005,6 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, _sa *stackAllocator) {
 	c.initialLayout = C.VkImageLayout(g.InitialLayout)
 }
 func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkImageCreateFlags Flags
 		{
@@ -4973,6 +5039,15 @@ func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
 		}
 	}
 	g.InitialLayout = ImageLayout(c.initialLayout)
+}
+func (s *ImageCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO
+}
+func (s *ImageCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateImage) Call(device Device, createInfo *ImageCreateInfo, allocator *AllocationCallbacks, image *Image) (_ret Result) {
 	var c struct {
@@ -5208,8 +5283,7 @@ func (g *ImageSubresourceRange) fromC(c *C.VkImageSubresourceRange) {
 }
 
 type ImageViewCreateInfo struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            ImageViewCreateFlags
 	Image            Image
 	ViewType         ImageViewType
@@ -5219,8 +5293,7 @@ type ImageViewCreateInfo struct {
 }
 
 func (g *ImageViewCreateInfo) toC(c *C.VkImageViewCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkImageViewCreateFlags C.VkFlags
 		{
@@ -5237,8 +5310,6 @@ func (g *ImageViewCreateInfo) toC(c *C.VkImageViewCreateInfo) {
 	g.SubresourceRange.toC(&c.subresourceRange)
 }
 func (g *ImageViewCreateInfo) fromC(c *C.VkImageViewCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkImageViewCreateFlags Flags
 		{
@@ -5253,6 +5324,15 @@ func (g *ImageViewCreateInfo) fromC(c *C.VkImageViewCreateInfo) {
 	g.Format = Format(c.format)
 	g.Components.fromC(&c.components)
 	g.SubresourceRange.fromC(&c.subresourceRange)
+}
+func (s *ImageViewCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO
+}
+func (s *ImageViewCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageViewCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ImageView C.VkImageView
@@ -5312,16 +5392,14 @@ type PFN_vkCreateShaderModule struct {
 }
 type ShaderModuleCreateFlags Flags
 type ShaderModuleCreateInfo struct {
-	SType    StructureType
-	Next     unsafe.Pointer
+	Next     Structure
 	Flags    ShaderModuleCreateFlags
 	CodeSize uint
 	Code     *uint32
 }
 
 func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkShaderModuleCreateFlags C.VkFlags
 		{
@@ -5338,8 +5416,6 @@ func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, _sa *stackAl
 	}
 }
 func (g *ShaderModuleCreateInfo) fromC(c *C.VkShaderModuleCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkShaderModuleCreateFlags Flags
 		{
@@ -5356,6 +5432,15 @@ func (g *ShaderModuleCreateInfo) fromC(c *C.VkShaderModuleCreateInfo) {
 		}
 		*g.Code = uint32(*c.pCode)
 	}
+}
+func (s *ShaderModuleCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO
+}
+func (s *ShaderModuleCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ShaderModuleCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ShaderModule C.VkShaderModule
@@ -5415,15 +5500,13 @@ type PFN_vkCreatePipelineCache struct {
 }
 type PipelineCacheCreateFlags Flags
 type PipelineCacheCreateInfo struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	Flags       PipelineCacheCreateFlags
 	InitialData []byte
 }
 
 func (g *PipelineCacheCreateInfo) toC(c *C.VkPipelineCacheCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineCacheCreateFlags C.VkFlags
 		{
@@ -5443,8 +5526,6 @@ func (g *PipelineCacheCreateInfo) toC(c *C.VkPipelineCacheCreateInfo, _sa *stack
 	}
 }
 func (g *PipelineCacheCreateInfo) fromC(c *C.VkPipelineCacheCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineCacheCreateFlags Flags
 		{
@@ -5461,6 +5542,15 @@ func (g *PipelineCacheCreateInfo) fromC(c *C.VkPipelineCacheCreateInfo) {
 			g.InitialData[i2] = slice2[i2]
 		}
 	}
+}
+func (s *PipelineCacheCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO
+}
+func (s *PipelineCacheCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineCacheCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineCache C.VkPipelineCache
@@ -5654,8 +5744,7 @@ func (g *SpecializationInfo) fromC(c *C.VkSpecializationInfo) {
 }
 
 type PipelineShaderStageCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineShaderStageCreateFlags
 	Stage              ShaderStageFlagBits
 	Module             ShaderModule
@@ -5664,8 +5753,7 @@ type PipelineShaderStageCreateInfo struct {
 }
 
 func (g *PipelineShaderStageCreateInfo) toC(c *C.VkPipelineShaderStageCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineShaderStageCreateFlags C.VkFlags
 		{
@@ -5684,8 +5772,6 @@ func (g *PipelineShaderStageCreateInfo) toC(c *C.VkPipelineShaderStageCreateInfo
 	}
 }
 func (g *PipelineShaderStageCreateInfo) fromC(c *C.VkPipelineShaderStageCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineShaderStageCreateFlags Flags
 		{
@@ -5704,6 +5790,15 @@ func (g *PipelineShaderStageCreateInfo) fromC(c *C.VkPipelineShaderStageCreateIn
 		}
 		g.SpecializationInfo.fromC(c.pSpecializationInfo)
 	}
+}
+func (s *PipelineShaderStageCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO
+}
+func (s *PipelineShaderStageCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineShaderStageCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineVertexInputStateCreateFlags Flags
@@ -5756,16 +5851,14 @@ func (g *VertexInputAttributeDescription) fromC(c *C.VkVertexInputAttributeDescr
 }
 
 type PipelineVertexInputStateCreateInfo struct {
-	SType                       StructureType
-	Next                        unsafe.Pointer
+	Next                        Structure
 	Flags                       PipelineVertexInputStateCreateFlags
 	VertexBindingDescriptions   []VertexInputBindingDescription
 	VertexAttributeDescriptions []VertexInputAttributeDescription
 }
 
 func (g *PipelineVertexInputStateCreateInfo) toC(c *C.VkPipelineVertexInputStateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineVertexInputStateCreateFlags C.VkFlags
 		{
@@ -5793,8 +5886,6 @@ func (g *PipelineVertexInputStateCreateInfo) toC(c *C.VkPipelineVertexInputState
 	}
 }
 func (g *PipelineVertexInputStateCreateInfo) fromC(c *C.VkPipelineVertexInputStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineVertexInputStateCreateFlags Flags
 		{
@@ -5819,6 +5910,15 @@ func (g *PipelineVertexInputStateCreateInfo) fromC(c *C.VkPipelineVertexInputSta
 		}
 	}
 }
+func (s *PipelineVertexInputStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO
+}
+func (s *PipelineVertexInputStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineVertexInputStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineInputAssemblyStateCreateFlags Flags
 type PrimitiveTopology int
@@ -5842,16 +5942,14 @@ const (
 )
 
 type PipelineInputAssemblyStateCreateInfo struct {
-	SType                  StructureType
-	Next                   unsafe.Pointer
+	Next                   Structure
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
 	PrimitiveRestartEnable bool
 }
 
 func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyStateCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineInputAssemblyStateCreateFlags C.VkFlags
 		{
@@ -5869,8 +5967,6 @@ func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyS
 	}
 }
 func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssemblyStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineInputAssemblyStateCreateFlags Flags
 		{
@@ -5883,18 +5979,25 @@ func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssembl
 	g.Topology = PrimitiveTopology(c.topology)
 	g.PrimitiveRestartEnable = c.primitiveRestartEnable != 0
 }
+func (s *PipelineInputAssemblyStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO
+}
+func (s *PipelineInputAssemblyStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineInputAssemblyStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineTessellationStateCreateFlags Flags
 type PipelineTessellationStateCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineTessellationStateCreateFlags
 	PatchControlPoints uint32
 }
 
 func (g *PipelineTessellationStateCreateInfo) toC(c *C.VkPipelineTessellationStateCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineTessellationStateCreateFlags C.VkFlags
 		{
@@ -5907,8 +6010,6 @@ func (g *PipelineTessellationStateCreateInfo) toC(c *C.VkPipelineTessellationSta
 	c.patchControlPoints = C.uint32_t(g.PatchControlPoints)
 }
 func (g *PipelineTessellationStateCreateInfo) fromC(c *C.VkPipelineTessellationStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineTessellationStateCreateFlags Flags
 		{
@@ -5919,6 +6020,15 @@ func (g *PipelineTessellationStateCreateInfo) fromC(c *C.VkPipelineTessellationS
 		g.Flags = PipelineTessellationStateCreateFlags(temp_in_VkPipelineTessellationStateCreateFlags)
 	}
 	g.PatchControlPoints = uint32(c.patchControlPoints)
+}
+func (s *PipelineTessellationStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO
+}
+func (s *PipelineTessellationStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineTessellationStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineViewportStateCreateFlags Flags
@@ -5991,16 +6101,14 @@ func (g *Rect2D) fromC(c *C.VkRect2D) {
 }
 
 type PipelineViewportStateCreateInfo struct {
-	SType     StructureType
-	Next      unsafe.Pointer
+	Next      Structure
 	Flags     PipelineViewportStateCreateFlags
 	Viewports []Viewport
 	Scissors  []Rect2D
 }
 
 func (g *PipelineViewportStateCreateInfo) toC(c *C.VkPipelineViewportStateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineViewportStateCreateFlags C.VkFlags
 		{
@@ -6028,8 +6136,6 @@ func (g *PipelineViewportStateCreateInfo) toC(c *C.VkPipelineViewportStateCreate
 	}
 }
 func (g *PipelineViewportStateCreateInfo) fromC(c *C.VkPipelineViewportStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineViewportStateCreateFlags Flags
 		{
@@ -6053,6 +6159,15 @@ func (g *PipelineViewportStateCreateInfo) fromC(c *C.VkPipelineViewportStateCrea
 			g.Scissors[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *PipelineViewportStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO
+}
+func (s *PipelineViewportStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineViewportStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineRasterizationStateCreateFlags Flags
@@ -6082,8 +6197,7 @@ const (
 )
 
 type PipelineRasterizationStateCreateInfo struct {
-	SType                   StructureType
-	Next                    unsafe.Pointer
+	Next                    Structure
 	Flags                   PipelineRasterizationStateCreateFlags
 	DepthClampEnable        bool
 	RasterizerDiscardEnable bool
@@ -6098,8 +6212,7 @@ type PipelineRasterizationStateCreateInfo struct {
 }
 
 func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationStateCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineRasterizationStateCreateFlags C.VkFlags
 		{
@@ -6141,8 +6254,6 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 	c.lineWidth = C.float(g.LineWidth)
 }
 func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizationStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineRasterizationStateCreateFlags Flags
 		{
@@ -6171,12 +6282,20 @@ func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizatio
 	g.DepthBiasSlopeFactor = float32(c.depthBiasSlopeFactor)
 	g.LineWidth = float32(c.lineWidth)
 }
+func (s *PipelineRasterizationStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO
+}
+func (s *PipelineRasterizationStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineRasterizationStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineMultisampleStateCreateFlags Flags
 type SampleMask uint32
 type PipelineMultisampleStateCreateInfo struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlagBits
 	SampleShadingEnable   bool
@@ -6187,8 +6306,7 @@ type PipelineMultisampleStateCreateInfo struct {
 }
 
 func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleStateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineMultisampleStateCreateFlags C.VkFlags
 		{
@@ -6225,8 +6343,6 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 	}
 }
 func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineMultisampleStateCreateFlags Flags
 		{
@@ -6251,6 +6367,15 @@ func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleSta
 	}
 	g.AlphaToCoverageEnable = c.alphaToCoverageEnable != 0
 	g.AlphaToOneEnable = c.alphaToOneEnable != 0
+}
+func (s *PipelineMultisampleStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO
+}
+func (s *PipelineMultisampleStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineMultisampleStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineDepthStencilStateCreateFlags Flags
@@ -6318,8 +6443,7 @@ func (g *StencilOpState) fromC(c *C.VkStencilOpState) {
 }
 
 type PipelineDepthStencilStateCreateInfo struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	Flags                 PipelineDepthStencilStateCreateFlags
 	DepthTestEnable       bool
 	DepthWriteEnable      bool
@@ -6333,8 +6457,7 @@ type PipelineDepthStencilStateCreateInfo struct {
 }
 
 func (g *PipelineDepthStencilStateCreateInfo) toC(c *C.VkPipelineDepthStencilStateCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineDepthStencilStateCreateFlags C.VkFlags
 		{
@@ -6371,8 +6494,6 @@ func (g *PipelineDepthStencilStateCreateInfo) toC(c *C.VkPipelineDepthStencilSta
 	c.maxDepthBounds = C.float(g.MaxDepthBounds)
 }
 func (g *PipelineDepthStencilStateCreateInfo) fromC(c *C.VkPipelineDepthStencilStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineDepthStencilStateCreateFlags Flags
 		{
@@ -6391,6 +6512,15 @@ func (g *PipelineDepthStencilStateCreateInfo) fromC(c *C.VkPipelineDepthStencilS
 	g.Back.fromC(&c.back)
 	g.MinDepthBounds = float32(c.minDepthBounds)
 	g.MaxDepthBounds = float32(c.maxDepthBounds)
+}
+func (s *PipelineDepthStencilStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO
+}
+func (s *PipelineDepthStencilStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineDepthStencilStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineColorBlendStateCreateFlags Flags
@@ -6561,8 +6691,7 @@ func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttac
 }
 
 type PipelineColorBlendStateCreateInfo struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	Flags          PipelineColorBlendStateCreateFlags
 	LogicOpEnable  bool
 	LogicOp        LogicOp
@@ -6571,8 +6700,7 @@ type PipelineColorBlendStateCreateInfo struct {
 }
 
 func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineColorBlendStateCreateFlags C.VkFlags
 		{
@@ -6601,8 +6729,6 @@ func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCr
 	}
 }
 func (g *PipelineColorBlendStateCreateInfo) fromC(c *C.VkPipelineColorBlendStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineColorBlendStateCreateFlags Flags
 		{
@@ -6624,6 +6750,15 @@ func (g *PipelineColorBlendStateCreateInfo) fromC(c *C.VkPipelineColorBlendState
 	for i, _ := range g.BlendConstants {
 		g.BlendConstants[i] = float32(c.blendConstants[i])
 	}
+}
+func (s *PipelineColorBlendStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO
+}
+func (s *PipelineColorBlendStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineColorBlendStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type PipelineDynamicStateCreateFlags Flags
@@ -6649,15 +6784,13 @@ const (
 )
 
 type PipelineDynamicStateCreateInfo struct {
-	SType         StructureType
-	Next          unsafe.Pointer
+	Next          Structure
 	Flags         PipelineDynamicStateCreateFlags
 	DynamicStates []DynamicState
 }
 
 func (g *PipelineDynamicStateCreateInfo) toC(c *C.VkPipelineDynamicStateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineDynamicStateCreateFlags C.VkFlags
 		{
@@ -6677,8 +6810,6 @@ func (g *PipelineDynamicStateCreateInfo) toC(c *C.VkPipelineDynamicStateCreateIn
 	}
 }
 func (g *PipelineDynamicStateCreateInfo) fromC(c *C.VkPipelineDynamicStateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineDynamicStateCreateFlags Flags
 		{
@@ -6696,13 +6827,21 @@ func (g *PipelineDynamicStateCreateInfo) fromC(c *C.VkPipelineDynamicStateCreate
 		}
 	}
 }
+func (s *PipelineDynamicStateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO
+}
+func (s *PipelineDynamicStateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineDynamicStateCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type PipelineLayout C.VkPipelineLayout
 type RenderPass C.VkRenderPass
 type Pipeline C.VkPipeline
 type GraphicsPipelineCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineCreateFlags
 	Stages             []PipelineShaderStageCreateInfo
 	VertexInputState   *PipelineVertexInputStateCreateInfo
@@ -6722,8 +6861,7 @@ type GraphicsPipelineCreateInfo struct {
 }
 
 func (g *GraphicsPipelineCreateInfo) toC(c *C.VkGraphicsPipelineCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineCreateFlags C.VkFlags
 		{
@@ -6784,8 +6922,6 @@ func (g *GraphicsPipelineCreateInfo) toC(c *C.VkGraphicsPipelineCreateInfo, _sa 
 	c.basePipelineIndex = C.int32_t(g.BasePipelineIndex)
 }
 func (g *GraphicsPipelineCreateInfo) fromC(c *C.VkGraphicsPipelineCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineCreateFlags Flags
 		{
@@ -6862,6 +6998,15 @@ func (g *GraphicsPipelineCreateInfo) fromC(c *C.VkGraphicsPipelineCreateInfo) {
 	g.BasePipelineHandle = Pipeline(c.basePipelineHandle)
 	g.BasePipelineIndex = int32(c.basePipelineIndex)
 }
+func (s *GraphicsPipelineCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO
+}
+func (s *GraphicsPipelineCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *GraphicsPipelineCreateInfo) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCache, createInfos []GraphicsPipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
@@ -6904,8 +7049,7 @@ type PFN_vkCreateComputePipelines struct {
 	Raw C.PFN_vkCreateComputePipelines
 }
 type ComputePipelineCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineCreateFlags
 	Stage              PipelineShaderStageCreateInfo
 	Layout             PipelineLayout
@@ -6914,8 +7058,7 @@ type ComputePipelineCreateInfo struct {
 }
 
 func (g *ComputePipelineCreateInfo) toC(c *C.VkComputePipelineCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineCreateFlags C.VkFlags
 		{
@@ -6931,8 +7074,6 @@ func (g *ComputePipelineCreateInfo) toC(c *C.VkComputePipelineCreateInfo, _sa *s
 	c.basePipelineIndex = C.int32_t(g.BasePipelineIndex)
 }
 func (g *ComputePipelineCreateInfo) fromC(c *C.VkComputePipelineCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineCreateFlags Flags
 		{
@@ -6946,6 +7087,15 @@ func (g *ComputePipelineCreateInfo) fromC(c *C.VkComputePipelineCreateInfo) {
 	g.Layout = PipelineLayout(c.layout)
 	g.BasePipelineHandle = Pipeline(c.basePipelineHandle)
 	g.BasePipelineIndex = int32(c.basePipelineIndex)
+}
+func (s *ComputePipelineCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO
+}
+func (s *ComputePipelineCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *ComputePipelineCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateComputePipelines) Call(device Device, pipelineCache PipelineCache, createInfos []ComputePipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
 	var c struct {
@@ -7046,16 +7196,14 @@ func (g *PushConstantRange) fromC(c *C.VkPushConstantRange) {
 }
 
 type PipelineLayoutCreateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              PipelineLayoutCreateFlags
 	SetLayouts         []DescriptorSetLayout
 	PushConstantRanges []PushConstantRange
 }
 
 func (g *PipelineLayoutCreateInfo) toC(c *C.VkPipelineLayoutCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkPipelineLayoutCreateFlags C.VkFlags
 		{
@@ -7083,8 +7231,6 @@ func (g *PipelineLayoutCreateInfo) toC(c *C.VkPipelineLayoutCreateInfo, _sa *sta
 	}
 }
 func (g *PipelineLayoutCreateInfo) fromC(c *C.VkPipelineLayoutCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkPipelineLayoutCreateFlags Flags
 		{
@@ -7108,6 +7254,15 @@ func (g *PipelineLayoutCreateInfo) fromC(c *C.VkPipelineLayoutCreateInfo) {
 			g.PushConstantRanges[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *PipelineLayoutCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO
+}
+func (s *PipelineLayoutCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PipelineLayoutCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreatePipelineLayout) Call(device Device, createInfo *PipelineLayoutCreateInfo, allocator *AllocationCallbacks, pipelineLayout *PipelineLayout) (_ret Result) {
 	var c struct {
@@ -7216,8 +7371,7 @@ const (
 )
 
 type SamplerCreateInfo struct {
-	SType                   StructureType
-	Next                    unsafe.Pointer
+	Next                    Structure
 	Flags                   SamplerCreateFlags
 	MagFilter               Filter
 	MinFilter               Filter
@@ -7237,8 +7391,7 @@ type SamplerCreateInfo struct {
 }
 
 func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkSamplerCreateFlags C.VkFlags
 		{
@@ -7277,8 +7430,6 @@ func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
 	}
 }
 func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkSamplerCreateFlags Flags
 		{
@@ -7303,6 +7454,15 @@ func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
 	g.MaxLod = float32(c.maxLod)
 	g.BorderColor = BorderColor(c.borderColor)
 	g.UnnormalizedCoordinates = c.unnormalizedCoordinates != 0
+}
+func (s *SamplerCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO
+}
+func (s *SamplerCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SamplerCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type Sampler C.VkSampler
@@ -7432,15 +7592,13 @@ func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
 }
 
 type DescriptorSetLayoutCreateInfo struct {
-	SType    StructureType
-	Next     unsafe.Pointer
+	Next     Structure
 	Flags    DescriptorSetLayoutCreateFlags
 	Bindings []DescriptorSetLayoutBinding
 }
 
 func (g *DescriptorSetLayoutCreateInfo) toC(c *C.VkDescriptorSetLayoutCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDescriptorSetLayoutCreateFlags C.VkFlags
 		{
@@ -7460,8 +7618,6 @@ func (g *DescriptorSetLayoutCreateInfo) toC(c *C.VkDescriptorSetLayoutCreateInfo
 	}
 }
 func (g *DescriptorSetLayoutCreateInfo) fromC(c *C.VkDescriptorSetLayoutCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDescriptorSetLayoutCreateFlags Flags
 		{
@@ -7478,6 +7634,15 @@ func (g *DescriptorSetLayoutCreateInfo) fromC(c *C.VkDescriptorSetLayoutCreateIn
 			g.Bindings[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *DescriptorSetLayoutCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO
+}
+func (s *DescriptorSetLayoutCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorSetLayoutCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateDescriptorSetLayout) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, allocator *AllocationCallbacks, setLayout *DescriptorSetLayout) (_ret Result) {
 	var c struct {
@@ -7548,16 +7713,14 @@ func (g *DescriptorPoolSize) fromC(c *C.VkDescriptorPoolSize) {
 }
 
 type DescriptorPoolCreateInfo struct {
-	SType     StructureType
-	Next      unsafe.Pointer
+	Next      Structure
 	Flags     DescriptorPoolCreateFlags
 	MaxSets   uint32
 	PoolSizes []DescriptorPoolSize
 }
 
 func (g *DescriptorPoolCreateInfo) toC(c *C.VkDescriptorPoolCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDescriptorPoolCreateFlags C.VkFlags
 		{
@@ -7578,8 +7741,6 @@ func (g *DescriptorPoolCreateInfo) toC(c *C.VkDescriptorPoolCreateInfo, _sa *sta
 	}
 }
 func (g *DescriptorPoolCreateInfo) fromC(c *C.VkDescriptorPoolCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDescriptorPoolCreateFlags Flags
 		{
@@ -7597,6 +7758,15 @@ func (g *DescriptorPoolCreateInfo) fromC(c *C.VkDescriptorPoolCreateInfo) {
 			g.PoolSizes[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *DescriptorPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO
+}
+func (s *DescriptorPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DescriptorPool C.VkDescriptorPool
@@ -7683,15 +7853,13 @@ type PFN_vkAllocateDescriptorSets struct {
 	Raw C.PFN_vkAllocateDescriptorSets
 }
 type DescriptorSetAllocateInfo struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	DescriptorPool DescriptorPool
 	SetLayouts     []DescriptorSetLayout
 }
 
 func (g *DescriptorSetAllocateInfo) toC(c *C.VkDescriptorSetAllocateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.descriptorPool = C.VkDescriptorPool(g.DescriptorPool)
 	c.descriptorSetCount = C.uint32_t(len(g.SetLayouts))
 	{
@@ -7703,8 +7871,6 @@ func (g *DescriptorSetAllocateInfo) toC(c *C.VkDescriptorSetAllocateInfo, _sa *s
 	}
 }
 func (g *DescriptorSetAllocateInfo) fromC(c *C.VkDescriptorSetAllocateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DescriptorPool = DescriptorPool(c.descriptorPool)
 	g.SetLayouts = make([]DescriptorSetLayout, int(c.descriptorSetCount))
 	{
@@ -7713,6 +7879,15 @@ func (g *DescriptorSetAllocateInfo) fromC(c *C.VkDescriptorSetAllocateInfo) {
 			g.SetLayouts[i2] = DescriptorSetLayout(slice2[i2])
 		}
 	}
+}
+func (s *DescriptorSetAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO
+}
+func (s *DescriptorSetAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorSetAllocateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DescriptorSet C.VkDescriptorSet
@@ -7826,8 +8001,7 @@ func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
 }
 
 type WriteDescriptorSet struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	DstSet          DescriptorSet
 	DstBinding      uint32
 	DstArrayElement uint32
@@ -7839,8 +8013,7 @@ type WriteDescriptorSet struct {
 }
 
 func (g *WriteDescriptorSet) toC(c *C.VkWriteDescriptorSet, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.dstSet = C.VkDescriptorSet(g.DstSet)
 	c.dstBinding = C.uint32_t(g.DstBinding)
 	c.dstArrayElement = C.uint32_t(g.DstArrayElement)
@@ -7860,8 +8033,6 @@ func (g *WriteDescriptorSet) toC(c *C.VkWriteDescriptorSet, _sa *stackAllocator)
 	}
 }
 func (g *WriteDescriptorSet) fromC(c *C.VkWriteDescriptorSet) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DstSet = DescriptorSet(c.dstSet)
 	g.DstBinding = uint32(c.dstBinding)
 	g.DstArrayElement = uint32(c.dstArrayElement)
@@ -7886,10 +8057,18 @@ func (g *WriteDescriptorSet) fromC(c *C.VkWriteDescriptorSet) {
 		*g.TexelBufferView = BufferView(*c.pTexelBufferView)
 	}
 }
+func (s *WriteDescriptorSet) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET
+}
+func (s *WriteDescriptorSet) GetNext() Structure {
+	return s.Next
+}
+func (s *WriteDescriptorSet) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CopyDescriptorSet struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	SrcSet          DescriptorSet
 	SrcBinding      uint32
 	SrcArrayElement uint32
@@ -7900,8 +8079,7 @@ type CopyDescriptorSet struct {
 }
 
 func (g *CopyDescriptorSet) toC(c *C.VkCopyDescriptorSet) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.srcSet = C.VkDescriptorSet(g.SrcSet)
 	c.srcBinding = C.uint32_t(g.SrcBinding)
 	c.srcArrayElement = C.uint32_t(g.SrcArrayElement)
@@ -7911,8 +8089,6 @@ func (g *CopyDescriptorSet) toC(c *C.VkCopyDescriptorSet) {
 	c.descriptorCount = C.uint32_t(g.DescriptorCount)
 }
 func (g *CopyDescriptorSet) fromC(c *C.VkCopyDescriptorSet) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.SrcSet = DescriptorSet(c.srcSet)
 	g.SrcBinding = uint32(c.srcBinding)
 	g.SrcArrayElement = uint32(c.srcArrayElement)
@@ -7920,6 +8096,15 @@ func (g *CopyDescriptorSet) fromC(c *C.VkCopyDescriptorSet) {
 	g.DstBinding = uint32(c.dstBinding)
 	g.DstArrayElement = uint32(c.dstArrayElement)
 	g.DescriptorCount = uint32(c.descriptorCount)
+}
+func (s *CopyDescriptorSet) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COPY_DESCRIPTOR_SET
+}
+func (s *CopyDescriptorSet) GetNext() Structure {
+	return s.Next
+}
+func (s *CopyDescriptorSet) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkUpdateDescriptorSets) Call(device Device, descriptorWrites []WriteDescriptorSet, descriptorCopies []CopyDescriptorSet) {
 	var c struct {
@@ -7956,8 +8141,7 @@ type PFN_vkCreateFramebuffer struct {
 }
 type FramebufferCreateFlags Flags
 type FramebufferCreateInfo struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	Flags       FramebufferCreateFlags
 	RenderPass  RenderPass
 	Attachments []ImageView
@@ -7967,8 +8151,7 @@ type FramebufferCreateInfo struct {
 }
 
 func (g *FramebufferCreateInfo) toC(c *C.VkFramebufferCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkFramebufferCreateFlags C.VkFlags
 		{
@@ -7992,8 +8175,6 @@ func (g *FramebufferCreateInfo) toC(c *C.VkFramebufferCreateInfo, _sa *stackAllo
 	c.layers = C.uint32_t(g.Layers)
 }
 func (g *FramebufferCreateInfo) fromC(c *C.VkFramebufferCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkFramebufferCreateFlags Flags
 		{
@@ -8014,6 +8195,15 @@ func (g *FramebufferCreateInfo) fromC(c *C.VkFramebufferCreateInfo) {
 	g.Width = uint32(c.width)
 	g.Height = uint32(c.height)
 	g.Layers = uint32(c.layers)
+}
+func (s *FramebufferCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO
+}
+func (s *FramebufferCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *FramebufferCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type Framebuffer C.VkFramebuffer
@@ -8388,8 +8578,7 @@ func (g *SubpassDependency) fromC(c *C.VkSubpassDependency) {
 }
 
 type RenderPassCreateInfo struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	Flags        RenderPassCreateFlags
 	Attachments  []AttachmentDescription
 	Subpasses    []SubpassDescription
@@ -8397,8 +8586,7 @@ type RenderPassCreateInfo struct {
 }
 
 func (g *RenderPassCreateInfo) toC(c *C.VkRenderPassCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkRenderPassCreateFlags C.VkFlags
 		{
@@ -8434,8 +8622,6 @@ func (g *RenderPassCreateInfo) toC(c *C.VkRenderPassCreateInfo, _sa *stackAlloca
 	}
 }
 func (g *RenderPassCreateInfo) fromC(c *C.VkRenderPassCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkRenderPassCreateFlags Flags
 		{
@@ -8466,6 +8652,15 @@ func (g *RenderPassCreateInfo) fromC(c *C.VkRenderPassCreateInfo) {
 			g.Dependencies[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *RenderPassCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO
+}
+func (s *RenderPassCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *RenderPassCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateRenderPass) Call(device Device, createInfo *RenderPassCreateInfo, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
 	var c struct {
@@ -8544,15 +8739,13 @@ type PFN_vkCreateCommandPool struct {
 }
 type CommandPoolCreateFlags Flags
 type CommandPoolCreateInfo struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            CommandPoolCreateFlags
 	QueueFamilyIndex uint32
 }
 
 func (g *CommandPoolCreateInfo) toC(c *C.VkCommandPoolCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkCommandPoolCreateFlags C.VkFlags
 		{
@@ -8565,8 +8758,6 @@ func (g *CommandPoolCreateInfo) toC(c *C.VkCommandPoolCreateInfo) {
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 }
 func (g *CommandPoolCreateInfo) fromC(c *C.VkCommandPoolCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkCommandPoolCreateFlags Flags
 		{
@@ -8577,6 +8768,15 @@ func (g *CommandPoolCreateInfo) fromC(c *C.VkCommandPoolCreateInfo) {
 		g.Flags = CommandPoolCreateFlags(temp_in_VkCommandPoolCreateFlags)
 	}
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
+}
+func (s *CommandPoolCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO
+}
+func (s *CommandPoolCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandPoolCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type CommandPool C.VkCommandPool
@@ -8674,26 +8874,31 @@ const (
 )
 
 type CommandBufferAllocateInfo struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	CommandPool        CommandPool
 	Level              CommandBufferLevel
 	CommandBufferCount uint32
 }
 
 func (g *CommandBufferAllocateInfo) toC(c *C.VkCommandBufferAllocateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.commandPool = C.VkCommandPool(g.CommandPool)
 	c.level = C.VkCommandBufferLevel(g.Level)
 	c.commandBufferCount = C.uint32_t(g.CommandBufferCount)
 }
 func (g *CommandBufferAllocateInfo) fromC(c *C.VkCommandBufferAllocateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.CommandPool = CommandPool(c.commandPool)
 	g.Level = CommandBufferLevel(c.level)
 	g.CommandBufferCount = uint32(c.commandBufferCount)
+}
+func (s *CommandBufferAllocateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO
+}
+func (s *CommandBufferAllocateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferAllocateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
 	var c struct {
@@ -8753,8 +8958,7 @@ type PFN_vkBeginCommandBuffer struct {
 type CommandBufferUsageFlags Flags
 type QueryControlFlags Flags
 type CommandBufferInheritanceInfo struct {
-	SType                StructureType
-	Next                 unsafe.Pointer
+	Next                 Structure
 	RenderPass           RenderPass
 	Subpass              uint32
 	Framebuffer          Framebuffer
@@ -8764,8 +8968,7 @@ type CommandBufferInheritanceInfo struct {
 }
 
 func (g *CommandBufferInheritanceInfo) toC(c *C.VkCommandBufferInheritanceInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.subpass = C.uint32_t(g.Subpass)
 	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
@@ -8794,8 +8997,6 @@ func (g *CommandBufferInheritanceInfo) toC(c *C.VkCommandBufferInheritanceInfo) 
 	}
 }
 func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.RenderPass = RenderPass(c.renderPass)
 	g.Subpass = uint32(c.subpass)
 	g.Framebuffer = Framebuffer(c.framebuffer)
@@ -8819,17 +9020,24 @@ func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo
 		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
 	}
 }
+func (s *CommandBufferInheritanceInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
+}
+func (s *CommandBufferInheritanceInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferInheritanceInfo) SetNext(n Structure) {
+	s.Next = n
+}
 
 type CommandBufferBeginInfo struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           CommandBufferUsageFlags
 	InheritanceInfo *CommandBufferInheritanceInfo
 }
 
 func (g *CommandBufferBeginInfo) toC(c *C.VkCommandBufferBeginInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkCommandBufferUsageFlags C.VkFlags
 		{
@@ -8845,8 +9053,6 @@ func (g *CommandBufferBeginInfo) toC(c *C.VkCommandBufferBeginInfo, _sa *stackAl
 	}
 }
 func (g *CommandBufferBeginInfo) fromC(c *C.VkCommandBufferBeginInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkCommandBufferUsageFlags Flags
 		{
@@ -8862,6 +9068,15 @@ func (g *CommandBufferBeginInfo) fromC(c *C.VkCommandBufferBeginInfo) {
 		}
 		g.InheritanceInfo.fromC(c.pInheritanceInfo)
 	}
+}
+func (s *CommandBufferBeginInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+}
+func (s *CommandBufferBeginInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *CommandBufferBeginInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkBeginCommandBuffer) Call(commandBuffer CommandBuffer, beginInfo *CommandBufferBeginInfo) (_ret Result) {
 	var c struct {
@@ -10074,15 +10289,13 @@ type PFN_vkCmdWaitEvents struct {
 	Raw C.PFN_vkCmdWaitEvents
 }
 type MemoryBarrier struct {
-	SType         StructureType
-	Next          unsafe.Pointer
+	Next          Structure
 	SrcAccessMask AccessFlags
 	DstAccessMask AccessFlags
 }
 
 func (g *MemoryBarrier) toC(c *C.VkMemoryBarrier) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkAccessFlags C.VkFlags
 		{
@@ -10103,8 +10316,6 @@ func (g *MemoryBarrier) toC(c *C.VkMemoryBarrier) {
 	}
 }
 func (g *MemoryBarrier) fromC(c *C.VkMemoryBarrier) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkAccessFlags Flags
 		{
@@ -10124,10 +10335,18 @@ func (g *MemoryBarrier) fromC(c *C.VkMemoryBarrier) {
 		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
 	}
 }
+func (s *MemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_BARRIER
+}
+func (s *MemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryBarrier) SetNext(n Structure) {
+	s.Next = n
+}
 
 type BufferMemoryBarrier struct {
-	SType               StructureType
-	Next                unsafe.Pointer
+	Next                Structure
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
 	SrcQueueFamilyIndex uint32
@@ -10138,8 +10357,7 @@ type BufferMemoryBarrier struct {
 }
 
 func (g *BufferMemoryBarrier) toC(c *C.VkBufferMemoryBarrier) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkAccessFlags C.VkFlags
 		{
@@ -10173,8 +10391,6 @@ func (g *BufferMemoryBarrier) toC(c *C.VkBufferMemoryBarrier) {
 	}
 }
 func (g *BufferMemoryBarrier) fromC(c *C.VkBufferMemoryBarrier) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkAccessFlags Flags
 		{
@@ -10207,10 +10423,18 @@ func (g *BufferMemoryBarrier) fromC(c *C.VkBufferMemoryBarrier) {
 		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
+func (s *BufferMemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
+}
+func (s *BufferMemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferMemoryBarrier) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ImageMemoryBarrier struct {
-	SType               StructureType
-	Next                unsafe.Pointer
+	Next                Structure
 	SrcAccessMask       AccessFlags
 	DstAccessMask       AccessFlags
 	OldLayout           ImageLayout
@@ -10222,8 +10446,7 @@ type ImageMemoryBarrier struct {
 }
 
 func (g *ImageMemoryBarrier) toC(c *C.VkImageMemoryBarrier) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkAccessFlags C.VkFlags
 		{
@@ -10250,8 +10473,6 @@ func (g *ImageMemoryBarrier) toC(c *C.VkImageMemoryBarrier) {
 	g.SubresourceRange.toC(&c.subresourceRange)
 }
 func (g *ImageMemoryBarrier) fromC(c *C.VkImageMemoryBarrier) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkAccessFlags Flags
 		{
@@ -10276,6 +10497,15 @@ func (g *ImageMemoryBarrier) fromC(c *C.VkImageMemoryBarrier) {
 	g.DstQueueFamilyIndex = uint32(c.dstQueueFamilyIndex)
 	g.Image = Image(c.image)
 	g.SubresourceRange.fromC(&c.subresourceRange)
+}
+func (s *ImageMemoryBarrier) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER
+}
+func (s *ImageMemoryBarrier) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageMemoryBarrier) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
 	var c struct {
@@ -10607,8 +10837,7 @@ type PFN_vkCmdBeginRenderPass struct {
 	Raw C.PFN_vkCmdBeginRenderPass
 }
 type RenderPassBeginInfo struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	RenderPass  RenderPass
 	Framebuffer Framebuffer
 	RenderArea  Rect2D
@@ -10616,8 +10845,7 @@ type RenderPassBeginInfo struct {
 }
 
 func (g *RenderPassBeginInfo) toC(c *C.VkRenderPassBeginInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
 	g.RenderArea.toC(&c.renderArea)
@@ -10631,8 +10859,6 @@ func (g *RenderPassBeginInfo) toC(c *C.VkRenderPassBeginInfo, _sa *stackAllocato
 	}
 }
 func (g *RenderPassBeginInfo) fromC(c *C.VkRenderPassBeginInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.RenderPass = RenderPass(c.renderPass)
 	g.Framebuffer = Framebuffer(c.framebuffer)
 	g.RenderArea.fromC(&c.renderArea)
@@ -10643,6 +10869,15 @@ func (g *RenderPassBeginInfo) fromC(c *C.VkRenderPassBeginInfo) {
 			g.ClearValues[i2].Raw = slice2[i2]
 		}
 	}
+}
+func (s *RenderPassBeginInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO
+}
+func (s *RenderPassBeginInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *RenderPassBeginInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SubpassContents int
@@ -13796,16 +14031,14 @@ type PFN_vkBindBufferMemory2 struct {
 	Raw C.PFN_vkBindBufferMemory2
 }
 type BindBufferMemoryInfo struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	Buffer       Buffer
 	Memory       DeviceMemory
 	MemoryOffset DeviceSize
 }
 
 func (g *BindBufferMemoryInfo) toC(c *C.VkBindBufferMemoryInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.buffer = C.VkBuffer(g.Buffer)
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
@@ -13815,8 +14048,6 @@ func (g *BindBufferMemoryInfo) toC(c *C.VkBindBufferMemoryInfo) {
 	}
 }
 func (g *BindBufferMemoryInfo) fromC(c *C.VkBindBufferMemoryInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Buffer = Buffer(c.buffer)
 	g.Memory = DeviceMemory(c.memory)
 	{
@@ -13824,6 +14055,15 @@ func (g *BindBufferMemoryInfo) fromC(c *C.VkBindBufferMemoryInfo) {
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
 		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
+}
+func (s *BindBufferMemoryInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
+}
+func (s *BindBufferMemoryInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BindBufferMemoryInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkBindBufferMemory2) Call(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
 	var c struct {
@@ -13852,16 +14092,14 @@ type PFN_vkBindImageMemory2 struct {
 	Raw C.PFN_vkBindImageMemory2
 }
 type BindImageMemoryInfo struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	Image        Image
 	Memory       DeviceMemory
 	MemoryOffset DeviceSize
 }
 
 func (g *BindImageMemoryInfo) toC(c *C.VkBindImageMemoryInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.image = C.VkImage(g.Image)
 	c.memory = C.VkDeviceMemory(g.Memory)
 	{
@@ -13871,8 +14109,6 @@ func (g *BindImageMemoryInfo) toC(c *C.VkBindImageMemoryInfo) {
 	}
 }
 func (g *BindImageMemoryInfo) fromC(c *C.VkBindImageMemoryInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Image = Image(c.image)
 	g.Memory = DeviceMemory(c.memory)
 	{
@@ -13880,6 +14116,15 @@ func (g *BindImageMemoryInfo) fromC(c *C.VkBindImageMemoryInfo) {
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
 		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
+}
+func (s *BindImageMemoryInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
+}
+func (s *BindImageMemoryInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *BindImageMemoryInfo) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkBindImageMemory2) Call(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
 	var c struct {
@@ -13983,16 +14228,14 @@ type PFN_vkEnumeratePhysicalDeviceGroups struct {
 	Raw C.PFN_vkEnumeratePhysicalDeviceGroups
 }
 type PhysicalDeviceGroupProperties struct {
-	SType               StructureType
-	Next                unsafe.Pointer
+	Next                Structure
 	PhysicalDeviceCount uint32
 	PhysicalDevices     [32]PhysicalDevice
 	SubsetAllocation    bool
 }
 
 func (g *PhysicalDeviceGroupProperties) toC(c *C.VkPhysicalDeviceGroupProperties) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.physicalDeviceCount = C.uint32_t(g.PhysicalDeviceCount)
 	for i, _ := range g.PhysicalDevices {
 		c.physicalDevices[i] = C.VkPhysicalDevice(g.PhysicalDevices[i])
@@ -14004,13 +14247,20 @@ func (g *PhysicalDeviceGroupProperties) toC(c *C.VkPhysicalDeviceGroupProperties
 	}
 }
 func (g *PhysicalDeviceGroupProperties) fromC(c *C.VkPhysicalDeviceGroupProperties) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.PhysicalDeviceCount = uint32(c.physicalDeviceCount)
 	for i, _ := range g.PhysicalDevices {
 		g.PhysicalDevices[i] = PhysicalDevice(c.physicalDevices[i])
 	}
 	g.SubsetAllocation = c.subsetAllocation != 0
+}
+func (s *PhysicalDeviceGroupProperties) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GROUP_PROPERTIES
+}
+func (s *PhysicalDeviceGroupProperties) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceGroupProperties) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
@@ -14043,37 +14293,47 @@ type PFN_vkGetImageMemoryRequirements2 struct {
 	Raw C.PFN_vkGetImageMemoryRequirements2
 }
 type ImageMemoryRequirementsInfo2 struct {
-	SType StructureType
-	Next  unsafe.Pointer
+	Next  Structure
 	Image Image
 }
 
 func (g *ImageMemoryRequirementsInfo2) toC(c *C.VkImageMemoryRequirementsInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.image = C.VkImage(g.Image)
 }
 func (g *ImageMemoryRequirementsInfo2) fromC(c *C.VkImageMemoryRequirementsInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Image = Image(c.image)
+}
+func (s *ImageMemoryRequirementsInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_MEMORY_REQUIREMENTS_INFO_2
+}
+func (s *ImageMemoryRequirementsInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageMemoryRequirementsInfo2) SetNext(n Structure) {
+	s.Next = n
 }
 
 type MemoryRequirements2 struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	MemoryRequirements MemoryRequirements
 }
 
 func (g *MemoryRequirements2) toC(c *C.VkMemoryRequirements2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.MemoryRequirements.toC(&c.memoryRequirements)
 }
 func (g *MemoryRequirements2) fromC(c *C.VkMemoryRequirements2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MemoryRequirements.fromC(&c.memoryRequirements)
+}
+func (s *MemoryRequirements2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_REQUIREMENTS_2
+}
+func (s *MemoryRequirements2) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryRequirements2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
@@ -14102,20 +14362,25 @@ type PFN_vkGetBufferMemoryRequirements2 struct {
 	Raw C.PFN_vkGetBufferMemoryRequirements2
 }
 type BufferMemoryRequirementsInfo2 struct {
-	SType  StructureType
-	Next   unsafe.Pointer
+	Next   Structure
 	Buffer Buffer
 }
 
 func (g *BufferMemoryRequirementsInfo2) toC(c *C.VkBufferMemoryRequirementsInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.buffer = C.VkBuffer(g.Buffer)
 }
 func (g *BufferMemoryRequirementsInfo2) fromC(c *C.VkBufferMemoryRequirementsInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Buffer = Buffer(c.buffer)
+}
+func (s *BufferMemoryRequirementsInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_REQUIREMENTS_INFO_2
+}
+func (s *BufferMemoryRequirementsInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *BufferMemoryRequirementsInfo2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
@@ -14144,37 +14409,47 @@ type PFN_vkGetImageSparseMemoryRequirements2 struct {
 	Raw C.PFN_vkGetImageSparseMemoryRequirements2
 }
 type ImageSparseMemoryRequirementsInfo2 struct {
-	SType StructureType
-	Next  unsafe.Pointer
+	Next  Structure
 	Image Image
 }
 
 func (g *ImageSparseMemoryRequirementsInfo2) toC(c *C.VkImageSparseMemoryRequirementsInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.image = C.VkImage(g.Image)
 }
 func (g *ImageSparseMemoryRequirementsInfo2) fromC(c *C.VkImageSparseMemoryRequirementsInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Image = Image(c.image)
+}
+func (s *ImageSparseMemoryRequirementsInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_SPARSE_MEMORY_REQUIREMENTS_INFO_2
+}
+func (s *ImageSparseMemoryRequirementsInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageSparseMemoryRequirementsInfo2) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SparseImageMemoryRequirements2 struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	MemoryRequirements SparseImageMemoryRequirements
 }
 
 func (g *SparseImageMemoryRequirements2) toC(c *C.VkSparseImageMemoryRequirements2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.MemoryRequirements.toC(&c.memoryRequirements)
 }
 func (g *SparseImageMemoryRequirements2) fromC(c *C.VkSparseImageMemoryRequirements2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MemoryRequirements.fromC(&c.memoryRequirements)
+}
+func (s *SparseImageMemoryRequirements2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SPARSE_IMAGE_MEMORY_REQUIREMENTS_2
+}
+func (s *SparseImageMemoryRequirements2) GetNext() Structure {
+	return s.Next
+}
+func (s *SparseImageMemoryRequirements2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
 	var c struct {
@@ -14209,20 +14484,25 @@ type PFN_vkGetPhysicalDeviceFeatures2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceFeatures2
 }
 type PhysicalDeviceFeatures2 struct {
-	SType    StructureType
-	Next     unsafe.Pointer
+	Next     Structure
 	Features PhysicalDeviceFeatures
 }
 
 func (g *PhysicalDeviceFeatures2) toC(c *C.VkPhysicalDeviceFeatures2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.Features.toC(&c.features)
 }
 func (g *PhysicalDeviceFeatures2) fromC(c *C.VkPhysicalDeviceFeatures2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Features.fromC(&c.features)
+}
+func (s *PhysicalDeviceFeatures2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2
+}
+func (s *PhysicalDeviceFeatures2) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceFeatures2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
 	var c struct {
@@ -14246,20 +14526,25 @@ type PFN_vkGetPhysicalDeviceProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceProperties2
 }
 type PhysicalDeviceProperties2 struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Properties PhysicalDeviceProperties
 }
 
 func (g *PhysicalDeviceProperties2) toC(c *C.VkPhysicalDeviceProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.Properties.toC(&c.properties)
 }
 func (g *PhysicalDeviceProperties2) fromC(c *C.VkPhysicalDeviceProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Properties.fromC(&c.properties)
+}
+func (s *PhysicalDeviceProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2
+}
+func (s *PhysicalDeviceProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
 	var c struct {
@@ -14283,20 +14568,25 @@ type PFN_vkGetPhysicalDeviceFormatProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceFormatProperties2
 }
 type FormatProperties2 struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	FormatProperties FormatProperties
 }
 
 func (g *FormatProperties2) toC(c *C.VkFormatProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.FormatProperties.toC(&c.formatProperties)
 }
 func (g *FormatProperties2) fromC(c *C.VkFormatProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.FormatProperties.fromC(&c.formatProperties)
+}
+func (s *FormatProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2
+}
+func (s *FormatProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *FormatProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
 	var c struct {
@@ -14322,8 +14612,7 @@ type PFN_vkGetPhysicalDeviceImageFormatProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceImageFormatProperties2
 }
 type PhysicalDeviceImageFormatInfo2 struct {
-	SType  StructureType
-	Next   unsafe.Pointer
+	Next   Structure
 	Format Format
 	Type   ImageType
 	Tiling ImageTiling
@@ -14332,8 +14621,7 @@ type PhysicalDeviceImageFormatInfo2 struct {
 }
 
 func (g *PhysicalDeviceImageFormatInfo2) toC(c *C.VkPhysicalDeviceImageFormatInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.format = C.VkFormat(g.Format)
 	c._type = C.VkImageType(g.Type)
 	c.tiling = C.VkImageTiling(g.Tiling)
@@ -14357,8 +14645,6 @@ func (g *PhysicalDeviceImageFormatInfo2) toC(c *C.VkPhysicalDeviceImageFormatInf
 	}
 }
 func (g *PhysicalDeviceImageFormatInfo2) fromC(c *C.VkPhysicalDeviceImageFormatInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Format = Format(c.format)
 	g.Type = ImageType(c._type)
 	g.Tiling = ImageTiling(c.tiling)
@@ -14381,22 +14667,36 @@ func (g *PhysicalDeviceImageFormatInfo2) fromC(c *C.VkPhysicalDeviceImageFormatI
 		g.Flags = ImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
 }
+func (s *PhysicalDeviceImageFormatInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
+}
+func (s *PhysicalDeviceImageFormatInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceImageFormatInfo2) SetNext(n Structure) {
+	s.Next = n
+}
 
 type ImageFormatProperties2 struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	ImageFormatProperties ImageFormatProperties
 }
 
 func (g *ImageFormatProperties2) toC(c *C.VkImageFormatProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.ImageFormatProperties.toC(&c.imageFormatProperties)
 }
 func (g *ImageFormatProperties2) fromC(c *C.VkImageFormatProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ImageFormatProperties.fromC(&c.imageFormatProperties)
+}
+func (s *ImageFormatProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2
+}
+func (s *ImageFormatProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *ImageFormatProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
 	var c struct {
@@ -14428,20 +14728,25 @@ type PFN_vkGetPhysicalDeviceQueueFamilyProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2
 }
 type QueueFamilyProperties2 struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	QueueFamilyProperties QueueFamilyProperties
 }
 
 func (g *QueueFamilyProperties2) toC(c *C.VkQueueFamilyProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.QueueFamilyProperties.toC(&c.queueFamilyProperties)
 }
 func (g *QueueFamilyProperties2) fromC(c *C.VkQueueFamilyProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.QueueFamilyProperties.fromC(&c.queueFamilyProperties)
+}
+func (s *QueueFamilyProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_QUEUE_FAMILY_PROPERTIES_2
+}
+func (s *QueueFamilyProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *QueueFamilyProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
 	var c struct {
@@ -14471,20 +14776,25 @@ type PFN_vkGetPhysicalDeviceMemoryProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceMemoryProperties2
 }
 type PhysicalDeviceMemoryProperties2 struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	MemoryProperties PhysicalDeviceMemoryProperties
 }
 
 func (g *PhysicalDeviceMemoryProperties2) toC(c *C.VkPhysicalDeviceMemoryProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.MemoryProperties.toC(&c.memoryProperties)
 }
 func (g *PhysicalDeviceMemoryProperties2) fromC(c *C.VkPhysicalDeviceMemoryProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MemoryProperties.fromC(&c.memoryProperties)
+}
+func (s *PhysicalDeviceMemoryProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MEMORY_PROPERTIES_2
+}
+func (s *PhysicalDeviceMemoryProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceMemoryProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
 	var c struct {
@@ -14508,8 +14818,7 @@ type PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 struct {
 	Raw C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2
 }
 type PhysicalDeviceSparseImageFormatInfo2 struct {
-	SType   StructureType
-	Next    unsafe.Pointer
+	Next    Structure
 	Format  Format
 	Type    ImageType
 	Samples SampleCountFlagBits
@@ -14518,8 +14827,7 @@ type PhysicalDeviceSparseImageFormatInfo2 struct {
 }
 
 func (g *PhysicalDeviceSparseImageFormatInfo2) toC(c *C.VkPhysicalDeviceSparseImageFormatInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.format = C.VkFormat(g.Format)
 	c._type = C.VkImageType(g.Type)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
@@ -14535,8 +14843,6 @@ func (g *PhysicalDeviceSparseImageFormatInfo2) toC(c *C.VkPhysicalDeviceSparseIm
 	c.tiling = C.VkImageTiling(g.Tiling)
 }
 func (g *PhysicalDeviceSparseImageFormatInfo2) fromC(c *C.VkPhysicalDeviceSparseImageFormatInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Format = Format(c.format)
 	g.Type = ImageType(c._type)
 	g.Samples = SampleCountFlagBits(c.samples)
@@ -14551,22 +14857,36 @@ func (g *PhysicalDeviceSparseImageFormatInfo2) fromC(c *C.VkPhysicalDeviceSparse
 	}
 	g.Tiling = ImageTiling(c.tiling)
 }
+func (s *PhysicalDeviceSparseImageFormatInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SPARSE_IMAGE_FORMAT_INFO_2
+}
+func (s *PhysicalDeviceSparseImageFormatInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceSparseImageFormatInfo2) SetNext(n Structure) {
+	s.Next = n
+}
 
 type SparseImageFormatProperties2 struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Properties SparseImageFormatProperties
 }
 
 func (g *SparseImageFormatProperties2) toC(c *C.VkSparseImageFormatProperties2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.Properties.toC(&c.properties)
 }
 func (g *SparseImageFormatProperties2) fromC(c *C.VkSparseImageFormatProperties2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Properties.fromC(&c.properties)
+}
+func (s *SparseImageFormatProperties2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SPARSE_IMAGE_FORMAT_PROPERTIES_2
+}
+func (s *SparseImageFormatProperties2) GetNext() Structure {
+	return s.Next
+}
+func (s *SparseImageFormatProperties2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
 	var c struct {
@@ -14626,16 +14946,14 @@ type PFN_vkGetDeviceQueue2 struct {
 	Raw C.PFN_vkGetDeviceQueue2
 }
 type DeviceQueueInfo2 struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	Flags            DeviceQueueCreateFlags
 	QueueFamilyIndex uint32
 	QueueIndex       uint32
 }
 
 func (g *DeviceQueueInfo2) toC(c *C.VkDeviceQueueInfo2) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
 		{
@@ -14649,8 +14967,6 @@ func (g *DeviceQueueInfo2) toC(c *C.VkDeviceQueueInfo2) {
 	c.queueIndex = C.uint32_t(g.QueueIndex)
 }
 func (g *DeviceQueueInfo2) fromC(c *C.VkDeviceQueueInfo2) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDeviceQueueCreateFlags Flags
 		{
@@ -14662,6 +14978,15 @@ func (g *DeviceQueueInfo2) fromC(c *C.VkDeviceQueueInfo2) {
 	}
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 	g.QueueIndex = uint32(c.queueIndex)
+}
+func (s *DeviceQueueInfo2) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2
+}
+func (s *DeviceQueueInfo2) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceQueueInfo2) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetDeviceQueue2) Call(device Device, queueInfo *DeviceQueueInfo2, queue *Queue) {
 	var c struct {
@@ -14733,8 +15058,7 @@ const (
 )
 
 type SamplerYcbcrConversionCreateInfo struct {
-	SType                       StructureType
-	Next                        unsafe.Pointer
+	Next                        Structure
 	Format                      Format
 	YcbcrModel                  SamplerYcbcrModelConversion
 	YcbcrRange                  SamplerYcbcrRange
@@ -14746,8 +15070,7 @@ type SamplerYcbcrConversionCreateInfo struct {
 }
 
 func (g *SamplerYcbcrConversionCreateInfo) toC(c *C.VkSamplerYcbcrConversionCreateInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.format = C.VkFormat(g.Format)
 	c.ycbcrModel = C.VkSamplerYcbcrModelConversion(g.YcbcrModel)
 	c.ycbcrRange = C.VkSamplerYcbcrRange(g.YcbcrRange)
@@ -14762,8 +15085,6 @@ func (g *SamplerYcbcrConversionCreateInfo) toC(c *C.VkSamplerYcbcrConversionCrea
 	}
 }
 func (g *SamplerYcbcrConversionCreateInfo) fromC(c *C.VkSamplerYcbcrConversionCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Format = Format(c.format)
 	g.YcbcrModel = SamplerYcbcrModelConversion(c.ycbcrModel)
 	g.YcbcrRange = SamplerYcbcrRange(c.ycbcrRange)
@@ -14772,6 +15093,15 @@ func (g *SamplerYcbcrConversionCreateInfo) fromC(c *C.VkSamplerYcbcrConversionCr
 	g.YChromaOffset = ChromaLocation(c.yChromaOffset)
 	g.ChromaFilter = Filter(c.chromaFilter)
 	g.ForceExplicitReconstruction = c.forceExplicitReconstruction != 0
+}
+func (s *SamplerYcbcrConversionCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_CREATE_INFO
+}
+func (s *SamplerYcbcrConversionCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *SamplerYcbcrConversionCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SamplerYcbcrConversion C.VkSamplerYcbcrConversion
@@ -14869,8 +15199,7 @@ const (
 )
 
 type DescriptorUpdateTemplateCreateInfo struct {
-	SType                   StructureType
-	Next                    unsafe.Pointer
+	Next                    Structure
 	Flags                   DescriptorUpdateTemplateCreateFlags
 	DescriptorUpdateEntries []DescriptorUpdateTemplateEntry
 	TemplateType            DescriptorUpdateTemplateType
@@ -14881,8 +15210,7 @@ type DescriptorUpdateTemplateCreateInfo struct {
 }
 
 func (g *DescriptorUpdateTemplateCreateInfo) toC(c *C.VkDescriptorUpdateTemplateCreateInfo, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDescriptorUpdateTemplateCreateFlags C.VkFlags
 		{
@@ -14907,8 +15235,6 @@ func (g *DescriptorUpdateTemplateCreateInfo) toC(c *C.VkDescriptorUpdateTemplate
 	c.set = C.uint32_t(g.Set)
 }
 func (g *DescriptorUpdateTemplateCreateInfo) fromC(c *C.VkDescriptorUpdateTemplateCreateInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDescriptorUpdateTemplateCreateFlags Flags
 		{
@@ -14930,6 +15256,15 @@ func (g *DescriptorUpdateTemplateCreateInfo) fromC(c *C.VkDescriptorUpdateTempla
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
 	g.PipelineLayout = PipelineLayout(c.pipelineLayout)
 	g.Set = uint32(c.set)
+}
+func (s *DescriptorUpdateTemplateCreateInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_CREATE_INFO
+}
+func (s *DescriptorUpdateTemplateCreateInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorUpdateTemplateCreateInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -15038,16 +15373,14 @@ const (
 )
 
 type PhysicalDeviceExternalBufferInfo struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Flags      BufferCreateFlags
 	Usage      BufferUsageFlags
 	HandleType ExternalMemoryHandleTypeFlagBits
 }
 
 func (g *PhysicalDeviceExternalBufferInfo) toC(c *C.VkPhysicalDeviceExternalBufferInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkBufferCreateFlags C.VkFlags
 		{
@@ -15069,8 +15402,6 @@ func (g *PhysicalDeviceExternalBufferInfo) toC(c *C.VkPhysicalDeviceExternalBuff
 	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(g.HandleType)
 }
 func (g *PhysicalDeviceExternalBufferInfo) fromC(c *C.VkPhysicalDeviceExternalBufferInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkBufferCreateFlags Flags
 		{
@@ -15090,6 +15421,15 @@ func (g *PhysicalDeviceExternalBufferInfo) fromC(c *C.VkPhysicalDeviceExternalBu
 		g.Usage = BufferUsageFlags(temp_in_VkBufferUsageFlags)
 	}
 	g.HandleType = ExternalMemoryHandleTypeFlagBits(c.handleType)
+}
+func (s *PhysicalDeviceExternalBufferInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_BUFFER_INFO
+}
+func (s *PhysicalDeviceExternalBufferInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceExternalBufferInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ExternalMemoryFeatureFlags Flags
@@ -15160,20 +15500,25 @@ func (g *ExternalMemoryProperties) fromC(c *C.VkExternalMemoryProperties) {
 }
 
 type ExternalBufferProperties struct {
-	SType                    StructureType
-	Next                     unsafe.Pointer
+	Next                     Structure
 	ExternalMemoryProperties ExternalMemoryProperties
 }
 
 func (g *ExternalBufferProperties) toC(c *C.VkExternalBufferProperties) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.ExternalMemoryProperties.toC(&c.externalMemoryProperties)
 }
 func (g *ExternalBufferProperties) fromC(c *C.VkExternalBufferProperties) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ExternalMemoryProperties.fromC(&c.externalMemoryProperties)
+}
+func (s *ExternalBufferProperties) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_EXTERNAL_BUFFER_PROPERTIES
+}
+func (s *ExternalBufferProperties) GetNext() Structure {
+	return s.Next
+}
+func (s *ExternalBufferProperties) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
 	var c struct {
@@ -15216,35 +15561,38 @@ const (
 )
 
 type PhysicalDeviceExternalFenceInfo struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	HandleType ExternalFenceHandleTypeFlagBits
 }
 
 func (g *PhysicalDeviceExternalFenceInfo) toC(c *C.VkPhysicalDeviceExternalFenceInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
 }
 func (g *PhysicalDeviceExternalFenceInfo) fromC(c *C.VkPhysicalDeviceExternalFenceInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
+}
+func (s *PhysicalDeviceExternalFenceInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_FENCE_INFO
+}
+func (s *PhysicalDeviceExternalFenceInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceExternalFenceInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ExternalFenceHandleTypeFlags Flags
 type ExternalFenceFeatureFlags Flags
 type ExternalFenceProperties struct {
-	SType                         StructureType
-	Next                          unsafe.Pointer
+	Next                          Structure
 	ExportFromImportedHandleTypes ExternalFenceHandleTypeFlags
 	CompatibleHandleTypes         ExternalFenceHandleTypeFlags
 	ExternalFenceFeatures         ExternalFenceFeatureFlags
 }
 
 func (g *ExternalFenceProperties) toC(c *C.VkExternalFenceProperties) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkExternalFenceHandleTypeFlags C.VkFlags
 		{
@@ -15274,8 +15622,6 @@ func (g *ExternalFenceProperties) toC(c *C.VkExternalFenceProperties) {
 	}
 }
 func (g *ExternalFenceProperties) fromC(c *C.VkExternalFenceProperties) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkExternalFenceHandleTypeFlags Flags
 		{
@@ -15303,6 +15649,15 @@ func (g *ExternalFenceProperties) fromC(c *C.VkExternalFenceProperties) {
 		}
 		g.ExternalFenceFeatures = ExternalFenceFeatureFlags(temp_in_VkExternalFenceFeatureFlags)
 	}
+}
+func (s *ExternalFenceProperties) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
+}
+func (s *ExternalFenceProperties) GetNext() Structure {
+	return s.Next
+}
+func (s *ExternalFenceProperties) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
 	var c struct {
@@ -15347,35 +15702,38 @@ const (
 )
 
 type PhysicalDeviceExternalSemaphoreInfo struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	HandleType ExternalSemaphoreHandleTypeFlagBits
 }
 
 func (g *PhysicalDeviceExternalSemaphoreInfo) toC(c *C.VkPhysicalDeviceExternalSemaphoreInfo) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
 }
 func (g *PhysicalDeviceExternalSemaphoreInfo) fromC(c *C.VkPhysicalDeviceExternalSemaphoreInfo) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
+}
+func (s *PhysicalDeviceExternalSemaphoreInfo) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_SEMAPHORE_INFO
+}
+func (s *PhysicalDeviceExternalSemaphoreInfo) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceExternalSemaphoreInfo) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ExternalSemaphoreHandleTypeFlags Flags
 type ExternalSemaphoreFeatureFlags Flags
 type ExternalSemaphoreProperties struct {
-	SType                         StructureType
-	Next                          unsafe.Pointer
+	Next                          Structure
 	ExportFromImportedHandleTypes ExternalSemaphoreHandleTypeFlags
 	CompatibleHandleTypes         ExternalSemaphoreHandleTypeFlags
 	ExternalSemaphoreFeatures     ExternalSemaphoreFeatureFlags
 }
 
 func (g *ExternalSemaphoreProperties) toC(c *C.VkExternalSemaphoreProperties) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkExternalSemaphoreHandleTypeFlags C.VkFlags
 		{
@@ -15405,8 +15763,6 @@ func (g *ExternalSemaphoreProperties) toC(c *C.VkExternalSemaphoreProperties) {
 	}
 }
 func (g *ExternalSemaphoreProperties) fromC(c *C.VkExternalSemaphoreProperties) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkExternalSemaphoreHandleTypeFlags Flags
 		{
@@ -15435,6 +15791,15 @@ func (g *ExternalSemaphoreProperties) fromC(c *C.VkExternalSemaphoreProperties) 
 		g.ExternalSemaphoreFeatures = ExternalSemaphoreFeatureFlags(temp_in_VkExternalSemaphoreFeatureFlags)
 	}
 }
+func (s *ExternalSemaphoreProperties) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
+}
+func (s *ExternalSemaphoreProperties) GetNext() Structure {
+	return s.Next
+}
+func (s *ExternalSemaphoreProperties) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
@@ -15462,14 +15827,12 @@ type PFN_vkGetDescriptorSetLayoutSupport struct {
 	Raw C.PFN_vkGetDescriptorSetLayoutSupport
 }
 type DescriptorSetLayoutSupport struct {
-	SType     StructureType
-	Next      unsafe.Pointer
+	Next      Structure
 	Supported bool
 }
 
 func (g *DescriptorSetLayoutSupport) toC(c *C.VkDescriptorSetLayoutSupport) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	if g.Supported {
 		c.supported = 1
 	} else {
@@ -15477,9 +15840,16 @@ func (g *DescriptorSetLayoutSupport) toC(c *C.VkDescriptorSetLayoutSupport) {
 	}
 }
 func (g *DescriptorSetLayoutSupport) fromC(c *C.VkDescriptorSetLayoutSupport) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Supported = c.supported != 0
+}
+func (s *DescriptorSetLayoutSupport) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_SUPPORT
+}
+func (s *DescriptorSetLayoutSupport) GetNext() Structure {
+	return s.Next
+}
+func (s *DescriptorSetLayoutSupport) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetDescriptorSetLayoutSupport) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
 	var c struct {
@@ -16412,8 +16782,7 @@ const (
 
 type SwapchainKHR C.VkSwapchainKHR
 type SwapchainCreateInfoKHR struct {
-	SType              StructureType
-	Next               unsafe.Pointer
+	Next               Structure
 	Flags              SwapchainCreateFlagsKHR
 	Surface            SurfaceKHR
 	MinImageCount      uint32
@@ -16432,8 +16801,7 @@ type SwapchainCreateInfoKHR struct {
 }
 
 func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkSwapchainCreateFlagsKHR C.VkFlags
 		{
@@ -16478,8 +16846,6 @@ func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, _sa *stackAl
 	c.oldSwapchain = C.VkSwapchainKHR(g.OldSwapchain)
 }
 func (g *SwapchainCreateInfoKHR) fromC(c *C.VkSwapchainCreateInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkSwapchainCreateFlagsKHR Flags
 		{
@@ -16517,6 +16883,15 @@ func (g *SwapchainCreateInfoKHR) fromC(c *C.VkSwapchainCreateInfoKHR) {
 	g.PresentMode = PresentModeKHR(c.presentMode)
 	g.Clipped = c.clipped != 0
 	g.OldSwapchain = SwapchainKHR(c.oldSwapchain)
+}
+func (s *SwapchainCreateInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR
+}
+func (s *SwapchainCreateInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SwapchainCreateInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateSwapchainKHR) Call(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result) {
 	var c struct {
@@ -16636,8 +17011,7 @@ type PFN_vkQueuePresentKHR struct {
 	Raw C.PFN_vkQueuePresentKHR
 }
 type PresentInfoKHR struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	WaitSemaphores []Semaphore
 	Swapchains     []SwapchainKHR
 	ImageIndices   []uint32
@@ -16645,8 +17019,7 @@ type PresentInfoKHR struct {
 }
 
 func (g *PresentInfoKHR) toC(c *C.VkPresentInfoKHR, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
 	{
 		c.pWaitSemaphores = (*C.VkSemaphore)(_sa.alloc(C.sizeof_void_pointer * uint(len(g.WaitSemaphores))))
@@ -16679,8 +17052,6 @@ func (g *PresentInfoKHR) toC(c *C.VkPresentInfoKHR, _sa *stackAllocator) {
 	}
 }
 func (g *PresentInfoKHR) fromC(c *C.VkPresentInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.WaitSemaphores = make([]Semaphore, int(c.waitSemaphoreCount))
 	{
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
@@ -16708,6 +17079,15 @@ func (g *PresentInfoKHR) fromC(c *C.VkPresentInfoKHR) {
 		}
 	}
 }
+func (s *PresentInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PRESENT_INFO_KHR
+}
+func (s *PresentInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *PresentInfoKHR) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkQueuePresentKHR) Call(queue Queue, presentInfo *PresentInfoKHR) (_ret Result) {
 	var c struct {
 		queue        C.VkQueue
@@ -16731,15 +17111,13 @@ type PFN_vkGetDeviceGroupPresentCapabilitiesKHR struct {
 }
 type DeviceGroupPresentModeFlagsKHR Flags
 type DeviceGroupPresentCapabilitiesKHR struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	PresentMask [32]uint32
 	Modes       DeviceGroupPresentModeFlagsKHR
 }
 
 func (g *DeviceGroupPresentCapabilitiesKHR) toC(c *C.VkDeviceGroupPresentCapabilitiesKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	for i, _ := range g.PresentMask {
 		c.presentMask[i] = C.uint32_t(g.PresentMask[i])
 	}
@@ -16754,8 +17132,6 @@ func (g *DeviceGroupPresentCapabilitiesKHR) toC(c *C.VkDeviceGroupPresentCapabil
 	}
 }
 func (g *DeviceGroupPresentCapabilitiesKHR) fromC(c *C.VkDeviceGroupPresentCapabilitiesKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	for i, _ := range g.PresentMask {
 		g.PresentMask[i] = uint32(c.presentMask[i])
 	}
@@ -16768,6 +17144,15 @@ func (g *DeviceGroupPresentCapabilitiesKHR) fromC(c *C.VkDeviceGroupPresentCapab
 		}
 		g.Modes = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
 	}
+}
+func (s *DeviceGroupPresentCapabilitiesKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR
+}
+func (s *DeviceGroupPresentCapabilitiesKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceGroupPresentCapabilitiesKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroupPresentCapabilities []DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
 	var c struct {
@@ -16862,8 +17247,7 @@ type PFN_vkAcquireNextImage2KHR struct {
 	Raw C.PFN_vkAcquireNextImage2KHR
 }
 type AcquireNextImageInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Swapchain  SwapchainKHR
 	Timeout    uint64
 	Semaphore  Semaphore
@@ -16872,8 +17256,7 @@ type AcquireNextImageInfoKHR struct {
 }
 
 func (g *AcquireNextImageInfoKHR) toC(c *C.VkAcquireNextImageInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.swapchain = C.VkSwapchainKHR(g.Swapchain)
 	c.timeout = C.uint64_t(g.Timeout)
 	c.semaphore = C.VkSemaphore(g.Semaphore)
@@ -16881,13 +17264,20 @@ func (g *AcquireNextImageInfoKHR) toC(c *C.VkAcquireNextImageInfoKHR) {
 	c.deviceMask = C.uint32_t(g.DeviceMask)
 }
 func (g *AcquireNextImageInfoKHR) fromC(c *C.VkAcquireNextImageInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Swapchain = SwapchainKHR(c.swapchain)
 	g.Timeout = uint64(c.timeout)
 	g.Semaphore = Semaphore(c.semaphore)
 	g.Fence = Fence(c.fence)
 	g.DeviceMask = uint32(c.deviceMask)
+}
+func (s *AcquireNextImageInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_ACQUIRE_NEXT_IMAGE_INFO_KHR
+}
+func (s *AcquireNextImageInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *AcquireNextImageInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkAcquireNextImage2KHR) Call(device Device, acquireInfo *AcquireNextImageInfoKHR, imageIndex *uint32) (_ret Result) {
 	var c struct {
@@ -17137,15 +17527,13 @@ type PFN_vkCreateDisplayModeKHR struct {
 }
 type DisplayModeCreateFlagsKHR Flags
 type DisplayModeCreateInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Flags      DisplayModeCreateFlagsKHR
 	Parameters DisplayModeParametersKHR
 }
 
 func (g *DisplayModeCreateInfoKHR) toC(c *C.VkDisplayModeCreateInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDisplayModeCreateFlagsKHR C.VkFlags
 		{
@@ -17158,8 +17546,6 @@ func (g *DisplayModeCreateInfoKHR) toC(c *C.VkDisplayModeCreateInfoKHR) {
 	g.Parameters.toC(&c.parameters)
 }
 func (g *DisplayModeCreateInfoKHR) fromC(c *C.VkDisplayModeCreateInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDisplayModeCreateFlagsKHR Flags
 		{
@@ -17170,6 +17556,15 @@ func (g *DisplayModeCreateInfoKHR) fromC(c *C.VkDisplayModeCreateInfoKHR) {
 		g.Flags = DisplayModeCreateFlagsKHR(temp_in_VkDisplayModeCreateFlagsKHR)
 	}
 	g.Parameters.fromC(&c.parameters)
+}
+func (s *DisplayModeCreateInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_MODE_CREATE_INFO_KHR
+}
+func (s *DisplayModeCreateInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayModeCreateInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateDisplayModeKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, createInfo *DisplayModeCreateInfoKHR, allocator *AllocationCallbacks, mode *DisplayModeKHR) (_ret Result) {
 	var c struct {
@@ -17296,8 +17691,7 @@ const (
 )
 
 type DisplaySurfaceCreateInfoKHR struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           DisplaySurfaceCreateFlagsKHR
 	DisplayMode     DisplayModeKHR
 	PlaneIndex      uint32
@@ -17309,8 +17703,7 @@ type DisplaySurfaceCreateInfoKHR struct {
 }
 
 func (g *DisplaySurfaceCreateInfoKHR) toC(c *C.VkDisplaySurfaceCreateInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDisplaySurfaceCreateFlagsKHR C.VkFlags
 		{
@@ -17329,8 +17722,6 @@ func (g *DisplaySurfaceCreateInfoKHR) toC(c *C.VkDisplaySurfaceCreateInfoKHR) {
 	g.ImageExtent.toC(&c.imageExtent)
 }
 func (g *DisplaySurfaceCreateInfoKHR) fromC(c *C.VkDisplaySurfaceCreateInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDisplaySurfaceCreateFlagsKHR Flags
 		{
@@ -17347,6 +17738,15 @@ func (g *DisplaySurfaceCreateInfoKHR) fromC(c *C.VkDisplaySurfaceCreateInfoKHR) 
 	g.GlobalAlpha = float32(c.globalAlpha)
 	g.AlphaMode = DisplayPlaneAlphaFlagBitsKHR(c.alphaMode)
 	g.ImageExtent.fromC(&c.imageExtent)
+}
+func (s *DisplaySurfaceCreateInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_SURFACE_CREATE_INFO_KHR
+}
+func (s *DisplaySurfaceCreateInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplaySurfaceCreateInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateDisplayPlaneSurfaceKHR) Call(instance Instance, createInfo *DisplaySurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
 	var c struct {
@@ -17758,23 +18158,28 @@ type PFN_vkGetMemoryFdKHR struct {
 	Raw C.PFN_vkGetMemoryFdKHR
 }
 type MemoryGetFdInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Memory     DeviceMemory
 	HandleType ExternalMemoryHandleTypeFlagBits
 }
 
 func (g *MemoryGetFdInfoKHR) toC(c *C.VkMemoryGetFdInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.memory = C.VkDeviceMemory(g.Memory)
 	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(g.HandleType)
 }
 func (g *MemoryGetFdInfoKHR) fromC(c *C.VkMemoryGetFdInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Memory = DeviceMemory(c.memory)
 	g.HandleType = ExternalMemoryHandleTypeFlagBits(c.handleType)
+}
+func (s *MemoryGetFdInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_GET_FD_INFO_KHR
+}
+func (s *MemoryGetFdInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryGetFdInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetMemoryFdKHR) Call(device Device, getFdInfo *MemoryGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
@@ -17804,20 +18209,25 @@ type PFN_vkGetMemoryFdPropertiesKHR struct {
 	Raw C.PFN_vkGetMemoryFdPropertiesKHR
 }
 type MemoryFdPropertiesKHR struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	MemoryTypeBits uint32
 }
 
 func (g *MemoryFdPropertiesKHR) toC(c *C.VkMemoryFdPropertiesKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
 }
 func (g *MemoryFdPropertiesKHR) fromC(c *C.VkMemoryFdPropertiesKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
+}
+func (s *MemoryFdPropertiesKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_FD_PROPERTIES_KHR
+}
+func (s *MemoryFdPropertiesKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryFdPropertiesKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties []MemoryFdPropertiesKHR) (_ret Result) {
 	var c struct {
@@ -17876,8 +18286,7 @@ type PFN_vkImportSemaphoreFdKHR struct {
 }
 type SemaphoreImportFlags Flags
 type ImportSemaphoreFdInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Semaphore  Semaphore
 	Flags      SemaphoreImportFlags
 	HandleType ExternalSemaphoreHandleTypeFlagBits
@@ -17885,8 +18294,7 @@ type ImportSemaphoreFdInfoKHR struct {
 }
 
 func (g *ImportSemaphoreFdInfoKHR) toC(c *C.VkImportSemaphoreFdInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.semaphore = C.VkSemaphore(g.Semaphore)
 	{
 		var temp_in_VkSemaphoreImportFlags C.VkFlags
@@ -17901,8 +18309,6 @@ func (g *ImportSemaphoreFdInfoKHR) toC(c *C.VkImportSemaphoreFdInfoKHR) {
 	c.fd = C.int(g.Fd)
 }
 func (g *ImportSemaphoreFdInfoKHR) fromC(c *C.VkImportSemaphoreFdInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Semaphore = Semaphore(c.semaphore)
 	{
 		var temp_in_VkSemaphoreImportFlags Flags
@@ -17915,6 +18321,15 @@ func (g *ImportSemaphoreFdInfoKHR) fromC(c *C.VkImportSemaphoreFdInfoKHR) {
 	}
 	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
 	g.Fd = int32(c.fd)
+}
+func (s *ImportSemaphoreFdInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMPORT_SEMAPHORE_FD_INFO_KHR
+}
+func (s *ImportSemaphoreFdInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *ImportSemaphoreFdInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkImportSemaphoreFdKHR) Call(device Device, importSemaphoreFdInfo *ImportSemaphoreFdInfoKHR) (_ret Result) {
 	var c struct {
@@ -17938,23 +18353,28 @@ type PFN_vkGetSemaphoreFdKHR struct {
 	Raw C.PFN_vkGetSemaphoreFdKHR
 }
 type SemaphoreGetFdInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Semaphore  Semaphore
 	HandleType ExternalSemaphoreHandleTypeFlagBits
 }
 
 func (g *SemaphoreGetFdInfoKHR) toC(c *C.VkSemaphoreGetFdInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.semaphore = C.VkSemaphore(g.Semaphore)
 	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
 }
 func (g *SemaphoreGetFdInfoKHR) fromC(c *C.VkSemaphoreGetFdInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Semaphore = Semaphore(c.semaphore)
 	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
+}
+func (s *SemaphoreGetFdInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SEMAPHORE_GET_FD_INFO_KHR
+}
+func (s *SemaphoreGetFdInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SemaphoreGetFdInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetSemaphoreFdKHR) Call(device Device, getFdInfo *SemaphoreGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
@@ -18122,8 +18542,7 @@ type PFN_vkCreateRenderPass2KHR struct {
 	Raw C.PFN_vkCreateRenderPass2KHR
 }
 type AttachmentDescription2KHR struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	Flags          AttachmentDescriptionFlags
 	Format         Format
 	Samples        SampleCountFlagBits
@@ -18136,8 +18555,7 @@ type AttachmentDescription2KHR struct {
 }
 
 func (g *AttachmentDescription2KHR) toC(c *C.VkAttachmentDescription2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkAttachmentDescriptionFlags C.VkFlags
 		{
@@ -18157,8 +18575,6 @@ func (g *AttachmentDescription2KHR) toC(c *C.VkAttachmentDescription2KHR) {
 	c.finalLayout = C.VkImageLayout(g.FinalLayout)
 }
 func (g *AttachmentDescription2KHR) fromC(c *C.VkAttachmentDescription2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkAttachmentDescriptionFlags Flags
 		{
@@ -18177,18 +18593,25 @@ func (g *AttachmentDescription2KHR) fromC(c *C.VkAttachmentDescription2KHR) {
 	g.InitialLayout = ImageLayout(c.initialLayout)
 	g.FinalLayout = ImageLayout(c.finalLayout)
 }
+func (s *AttachmentDescription2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2_KHR
+}
+func (s *AttachmentDescription2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *AttachmentDescription2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 
 type AttachmentReference2KHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Attachment uint32
 	Layout     ImageLayout
 	AspectMask ImageAspectFlags
 }
 
 func (g *AttachmentReference2KHR) toC(c *C.VkAttachmentReference2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.attachment = C.uint32_t(g.Attachment)
 	c.layout = C.VkImageLayout(g.Layout)
 	{
@@ -18202,8 +18625,6 @@ func (g *AttachmentReference2KHR) toC(c *C.VkAttachmentReference2KHR) {
 	}
 }
 func (g *AttachmentReference2KHR) fromC(c *C.VkAttachmentReference2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Attachment = uint32(c.attachment)
 	g.Layout = ImageLayout(c.layout)
 	{
@@ -18216,10 +18637,18 @@ func (g *AttachmentReference2KHR) fromC(c *C.VkAttachmentReference2KHR) {
 		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 }
+func (s *AttachmentReference2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR
+}
+func (s *AttachmentReference2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *AttachmentReference2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 
 type SubpassDescription2KHR struct {
-	SType                  StructureType
-	Next                   unsafe.Pointer
+	Next                   Structure
 	Flags                  SubpassDescriptionFlags
 	PipelineBindPoint      PipelineBindPoint
 	ViewMask               uint32
@@ -18231,8 +18660,7 @@ type SubpassDescription2KHR struct {
 }
 
 func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkSubpassDescriptionFlags C.VkFlags
 		{
@@ -18281,8 +18709,6 @@ func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, _sa *stackAl
 	}
 }
 func (g *SubpassDescription2KHR) fromC(c *C.VkSubpassDescription2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkSubpassDescriptionFlags Flags
 		{
@@ -18328,10 +18754,18 @@ func (g *SubpassDescription2KHR) fromC(c *C.VkSubpassDescription2KHR) {
 		}
 	}
 }
+func (s *SubpassDescription2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_2_KHR
+}
+func (s *SubpassDescription2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SubpassDescription2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 
 type SubpassDependency2KHR struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	SrcSubpass      uint32
 	DstSubpass      uint32
 	SrcStageMask    PipelineStageFlags
@@ -18343,8 +18777,7 @@ type SubpassDependency2KHR struct {
 }
 
 func (g *SubpassDependency2KHR) toC(c *C.VkSubpassDependency2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.srcSubpass = C.uint32_t(g.SrcSubpass)
 	c.dstSubpass = C.uint32_t(g.DstSubpass)
 	{
@@ -18395,8 +18828,6 @@ func (g *SubpassDependency2KHR) toC(c *C.VkSubpassDependency2KHR) {
 	c.viewOffset = C.int32_t(g.ViewOffset)
 }
 func (g *SubpassDependency2KHR) fromC(c *C.VkSubpassDependency2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.SrcSubpass = uint32(c.srcSubpass)
 	g.DstSubpass = uint32(c.dstSubpass)
 	{
@@ -18446,10 +18877,18 @@ func (g *SubpassDependency2KHR) fromC(c *C.VkSubpassDependency2KHR) {
 	}
 	g.ViewOffset = int32(c.viewOffset)
 }
+func (s *SubpassDependency2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBPASS_DEPENDENCY_2_KHR
+}
+func (s *SubpassDependency2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SubpassDependency2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 
 type RenderPassCreateInfo2KHR struct {
-	SType               StructureType
-	Next                unsafe.Pointer
+	Next                Structure
 	Flags               RenderPassCreateFlags
 	Attachments         []AttachmentDescription2KHR
 	Subpasses           []SubpassDescription2KHR
@@ -18458,8 +18897,7 @@ type RenderPassCreateInfo2KHR struct {
 }
 
 func (g *RenderPassCreateInfo2KHR) toC(c *C.VkRenderPassCreateInfo2KHR, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkRenderPassCreateFlags C.VkFlags
 		{
@@ -18503,8 +18941,6 @@ func (g *RenderPassCreateInfo2KHR) toC(c *C.VkRenderPassCreateInfo2KHR, _sa *sta
 	}
 }
 func (g *RenderPassCreateInfo2KHR) fromC(c *C.VkRenderPassCreateInfo2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkRenderPassCreateFlags Flags
 		{
@@ -18543,6 +18979,15 @@ func (g *RenderPassCreateInfo2KHR) fromC(c *C.VkRenderPassCreateInfo2KHR) {
 		}
 	}
 }
+func (s *RenderPassCreateInfo2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO_2_KHR
+}
+func (s *RenderPassCreateInfo2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *RenderPassCreateInfo2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkCreateRenderPass2KHR) Call(device Device, createInfo *RenderPassCreateInfo2KHR, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
@@ -18576,20 +19021,25 @@ type PFN_vkCmdBeginRenderPass2KHR struct {
 	Raw C.PFN_vkCmdBeginRenderPass2KHR
 }
 type SubpassBeginInfoKHR struct {
-	SType    StructureType
-	Next     unsafe.Pointer
+	Next     Structure
 	Contents SubpassContents
 }
 
 func (g *SubpassBeginInfoKHR) toC(c *C.VkSubpassBeginInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.contents = C.VkSubpassContents(g.Contents)
 }
 func (g *SubpassBeginInfoKHR) fromC(c *C.VkSubpassBeginInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Contents = SubpassContents(c.contents)
+}
+func (s *SubpassBeginInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBPASS_BEGIN_INFO_KHR
+}
+func (s *SubpassBeginInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SubpassBeginInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdBeginRenderPass2KHR) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, subpassBeginInfo *SubpassBeginInfoKHR) {
 	var c struct {
@@ -18614,18 +19064,21 @@ func (p PFN_vkCmdBeginRenderPass2KHR) Call(commandBuffer CommandBuffer, renderPa
 type PFN_vkCmdNextSubpass2KHR struct {
 	Raw C.PFN_vkCmdNextSubpass2KHR
 }
-type SubpassEndInfoKHR struct {
-	SType StructureType
-	Next  unsafe.Pointer
-}
+type SubpassEndInfoKHR struct{ Next Structure }
 
 func (g *SubpassEndInfoKHR) toC(c *C.VkSubpassEndInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 }
 func (g *SubpassEndInfoKHR) fromC(c *C.VkSubpassEndInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
+}
+func (s *SubpassEndInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SUBPASS_END_INFO_KHR
+}
+func (s *SubpassEndInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SubpassEndInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdNextSubpass2KHR) Call(commandBuffer CommandBuffer, subpassBeginInfo *SubpassBeginInfoKHR, subpassEndInfo *SubpassEndInfoKHR) {
 	var c struct {
@@ -18715,8 +19168,7 @@ type PFN_vkImportFenceFdKHR struct {
 }
 type FenceImportFlags Flags
 type ImportFenceFdInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Fence      Fence
 	Flags      FenceImportFlags
 	HandleType ExternalFenceHandleTypeFlagBits
@@ -18724,8 +19176,7 @@ type ImportFenceFdInfoKHR struct {
 }
 
 func (g *ImportFenceFdInfoKHR) toC(c *C.VkImportFenceFdInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.fence = C.VkFence(g.Fence)
 	{
 		var temp_in_VkFenceImportFlags C.VkFlags
@@ -18740,8 +19191,6 @@ func (g *ImportFenceFdInfoKHR) toC(c *C.VkImportFenceFdInfoKHR) {
 	c.fd = C.int(g.Fd)
 }
 func (g *ImportFenceFdInfoKHR) fromC(c *C.VkImportFenceFdInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Fence = Fence(c.fence)
 	{
 		var temp_in_VkFenceImportFlags Flags
@@ -18754,6 +19203,15 @@ func (g *ImportFenceFdInfoKHR) fromC(c *C.VkImportFenceFdInfoKHR) {
 	}
 	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
 	g.Fd = int32(c.fd)
+}
+func (s *ImportFenceFdInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_IMPORT_FENCE_FD_INFO_KHR
+}
+func (s *ImportFenceFdInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *ImportFenceFdInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkImportFenceFdKHR) Call(device Device, importFenceFdInfo *ImportFenceFdInfoKHR) (_ret Result) {
 	var c struct {
@@ -18777,23 +19235,28 @@ type PFN_vkGetFenceFdKHR struct {
 	Raw C.PFN_vkGetFenceFdKHR
 }
 type FenceGetFdInfoKHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Fence      Fence
 	HandleType ExternalFenceHandleTypeFlagBits
 }
 
 func (g *FenceGetFdInfoKHR) toC(c *C.VkFenceGetFdInfoKHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.fence = C.VkFence(g.Fence)
 	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
 }
 func (g *FenceGetFdInfoKHR) fromC(c *C.VkFenceGetFdInfoKHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Fence = Fence(c.fence)
 	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
+}
+func (s *FenceGetFdInfoKHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR
+}
+func (s *FenceGetFdInfoKHR) GetNext() Structure {
+	return s.Next
+}
+func (s *FenceGetFdInfoKHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetFenceFdKHR) Call(device Device, getFdInfo *FenceGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
@@ -18823,37 +19286,47 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
 }
 type PhysicalDeviceSurfaceInfo2KHR struct {
-	SType   StructureType
-	Next    unsafe.Pointer
+	Next    Structure
 	Surface SurfaceKHR
 }
 
 func (g *PhysicalDeviceSurfaceInfo2KHR) toC(c *C.VkPhysicalDeviceSurfaceInfo2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.surface = C.VkSurfaceKHR(g.Surface)
 }
 func (g *PhysicalDeviceSurfaceInfo2KHR) fromC(c *C.VkPhysicalDeviceSurfaceInfo2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Surface = SurfaceKHR(c.surface)
+}
+func (s *PhysicalDeviceSurfaceInfo2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR
+}
+func (s *PhysicalDeviceSurfaceInfo2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *PhysicalDeviceSurfaceInfo2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 
 type SurfaceCapabilities2KHR struct {
-	SType               StructureType
-	Next                unsafe.Pointer
+	Next                Structure
 	SurfaceCapabilities SurfaceCapabilitiesKHR
 }
 
 func (g *SurfaceCapabilities2KHR) toC(c *C.VkSurfaceCapabilities2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.SurfaceCapabilities.toC(&c.surfaceCapabilities)
 }
 func (g *SurfaceCapabilities2KHR) fromC(c *C.VkSurfaceCapabilities2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.SurfaceCapabilities.fromC(&c.surfaceCapabilities)
+}
+func (s *SurfaceCapabilities2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR
+}
+func (s *SurfaceCapabilities2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SurfaceCapabilities2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities []SurfaceCapabilities2KHR) (_ret Result) {
 	var c struct {
@@ -18885,20 +19358,25 @@ type PFN_vkGetPhysicalDeviceSurfaceFormats2KHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfaceFormats2KHR
 }
 type SurfaceFormat2KHR struct {
-	SType         StructureType
-	Next          unsafe.Pointer
+	Next          Structure
 	SurfaceFormat SurfaceFormatKHR
 }
 
 func (g *SurfaceFormat2KHR) toC(c *C.VkSurfaceFormat2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.SurfaceFormat.toC(&c.surfaceFormat)
 }
 func (g *SurfaceFormat2KHR) fromC(c *C.VkSurfaceFormat2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.SurfaceFormat.fromC(&c.surfaceFormat)
+}
+func (s *SurfaceFormat2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SURFACE_FORMAT_2_KHR
+}
+func (s *SurfaceFormat2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *SurfaceFormat2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result) {
 	var c struct {
@@ -18936,20 +19414,25 @@ type PFN_vkGetPhysicalDeviceDisplayProperties2KHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceDisplayProperties2KHR
 }
 type DisplayProperties2KHR struct {
-	SType             StructureType
-	Next              unsafe.Pointer
+	Next              Structure
 	DisplayProperties DisplayPropertiesKHR
 }
 
 func (g *DisplayProperties2KHR) toC(c *C.VkDisplayProperties2KHR, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.DisplayProperties.toC(&c.displayProperties, _sa)
 }
 func (g *DisplayProperties2KHR) fromC(c *C.VkDisplayProperties2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DisplayProperties.fromC(&c.displayProperties)
+}
+func (s *DisplayProperties2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_PROPERTIES_2_KHR
+}
+func (s *DisplayProperties2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayProperties2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result) {
 	var c struct {
@@ -18982,20 +19465,25 @@ type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
 }
 type DisplayPlaneProperties2KHR struct {
-	SType                  StructureType
-	Next                   unsafe.Pointer
+	Next                   Structure
 	DisplayPlaneProperties DisplayPlanePropertiesKHR
 }
 
 func (g *DisplayPlaneProperties2KHR) toC(c *C.VkDisplayPlaneProperties2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.DisplayPlaneProperties.toC(&c.displayPlaneProperties)
 }
 func (g *DisplayPlaneProperties2KHR) fromC(c *C.VkDisplayPlaneProperties2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DisplayPlaneProperties.fromC(&c.displayPlaneProperties)
+}
+func (s *DisplayPlaneProperties2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_PLANE_PROPERTIES_2_KHR
+}
+func (s *DisplayPlaneProperties2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayPlaneProperties2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result) {
 	var c struct {
@@ -19028,20 +19516,25 @@ type PFN_vkGetDisplayModeProperties2KHR struct {
 	Raw C.PFN_vkGetDisplayModeProperties2KHR
 }
 type DisplayModeProperties2KHR struct {
-	SType                 StructureType
-	Next                  unsafe.Pointer
+	Next                  Structure
 	DisplayModeProperties DisplayModePropertiesKHR
 }
 
 func (g *DisplayModeProperties2KHR) toC(c *C.VkDisplayModeProperties2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.DisplayModeProperties.toC(&c.displayModeProperties)
 }
 func (g *DisplayModeProperties2KHR) fromC(c *C.VkDisplayModeProperties2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DisplayModeProperties.fromC(&c.displayModeProperties)
+}
+func (s *DisplayModeProperties2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_MODE_PROPERTIES_2_KHR
+}
+func (s *DisplayModeProperties2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayModeProperties2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result) {
 	var c struct {
@@ -19076,40 +19569,50 @@ type PFN_vkGetDisplayPlaneCapabilities2KHR struct {
 	Raw C.PFN_vkGetDisplayPlaneCapabilities2KHR
 }
 type DisplayPlaneInfo2KHR struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	Mode       DisplayModeKHR
 	PlaneIndex uint32
 }
 
 func (g *DisplayPlaneInfo2KHR) toC(c *C.VkDisplayPlaneInfo2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.mode = C.VkDisplayModeKHR(g.Mode)
 	c.planeIndex = C.uint32_t(g.PlaneIndex)
 }
 func (g *DisplayPlaneInfo2KHR) fromC(c *C.VkDisplayPlaneInfo2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Mode = DisplayModeKHR(c.mode)
 	g.PlaneIndex = uint32(c.planeIndex)
 }
+func (s *DisplayPlaneInfo2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_PLANE_INFO_2_KHR
+}
+func (s *DisplayPlaneInfo2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayPlaneInfo2KHR) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DisplayPlaneCapabilities2KHR struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	Capabilities DisplayPlaneCapabilitiesKHR
 }
 
 func (g *DisplayPlaneCapabilities2KHR) toC(c *C.VkDisplayPlaneCapabilities2KHR) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.Capabilities.toC(&c.capabilities)
 }
 func (g *DisplayPlaneCapabilities2KHR) fromC(c *C.VkDisplayPlaneCapabilities2KHR) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Capabilities.fromC(&c.capabilities)
+}
+func (s *DisplayPlaneCapabilities2KHR) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_PLANE_CAPABILITIES_2_KHR
+}
+func (s *DisplayPlaneCapabilities2KHR) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayPlaneCapabilities2KHR) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities []DisplayPlaneCapabilities2KHR) (_ret Result) {
 	var c struct {
@@ -19511,16 +20014,14 @@ type PFN_vkCreateDebugReportCallbackEXT struct {
 	Raw C.PFN_vkCreateDebugReportCallbackEXT
 }
 type DebugReportCallbackCreateInfoEXT struct {
-	SType    StructureType
-	Next     unsafe.Pointer
+	Next     Structure
 	Flags    DebugReportFlagsEXT
 	Callback PFN_vkDebugReportCallbackEXT
 	UserData []byte
 }
 
 func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDebugReportFlagsEXT C.VkFlags
 		{
@@ -19540,8 +20041,6 @@ func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateI
 	}
 }
 func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreateInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDebugReportFlagsEXT Flags
 		{
@@ -19558,6 +20057,15 @@ func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreat
 			g.UserData[i2] = slice2[i2]
 		}
 	}
+}
+func (s *DebugReportCallbackCreateInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
+}
+func (s *DebugReportCallbackCreateInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugReportCallbackCreateInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DebugReportCallbackEXT C.VkDebugReportCallbackEXT
@@ -19652,8 +20160,7 @@ type PFN_vkDebugMarkerSetObjectTagEXT struct {
 	Raw C.PFN_vkDebugMarkerSetObjectTagEXT
 }
 type DebugMarkerObjectTagInfoEXT struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	ObjectType DebugReportObjectTypeEXT
 	Object     uint64
 	TagName    uint64
@@ -19662,8 +20169,7 @@ type DebugMarkerObjectTagInfoEXT struct {
 }
 
 func (g *DebugMarkerObjectTagInfoEXT) toC(c *C.VkDebugMarkerObjectTagInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectType = C.VkDebugReportObjectTypeEXT(g.ObjectType)
 	c.object = C.uint64_t(g.Object)
 	c.tagName = C.uint64_t(g.TagName)
@@ -19671,13 +20177,20 @@ func (g *DebugMarkerObjectTagInfoEXT) toC(c *C.VkDebugMarkerObjectTagInfoEXT) {
 	c.pTag = g.Tag
 }
 func (g *DebugMarkerObjectTagInfoEXT) fromC(c *C.VkDebugMarkerObjectTagInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectType = DebugReportObjectTypeEXT(c.objectType)
 	g.Object = uint64(c.object)
 	g.TagName = uint64(c.tagName)
 	g.TagSize = uint(c.tagSize)
 	g.Tag = c.pTag
+}
+func (s *DebugMarkerObjectTagInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_TAG_INFO_EXT
+}
+func (s *DebugMarkerObjectTagInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugMarkerObjectTagInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkDebugMarkerSetObjectTagEXT) Call(device Device, tagInfo *DebugMarkerObjectTagInfoEXT) (_ret Result) {
 	var c struct {
@@ -19701,26 +20214,31 @@ type PFN_vkDebugMarkerSetObjectNameEXT struct {
 	Raw C.PFN_vkDebugMarkerSetObjectNameEXT
 }
 type DebugMarkerObjectNameInfoEXT struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	ObjectType DebugReportObjectTypeEXT
 	Object     uint64
 	ObjectName string
 }
 
 func (g *DebugMarkerObjectNameInfoEXT) toC(c *C.VkDebugMarkerObjectNameInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectType = C.VkDebugReportObjectTypeEXT(g.ObjectType)
 	c.object = C.uint64_t(g.Object)
 	c.pObjectName = toCString(g.ObjectName, _sa)
 }
 func (g *DebugMarkerObjectNameInfoEXT) fromC(c *C.VkDebugMarkerObjectNameInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectType = DebugReportObjectTypeEXT(c.objectType)
 	g.Object = uint64(c.object)
 	g.ObjectName = toGoString(c.pObjectName)
+}
+func (s *DebugMarkerObjectNameInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_MARKER_OBJECT_NAME_INFO_EXT
+}
+func (s *DebugMarkerObjectNameInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugMarkerObjectNameInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkDebugMarkerSetObjectNameEXT) Call(device Device, nameInfo *DebugMarkerObjectNameInfoEXT) (_ret Result) {
 	var c struct {
@@ -19744,27 +20262,32 @@ type PFN_vkCmdDebugMarkerBeginEXT struct {
 	Raw C.PFN_vkCmdDebugMarkerBeginEXT
 }
 type DebugMarkerMarkerInfoEXT struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	MarkerName string
 	Color      [4]float32
 }
 
 func (g *DebugMarkerMarkerInfoEXT) toC(c *C.VkDebugMarkerMarkerInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.pMarkerName = toCString(g.MarkerName, _sa)
 	for i, _ := range g.Color {
 		c.color[i] = C.float(g.Color[i])
 	}
 }
 func (g *DebugMarkerMarkerInfoEXT) fromC(c *C.VkDebugMarkerMarkerInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MarkerName = toGoString(c.pMarkerName)
 	for i, _ := range g.Color {
 		g.Color[i] = float32(c.color[i])
 	}
+}
+func (s *DebugMarkerMarkerInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_MARKER_MARKER_INFO_EXT
+}
+func (s *DebugMarkerMarkerInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugMarkerMarkerInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdDebugMarkerBeginEXT) Call(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
 	var c struct {
@@ -20050,16 +20573,14 @@ type PFN_vkCmdBeginConditionalRenderingEXT struct {
 }
 type ConditionalRenderingFlagsEXT Flags
 type ConditionalRenderingBeginInfoEXT struct {
-	SType  StructureType
-	Next   unsafe.Pointer
+	Next   Structure
 	Buffer Buffer
 	Offset DeviceSize
 	Flags  ConditionalRenderingFlagsEXT
 }
 
 func (g *ConditionalRenderingBeginInfoEXT) toC(c *C.VkConditionalRenderingBeginInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.buffer = C.VkBuffer(g.Buffer)
 	{
 		var temp_in_VkDeviceSize C.uint64_t
@@ -20077,8 +20598,6 @@ func (g *ConditionalRenderingBeginInfoEXT) toC(c *C.VkConditionalRenderingBeginI
 	}
 }
 func (g *ConditionalRenderingBeginInfoEXT) fromC(c *C.VkConditionalRenderingBeginInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Buffer = Buffer(c.buffer)
 	{
 		var temp_in_VkDeviceSize uint64
@@ -20094,6 +20613,15 @@ func (g *ConditionalRenderingBeginInfoEXT) fromC(c *C.VkConditionalRenderingBegi
 		}
 		g.Flags = ConditionalRenderingFlagsEXT(temp_in_VkConditionalRenderingFlagsEXT)
 	}
+}
+func (s *ConditionalRenderingBeginInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
+}
+func (s *ConditionalRenderingBeginInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *ConditionalRenderingBeginInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdBeginConditionalRenderingEXT) Call(commandBuffer CommandBuffer, conditionalRenderingBegin *ConditionalRenderingBeginInfoEXT) {
 	var c struct {
@@ -20168,8 +20696,7 @@ func (g *IndirectCommandsTokenNVX) fromC(c *C.VkIndirectCommandsTokenNVX) {
 }
 
 type CmdProcessCommandsInfoNVX struct {
-	SType                  StructureType
-	Next                   unsafe.Pointer
+	Next                   Structure
 	ObjectTable            ObjectTableNVX
 	IndirectCommandsLayout IndirectCommandsLayoutNVX
 	IndirectCommandsTokens []IndirectCommandsTokenNVX
@@ -20182,8 +20709,7 @@ type CmdProcessCommandsInfoNVX struct {
 }
 
 func (g *CmdProcessCommandsInfoNVX) toC(c *C.VkCmdProcessCommandsInfoNVX, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectTable = C.VkObjectTableNVX(g.ObjectTable)
 	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(g.IndirectCommandsLayout)
 	c.indirectCommandsTokenCount = C.uint32_t(len(g.IndirectCommandsTokens))
@@ -20210,8 +20736,6 @@ func (g *CmdProcessCommandsInfoNVX) toC(c *C.VkCmdProcessCommandsInfoNVX, _sa *s
 	}
 }
 func (g *CmdProcessCommandsInfoNVX) fromC(c *C.VkCmdProcessCommandsInfoNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectTable = ObjectTableNVX(c.objectTable)
 	g.IndirectCommandsLayout = IndirectCommandsLayoutNVX(c.indirectCommandsLayout)
 	g.IndirectCommandsTokens = make([]IndirectCommandsTokenNVX, int(c.indirectCommandsTokenCount))
@@ -20236,6 +20760,15 @@ func (g *CmdProcessCommandsInfoNVX) fromC(c *C.VkCmdProcessCommandsInfoNVX) {
 		g.SequencesIndexOffset = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
+func (s *CmdProcessCommandsInfoNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX
+}
+func (s *CmdProcessCommandsInfoNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *CmdProcessCommandsInfoNVX) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkCmdProcessCommandsNVX) Call(commandBuffer CommandBuffer, processCommandsInfo *CmdProcessCommandsInfoNVX) {
 	var c struct {
 		commandBuffer        C.VkCommandBuffer
@@ -20255,26 +20788,31 @@ type PFN_vkCmdReserveSpaceForCommandsNVX struct {
 	Raw C.PFN_vkCmdReserveSpaceForCommandsNVX
 }
 type CmdReserveSpaceForCommandsInfoNVX struct {
-	SType                  StructureType
-	Next                   unsafe.Pointer
+	Next                   Structure
 	ObjectTable            ObjectTableNVX
 	IndirectCommandsLayout IndirectCommandsLayoutNVX
 	MaxSequencesCount      uint32
 }
 
 func (g *CmdReserveSpaceForCommandsInfoNVX) toC(c *C.VkCmdReserveSpaceForCommandsInfoNVX) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectTable = C.VkObjectTableNVX(g.ObjectTable)
 	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(g.IndirectCommandsLayout)
 	c.maxSequencesCount = C.uint32_t(g.MaxSequencesCount)
 }
 func (g *CmdReserveSpaceForCommandsInfoNVX) fromC(c *C.VkCmdReserveSpaceForCommandsInfoNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectTable = ObjectTableNVX(c.objectTable)
 	g.IndirectCommandsLayout = IndirectCommandsLayoutNVX(c.indirectCommandsLayout)
 	g.MaxSequencesCount = uint32(c.maxSequencesCount)
+}
+func (s *CmdReserveSpaceForCommandsInfoNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_CMD_RESERVE_SPACE_FOR_COMMANDS_INFO_NVX
+}
+func (s *CmdReserveSpaceForCommandsInfoNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *CmdReserveSpaceForCommandsInfoNVX) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdReserveSpaceForCommandsNVX) Call(commandBuffer CommandBuffer, reserveSpaceInfo *CmdReserveSpaceForCommandsInfoNVX) {
 	var c struct {
@@ -20316,16 +20854,14 @@ func (g *IndirectCommandsLayoutTokenNVX) fromC(c *C.VkIndirectCommandsLayoutToke
 }
 
 type IndirectCommandsLayoutCreateInfoNVX struct {
-	SType             StructureType
-	Next              unsafe.Pointer
+	Next              Structure
 	PipelineBindPoint PipelineBindPoint
 	Flags             IndirectCommandsLayoutUsageFlagsNVX
 	Tokens            []IndirectCommandsLayoutTokenNVX
 }
 
 func (g *IndirectCommandsLayoutCreateInfoNVX) toC(c *C.VkIndirectCommandsLayoutCreateInfoNVX, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	{
 		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX C.VkFlags
@@ -20346,8 +20882,6 @@ func (g *IndirectCommandsLayoutCreateInfoNVX) toC(c *C.VkIndirectCommandsLayoutC
 	}
 }
 func (g *IndirectCommandsLayoutCreateInfoNVX) fromC(c *C.VkIndirectCommandsLayoutCreateInfoNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
 	{
 		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX Flags
@@ -20365,6 +20899,15 @@ func (g *IndirectCommandsLayoutCreateInfoNVX) fromC(c *C.VkIndirectCommandsLayou
 			g.Tokens[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *IndirectCommandsLayoutCreateInfoNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_INDIRECT_COMMANDS_LAYOUT_CREATE_INFO_NVX
+}
+func (s *IndirectCommandsLayoutCreateInfoNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *IndirectCommandsLayoutCreateInfoNVX) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateIndirectCommandsLayoutNVX) Call(device Device, createInfo *IndirectCommandsLayoutCreateInfoNVX, allocator *AllocationCallbacks, indirectCommandsLayout *IndirectCommandsLayoutNVX) (_ret Result) {
 	var c struct {
@@ -20435,8 +20978,7 @@ const (
 
 type ObjectEntryUsageFlagsNVX Flags
 type ObjectTableCreateInfoNVX struct {
-	SType                          StructureType
-	Next                           unsafe.Pointer
+	Next                           Structure
 	ObjectEntryTypes               []ObjectEntryTypeNVX
 	ObjectEntryCounts              []uint32
 	ObjectEntryUsageFlags          []ObjectEntryUsageFlagsNVX
@@ -20448,8 +20990,7 @@ type ObjectTableCreateInfoNVX struct {
 }
 
 func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectCount = C.uint32_t(len(g.ObjectEntryTypes))
 	{
 		c.pObjectEntryTypes = (*C.VkObjectEntryTypeNVX)(_sa.alloc(C.sizeof_void_pointer * uint(len(g.ObjectEntryTypes))))
@@ -20487,8 +21028,6 @@ func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, _sa *sta
 	c.maxPipelineLayouts = C.uint32_t(g.MaxPipelineLayouts)
 }
 func (g *ObjectTableCreateInfoNVX) fromC(c *C.VkObjectTableCreateInfoNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectEntryTypes = make([]ObjectEntryTypeNVX, int(c.objectCount))
 	{
 		slice2 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(g.ObjectEntryTypes):len(g.ObjectEntryTypes)]
@@ -20521,6 +21060,15 @@ func (g *ObjectTableCreateInfoNVX) fromC(c *C.VkObjectTableCreateInfoNVX) {
 	g.MaxStorageImagesPerDescriptor = uint32(c.maxStorageImagesPerDescriptor)
 	g.MaxSampledImagesPerDescriptor = uint32(c.maxSampledImagesPerDescriptor)
 	g.MaxPipelineLayouts = uint32(c.maxPipelineLayouts)
+}
+func (s *ObjectTableCreateInfoNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_OBJECT_TABLE_CREATE_INFO_NVX
+}
+func (s *ObjectTableCreateInfoNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *ObjectTableCreateInfoNVX) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCreateObjectTableNVX) Call(device Device, createInfo *ObjectTableCreateInfoNVX, allocator *AllocationCallbacks, objectTable *ObjectTableNVX) (_ret Result) {
 	var c struct {
@@ -20681,14 +21229,12 @@ type PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX struct {
 	Raw C.PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
 }
 type DeviceGeneratedCommandsFeaturesNVX struct {
-	SType                      StructureType
-	Next                       unsafe.Pointer
+	Next                       Structure
 	ComputeBindingPointSupport bool
 }
 
 func (g *DeviceGeneratedCommandsFeaturesNVX) toC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	if g.ComputeBindingPointSupport {
 		c.computeBindingPointSupport = 1
 	} else {
@@ -20696,14 +21242,20 @@ func (g *DeviceGeneratedCommandsFeaturesNVX) toC(c *C.VkDeviceGeneratedCommandsF
 	}
 }
 func (g *DeviceGeneratedCommandsFeaturesNVX) fromC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ComputeBindingPointSupport = c.computeBindingPointSupport != 0
+}
+func (s *DeviceGeneratedCommandsFeaturesNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_FEATURES_NVX
+}
+func (s *DeviceGeneratedCommandsFeaturesNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceGeneratedCommandsFeaturesNVX) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DeviceGeneratedCommandsLimitsNVX struct {
-	SType                                 StructureType
-	Next                                  unsafe.Pointer
+	Next                                  Structure
 	MaxIndirectCommandsLayoutTokenCount   uint32
 	MaxObjectEntryCounts                  uint32
 	MinSequenceCountBufferOffsetAlignment uint32
@@ -20712,8 +21264,7 @@ type DeviceGeneratedCommandsLimitsNVX struct {
 }
 
 func (g *DeviceGeneratedCommandsLimitsNVX) toC(c *C.VkDeviceGeneratedCommandsLimitsNVX) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.maxIndirectCommandsLayoutTokenCount = C.uint32_t(g.MaxIndirectCommandsLayoutTokenCount)
 	c.maxObjectEntryCounts = C.uint32_t(g.MaxObjectEntryCounts)
 	c.minSequenceCountBufferOffsetAlignment = C.uint32_t(g.MinSequenceCountBufferOffsetAlignment)
@@ -20721,13 +21272,20 @@ func (g *DeviceGeneratedCommandsLimitsNVX) toC(c *C.VkDeviceGeneratedCommandsLim
 	c.minCommandsTokenBufferOffsetAlignment = C.uint32_t(g.MinCommandsTokenBufferOffsetAlignment)
 }
 func (g *DeviceGeneratedCommandsLimitsNVX) fromC(c *C.VkDeviceGeneratedCommandsLimitsNVX) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MaxIndirectCommandsLayoutTokenCount = uint32(c.maxIndirectCommandsLayoutTokenCount)
 	g.MaxObjectEntryCounts = uint32(c.maxObjectEntryCounts)
 	g.MinSequenceCountBufferOffsetAlignment = uint32(c.minSequenceCountBufferOffsetAlignment)
 	g.MinSequenceIndexBufferOffsetAlignment = uint32(c.minSequenceIndexBufferOffsetAlignment)
 	g.MinCommandsTokenBufferOffsetAlignment = uint32(c.minCommandsTokenBufferOffsetAlignment)
+}
+func (s *DeviceGeneratedCommandsLimitsNVX) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_GENERATED_COMMANDS_LIMITS_NVX
+}
+func (s *DeviceGeneratedCommandsLimitsNVX) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceGeneratedCommandsLimitsNVX) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice PhysicalDevice, features []DeviceGeneratedCommandsFeaturesNVX, limits []DeviceGeneratedCommandsLimitsNVX) {
 	var c struct {
@@ -20815,8 +21373,7 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT struct {
 }
 type SurfaceCounterFlagsEXT Flags
 type SurfaceCapabilities2EXT struct {
-	SType                    StructureType
-	Next                     unsafe.Pointer
+	Next                     Structure
 	MinImageCount            uint32
 	MaxImageCount            uint32
 	CurrentExtent            Extent2D
@@ -20831,8 +21388,7 @@ type SurfaceCapabilities2EXT struct {
 }
 
 func (g *SurfaceCapabilities2EXT) toC(c *C.VkSurfaceCapabilities2EXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.minImageCount = C.uint32_t(g.MinImageCount)
 	c.maxImageCount = C.uint32_t(g.MaxImageCount)
 	g.CurrentExtent.toC(&c.currentExtent)
@@ -20878,8 +21434,6 @@ func (g *SurfaceCapabilities2EXT) toC(c *C.VkSurfaceCapabilities2EXT) {
 	}
 }
 func (g *SurfaceCapabilities2EXT) fromC(c *C.VkSurfaceCapabilities2EXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MinImageCount = uint32(c.minImageCount)
 	g.MaxImageCount = uint32(c.maxImageCount)
 	g.CurrentExtent.fromC(&c.currentExtent)
@@ -20924,6 +21478,15 @@ func (g *SurfaceCapabilities2EXT) fromC(c *C.VkSurfaceCapabilities2EXT) {
 		g.SupportedSurfaceCounters = SurfaceCounterFlagsEXT(temp_in_VkSurfaceCounterFlagsEXT)
 	}
 }
+func (s *SurfaceCapabilities2EXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
+}
+func (s *SurfaceCapabilities2EXT) GetNext() Structure {
+	return s.Next
+}
+func (s *SurfaceCapabilities2EXT) SetNext(n Structure) {
+	s.Next = n
+}
 func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilities2EXT) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
@@ -20963,20 +21526,25 @@ const (
 )
 
 type DisplayPowerInfoEXT struct {
-	SType      StructureType
-	Next       unsafe.Pointer
+	Next       Structure
 	PowerState DisplayPowerStateEXT
 }
 
 func (g *DisplayPowerInfoEXT) toC(c *C.VkDisplayPowerInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.powerState = C.VkDisplayPowerStateEXT(g.PowerState)
 }
 func (g *DisplayPowerInfoEXT) fromC(c *C.VkDisplayPowerInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.PowerState = DisplayPowerStateEXT(c.powerState)
+}
+func (s *DisplayPowerInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_POWER_INFO_EXT
+}
+func (s *DisplayPowerInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayPowerInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkDisplayPowerControlEXT) Call(device Device, display DisplayKHR, displayPowerInfo *DisplayPowerInfoEXT) (_ret Result) {
 	var c struct {
@@ -21012,20 +21580,25 @@ const (
 )
 
 type DeviceEventInfoEXT struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	DeviceEvent DeviceEventTypeEXT
 }
 
 func (g *DeviceEventInfoEXT) toC(c *C.VkDeviceEventInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.deviceEvent = C.VkDeviceEventTypeEXT(g.DeviceEvent)
 }
 func (g *DeviceEventInfoEXT) fromC(c *C.VkDeviceEventInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DeviceEvent = DeviceEventTypeEXT(c.deviceEvent)
+}
+func (s *DeviceEventInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEVICE_EVENT_INFO_EXT
+}
+func (s *DeviceEventInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DeviceEventInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *DeviceEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
@@ -21070,20 +21643,25 @@ const (
 )
 
 type DisplayEventInfoEXT struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	DisplayEvent DisplayEventTypeEXT
 }
 
 func (g *DisplayEventInfoEXT) toC(c *C.VkDisplayEventInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.displayEvent = C.VkDisplayEventTypeEXT(g.DisplayEvent)
 }
 func (g *DisplayEventInfoEXT) fromC(c *C.VkDisplayEventInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DisplayEvent = DisplayEventTypeEXT(c.displayEvent)
+}
+func (s *DisplayEventInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DISPLAY_EVENT_INFO_EXT
+}
+func (s *DisplayEventInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DisplayEventInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, displayEventInfo *DisplayEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
@@ -21281,8 +21859,7 @@ func (g *XYColorEXT) fromC(c *C.VkXYColorEXT) {
 }
 
 type HdrMetadataEXT struct {
-	SType                     StructureType
-	Next                      unsafe.Pointer
+	Next                      Structure
 	DisplayPrimaryRed         XYColorEXT
 	DisplayPrimaryGreen       XYColorEXT
 	DisplayPrimaryBlue        XYColorEXT
@@ -21294,8 +21871,7 @@ type HdrMetadataEXT struct {
 }
 
 func (g *HdrMetadataEXT) toC(c *C.VkHdrMetadataEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.DisplayPrimaryRed.toC(&c.displayPrimaryRed)
 	g.DisplayPrimaryGreen.toC(&c.displayPrimaryGreen)
 	g.DisplayPrimaryBlue.toC(&c.displayPrimaryBlue)
@@ -21306,8 +21882,6 @@ func (g *HdrMetadataEXT) toC(c *C.VkHdrMetadataEXT) {
 	c.maxFrameAverageLightLevel = C.float(g.MaxFrameAverageLightLevel)
 }
 func (g *HdrMetadataEXT) fromC(c *C.VkHdrMetadataEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.DisplayPrimaryRed.fromC(&c.displayPrimaryRed)
 	g.DisplayPrimaryGreen.fromC(&c.displayPrimaryGreen)
 	g.DisplayPrimaryBlue.fromC(&c.displayPrimaryBlue)
@@ -21316,6 +21890,15 @@ func (g *HdrMetadataEXT) fromC(c *C.VkHdrMetadataEXT) {
 	g.MinLuminance = float32(c.minLuminance)
 	g.MaxContentLightLevel = float32(c.maxContentLightLevel)
 	g.MaxFrameAverageLightLevel = float32(c.maxFrameAverageLightLevel)
+}
+func (s *HdrMetadataEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_HDR_METADATA_EXT
+}
+func (s *HdrMetadataEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *HdrMetadataEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, metadata []HdrMetadataEXT) {
 	var c struct {
@@ -21361,27 +21944,32 @@ const (
 type DebugUtilsMessageTypeFlagsEXT Flags
 type DebugUtilsMessengerCallbackDataFlagsEXT Flags
 type DebugUtilsLabelEXT struct {
-	SType     StructureType
-	Next      unsafe.Pointer
+	Next      Structure
 	LabelName string
 	Color     [4]float32
 }
 
 func (g *DebugUtilsLabelEXT) toC(c *C.VkDebugUtilsLabelEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.pLabelName = toCString(g.LabelName, _sa)
 	for i, _ := range g.Color {
 		c.color[i] = C.float(g.Color[i])
 	}
 }
 func (g *DebugUtilsLabelEXT) fromC(c *C.VkDebugUtilsLabelEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.LabelName = toGoString(c.pLabelName)
 	for i, _ := range g.Color {
 		g.Color[i] = float32(c.color[i])
 	}
+}
+func (s *DebugUtilsLabelEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT
+}
+func (s *DebugUtilsLabelEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugUtilsLabelEXT) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ObjectType int
@@ -21433,31 +22021,35 @@ const (
 )
 
 type DebugUtilsObjectNameInfoEXT struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	ObjectType   ObjectType
 	ObjectHandle uint64
 	ObjectName   string
 }
 
 func (g *DebugUtilsObjectNameInfoEXT) toC(c *C.VkDebugUtilsObjectNameInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectType = C.VkObjectType(g.ObjectType)
 	c.objectHandle = C.uint64_t(g.ObjectHandle)
 	c.pObjectName = toCString(g.ObjectName, _sa)
 }
 func (g *DebugUtilsObjectNameInfoEXT) fromC(c *C.VkDebugUtilsObjectNameInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectType = ObjectType(c.objectType)
 	g.ObjectHandle = uint64(c.objectHandle)
 	g.ObjectName = toGoString(c.pObjectName)
 }
+func (s *DebugUtilsObjectNameInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT
+}
+func (s *DebugUtilsObjectNameInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugUtilsObjectNameInfoEXT) SetNext(n Structure) {
+	s.Next = n
+}
 
 type DebugUtilsMessengerCallbackDataEXT struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           DebugUtilsMessengerCallbackDataFlagsEXT
 	MessageIdName   string
 	MessageIdNumber int32
@@ -21468,8 +22060,7 @@ type DebugUtilsMessengerCallbackDataEXT struct {
 }
 
 func (g *DebugUtilsMessengerCallbackDataEXT) toC(c *C.VkDebugUtilsMessengerCallbackDataEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT C.VkFlags
 		{
@@ -21508,8 +22099,6 @@ func (g *DebugUtilsMessengerCallbackDataEXT) toC(c *C.VkDebugUtilsMessengerCallb
 	}
 }
 func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCallbackDataEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT Flags
 		{
@@ -21543,6 +22132,15 @@ func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCal
 			g.Objects[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *DebugUtilsMessengerCallbackDataEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CALLBACK_DATA_EXT
+}
+func (s *DebugUtilsMessengerCallbackDataEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugUtilsMessengerCallbackDataEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret bool) {
 	var c struct {
@@ -21600,8 +22198,7 @@ type PFN_vkSetDebugUtilsObjectTagEXT struct {
 	Raw C.PFN_vkSetDebugUtilsObjectTagEXT
 }
 type DebugUtilsObjectTagInfoEXT struct {
-	SType        StructureType
-	Next         unsafe.Pointer
+	Next         Structure
 	ObjectType   ObjectType
 	ObjectHandle uint64
 	TagName      uint64
@@ -21610,8 +22207,7 @@ type DebugUtilsObjectTagInfoEXT struct {
 }
 
 func (g *DebugUtilsObjectTagInfoEXT) toC(c *C.VkDebugUtilsObjectTagInfoEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.objectType = C.VkObjectType(g.ObjectType)
 	c.objectHandle = C.uint64_t(g.ObjectHandle)
 	c.tagName = C.uint64_t(g.TagName)
@@ -21619,13 +22215,20 @@ func (g *DebugUtilsObjectTagInfoEXT) toC(c *C.VkDebugUtilsObjectTagInfoEXT) {
 	c.pTag = g.Tag
 }
 func (g *DebugUtilsObjectTagInfoEXT) fromC(c *C.VkDebugUtilsObjectTagInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.ObjectType = ObjectType(c.objectType)
 	g.ObjectHandle = uint64(c.objectHandle)
 	g.TagName = uint64(c.tagName)
 	g.TagSize = uint(c.tagSize)
 	g.Tag = c.pTag
+}
+func (s *DebugUtilsObjectTagInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_TAG_INFO_EXT
+}
+func (s *DebugUtilsObjectTagInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugUtilsObjectTagInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkSetDebugUtilsObjectTagEXT) Call(device Device, tagInfo *DebugUtilsObjectTagInfoEXT) (_ret Result) {
 	var c struct {
@@ -21747,8 +22350,7 @@ type PFN_vkCreateDebugUtilsMessengerEXT struct {
 type DebugUtilsMessengerCreateFlagsEXT Flags
 type DebugUtilsMessageSeverityFlagsEXT Flags
 type DebugUtilsMessengerCreateInfoEXT struct {
-	SType           StructureType
-	Next            unsafe.Pointer
+	Next            Structure
 	Flags           DebugUtilsMessengerCreateFlagsEXT
 	MessageSeverity DebugUtilsMessageSeverityFlagsEXT
 	MessageType     DebugUtilsMessageTypeFlagsEXT
@@ -21757,8 +22359,7 @@ type DebugUtilsMessengerCreateInfoEXT struct {
 }
 
 func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT C.VkFlags
 		{
@@ -21796,8 +22397,6 @@ func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateI
 	}
 }
 func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreateInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT Flags
 		{
@@ -21832,6 +22431,15 @@ func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreat
 			g.UserData[i2] = slice2[i2]
 		}
 	}
+}
+func (s *DebugUtilsMessengerCreateInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT
+}
+func (s *DebugUtilsMessengerCreateInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *DebugUtilsMessengerCreateInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 
 type DebugUtilsMessengerEXT C.VkDebugUtilsMessengerEXT
@@ -21938,16 +22546,14 @@ func (g *SampleLocationEXT) fromC(c *C.VkSampleLocationEXT) {
 }
 
 type SampleLocationsInfoEXT struct {
-	SType                   StructureType
-	Next                    unsafe.Pointer
+	Next                    Structure
 	SampleLocationsPerPixel SampleCountFlagBits
 	SampleLocationGridSize  Extent2D
 	SampleLocations         []SampleLocationEXT
 }
 
 func (g *SampleLocationsInfoEXT) toC(c *C.VkSampleLocationsInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.sampleLocationsPerPixel = C.VkSampleCountFlagBits(g.SampleLocationsPerPixel)
 	g.SampleLocationGridSize.toC(&c.sampleLocationGridSize)
 	c.sampleLocationsCount = C.uint32_t(len(g.SampleLocations))
@@ -21960,8 +22566,6 @@ func (g *SampleLocationsInfoEXT) toC(c *C.VkSampleLocationsInfoEXT, _sa *stackAl
 	}
 }
 func (g *SampleLocationsInfoEXT) fromC(c *C.VkSampleLocationsInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.SampleLocationsPerPixel = SampleCountFlagBits(c.sampleLocationsPerPixel)
 	g.SampleLocationGridSize.fromC(&c.sampleLocationGridSize)
 	g.SampleLocations = make([]SampleLocationEXT, int(c.sampleLocationsCount))
@@ -21971,6 +22575,15 @@ func (g *SampleLocationsInfoEXT) fromC(c *C.VkSampleLocationsInfoEXT) {
 			g.SampleLocations[i2].fromC(&slice2[i2])
 		}
 	}
+}
+func (s *SampleLocationsInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_SAMPLE_LOCATIONS_INFO_EXT
+}
+func (s *SampleLocationsInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *SampleLocationsInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkCmdSetSampleLocationsEXT) Call(commandBuffer CommandBuffer, sampleLocationsInfo *SampleLocationsInfoEXT) {
 	var c struct {
@@ -21991,20 +22604,25 @@ type PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT struct {
 	Raw C.PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT
 }
 type MultisamplePropertiesEXT struct {
-	SType                     StructureType
-	Next                      unsafe.Pointer
+	Next                      Structure
 	MaxSampleLocationGridSize Extent2D
 }
 
 func (g *MultisamplePropertiesEXT) toC(c *C.VkMultisamplePropertiesEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	g.MaxSampleLocationGridSize.toC(&c.maxSampleLocationGridSize)
 }
 func (g *MultisamplePropertiesEXT) fromC(c *C.VkMultisamplePropertiesEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MaxSampleLocationGridSize.fromC(&c.maxSampleLocationGridSize)
+}
+func (s *MultisamplePropertiesEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MULTISAMPLE_PROPERTIES_EXT
+}
+func (s *MultisamplePropertiesEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *MultisamplePropertiesEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties []MultisamplePropertiesEXT) {
 	var c struct {
@@ -22031,15 +22649,13 @@ type PFN_vkCreateValidationCacheEXT struct {
 }
 type ValidationCacheCreateFlagsEXT Flags
 type ValidationCacheCreateInfoEXT struct {
-	SType       StructureType
-	Next        unsafe.Pointer
+	Next        Structure
 	Flags       ValidationCacheCreateFlagsEXT
 	InitialData []byte
 }
 
 func (g *ValidationCacheCreateInfoEXT) toC(c *C.VkValidationCacheCreateInfoEXT, _sa *stackAllocator) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	{
 		var temp_in_VkValidationCacheCreateFlagsEXT C.VkFlags
 		{
@@ -22059,8 +22675,6 @@ func (g *ValidationCacheCreateInfoEXT) toC(c *C.VkValidationCacheCreateInfoEXT, 
 	}
 }
 func (g *ValidationCacheCreateInfoEXT) fromC(c *C.VkValidationCacheCreateInfoEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	{
 		var temp_in_VkValidationCacheCreateFlagsEXT Flags
 		{
@@ -22077,6 +22691,15 @@ func (g *ValidationCacheCreateInfoEXT) fromC(c *C.VkValidationCacheCreateInfoEXT
 			g.InitialData[i2] = slice2[i2]
 		}
 	}
+}
+func (s *ValidationCacheCreateInfoEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_VALIDATION_CACHE_CREATE_INFO_EXT
+}
+func (s *ValidationCacheCreateInfoEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *ValidationCacheCreateInfoEXT) SetNext(n Structure) {
+	s.Next = n
 }
 
 type ValidationCacheEXT C.VkValidationCacheEXT
@@ -22197,20 +22820,25 @@ type PFN_vkGetMemoryHostPointerPropertiesEXT struct {
 	Raw C.PFN_vkGetMemoryHostPointerPropertiesEXT
 }
 type MemoryHostPointerPropertiesEXT struct {
-	SType          StructureType
-	Next           unsafe.Pointer
+	Next           Structure
 	MemoryTypeBits uint32
 }
 
 func (g *MemoryHostPointerPropertiesEXT) toC(c *C.VkMemoryHostPointerPropertiesEXT) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
 }
 func (g *MemoryHostPointerPropertiesEXT) fromC(c *C.VkMemoryHostPointerPropertiesEXT) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
+}
+func (s *MemoryHostPointerPropertiesEXT) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_MEMORY_HOST_POINTER_PROPERTIES_EXT
+}
+func (s *MemoryHostPointerPropertiesEXT) GetNext() Structure {
+	return s.Next
+}
+func (s *MemoryHostPointerPropertiesEXT) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties []MemoryHostPointerPropertiesEXT) (_ret Result) {
 	var c struct {
@@ -22279,23 +22907,28 @@ type PFN_vkGetQueueCheckpointDataNV struct {
 	Raw C.PFN_vkGetQueueCheckpointDataNV
 }
 type CheckpointDataNV struct {
-	SType            StructureType
-	Next             unsafe.Pointer
+	Next             Structure
 	Stage            PipelineStageFlagBits
 	CheckpointMarker unsafe.Pointer
 }
 
 func (g *CheckpointDataNV) toC(c *C.VkCheckpointDataNV) {
-	c.sType = C.VkStructureType(g.SType)
-	c.pNext = g.Next
+	c.sType = g.sType()
 	c.stage = C.VkPipelineStageFlagBits(g.Stage)
 	c.pCheckpointMarker = g.CheckpointMarker
 }
 func (g *CheckpointDataNV) fromC(c *C.VkCheckpointDataNV) {
-	g.SType = StructureType(c.sType)
-	g.Next = c.pNext
 	g.Stage = PipelineStageFlagBits(c.stage)
 	g.CheckpointMarker = c.pCheckpointMarker
+}
+func (s *CheckpointDataNV) sType() C.VkStructureType {
+	return C.VK_STRUCTURE_TYPE_CHECKPOINT_DATA_NV
+}
+func (s *CheckpointDataNV) GetNext() Structure {
+	return s.Next
+}
+func (s *CheckpointDataNV) SetNext(n Structure) {
+	s.Next = n
 }
 func (p PFN_vkGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV) {
 	var c struct {
