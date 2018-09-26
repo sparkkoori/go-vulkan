@@ -695,618 +695,397 @@ func EnumeratePhysicalDevices(instance Instance, physicalDeviceCount *uint32, ph
 	return
 }
 
-type Bool32 uint32
 type PhysicalDeviceFeatures struct {
-	RobustBufferAccess                      Bool32
-	FullDrawIndexUint32                     Bool32
-	ImageCubeArray                          Bool32
-	IndependentBlend                        Bool32
-	GeometryShader                          Bool32
-	TessellationShader                      Bool32
-	SampleRateShading                       Bool32
-	DualSrcBlend                            Bool32
-	LogicOp                                 Bool32
-	MultiDrawIndirect                       Bool32
-	DrawIndirectFirstInstance               Bool32
-	DepthClamp                              Bool32
-	DepthBiasClamp                          Bool32
-	FillModeNonSolid                        Bool32
-	DepthBounds                             Bool32
-	WideLines                               Bool32
-	LargePoints                             Bool32
-	AlphaToOne                              Bool32
-	MultiViewport                           Bool32
-	SamplerAnisotropy                       Bool32
-	TextureCompressionETC2                  Bool32
-	TextureCompressionASTC_LDR              Bool32
-	TextureCompressionBC                    Bool32
-	OcclusionQueryPrecise                   Bool32
-	PipelineStatisticsQuery                 Bool32
-	VertexPipelineStoresAndAtomics          Bool32
-	FragmentStoresAndAtomics                Bool32
-	ShaderTessellationAndGeometryPointSize  Bool32
-	ShaderImageGatherExtended               Bool32
-	ShaderStorageImageExtendedFormats       Bool32
-	ShaderStorageImageMultisample           Bool32
-	ShaderStorageImageReadWithoutFormat     Bool32
-	ShaderStorageImageWriteWithoutFormat    Bool32
-	ShaderUniformBufferArrayDynamicIndexing Bool32
-	ShaderSampledImageArrayDynamicIndexing  Bool32
-	ShaderStorageBufferArrayDynamicIndexing Bool32
-	ShaderStorageImageArrayDynamicIndexing  Bool32
-	ShaderClipDistance                      Bool32
-	ShaderCullDistance                      Bool32
-	ShaderFloat64                           Bool32
-	ShaderInt64                             Bool32
-	ShaderInt16                             Bool32
-	ShaderResourceResidency                 Bool32
-	ShaderResourceMinLod                    Bool32
-	SparseBinding                           Bool32
-	SparseResidencyBuffer                   Bool32
-	SparseResidencyImage2D                  Bool32
-	SparseResidencyImage3D                  Bool32
-	SparseResidency2Samples                 Bool32
-	SparseResidency4Samples                 Bool32
-	SparseResidency8Samples                 Bool32
-	SparseResidency16Samples                Bool32
-	SparseResidencyAliased                  Bool32
-	VariableMultisampleRate                 Bool32
-	InheritedQueries                        Bool32
+	RobustBufferAccess                      bool
+	FullDrawIndexUint32                     bool
+	ImageCubeArray                          bool
+	IndependentBlend                        bool
+	GeometryShader                          bool
+	TessellationShader                      bool
+	SampleRateShading                       bool
+	DualSrcBlend                            bool
+	LogicOp                                 bool
+	MultiDrawIndirect                       bool
+	DrawIndirectFirstInstance               bool
+	DepthClamp                              bool
+	DepthBiasClamp                          bool
+	FillModeNonSolid                        bool
+	DepthBounds                             bool
+	WideLines                               bool
+	LargePoints                             bool
+	AlphaToOne                              bool
+	MultiViewport                           bool
+	SamplerAnisotropy                       bool
+	TextureCompressionETC2                  bool
+	TextureCompressionASTC_LDR              bool
+	TextureCompressionBC                    bool
+	OcclusionQueryPrecise                   bool
+	PipelineStatisticsQuery                 bool
+	VertexPipelineStoresAndAtomics          bool
+	FragmentStoresAndAtomics                bool
+	ShaderTessellationAndGeometryPointSize  bool
+	ShaderImageGatherExtended               bool
+	ShaderStorageImageExtendedFormats       bool
+	ShaderStorageImageMultisample           bool
+	ShaderStorageImageReadWithoutFormat     bool
+	ShaderStorageImageWriteWithoutFormat    bool
+	ShaderUniformBufferArrayDynamicIndexing bool
+	ShaderSampledImageArrayDynamicIndexing  bool
+	ShaderStorageBufferArrayDynamicIndexing bool
+	ShaderStorageImageArrayDynamicIndexing  bool
+	ShaderClipDistance                      bool
+	ShaderCullDistance                      bool
+	ShaderFloat64                           bool
+	ShaderInt64                             bool
+	ShaderInt16                             bool
+	ShaderResourceResidency                 bool
+	ShaderResourceMinLod                    bool
+	SparseBinding                           bool
+	SparseResidencyBuffer                   bool
+	SparseResidencyImage2D                  bool
+	SparseResidencyImage3D                  bool
+	SparseResidency2Samples                 bool
+	SparseResidency4Samples                 bool
+	SparseResidency8Samples                 bool
+	SparseResidency16Samples                bool
+	SparseResidencyAliased                  bool
+	VariableMultisampleRate                 bool
+	InheritedQueries                        bool
 }
 
 func (g *PhysicalDeviceFeatures) toC(c *C.VkPhysicalDeviceFeatures) {
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.RobustBufferAccess))
-		c.robustBufferAccess = C.VkBool32(temp_in_VkBool32)
+	if g.RobustBufferAccess {
+		c.robustBufferAccess = 1
+	} else {
+		c.robustBufferAccess = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.FullDrawIndexUint32))
-		c.fullDrawIndexUint32 = C.VkBool32(temp_in_VkBool32)
+	if g.FullDrawIndexUint32 {
+		c.fullDrawIndexUint32 = 1
+	} else {
+		c.fullDrawIndexUint32 = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ImageCubeArray))
-		c.imageCubeArray = C.VkBool32(temp_in_VkBool32)
+	if g.ImageCubeArray {
+		c.imageCubeArray = 1
+	} else {
+		c.imageCubeArray = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.IndependentBlend))
-		c.independentBlend = C.VkBool32(temp_in_VkBool32)
+	if g.IndependentBlend {
+		c.independentBlend = 1
+	} else {
+		c.independentBlend = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.GeometryShader))
-		c.geometryShader = C.VkBool32(temp_in_VkBool32)
+	if g.GeometryShader {
+		c.geometryShader = 1
+	} else {
+		c.geometryShader = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.TessellationShader))
-		c.tessellationShader = C.VkBool32(temp_in_VkBool32)
+	if g.TessellationShader {
+		c.tessellationShader = 1
+	} else {
+		c.tessellationShader = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SampleRateShading))
-		c.sampleRateShading = C.VkBool32(temp_in_VkBool32)
+	if g.SampleRateShading {
+		c.sampleRateShading = 1
+	} else {
+		c.sampleRateShading = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DualSrcBlend))
-		c.dualSrcBlend = C.VkBool32(temp_in_VkBool32)
+	if g.DualSrcBlend {
+		c.dualSrcBlend = 1
+	} else {
+		c.dualSrcBlend = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.LogicOp))
-		c.logicOp = C.VkBool32(temp_in_VkBool32)
+	if g.LogicOp {
+		c.logicOp = 1
+	} else {
+		c.logicOp = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.MultiDrawIndirect))
-		c.multiDrawIndirect = C.VkBool32(temp_in_VkBool32)
+	if g.MultiDrawIndirect {
+		c.multiDrawIndirect = 1
+	} else {
+		c.multiDrawIndirect = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DrawIndirectFirstInstance))
-		c.drawIndirectFirstInstance = C.VkBool32(temp_in_VkBool32)
+	if g.DrawIndirectFirstInstance {
+		c.drawIndirectFirstInstance = 1
+	} else {
+		c.drawIndirectFirstInstance = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthClamp))
-		c.depthClamp = C.VkBool32(temp_in_VkBool32)
+	if g.DepthClamp {
+		c.depthClamp = 1
+	} else {
+		c.depthClamp = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBiasClamp))
-		c.depthBiasClamp = C.VkBool32(temp_in_VkBool32)
+	if g.DepthBiasClamp {
+		c.depthBiasClamp = 1
+	} else {
+		c.depthBiasClamp = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.FillModeNonSolid))
-		c.fillModeNonSolid = C.VkBool32(temp_in_VkBool32)
+	if g.FillModeNonSolid {
+		c.fillModeNonSolid = 1
+	} else {
+		c.fillModeNonSolid = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBounds))
-		c.depthBounds = C.VkBool32(temp_in_VkBool32)
+	if g.DepthBounds {
+		c.depthBounds = 1
+	} else {
+		c.depthBounds = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.WideLines))
-		c.wideLines = C.VkBool32(temp_in_VkBool32)
+	if g.WideLines {
+		c.wideLines = 1
+	} else {
+		c.wideLines = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.LargePoints))
-		c.largePoints = C.VkBool32(temp_in_VkBool32)
+	if g.LargePoints {
+		c.largePoints = 1
+	} else {
+		c.largePoints = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToOne))
-		c.alphaToOne = C.VkBool32(temp_in_VkBool32)
+	if g.AlphaToOne {
+		c.alphaToOne = 1
+	} else {
+		c.alphaToOne = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.MultiViewport))
-		c.multiViewport = C.VkBool32(temp_in_VkBool32)
+	if g.MultiViewport {
+		c.multiViewport = 1
+	} else {
+		c.multiViewport = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SamplerAnisotropy))
-		c.samplerAnisotropy = C.VkBool32(temp_in_VkBool32)
+	if g.SamplerAnisotropy {
+		c.samplerAnisotropy = 1
+	} else {
+		c.samplerAnisotropy = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionETC2))
-		c.textureCompressionETC2 = C.VkBool32(temp_in_VkBool32)
+	if g.TextureCompressionETC2 {
+		c.textureCompressionETC2 = 1
+	} else {
+		c.textureCompressionETC2 = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionASTC_LDR))
-		c.textureCompressionASTC_LDR = C.VkBool32(temp_in_VkBool32)
+	if g.TextureCompressionASTC_LDR {
+		c.textureCompressionASTC_LDR = 1
+	} else {
+		c.textureCompressionASTC_LDR = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.TextureCompressionBC))
-		c.textureCompressionBC = C.VkBool32(temp_in_VkBool32)
+	if g.TextureCompressionBC {
+		c.textureCompressionBC = 1
+	} else {
+		c.textureCompressionBC = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.OcclusionQueryPrecise))
-		c.occlusionQueryPrecise = C.VkBool32(temp_in_VkBool32)
+	if g.OcclusionQueryPrecise {
+		c.occlusionQueryPrecise = 1
+	} else {
+		c.occlusionQueryPrecise = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.PipelineStatisticsQuery))
-		c.pipelineStatisticsQuery = C.VkBool32(temp_in_VkBool32)
+	if g.PipelineStatisticsQuery {
+		c.pipelineStatisticsQuery = 1
+	} else {
+		c.pipelineStatisticsQuery = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.VertexPipelineStoresAndAtomics))
-		c.vertexPipelineStoresAndAtomics = C.VkBool32(temp_in_VkBool32)
+	if g.VertexPipelineStoresAndAtomics {
+		c.vertexPipelineStoresAndAtomics = 1
+	} else {
+		c.vertexPipelineStoresAndAtomics = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.FragmentStoresAndAtomics))
-		c.fragmentStoresAndAtomics = C.VkBool32(temp_in_VkBool32)
+	if g.FragmentStoresAndAtomics {
+		c.fragmentStoresAndAtomics = 1
+	} else {
+		c.fragmentStoresAndAtomics = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderTessellationAndGeometryPointSize))
-		c.shaderTessellationAndGeometryPointSize = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderTessellationAndGeometryPointSize {
+		c.shaderTessellationAndGeometryPointSize = 1
+	} else {
+		c.shaderTessellationAndGeometryPointSize = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderImageGatherExtended))
-		c.shaderImageGatherExtended = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderImageGatherExtended {
+		c.shaderImageGatherExtended = 1
+	} else {
+		c.shaderImageGatherExtended = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageExtendedFormats))
-		c.shaderStorageImageExtendedFormats = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageImageExtendedFormats {
+		c.shaderStorageImageExtendedFormats = 1
+	} else {
+		c.shaderStorageImageExtendedFormats = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageMultisample))
-		c.shaderStorageImageMultisample = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageImageMultisample {
+		c.shaderStorageImageMultisample = 1
+	} else {
+		c.shaderStorageImageMultisample = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageReadWithoutFormat))
-		c.shaderStorageImageReadWithoutFormat = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageImageReadWithoutFormat {
+		c.shaderStorageImageReadWithoutFormat = 1
+	} else {
+		c.shaderStorageImageReadWithoutFormat = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageWriteWithoutFormat))
-		c.shaderStorageImageWriteWithoutFormat = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageImageWriteWithoutFormat {
+		c.shaderStorageImageWriteWithoutFormat = 1
+	} else {
+		c.shaderStorageImageWriteWithoutFormat = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderUniformBufferArrayDynamicIndexing))
-		c.shaderUniformBufferArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderUniformBufferArrayDynamicIndexing {
+		c.shaderUniformBufferArrayDynamicIndexing = 1
+	} else {
+		c.shaderUniformBufferArrayDynamicIndexing = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderSampledImageArrayDynamicIndexing))
-		c.shaderSampledImageArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderSampledImageArrayDynamicIndexing {
+		c.shaderSampledImageArrayDynamicIndexing = 1
+	} else {
+		c.shaderSampledImageArrayDynamicIndexing = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageBufferArrayDynamicIndexing))
-		c.shaderStorageBufferArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageBufferArrayDynamicIndexing {
+		c.shaderStorageBufferArrayDynamicIndexing = 1
+	} else {
+		c.shaderStorageBufferArrayDynamicIndexing = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderStorageImageArrayDynamicIndexing))
-		c.shaderStorageImageArrayDynamicIndexing = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderStorageImageArrayDynamicIndexing {
+		c.shaderStorageImageArrayDynamicIndexing = 1
+	} else {
+		c.shaderStorageImageArrayDynamicIndexing = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderClipDistance))
-		c.shaderClipDistance = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderClipDistance {
+		c.shaderClipDistance = 1
+	} else {
+		c.shaderClipDistance = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderCullDistance))
-		c.shaderCullDistance = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderCullDistance {
+		c.shaderCullDistance = 1
+	} else {
+		c.shaderCullDistance = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderFloat64))
-		c.shaderFloat64 = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderFloat64 {
+		c.shaderFloat64 = 1
+	} else {
+		c.shaderFloat64 = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderInt64))
-		c.shaderInt64 = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderInt64 {
+		c.shaderInt64 = 1
+	} else {
+		c.shaderInt64 = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderInt16))
-		c.shaderInt16 = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderInt16 {
+		c.shaderInt16 = 1
+	} else {
+		c.shaderInt16 = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderResourceResidency))
-		c.shaderResourceResidency = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderResourceResidency {
+		c.shaderResourceResidency = 1
+	} else {
+		c.shaderResourceResidency = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ShaderResourceMinLod))
-		c.shaderResourceMinLod = C.VkBool32(temp_in_VkBool32)
+	if g.ShaderResourceMinLod {
+		c.shaderResourceMinLod = 1
+	} else {
+		c.shaderResourceMinLod = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseBinding))
-		c.sparseBinding = C.VkBool32(temp_in_VkBool32)
+	if g.SparseBinding {
+		c.sparseBinding = 1
+	} else {
+		c.sparseBinding = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyBuffer))
-		c.sparseResidencyBuffer = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidencyBuffer {
+		c.sparseResidencyBuffer = 1
+	} else {
+		c.sparseResidencyBuffer = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyImage2D))
-		c.sparseResidencyImage2D = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidencyImage2D {
+		c.sparseResidencyImage2D = 1
+	} else {
+		c.sparseResidencyImage2D = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyImage3D))
-		c.sparseResidencyImage3D = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidencyImage3D {
+		c.sparseResidencyImage3D = 1
+	} else {
+		c.sparseResidencyImage3D = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency2Samples))
-		c.sparseResidency2Samples = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidency2Samples {
+		c.sparseResidency2Samples = 1
+	} else {
+		c.sparseResidency2Samples = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency4Samples))
-		c.sparseResidency4Samples = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidency4Samples {
+		c.sparseResidency4Samples = 1
+	} else {
+		c.sparseResidency4Samples = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency8Samples))
-		c.sparseResidency8Samples = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidency8Samples {
+		c.sparseResidency8Samples = 1
+	} else {
+		c.sparseResidency8Samples = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidency16Samples))
-		c.sparseResidency16Samples = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidency16Samples {
+		c.sparseResidency16Samples = 1
+	} else {
+		c.sparseResidency16Samples = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SparseResidencyAliased))
-		c.sparseResidencyAliased = C.VkBool32(temp_in_VkBool32)
+	if g.SparseResidencyAliased {
+		c.sparseResidencyAliased = 1
+	} else {
+		c.sparseResidencyAliased = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.VariableMultisampleRate))
-		c.variableMultisampleRate = C.VkBool32(temp_in_VkBool32)
+	if g.VariableMultisampleRate {
+		c.variableMultisampleRate = 1
+	} else {
+		c.variableMultisampleRate = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.InheritedQueries))
-		c.inheritedQueries = C.VkBool32(temp_in_VkBool32)
+	if g.InheritedQueries {
+		c.inheritedQueries = 1
+	} else {
+		c.inheritedQueries = 0
 	}
 }
 func (g *PhysicalDeviceFeatures) fromC(c *C.VkPhysicalDeviceFeatures) {
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.robustBufferAccess))
-		g.RobustBufferAccess = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.fullDrawIndexUint32))
-		g.FullDrawIndexUint32 = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.imageCubeArray))
-		g.ImageCubeArray = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.independentBlend))
-		g.IndependentBlend = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.geometryShader))
-		g.GeometryShader = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.tessellationShader))
-		g.TessellationShader = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sampleRateShading))
-		g.SampleRateShading = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.dualSrcBlend))
-		g.DualSrcBlend = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.logicOp))
-		g.LogicOp = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.multiDrawIndirect))
-		g.MultiDrawIndirect = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.drawIndirectFirstInstance))
-		g.DrawIndirectFirstInstance = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthClamp))
-		g.DepthClamp = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBiasClamp))
-		g.DepthBiasClamp = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.fillModeNonSolid))
-		g.FillModeNonSolid = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBounds))
-		g.DepthBounds = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.wideLines))
-		g.WideLines = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.largePoints))
-		g.LargePoints = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToOne))
-		g.AlphaToOne = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.multiViewport))
-		g.MultiViewport = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.samplerAnisotropy))
-		g.SamplerAnisotropy = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionETC2))
-		g.TextureCompressionETC2 = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionASTC_LDR))
-		g.TextureCompressionASTC_LDR = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.textureCompressionBC))
-		g.TextureCompressionBC = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.occlusionQueryPrecise))
-		g.OcclusionQueryPrecise = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.pipelineStatisticsQuery))
-		g.PipelineStatisticsQuery = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.vertexPipelineStoresAndAtomics))
-		g.VertexPipelineStoresAndAtomics = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.fragmentStoresAndAtomics))
-		g.FragmentStoresAndAtomics = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderTessellationAndGeometryPointSize))
-		g.ShaderTessellationAndGeometryPointSize = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderImageGatherExtended))
-		g.ShaderImageGatherExtended = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageExtendedFormats))
-		g.ShaderStorageImageExtendedFormats = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageMultisample))
-		g.ShaderStorageImageMultisample = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageReadWithoutFormat))
-		g.ShaderStorageImageReadWithoutFormat = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageWriteWithoutFormat))
-		g.ShaderStorageImageWriteWithoutFormat = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderUniformBufferArrayDynamicIndexing))
-		g.ShaderUniformBufferArrayDynamicIndexing = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderSampledImageArrayDynamicIndexing))
-		g.ShaderSampledImageArrayDynamicIndexing = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageBufferArrayDynamicIndexing))
-		g.ShaderStorageBufferArrayDynamicIndexing = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderStorageImageArrayDynamicIndexing))
-		g.ShaderStorageImageArrayDynamicIndexing = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderClipDistance))
-		g.ShaderClipDistance = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderCullDistance))
-		g.ShaderCullDistance = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderFloat64))
-		g.ShaderFloat64 = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderInt64))
-		g.ShaderInt64 = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderInt16))
-		g.ShaderInt16 = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderResourceResidency))
-		g.ShaderResourceResidency = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.shaderResourceMinLod))
-		g.ShaderResourceMinLod = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseBinding))
-		g.SparseBinding = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyBuffer))
-		g.SparseResidencyBuffer = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyImage2D))
-		g.SparseResidencyImage2D = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyImage3D))
-		g.SparseResidencyImage3D = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency2Samples))
-		g.SparseResidency2Samples = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency4Samples))
-		g.SparseResidency4Samples = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency8Samples))
-		g.SparseResidency8Samples = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidency16Samples))
-		g.SparseResidency16Samples = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sparseResidencyAliased))
-		g.SparseResidencyAliased = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.variableMultisampleRate))
-		g.VariableMultisampleRate = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.inheritedQueries))
-		g.InheritedQueries = Bool32(temp_in_VkBool32)
-	}
+	g.RobustBufferAccess = c.robustBufferAccess != 0
+	g.FullDrawIndexUint32 = c.fullDrawIndexUint32 != 0
+	g.ImageCubeArray = c.imageCubeArray != 0
+	g.IndependentBlend = c.independentBlend != 0
+	g.GeometryShader = c.geometryShader != 0
+	g.TessellationShader = c.tessellationShader != 0
+	g.SampleRateShading = c.sampleRateShading != 0
+	g.DualSrcBlend = c.dualSrcBlend != 0
+	g.LogicOp = c.logicOp != 0
+	g.MultiDrawIndirect = c.multiDrawIndirect != 0
+	g.DrawIndirectFirstInstance = c.drawIndirectFirstInstance != 0
+	g.DepthClamp = c.depthClamp != 0
+	g.DepthBiasClamp = c.depthBiasClamp != 0
+	g.FillModeNonSolid = c.fillModeNonSolid != 0
+	g.DepthBounds = c.depthBounds != 0
+	g.WideLines = c.wideLines != 0
+	g.LargePoints = c.largePoints != 0
+	g.AlphaToOne = c.alphaToOne != 0
+	g.MultiViewport = c.multiViewport != 0
+	g.SamplerAnisotropy = c.samplerAnisotropy != 0
+	g.TextureCompressionETC2 = c.textureCompressionETC2 != 0
+	g.TextureCompressionASTC_LDR = c.textureCompressionASTC_LDR != 0
+	g.TextureCompressionBC = c.textureCompressionBC != 0
+	g.OcclusionQueryPrecise = c.occlusionQueryPrecise != 0
+	g.PipelineStatisticsQuery = c.pipelineStatisticsQuery != 0
+	g.VertexPipelineStoresAndAtomics = c.vertexPipelineStoresAndAtomics != 0
+	g.FragmentStoresAndAtomics = c.fragmentStoresAndAtomics != 0
+	g.ShaderTessellationAndGeometryPointSize = c.shaderTessellationAndGeometryPointSize != 0
+	g.ShaderImageGatherExtended = c.shaderImageGatherExtended != 0
+	g.ShaderStorageImageExtendedFormats = c.shaderStorageImageExtendedFormats != 0
+	g.ShaderStorageImageMultisample = c.shaderStorageImageMultisample != 0
+	g.ShaderStorageImageReadWithoutFormat = c.shaderStorageImageReadWithoutFormat != 0
+	g.ShaderStorageImageWriteWithoutFormat = c.shaderStorageImageWriteWithoutFormat != 0
+	g.ShaderUniformBufferArrayDynamicIndexing = c.shaderUniformBufferArrayDynamicIndexing != 0
+	g.ShaderSampledImageArrayDynamicIndexing = c.shaderSampledImageArrayDynamicIndexing != 0
+	g.ShaderStorageBufferArrayDynamicIndexing = c.shaderStorageBufferArrayDynamicIndexing != 0
+	g.ShaderStorageImageArrayDynamicIndexing = c.shaderStorageImageArrayDynamicIndexing != 0
+	g.ShaderClipDistance = c.shaderClipDistance != 0
+	g.ShaderCullDistance = c.shaderCullDistance != 0
+	g.ShaderFloat64 = c.shaderFloat64 != 0
+	g.ShaderInt64 = c.shaderInt64 != 0
+	g.ShaderInt16 = c.shaderInt16 != 0
+	g.ShaderResourceResidency = c.shaderResourceResidency != 0
+	g.ShaderResourceMinLod = c.shaderResourceMinLod != 0
+	g.SparseBinding = c.sparseBinding != 0
+	g.SparseResidencyBuffer = c.sparseResidencyBuffer != 0
+	g.SparseResidencyImage2D = c.sparseResidencyImage2D != 0
+	g.SparseResidencyImage3D = c.sparseResidencyImage3D != 0
+	g.SparseResidency2Samples = c.sparseResidency2Samples != 0
+	g.SparseResidency4Samples = c.sparseResidency4Samples != 0
+	g.SparseResidency8Samples = c.sparseResidency8Samples != 0
+	g.SparseResidency16Samples = c.sparseResidency16Samples != 0
+	g.SparseResidencyAliased = c.sparseResidencyAliased != 0
+	g.VariableMultisampleRate = c.variableMultisampleRate != 0
+	g.InheritedQueries = c.inheritedQueries != 0
 }
 func GetPhysicalDeviceFeatures(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
 	var c struct {
@@ -1924,7 +1703,7 @@ type PhysicalDeviceLimits struct {
 	SampledImageStencilSampleCounts                 SampleCountFlags
 	StorageImageSampleCounts                        SampleCountFlags
 	MaxSampleMaskWords                              uint32
-	TimestampComputeAndGraphics                     Bool32
+	TimestampComputeAndGraphics                     bool
 	TimestampPeriod                                 float32
 	MaxClipDistances                                uint32
 	MaxCullDistances                                uint32
@@ -1934,8 +1713,8 @@ type PhysicalDeviceLimits struct {
 	LineWidthRange                                  [2]float32
 	PointSizeGranularity                            float32
 	LineWidthGranularity                            float32
-	StrictLines                                     Bool32
-	StandardSampleLocations                         Bool32
+	StrictLines                                     bool
+	StandardSampleLocations                         bool
 	OptimalBufferCopyOffsetAlignment                DeviceSize
 	OptimalBufferCopyRowPitchAlignment              DeviceSize
 	NonCoherentAtomSize                             DeviceSize
@@ -2133,10 +1912,10 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 		c.storageImageSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	c.maxSampleMaskWords = C.uint32_t(g.MaxSampleMaskWords)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.TimestampComputeAndGraphics))
-		c.timestampComputeAndGraphics = C.VkBool32(temp_in_VkBool32)
+	if g.TimestampComputeAndGraphics {
+		c.timestampComputeAndGraphics = 1
+	} else {
+		c.timestampComputeAndGraphics = 0
 	}
 	c.timestampPeriod = C.float(g.TimestampPeriod)
 	c.maxClipDistances = C.uint32_t(g.MaxClipDistances)
@@ -2151,15 +1930,15 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	}
 	c.pointSizeGranularity = C.float(g.PointSizeGranularity)
 	c.lineWidthGranularity = C.float(g.LineWidthGranularity)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.StrictLines))
-		c.strictLines = C.VkBool32(temp_in_VkBool32)
+	if g.StrictLines {
+		c.strictLines = 1
+	} else {
+		c.strictLines = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.StandardSampleLocations))
-		c.standardSampleLocations = C.VkBool32(temp_in_VkBool32)
+	if g.StandardSampleLocations {
+		c.standardSampleLocations = 1
+	} else {
+		c.standardSampleLocations = 0
 	}
 	{
 		var temp_in_VkDeviceSize C.uint64_t
@@ -2369,11 +2148,7 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 		g.StorageImageSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
 	}
 	g.MaxSampleMaskWords = uint32(c.maxSampleMaskWords)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.timestampComputeAndGraphics))
-		g.TimestampComputeAndGraphics = Bool32(temp_in_VkBool32)
-	}
+	g.TimestampComputeAndGraphics = c.timestampComputeAndGraphics != 0
 	g.TimestampPeriod = float32(c.timestampPeriod)
 	g.MaxClipDistances = uint32(c.maxClipDistances)
 	g.MaxCullDistances = uint32(c.maxCullDistances)
@@ -2387,16 +2162,8 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	}
 	g.PointSizeGranularity = float32(c.pointSizeGranularity)
 	g.LineWidthGranularity = float32(c.lineWidthGranularity)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.strictLines))
-		g.StrictLines = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.standardSampleLocations))
-		g.StandardSampleLocations = Bool32(temp_in_VkBool32)
-	}
+	g.StrictLines = c.strictLines != 0
+	g.StandardSampleLocations = c.standardSampleLocations != 0
 	{
 		var temp_in_VkDeviceSize uint64
 		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.optimalBufferCopyOffsetAlignment))
@@ -2415,66 +2182,46 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 }
 
 type PhysicalDeviceSparseProperties struct {
-	ResidencyStandard2DBlockShape            Bool32
-	ResidencyStandard2DMultisampleBlockShape Bool32
-	ResidencyStandard3DBlockShape            Bool32
-	ResidencyAlignedMipSize                  Bool32
-	ResidencyNonResidentStrict               Bool32
+	ResidencyStandard2DBlockShape            bool
+	ResidencyStandard2DMultisampleBlockShape bool
+	ResidencyStandard3DBlockShape            bool
+	ResidencyAlignedMipSize                  bool
+	ResidencyNonResidentStrict               bool
 }
 
 func (g *PhysicalDeviceSparseProperties) toC(c *C.VkPhysicalDeviceSparseProperties) {
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard2DBlockShape))
-		c.residencyStandard2DBlockShape = C.VkBool32(temp_in_VkBool32)
+	if g.ResidencyStandard2DBlockShape {
+		c.residencyStandard2DBlockShape = 1
+	} else {
+		c.residencyStandard2DBlockShape = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard2DMultisampleBlockShape))
-		c.residencyStandard2DMultisampleBlockShape = C.VkBool32(temp_in_VkBool32)
+	if g.ResidencyStandard2DMultisampleBlockShape {
+		c.residencyStandard2DMultisampleBlockShape = 1
+	} else {
+		c.residencyStandard2DMultisampleBlockShape = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyStandard3DBlockShape))
-		c.residencyStandard3DBlockShape = C.VkBool32(temp_in_VkBool32)
+	if g.ResidencyStandard3DBlockShape {
+		c.residencyStandard3DBlockShape = 1
+	} else {
+		c.residencyStandard3DBlockShape = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyAlignedMipSize))
-		c.residencyAlignedMipSize = C.VkBool32(temp_in_VkBool32)
+	if g.ResidencyAlignedMipSize {
+		c.residencyAlignedMipSize = 1
+	} else {
+		c.residencyAlignedMipSize = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ResidencyNonResidentStrict))
-		c.residencyNonResidentStrict = C.VkBool32(temp_in_VkBool32)
+	if g.ResidencyNonResidentStrict {
+		c.residencyNonResidentStrict = 1
+	} else {
+		c.residencyNonResidentStrict = 0
 	}
 }
 func (g *PhysicalDeviceSparseProperties) fromC(c *C.VkPhysicalDeviceSparseProperties) {
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard2DBlockShape))
-		g.ResidencyStandard2DBlockShape = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard2DMultisampleBlockShape))
-		g.ResidencyStandard2DMultisampleBlockShape = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyStandard3DBlockShape))
-		g.ResidencyStandard3DBlockShape = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyAlignedMipSize))
-		g.ResidencyAlignedMipSize = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.residencyNonResidentStrict))
-		g.ResidencyNonResidentStrict = Bool32(temp_in_VkBool32)
-	}
+	g.ResidencyStandard2DBlockShape = c.residencyStandard2DBlockShape != 0
+	g.ResidencyStandard2DMultisampleBlockShape = c.residencyStandard2DMultisampleBlockShape != 0
+	g.ResidencyStandard3DBlockShape = c.residencyStandard3DBlockShape != 0
+	g.ResidencyAlignedMipSize = c.residencyAlignedMipSize != 0
+	g.ResidencyNonResidentStrict = c.residencyNonResidentStrict != 0
 }
 
 type PhysicalDeviceProperties struct {
@@ -4256,7 +4003,7 @@ func GetFenceStatus(device Device, fence Fence) (_ret Result) {
 	_ret = Result(c._ret)
 	return
 }
-func WaitForFences(device Device, fences []Fence, waitAll Bool32, timeout uint64) (_ret Result) {
+func WaitForFences(device Device, fences []Fence, waitAll bool, timeout uint64) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		fenceCount C.uint32_t
@@ -4276,10 +4023,10 @@ func WaitForFences(device Device, fences []Fence, waitAll Bool32, timeout uint64
 			slice3[i3] = C.VkFence(fences[i3])
 		}
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(waitAll))
-		c.waitAll = C.VkBool32(temp_in_VkBool32)
+	if waitAll {
+		c.waitAll = 1
+	} else {
+		c.waitAll = 0
 	}
 	c.timeout = C.uint64_t(timeout)
 	c._ret = C.vkWaitForFences(c.device, c.fenceCount, c.pFences, c.waitAll, c.timeout)
@@ -5841,7 +5588,7 @@ type PipelineInputAssemblyStateCreateInfo struct {
 	Next                   unsafe.Pointer
 	Flags                  PipelineInputAssemblyStateCreateFlags
 	Topology               PrimitiveTopology
-	PrimitiveRestartEnable Bool32
+	PrimitiveRestartEnable bool
 }
 
 func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyStateCreateInfo) {
@@ -5857,10 +5604,10 @@ func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyS
 		c.flags = C.VkPipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
 	}
 	c.topology = C.VkPrimitiveTopology(g.Topology)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.PrimitiveRestartEnable))
-		c.primitiveRestartEnable = C.VkBool32(temp_in_VkBool32)
+	if g.PrimitiveRestartEnable {
+		c.primitiveRestartEnable = 1
+	} else {
+		c.primitiveRestartEnable = 0
 	}
 }
 func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssemblyStateCreateInfo) {
@@ -5876,11 +5623,7 @@ func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssembl
 		g.Flags = PipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
 	}
 	g.Topology = PrimitiveTopology(c.topology)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.primitiveRestartEnable))
-		g.PrimitiveRestartEnable = Bool32(temp_in_VkBool32)
-	}
+	g.PrimitiveRestartEnable = c.primitiveRestartEnable != 0
 }
 
 type PipelineTessellationStateCreateFlags Flags
@@ -6084,12 +5827,12 @@ type PipelineRasterizationStateCreateInfo struct {
 	Type                    StructureType
 	Next                    unsafe.Pointer
 	Flags                   PipelineRasterizationStateCreateFlags
-	DepthClampEnable        Bool32
-	RasterizerDiscardEnable Bool32
+	DepthClampEnable        bool
+	RasterizerDiscardEnable bool
 	PolygonMode             PolygonMode
 	CullMode                CullModeFlags
 	FrontFace               FrontFace
-	DepthBiasEnable         Bool32
+	DepthBiasEnable         bool
 	DepthBiasConstantFactor float32
 	DepthBiasClamp          float32
 	DepthBiasSlopeFactor    float32
@@ -6108,15 +5851,15 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 		}
 		c.flags = C.VkPipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthClampEnable))
-		c.depthClampEnable = C.VkBool32(temp_in_VkBool32)
+	if g.DepthClampEnable {
+		c.depthClampEnable = 1
+	} else {
+		c.depthClampEnable = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.RasterizerDiscardEnable))
-		c.rasterizerDiscardEnable = C.VkBool32(temp_in_VkBool32)
+	if g.RasterizerDiscardEnable {
+		c.rasterizerDiscardEnable = 1
+	} else {
+		c.rasterizerDiscardEnable = 0
 	}
 	c.polygonMode = C.VkPolygonMode(g.PolygonMode)
 	{
@@ -6129,10 +5872,10 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 		c.cullMode = C.VkCullModeFlags(temp_in_VkCullModeFlags)
 	}
 	c.frontFace = C.VkFrontFace(g.FrontFace)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBiasEnable))
-		c.depthBiasEnable = C.VkBool32(temp_in_VkBool32)
+	if g.DepthBiasEnable {
+		c.depthBiasEnable = 1
+	} else {
+		c.depthBiasEnable = 0
 	}
 	c.depthBiasConstantFactor = C.float(g.DepthBiasConstantFactor)
 	c.depthBiasClamp = C.float(g.DepthBiasClamp)
@@ -6151,16 +5894,8 @@ func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizatio
 		}
 		g.Flags = PipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthClampEnable))
-		g.DepthClampEnable = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.rasterizerDiscardEnable))
-		g.RasterizerDiscardEnable = Bool32(temp_in_VkBool32)
-	}
+	g.DepthClampEnable = c.depthClampEnable != 0
+	g.RasterizerDiscardEnable = c.rasterizerDiscardEnable != 0
 	g.PolygonMode = PolygonMode(c.polygonMode)
 	{
 		var temp_in_VkCullModeFlags Flags
@@ -6172,11 +5907,7 @@ func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizatio
 		g.CullMode = CullModeFlags(temp_in_VkCullModeFlags)
 	}
 	g.FrontFace = FrontFace(c.frontFace)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBiasEnable))
-		g.DepthBiasEnable = Bool32(temp_in_VkBool32)
-	}
+	g.DepthBiasEnable = c.depthBiasEnable != 0
 	g.DepthBiasConstantFactor = float32(c.depthBiasConstantFactor)
 	g.DepthBiasClamp = float32(c.depthBiasClamp)
 	g.DepthBiasSlopeFactor = float32(c.depthBiasSlopeFactor)
@@ -6190,11 +5921,11 @@ type PipelineMultisampleStateCreateInfo struct {
 	Next                  unsafe.Pointer
 	Flags                 PipelineMultisampleStateCreateFlags
 	RasterizationSamples  SampleCountFlagBits
-	SampleShadingEnable   Bool32
+	SampleShadingEnable   bool
 	MinSampleShading      float32
 	SampleMask            *SampleMask
-	AlphaToCoverageEnable Bool32
-	AlphaToOneEnable      Bool32
+	AlphaToCoverageEnable bool
+	AlphaToOneEnable      bool
 }
 
 func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleStateCreateInfo, _sa *stackAllocator) {
@@ -6210,10 +5941,10 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 		c.flags = C.VkPipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
 	}
 	c.rasterizationSamples = C.VkSampleCountFlagBits(g.RasterizationSamples)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SampleShadingEnable))
-		c.sampleShadingEnable = C.VkBool32(temp_in_VkBool32)
+	if g.SampleShadingEnable {
+		c.sampleShadingEnable = 1
+	} else {
+		c.sampleShadingEnable = 0
 	}
 	c.minSampleShading = C.float(g.MinSampleShading)
 	{
@@ -6224,15 +5955,15 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 			*c.pSampleMask = C.VkSampleMask(temp_in_VkSampleMask)
 		}
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToCoverageEnable))
-		c.alphaToCoverageEnable = C.VkBool32(temp_in_VkBool32)
+	if g.AlphaToCoverageEnable {
+		c.alphaToCoverageEnable = 1
+	} else {
+		c.alphaToCoverageEnable = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.AlphaToOneEnable))
-		c.alphaToOneEnable = C.VkBool32(temp_in_VkBool32)
+	if g.AlphaToOneEnable {
+		c.alphaToOneEnable = 1
+	} else {
+		c.alphaToOneEnable = 0
 	}
 }
 func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleStateCreateInfo) {
@@ -6248,11 +5979,7 @@ func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleSta
 		g.Flags = PipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
 	}
 	g.RasterizationSamples = SampleCountFlagBits(c.rasterizationSamples)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.sampleShadingEnable))
-		g.SampleShadingEnable = Bool32(temp_in_VkBool32)
-	}
+	g.SampleShadingEnable = c.sampleShadingEnable != 0
 	g.MinSampleShading = float32(c.minSampleShading)
 	{
 		if g.SampleMask == nil {
@@ -6264,16 +5991,8 @@ func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleSta
 			*g.SampleMask = SampleMask(temp_in_VkSampleMask)
 		}
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToCoverageEnable))
-		g.AlphaToCoverageEnable = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.alphaToOneEnable))
-		g.AlphaToOneEnable = Bool32(temp_in_VkBool32)
-	}
+	g.AlphaToCoverageEnable = c.alphaToCoverageEnable != 0
+	g.AlphaToOneEnable = c.alphaToOneEnable != 0
 }
 
 type PipelineDepthStencilStateCreateFlags Flags
@@ -6344,11 +6063,11 @@ type PipelineDepthStencilStateCreateInfo struct {
 	Type                  StructureType
 	Next                  unsafe.Pointer
 	Flags                 PipelineDepthStencilStateCreateFlags
-	DepthTestEnable       Bool32
-	DepthWriteEnable      Bool32
+	DepthTestEnable       bool
+	DepthWriteEnable      bool
 	DepthCompareOp        CompareOp
-	DepthBoundsTestEnable Bool32
-	StencilTestEnable     Bool32
+	DepthBoundsTestEnable bool
+	StencilTestEnable     bool
 	Front                 StencilOpState
 	Back                  StencilOpState
 	MinDepthBounds        float32
@@ -6367,26 +6086,26 @@ func (g *PipelineDepthStencilStateCreateInfo) toC(c *C.VkPipelineDepthStencilSta
 		}
 		c.flags = C.VkPipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthTestEnable))
-		c.depthTestEnable = C.VkBool32(temp_in_VkBool32)
+	if g.DepthTestEnable {
+		c.depthTestEnable = 1
+	} else {
+		c.depthTestEnable = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthWriteEnable))
-		c.depthWriteEnable = C.VkBool32(temp_in_VkBool32)
+	if g.DepthWriteEnable {
+		c.depthWriteEnable = 1
+	} else {
+		c.depthWriteEnable = 0
 	}
 	c.depthCompareOp = C.VkCompareOp(g.DepthCompareOp)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.DepthBoundsTestEnable))
-		c.depthBoundsTestEnable = C.VkBool32(temp_in_VkBool32)
+	if g.DepthBoundsTestEnable {
+		c.depthBoundsTestEnable = 1
+	} else {
+		c.depthBoundsTestEnable = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.StencilTestEnable))
-		c.stencilTestEnable = C.VkBool32(temp_in_VkBool32)
+	if g.StencilTestEnable {
+		c.stencilTestEnable = 1
+	} else {
+		c.stencilTestEnable = 0
 	}
 	g.Front.toC(&c.front)
 	g.Back.toC(&c.back)
@@ -6405,27 +6124,11 @@ func (g *PipelineDepthStencilStateCreateInfo) fromC(c *C.VkPipelineDepthStencilS
 		}
 		g.Flags = PipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthTestEnable))
-		g.DepthTestEnable = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthWriteEnable))
-		g.DepthWriteEnable = Bool32(temp_in_VkBool32)
-	}
+	g.DepthTestEnable = c.depthTestEnable != 0
+	g.DepthWriteEnable = c.depthWriteEnable != 0
 	g.DepthCompareOp = CompareOp(c.depthCompareOp)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.depthBoundsTestEnable))
-		g.DepthBoundsTestEnable = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.stencilTestEnable))
-		g.StencilTestEnable = Bool32(temp_in_VkBool32)
-	}
+	g.DepthBoundsTestEnable = c.depthBoundsTestEnable != 0
+	g.StencilTestEnable = c.stencilTestEnable != 0
 	g.Front.fromC(&c.front)
 	g.Back.fromC(&c.back)
 	g.MinDepthBounds = float32(c.minDepthBounds)
@@ -6548,7 +6251,7 @@ const (
 
 type ColorComponentFlags Flags
 type PipelineColorBlendAttachmentState struct {
-	BlendEnable         Bool32
+	BlendEnable         bool
 	SrcColorBlendFactor BlendFactor
 	DstColorBlendFactor BlendFactor
 	ColorBlendOp        BlendOp
@@ -6559,10 +6262,10 @@ type PipelineColorBlendAttachmentState struct {
 }
 
 func (g *PipelineColorBlendAttachmentState) toC(c *C.VkPipelineColorBlendAttachmentState) {
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.BlendEnable))
-		c.blendEnable = C.VkBool32(temp_in_VkBool32)
+	if g.BlendEnable {
+		c.blendEnable = 1
+	} else {
+		c.blendEnable = 0
 	}
 	c.srcColorBlendFactor = C.VkBlendFactor(g.SrcColorBlendFactor)
 	c.dstColorBlendFactor = C.VkBlendFactor(g.DstColorBlendFactor)
@@ -6581,11 +6284,7 @@ func (g *PipelineColorBlendAttachmentState) toC(c *C.VkPipelineColorBlendAttachm
 	}
 }
 func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttachmentState) {
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.blendEnable))
-		g.BlendEnable = Bool32(temp_in_VkBool32)
-	}
+	g.BlendEnable = c.blendEnable != 0
 	g.SrcColorBlendFactor = BlendFactor(c.srcColorBlendFactor)
 	g.DstColorBlendFactor = BlendFactor(c.dstColorBlendFactor)
 	g.ColorBlendOp = BlendOp(c.colorBlendOp)
@@ -6607,7 +6306,7 @@ type PipelineColorBlendStateCreateInfo struct {
 	Type           StructureType
 	Next           unsafe.Pointer
 	Flags          PipelineColorBlendStateCreateFlags
-	LogicOpEnable  Bool32
+	LogicOpEnable  bool
 	LogicOp        LogicOp
 	Attachments    []PipelineColorBlendAttachmentState
 	BlendConstants [4]float32
@@ -6625,10 +6324,10 @@ func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCr
 		}
 		c.flags = C.VkPipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.LogicOpEnable))
-		c.logicOpEnable = C.VkBool32(temp_in_VkBool32)
+	if g.LogicOpEnable {
+		c.logicOpEnable = 1
+	} else {
+		c.logicOpEnable = 0
 	}
 	c.logicOp = C.VkLogicOp(g.LogicOp)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
@@ -6655,11 +6354,7 @@ func (g *PipelineColorBlendStateCreateInfo) fromC(c *C.VkPipelineColorBlendState
 		}
 		g.Flags = PipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.logicOpEnable))
-		g.LogicOpEnable = Bool32(temp_in_VkBool32)
-	}
+	g.LogicOpEnable = c.logicOpEnable != 0
 	g.LogicOp = LogicOp(c.logicOp)
 	g.Attachments = make([]PipelineColorBlendAttachmentState, int(c.attachmentCount))
 	{
@@ -7254,14 +6949,14 @@ type SamplerCreateInfo struct {
 	AddressModeV            SamplerAddressMode
 	AddressModeW            SamplerAddressMode
 	MipLodBias              float32
-	AnisotropyEnable        Bool32
+	AnisotropyEnable        bool
 	MaxAnisotropy           float32
-	CompareEnable           Bool32
+	CompareEnable           bool
 	CompareOp               CompareOp
 	MinLod                  float32
 	MaxLod                  float32
 	BorderColor             BorderColor
-	UnnormalizedCoordinates Bool32
+	UnnormalizedCoordinates bool
 }
 
 func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
@@ -7283,25 +6978,25 @@ func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo) {
 	c.addressModeV = C.VkSamplerAddressMode(g.AddressModeV)
 	c.addressModeW = C.VkSamplerAddressMode(g.AddressModeW)
 	c.mipLodBias = C.float(g.MipLodBias)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.AnisotropyEnable))
-		c.anisotropyEnable = C.VkBool32(temp_in_VkBool32)
+	if g.AnisotropyEnable {
+		c.anisotropyEnable = 1
+	} else {
+		c.anisotropyEnable = 0
 	}
 	c.maxAnisotropy = C.float(g.MaxAnisotropy)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.CompareEnable))
-		c.compareEnable = C.VkBool32(temp_in_VkBool32)
+	if g.CompareEnable {
+		c.compareEnable = 1
+	} else {
+		c.compareEnable = 0
 	}
 	c.compareOp = C.VkCompareOp(g.CompareOp)
 	c.minLod = C.float(g.MinLod)
 	c.maxLod = C.float(g.MaxLod)
 	c.borderColor = C.VkBorderColor(g.BorderColor)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.UnnormalizedCoordinates))
-		c.unnormalizedCoordinates = C.VkBool32(temp_in_VkBool32)
+	if g.UnnormalizedCoordinates {
+		c.unnormalizedCoordinates = 1
+	} else {
+		c.unnormalizedCoordinates = 0
 	}
 }
 func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
@@ -7323,26 +7018,14 @@ func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
 	g.AddressModeV = SamplerAddressMode(c.addressModeV)
 	g.AddressModeW = SamplerAddressMode(c.addressModeW)
 	g.MipLodBias = float32(c.mipLodBias)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.anisotropyEnable))
-		g.AnisotropyEnable = Bool32(temp_in_VkBool32)
-	}
+	g.AnisotropyEnable = c.anisotropyEnable != 0
 	g.MaxAnisotropy = float32(c.maxAnisotropy)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.compareEnable))
-		g.CompareEnable = Bool32(temp_in_VkBool32)
-	}
+	g.CompareEnable = c.compareEnable != 0
 	g.CompareOp = CompareOp(c.compareOp)
 	g.MinLod = float32(c.minLod)
 	g.MaxLod = float32(c.maxLod)
 	g.BorderColor = BorderColor(c.borderColor)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.unnormalizedCoordinates))
-		g.UnnormalizedCoordinates = Bool32(temp_in_VkBool32)
-	}
+	g.UnnormalizedCoordinates = c.unnormalizedCoordinates != 0
 }
 
 type Sampler C.VkSampler
@@ -8720,7 +8403,7 @@ type CommandBufferInheritanceInfo struct {
 	RenderPass           RenderPass
 	Subpass              uint32
 	Framebuffer          Framebuffer
-	OcclusionQueryEnable Bool32
+	OcclusionQueryEnable bool
 	QueryFlags           QueryControlFlags
 	PipelineStatistics   QueryPipelineStatisticFlags
 }
@@ -8731,10 +8414,10 @@ func (g *CommandBufferInheritanceInfo) toC(c *C.VkCommandBufferInheritanceInfo) 
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.subpass = C.uint32_t(g.Subpass)
 	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.OcclusionQueryEnable))
-		c.occlusionQueryEnable = C.VkBool32(temp_in_VkBool32)
+	if g.OcclusionQueryEnable {
+		c.occlusionQueryEnable = 1
+	} else {
+		c.occlusionQueryEnable = 0
 	}
 	{
 		var temp_in_VkQueryControlFlags C.VkFlags
@@ -8761,11 +8444,7 @@ func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo
 	g.RenderPass = RenderPass(c.renderPass)
 	g.Subpass = uint32(c.subpass)
 	g.Framebuffer = Framebuffer(c.framebuffer)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.occlusionQueryEnable))
-		g.OcclusionQueryEnable = Bool32(temp_in_VkBool32)
-	}
+	g.OcclusionQueryEnable = c.occlusionQueryEnable != 0
 	{
 		var temp_in_VkQueryControlFlags Flags
 		{
@@ -10674,7 +10353,7 @@ type PhysicalDeviceGroupProperties struct {
 	Next                unsafe.Pointer
 	PhysicalDeviceCount uint32
 	PhysicalDevices     [32]PhysicalDevice
-	SubsetAllocation    Bool32
+	SubsetAllocation    bool
 }
 
 func (g *PhysicalDeviceGroupProperties) toC(c *C.VkPhysicalDeviceGroupProperties) {
@@ -10684,10 +10363,10 @@ func (g *PhysicalDeviceGroupProperties) toC(c *C.VkPhysicalDeviceGroupProperties
 	for i, _ := range g.PhysicalDevices {
 		c.physicalDevices[i] = C.VkPhysicalDevice(g.PhysicalDevices[i])
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.SubsetAllocation))
-		c.subsetAllocation = C.VkBool32(temp_in_VkBool32)
+	if g.SubsetAllocation {
+		c.subsetAllocation = 1
+	} else {
+		c.subsetAllocation = 0
 	}
 }
 func (g *PhysicalDeviceGroupProperties) fromC(c *C.VkPhysicalDeviceGroupProperties) {
@@ -10697,11 +10376,7 @@ func (g *PhysicalDeviceGroupProperties) fromC(c *C.VkPhysicalDeviceGroupProperti
 	for i, _ := range g.PhysicalDevices {
 		g.PhysicalDevices[i] = PhysicalDevice(c.physicalDevices[i])
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.subsetAllocation))
-		g.SubsetAllocation = Bool32(temp_in_VkBool32)
-	}
+	g.SubsetAllocation = c.subsetAllocation != 0
 }
 func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
@@ -11394,7 +11069,7 @@ type SamplerYcbcrConversionCreateInfo struct {
 	XChromaOffset               ChromaLocation
 	YChromaOffset               ChromaLocation
 	ChromaFilter                Filter
-	ForceExplicitReconstruction Bool32
+	ForceExplicitReconstruction bool
 }
 
 func (g *SamplerYcbcrConversionCreateInfo) toC(c *C.VkSamplerYcbcrConversionCreateInfo) {
@@ -11407,10 +11082,10 @@ func (g *SamplerYcbcrConversionCreateInfo) toC(c *C.VkSamplerYcbcrConversionCrea
 	c.xChromaOffset = C.VkChromaLocation(g.XChromaOffset)
 	c.yChromaOffset = C.VkChromaLocation(g.YChromaOffset)
 	c.chromaFilter = C.VkFilter(g.ChromaFilter)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ForceExplicitReconstruction))
-		c.forceExplicitReconstruction = C.VkBool32(temp_in_VkBool32)
+	if g.ForceExplicitReconstruction {
+		c.forceExplicitReconstruction = 1
+	} else {
+		c.forceExplicitReconstruction = 0
 	}
 }
 func (g *SamplerYcbcrConversionCreateInfo) fromC(c *C.VkSamplerYcbcrConversionCreateInfo) {
@@ -11423,11 +11098,7 @@ func (g *SamplerYcbcrConversionCreateInfo) fromC(c *C.VkSamplerYcbcrConversionCr
 	g.XChromaOffset = ChromaLocation(c.xChromaOffset)
 	g.YChromaOffset = ChromaLocation(c.yChromaOffset)
 	g.ChromaFilter = Filter(c.chromaFilter)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.forceExplicitReconstruction))
-		g.ForceExplicitReconstruction = Bool32(temp_in_VkBool32)
-	}
+	g.ForceExplicitReconstruction = c.forceExplicitReconstruction != 0
 }
 
 type SamplerYcbcrConversion C.VkSamplerYcbcrConversion
@@ -12090,26 +11761,22 @@ func GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice PhysicalDevice,
 type DescriptorSetLayoutSupport struct {
 	Type      StructureType
 	Next      unsafe.Pointer
-	Supported Bool32
+	Supported bool
 }
 
 func (g *DescriptorSetLayoutSupport) toC(c *C.VkDescriptorSetLayoutSupport) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.Supported))
-		c.supported = C.VkBool32(temp_in_VkBool32)
+	if g.Supported {
+		c.supported = 1
+	} else {
+		c.supported = 0
 	}
 }
 func (g *DescriptorSetLayoutSupport) fromC(c *C.VkDescriptorSetLayoutSupport) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.supported))
-		g.Supported = Bool32(temp_in_VkBool32)
-	}
+	g.Supported = c.supported != 0
 }
 func GetDescriptorSetLayoutSupport(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
 	var c struct {
@@ -12150,7 +11817,7 @@ func DestroySurfaceKHR(instance Instance, surface SurfaceKHR, allocator *Allocat
 	}
 	C.vkDestroySurfaceKHR(c.instance, c.surface, c.pAllocator)
 }
-func GetPhysicalDeviceSurfaceSupportKHR(physicalDevice PhysicalDevice, queueFamilyIndex uint32, surface SurfaceKHR, supported *Bool32) (_ret Result) {
+func GetPhysicalDeviceSurfaceSupportKHR(physicalDevice PhysicalDevice, queueFamilyIndex uint32, surface SurfaceKHR, supported *bool) (_ret Result) {
 	var c struct {
 		physicalDevice   C.VkPhysicalDevice
 		queueFamilyIndex C.uint32_t
@@ -12165,19 +11832,15 @@ func GetPhysicalDeviceSurfaceSupportKHR(physicalDevice PhysicalDevice, queueFami
 	c.surface = C.VkSurfaceKHR(surface)
 	{
 		c.pSupported = (*C.VkBool32)(_sa.alloc(C.sizeof_VkBool32))
-		{
-			var temp_in_VkBool32 C.uint32_t
-			temp_in_VkBool32 = C.uint32_t((uint32)(*supported))
-			*c.pSupported = C.VkBool32(temp_in_VkBool32)
+		if *supported {
+			*c.pSupported = 1
+		} else {
+			*c.pSupported = 0
 		}
 	}
 	c._ret = C.vkGetPhysicalDeviceSurfaceSupportKHR(c.physicalDevice, c.queueFamilyIndex, c.surface, c.pSupported)
 	_ret = Result(c._ret)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(*c.pSupported))
-		*supported = Bool32(temp_in_VkBool32)
-	}
+	*supported = *c.pSupported != 0
 	return
 }
 
@@ -12444,7 +12107,7 @@ type SwapchainCreateInfoKHR struct {
 	PreTransform       SurfaceTransformFlagBitsKHR
 	CompositeAlpha     CompositeAlphaFlagBitsKHR
 	PresentMode        PresentModeKHR
-	Clipped            Bool32
+	Clipped            bool
 	OldSwapchain       SwapchainKHR
 }
 
@@ -12487,10 +12150,10 @@ func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, _sa *stackAl
 	c.preTransform = C.VkSurfaceTransformFlagBitsKHR(g.PreTransform)
 	c.compositeAlpha = C.VkCompositeAlphaFlagBitsKHR(g.CompositeAlpha)
 	c.presentMode = C.VkPresentModeKHR(g.PresentMode)
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.Clipped))
-		c.clipped = C.VkBool32(temp_in_VkBool32)
+	if g.Clipped {
+		c.clipped = 1
+	} else {
+		c.clipped = 0
 	}
 	c.oldSwapchain = C.VkSwapchainKHR(g.OldSwapchain)
 }
@@ -12532,11 +12195,7 @@ func (g *SwapchainCreateInfoKHR) fromC(c *C.VkSwapchainCreateInfoKHR) {
 	g.PreTransform = SurfaceTransformFlagBitsKHR(c.preTransform)
 	g.CompositeAlpha = CompositeAlphaFlagBitsKHR(c.compositeAlpha)
 	g.PresentMode = PresentModeKHR(c.presentMode)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.clipped))
-		g.Clipped = Bool32(temp_in_VkBool32)
-	}
+	g.Clipped = c.clipped != 0
 	g.OldSwapchain = SwapchainKHR(c.oldSwapchain)
 }
 func CreateSwapchainKHR(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result) {
@@ -12907,8 +12566,8 @@ type DisplayPropertiesKHR struct {
 	PhysicalDimensions   Extent2D
 	PhysicalResolution   Extent2D
 	SupportedTransforms  SurfaceTransformFlagsKHR
-	PlaneReorderPossible Bool32
-	PersistentContent    Bool32
+	PlaneReorderPossible bool
+	PersistentContent    bool
 }
 
 func (g *DisplayPropertiesKHR) toC(c *C.VkDisplayPropertiesKHR, _sa *stackAllocator) {
@@ -12925,15 +12584,15 @@ func (g *DisplayPropertiesKHR) toC(c *C.VkDisplayPropertiesKHR, _sa *stackAlloca
 		}
 		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.PlaneReorderPossible))
-		c.planeReorderPossible = C.VkBool32(temp_in_VkBool32)
+	if g.PlaneReorderPossible {
+		c.planeReorderPossible = 1
+	} else {
+		c.planeReorderPossible = 0
 	}
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.PersistentContent))
-		c.persistentContent = C.VkBool32(temp_in_VkBool32)
+	if g.PersistentContent {
+		c.persistentContent = 1
+	} else {
+		c.persistentContent = 0
 	}
 }
 func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
@@ -12950,16 +12609,8 @@ func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
 		}
 		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
 	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.planeReorderPossible))
-		g.PlaneReorderPossible = Bool32(temp_in_VkBool32)
-	}
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.persistentContent))
-		g.PersistentContent = Bool32(temp_in_VkBool32)
-	}
+	g.PlaneReorderPossible = c.planeReorderPossible != 0
+	g.PersistentContent = c.persistentContent != 0
 }
 func GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPropertiesKHR) (_ret Result) {
 	var c struct {
@@ -15234,7 +14885,7 @@ const (
 	DEBUG_REPORT_OBJECT_TYPE_MAX_ENUM_EXT                       DebugReportObjectTypeEXT = 2147483647
 )
 
-func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret Bool32) {
+func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret bool) {
 	var c struct {
 		arg0 C.VkDebugReportFlagsEXT
 		arg1 C.VkDebugReportObjectTypeEXT
@@ -15265,11 +14916,7 @@ func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugR
 	c.arg6 = toCString(arg6, _sa)
 	c.arg7 = arg7
 	c._ret = C.callPFN_vkDebugReportCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4, c.arg5, c.arg6, c.arg7)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c._ret))
-		_ret = Bool32(temp_in_VkBool32)
-	}
+	_ret = c._ret != 0
 	return
 }
 
@@ -16360,26 +16007,22 @@ func UnregisterObjectsNVX(device Device, objectTable ObjectTableNVX, objectEntry
 type DeviceGeneratedCommandsFeaturesNVX struct {
 	Type                       StructureType
 	Next                       unsafe.Pointer
-	ComputeBindingPointSupport Bool32
+	ComputeBindingPointSupport bool
 }
 
 func (g *DeviceGeneratedCommandsFeaturesNVX) toC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
 	c.sType = C.VkStructureType(g.Type)
 	c.pNext = g.Next
-	{
-		var temp_in_VkBool32 C.uint32_t
-		temp_in_VkBool32 = C.uint32_t((uint32)(g.ComputeBindingPointSupport))
-		c.computeBindingPointSupport = C.VkBool32(temp_in_VkBool32)
+	if g.ComputeBindingPointSupport {
+		c.computeBindingPointSupport = 1
+	} else {
+		c.computeBindingPointSupport = 0
 	}
 }
 func (g *DeviceGeneratedCommandsFeaturesNVX) fromC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
 	g.Type = StructureType(c.sType)
 	g.Next = c.pNext
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c.computeBindingPointSupport))
-		g.ComputeBindingPointSupport = Bool32(temp_in_VkBool32)
-	}
+	g.ComputeBindingPointSupport = c.computeBindingPointSupport != 0
 }
 
 type DeviceGeneratedCommandsLimitsNVX struct {
@@ -17319,7 +16962,7 @@ func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCal
 		}
 	}
 }
-func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret Bool32) {
+func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret bool) {
 	var c struct {
 		arg0 C.VkDebugUtilsMessageSeverityFlagBitsEXT
 		arg1 C.VkDebugUtilsMessageTypeFlagsEXT
@@ -17345,11 +16988,7 @@ func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverit
 	}
 	c.arg3 = arg3
 	c._ret = C.callPFN_vkDebugUtilsMessengerCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
-	{
-		var temp_in_VkBool32 uint32
-		temp_in_VkBool32 = uint32((C.uint32_t)(c._ret))
-		_ret = Bool32(temp_in_VkBool32)
-	}
+	_ret = c._ret != 0
 	return
 }
 

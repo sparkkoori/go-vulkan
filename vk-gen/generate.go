@@ -684,6 +684,24 @@ func (g *generator) mapTypedefType(n *cast.TypedefType, pid string) *typeInfo {
 		return info
 	}
 
+	if n.Type == "VkBool32" {
+		info := &typeInfo{}
+		info.gotype = ident("bool")
+		info.ctype = ident("C." + n.Type)
+		info.csize = ident("C.sizeof_" + n.Type)
+		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(govar, binExpr(cvar, intLit(0), token.NEQ))
+		}
+		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+			return &goast.IfStmt{
+				Cond: govar,
+				Body: blockStmt(assignStmt1n1(cvar, intLit(1))),
+				Else: assignStmt1n1(cvar, intLit(0)),
+			}
+		}
+		return info
+	}
+
 	decl := g.nodes[n.Type].(*cast.TypedefDecl)
 	o := decl.ChildNodes[0]
 

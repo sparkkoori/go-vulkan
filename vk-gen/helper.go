@@ -272,6 +272,14 @@ func mulExpr(x, y goast.Expr) *goast.BinaryExpr {
 	}
 }
 
+func binExpr(x, y goast.Expr, op token.Token) *goast.BinaryExpr {
+	return &goast.BinaryExpr{
+		X:  x,
+		Op: op,
+		Y:  y,
+	}
+}
+
 func starExpr(expr goast.Expr) *goast.StarExpr {
 	return &goast.StarExpr{
 		X: expr,
