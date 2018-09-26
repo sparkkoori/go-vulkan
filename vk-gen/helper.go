@@ -32,10 +32,10 @@ func toGoFieldName(n string) string {
 		n = strings.TrimPrefix(n, subs[1])
 	}
 
-	re = regexp.MustCompile("^s[A-Z]+")
-	if re.MatchString(n) {
-		n = strings.TrimPrefix(n, "s")
-	}
+	// re = regexp.MustCompile("^s[A-Z]+")
+	// if re.MatchString(n) {
+	// 	n = strings.TrimPrefix(n, "s")
+	// }
 
 	re = regexp.MustCompile("^pfn[A-Z]+")
 	if re.MatchString(n) {
