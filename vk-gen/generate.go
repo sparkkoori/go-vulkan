@@ -201,13 +201,14 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 		g.target.addGo(funcDecl(ident(upFirst(gostr)), recv, funcType1, stmts1...))
 	}
 
+	info.go2cAlloc = false
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 		return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
 	}
-
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 		return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
 	}
+	info.refc2go = nil
 
 	return info
 }
@@ -520,15 +521,6 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			info.gotype = arrayType(ident("byte"), nil)
 			info.ctype = ident("unsafe.Pointer")
 			info.csize = ident("C.sizeof_void_pointer")
-			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
-				assignSlice := assignStmt1n1D(slice, toslice)
-				assignValue := assignStmt1n1(indexExpr(govar, i), indexExpr(slice, i))
-				rangeSlice := rangeStmti(govar, i, assignValue)
-				return blockStmt(assignSlice, rangeSlice)
-			}
 			info.go2cAlloc = true
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
@@ -541,19 +533,20 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt3 := rangeStmti(govar, i, stmt3s)
 				return blockStmt(stmt1, stmt2, stmt3)
 			}
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				slice := ident("slice" + level)
+				i := ident("i" + level)
+				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
+				assignSlice := assignStmt1n1D(slice, toslice)
+				assignValue := assignStmt1n1(indexExpr(govar, i), indexExpr(slice, i))
+				rangeSlice := rangeStmti(govar, i, assignValue)
+				return blockStmt(assignSlice, rangeSlice)
+			}
+			info.refc2go = info.c2go
 		} else {
 			info.gotype = arrayType(oinfo.gotype, nil)
 			info.ctype = starExpr(oinfo.ctype)
 			info.csize = ident("C.sizeof_void_pointer")
-			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
-				assignSlice := assignStmt1n1D(slice, toslice)
-				assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
-				rangeSlice := rangeStmti(govar, i, assignValue)
-				return blockStmt(assignSlice, rangeSlice)
-			}
 			info.go2cAlloc = true
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
@@ -566,6 +559,16 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt3 := rangeStmti(govar, i, stmt3s)
 				return blockStmt(stmt1, stmt2, stmt3)
 			}
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				slice := ident("slice" + level)
+				i := ident("i" + level)
+				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
+				assignSlice := assignStmt1n1D(slice, toslice)
+				assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
+				rangeSlice := rangeStmti(govar, i, assignValue)
+				return blockStmt(assignSlice, rangeSlice)
+			}
+			info.refc2go = info.c2go
 		}
 		return info
 	}
@@ -576,13 +579,15 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			ctype:  ident("unsafe.Pointer"),
 			gotype: ident("unsafe.Pointer"),
 			csize:  ident("C.sizeof_void_pointer"),
-			c2go: func(govar, cvar goast.Expr) goast.Stmt {
-				return assignStmt1n1(govar, cvar)
-			},
-			go2c: func(govar, cvar goast.Expr) goast.Stmt {
-				return assignStmt1n1(cvar, govar)
-			},
 		}
+		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+			//No alloc for unsafe.Pointer
+			return assignStmt1n1(cvar, govar)
+		}
+		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+			return assignStmt1n1(govar, cvar)
+		}
+		info.refc2go = nil
 		return info
 	}
 
@@ -618,12 +623,14 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			ctype:  typ,
 			gotype: typ,
 			csize:  ident("C.sizeof_void_pointer"),
+			go2c: func(govar, cvar goast.Expr) goast.Stmt {
+				//no alloc
+				return assignStmt1n1(cvar, govar)
+			},
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			},
-			go2c: func(govar, cvar goast.Expr) goast.Stmt {
-				return assignStmt1n1(cvar, govar)
-			},
+			refc2go: nil,
 		}
 		return info
 	}
@@ -637,37 +644,40 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		}
 		if oinfo.csize != nil {
 			//Size is not 0
-			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
-				ifstmt := &goast.IfStmt{
-					If: token.Pos(1),
-					Cond: &goast.BinaryExpr{
-						X:  govar,
-						Op: token.EQL,
-						Y:  ident("nil"),
-					},
-					Body: blockStmt(alloc),
-				}
-				conv := oinfo.c2go(starExpr(govar), starExpr(cvar))
-				return blockStmt(ifstmt, conv)
-			}
 			info.go2cAlloc = true
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				alloc := assignStmt1n1(cvar, saalloc(oinfo.ctype, oinfo.csize))
 				conv := oinfo.go2c(starExpr(govar), starExpr(cvar))
 				return blockStmt(alloc, conv)
 			}
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				// alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
+				// ifstmt := &goast.IfStmt{
+				// 	If: token.Pos(1),
+				// 	Cond: &goast.BinaryExpr{
+				// 		X:  govar,
+				// 		Op: token.EQL,
+				// 		Y:  ident("nil"),
+				// 	},
+				// 	Body: blockStmt(alloc),
+				// }
+				// conv := oinfo.c2go(starExpr(govar), starExpr(cvar))
+				// return blockStmt(ifstmt, conv)
+				return oinfo.c2go(starExpr(govar), starExpr(cvar))
+			}
 			info.refc2go = func(govar, cvar goast.Expr) goast.Stmt {
 				return oinfo.c2go(starExpr(govar), starExpr(cvar))
 			}
 		} else {
-			//No size,so no alloc
+			//No size
+			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+				//no alloc
+				return assignStmt1n1(cvar, govar)
+			}
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			}
-			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-				return assignStmt1n1(cvar, govar)
-			}
+			info.refc2go = nil
 		}
 		return info
 	}
@@ -760,15 +770,6 @@ func (g *generator) mapDecayedType(n *cast.DecayedType, pid string) *typeInfo {
 
 	level := strconv.Itoa(len(strings.Split(pid, ".")))
 	size := intLit(an.Size)
-	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-		slice := ident("slice" + level)
-		i := ident("i" + level)
-		toslice := asSliceExpr(oinfo.ctype, cvar, size)
-		assignSlice := assignStmt1n1D(slice, toslice)
-		assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
-		rangeSlice := rangeStmti(govar, i, assignValue)
-		return blockStmt(assignSlice, rangeSlice)
-	}
 	info.go2cAlloc = true
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 		slice := ident("slice" + level)
@@ -780,6 +781,27 @@ func (g *generator) mapDecayedType(n *cast.DecayedType, pid string) *typeInfo {
 		stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
 		stmt3 := rangeStmti(govar, i, stmt3s)
 		return blockStmt(stmt1, stmt2, stmt3)
+	}
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		slice := ident("slice" + level)
+		i := ident("i" + level)
+		toslice := asSliceExpr(oinfo.ctype, cvar, size)
+		assignSlice := assignStmt1n1D(slice, toslice)
+		assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
+		rangeSlice := rangeStmti(govar, i, assignValue)
+		return blockStmt(assignSlice, rangeSlice)
+	}
+
+	if oinfo.refc2go != nil {
+		info.refc2go = func(govar, cvar goast.Expr) goast.Stmt {
+			slice := ident("slice" + level)
+			i := ident("i" + level)
+			toslice := asSliceExpr(oinfo.ctype, cvar, size)
+			assignSlice := assignStmt1n1D(slice, toslice)
+			assignValue := oinfo.refc2go(indexExpr(govar, i), indexExpr(slice, i))
+			rangeSlice := rangeStmti(govar, i, assignValue)
+			return blockStmt(assignSlice, rangeSlice)
+		}
 	}
 
 	return info
@@ -809,6 +831,7 @@ func (g *generator) mapTypedefType(n *cast.TypedefType, pid string) *typeInfo {
 		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 			return assignStmt1n1(cvar, callExpr(info.ctype, govar))
 		}
+		info.refc2go = nil
 		return info
 	}
 
@@ -827,6 +850,7 @@ func (g *generator) mapTypedefType(n *cast.TypedefType, pid string) *typeInfo {
 				Else: assignStmt1n1(cvar, intLit(0)),
 			}
 		}
+		info.refc2go = nil
 		return info
 	}
 
@@ -874,6 +898,7 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 				info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 					return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
 				}
+				info.refc2go = nil
 				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
 					Fields: &goast.FieldList{
 						List: []*goast.Field{
@@ -899,6 +924,7 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(cvar, callExpr(info.ctype, govar))
 			}
+			info.refc2go = nil
 
 			g.target.addGo(typeDecl(info.gotype.(*goast.Ident), info.ctype))
 			return info
@@ -1156,7 +1182,14 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 		} else {
 			goname.Name = upFirst(toGoFieldName(fieldDecl.Name))
 		}
-
+		isPointerToConst := false
+		if pt, ok := ftn.(*cast.PointerType); ok {
+			if qt, ok := pt.ChildNodes[0].(*cast.QualType); ok {
+				if qt.Kind == "const" {
+					isPointerToConst = true
+				}
+			}
+		}
 		finfo := g.mapType(ftn, id)
 
 		//sType
@@ -1166,6 +1199,11 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 				return assignStmt1n1(selectorExpr(cscope, ident("sType")), selectorExpr(goscope, ident("sType()")))
 			})
 			continue
+		}
+
+		if pending != nil {
+			pending(finfo.gotype, goname)
+			pending = nil
 		}
 
 		//pNext
@@ -1178,17 +1216,17 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 				call := callExpr(fn, ident("_sa"))
 				return assignStmt1n1(selectorExpr(cscope, cname), call)
 			})
-			c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+			c2go := func(goscope, cscope goast.Expr) goast.Stmt {
 				fn := selectorExpr(selectorExpr(goscope, goname), ident("fromCStructure"))
 				call := callExpr(fn, selectorExpr(cscope, cname))
 				return exprStmt(call)
-			})
+			}
+			c2goFns = append(c2goFns, c2go)
+			if !isPointerToConst {
+				//Not restict, but it fit most cases
+				refc2goFns = append(refc2goFns, c2go)
+			}
 			continue
-		}
-
-		if pending != nil {
-			pending(finfo.gotype, goname)
-			pending = nil
 		}
 
 		//Array Size
@@ -1206,6 +1244,7 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 					make := callExpr(ident("make"), arrtype, n)
 					return assignStmt1n1(selectorExpr(goscope, arrname), make)
 				})
+				// no refc2goFn
 			}
 			continue
 		}
@@ -1218,21 +1257,11 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 		c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
 			return finfo.c2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
 		})
-		if finfo.refc2go != nil {
-			isPointerToConst := false
-			if pt, ok := ftn.(*cast.PointerType); ok {
-				if qt, ok := pt.ChildNodes[0].(*cast.QualType); ok {
-					if qt.Kind == "const" {
-						isPointerToConst = true
-					}
-				}
-			}
+		if finfo.refc2go != nil && !isPointerToConst {
 			//Not restict, but it fit most cases
-			if !isPointerToConst {
-				refc2goFns = append(refc2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
-					return finfo.refc2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
-				})
-			}
+			refc2goFns = append(refc2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+				return finfo.refc2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
+			})
 		}
 		if finfo.go2cAlloc {
 			info.go2cAlloc = true
