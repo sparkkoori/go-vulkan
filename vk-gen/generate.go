@@ -72,6 +72,8 @@ func (g *generator) mapType(node cast.Node, pid string) *typeInfo {
 		return g.mapPointerType(n, pid)
 	case *cast.ConstantArrayType:
 		return g.mapConstantArrayType(n, pid)
+	case *cast.DecayedType:
+		return g.mapDecayedType(n, pid)
 	case *cast.QualType:
 		return g.mapQualType(n, pid)
 	case *cast.TypedefType:
@@ -464,7 +466,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		} else {
 			info.gotype = arrayType(oinfo.gotype, nil)
 			info.ctype = starExpr(oinfo.ctype)
-			info.csize = oinfo.csize
+			info.csize = ident("C.sizeof_void_pointer")
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
 				i := ident("i" + level)
@@ -653,6 +655,53 @@ func (g *generator) mapConstantArrayType(n *cast.ConstantArrayType, pid string) 
 			stmt := oinfo.refc2go(indexExpr(govar, ident("i")), indexExpr(cvar, ident("i")))
 			return rangeStmt(govar, stmt)
 		}
+	}
+
+	return info
+}
+
+func (g *generator) mapDecayedType(n *cast.DecayedType, pid string) *typeInfo {
+	an := n.ChildNodes[0].(*cast.ConstantArrayType)
+	id := pid + "." + fmt.Sprintf("[%d]", an.Size)
+	oinfo := g.mapType(an.ChildNodes[0], id)
+
+	if oinfo == nil {
+		return nil
+	}
+
+	info := &typeInfo{}
+	info.gotype = &goast.ArrayType{
+		Len: &goast.BasicLit{
+			Kind:  token.INT,
+			Value: strconv.Itoa(an.Size),
+		},
+		Elt: oinfo.gotype,
+	}
+	info.ctype = starExpr(oinfo.ctype)
+	info.csize = ident("C.sizeof_void_pointer")
+
+	level := strconv.Itoa(len(strings.Split(pid, ".")))
+	size := intLit(an.Size)
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		slice := ident("slice" + level)
+		i := ident("i" + level)
+		toslice := asSliceExpr(oinfo.ctype, cvar, size)
+		assignSlice := assignStmt1n1D(slice, toslice)
+		assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
+		rangeSlice := rangeStmti(govar, i, assignValue)
+		return blockStmt(assignSlice, rangeSlice)
+	}
+	info.go2cAlloc = true
+	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+		slice := ident("slice" + level)
+		i := ident("i" + level)
+		memSize := mulExpr(oinfo.csize, size)
+		toslice := asSliceExpr(oinfo.ctype, cvar, size)
+		stmt1 := assignStmt1n1(cvar, saalloc(oinfo.ctype, memSize))
+		stmt2 := assignStmt1n1D(slice, toslice)
+		stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
+		stmt3 := rangeStmti(govar, i, stmt3s)
+		return blockStmt(stmt1, stmt2, stmt3)
 	}
 
 	return info
@@ -1263,6 +1312,10 @@ func (g *generator) process(src Source) {
 	for _, node := range src {
 		switch n := node.(type) {
 		case *cast.TypedefDecl:
+			if strings.HasPrefix(n.Name, "PFN_") {
+				// println(n.Name)
+				g.genTypedefDecl(n)
+			}
 		case *cast.RecordDecl:
 		case *cast.EnumDecl:
 		case *cast.FunctionDecl:
