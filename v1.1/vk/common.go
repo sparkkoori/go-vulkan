@@ -19,6 +19,8 @@ type Structure interface {
 	GetNext() Structure
 	SetNext(s Structure)
 	sType() C.VkStructureType
+	toCStructure(_sa *stackAllocator) unsafe.Pointer
+	fromCStructure(unsafe.Pointer)
 }
 
 func init() {

@@ -312,12 +312,12 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 	}
 
 	if isStructure {
-		g.genStructureMethods(decl.Name, info.gotype)
+		g.genStructureMethods(decl.Name, info)
 	}
 	return info
 }
 
-func (g *generator) genStructureMethods(name string, gotype goast.Expr) {
+func (g *generator) genStructureMethods(name string, info *typeInfo) {
 	/*VkStructureType value is obtained by taking the name of the structure,
 	  stripping the leading Vk, prefixing each capital letter with _,
 	  converting the entire resulting string to upper case,
@@ -331,7 +331,40 @@ func (g *generator) genStructureMethods(name string, gotype goast.Expr) {
 	{
 		fnT := funcType(nil, []*goast.Field{field(ident("C.VkStructureType"))})
 		ret := returnStmt(ident("C." + sType))
-		fn := funcDecl(ident("sType"), field(starExpr(gotype), ident("s")), fnT, ret)
+		fn := funcDecl(ident("sType"), field(starExpr(info.gotype), ident("s")), fnT, ret)
+		g.target.addGo(fn)
+	}
+
+	//toCStructure()
+	{
+		fnT := funcType([]*goast.Field{
+			field(starExpr(ident("stackAllocator")), ident("_sa")),
+		}, []*goast.Field{
+			field(ident("unsafe.Pointer")),
+		})
+		ifstmt := &goast.IfStmt{
+			If:   token.Pos(1),
+			Cond: binExpr(ident("s"), ident("nil"), token.EQL),
+			Body: blockStmt(returnStmt(ident("nil"))),
+		}
+		alloc := assignStmt1n1D(ident("c"), saalloc(info.ctype, info.csize))
+		conv := info.go2c(starExpr(ident("s")), starExpr(ident("c")))
+		ret := returnStmt(callExpr(ident("unsafe.Pointer"), ident("c")))
+		fn := funcDecl(ident("toCStructure"), field(starExpr(info.gotype), ident("s")), fnT, ifstmt, alloc, conv, ret)
+		g.target.addGo(fn)
+	}
+
+	//fromCStructure()
+	{
+		ifstmt := &goast.IfStmt{
+			If:   token.Pos(1),
+			Cond: binExpr(ident("s"), ident("nil"), token.EQL),
+			Body: blockStmt(returnStmt()),
+		}
+		fnT := funcType([]*goast.Field{field(ident("unsafe.Pointer"), ident("p"))}, nil)
+		cast := assignStmt1n1D(ident("c"), callExpr(starExpr(info.ctype), ident("p")))
+		conv := info.c2go(starExpr(ident("s")), starExpr(ident("c")))
+		fn := funcDecl(ident("fromCStructure"), field(starExpr(info.gotype), ident("s")), fnT, ifstmt, cast, conv)
 		g.target.addGo(fn)
 	}
 
@@ -339,7 +372,7 @@ func (g *generator) genStructureMethods(name string, gotype goast.Expr) {
 	{
 		fnT := funcType(nil, []*goast.Field{field(ident("Structure"))})
 		ret := returnStmt(selectorExpr(ident("s"), ident("Next")))
-		fn := funcDecl(ident("GetNext"), field(starExpr(gotype), ident("s")), fnT, ret)
+		fn := funcDecl(ident("GetNext"), field(starExpr(info.gotype), ident("s")), fnT, ret)
 		g.target.addGo(fn)
 	}
 
@@ -347,7 +380,7 @@ func (g *generator) genStructureMethods(name string, gotype goast.Expr) {
 	{
 		fnT := funcType([]*goast.Field{field(ident("Structure"), ident("n"))}, nil)
 		ass := assignStmt1n1(selectorExpr(ident("s"), ident("Next")), ident("n"))
-		fn := funcDecl(ident("SetNext"), field(starExpr(gotype), ident("s")), fnT, ass)
+		fn := funcDecl(ident("SetNext"), field(starExpr(info.gotype), ident("s")), fnT, ass)
 		g.target.addGo(fn)
 	}
 }
@@ -1138,12 +1171,17 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 		if i == 1 && fieldDecl.Name == "pNext" {
 			info.cfields = append(info.cfields, field(finfo.ctype, cname))
 			info.gofields = append(info.gofields, field(ident("Structure"), goname))
-			// go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
-			// 	return finfo.go2c(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
-			// })
-			// c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
-			// 	return finfo.c2go(selectorExpr(goscope, goname), selectorExpr(cscope, cname))
-			// })
+			info.go2cAlloc = true
+			go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
+				fn := selectorExpr(selectorExpr(goscope, goname), ident("toCStructure"))
+				call := callExpr(fn, ident("_sa"))
+				return assignStmt1n1(selectorExpr(cscope, cname), call)
+			})
+			c2goFns = append(c2goFns, func(goscope, cscope goast.Expr) goast.Stmt {
+				fn := selectorExpr(selectorExpr(goscope, goname), ident("fromCStructure"))
+				call := callExpr(fn, selectorExpr(cscope, cname))
+				return exprStmt(call)
+			})
 			continue
 		}
 
