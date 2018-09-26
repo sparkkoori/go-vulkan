@@ -6,133 +6,56 @@ package vk
 import "C"
 import "unsafe"
 
-type PFN_vkAllocationFunction struct {
-	Raw C.PFN_vkAllocationFunction
-}
-type SystemAllocationScope int
+type PipelineCacheHeaderVersion int
 
 const (
-	SYSTEM_ALLOCATION_SCOPE_COMMAND     SystemAllocationScope = 0
-	SYSTEM_ALLOCATION_SCOPE_OBJECT      SystemAllocationScope = 1
-	SYSTEM_ALLOCATION_SCOPE_CACHE       SystemAllocationScope = 2
-	SYSTEM_ALLOCATION_SCOPE_DEVICE      SystemAllocationScope = 3
-	SYSTEM_ALLOCATION_SCOPE_INSTANCE    SystemAllocationScope = 4
-	SYSTEM_ALLOCATION_SCOPE_BEGIN_RANGE SystemAllocationScope = SYSTEM_ALLOCATION_SCOPE_COMMAND
-	SYSTEM_ALLOCATION_SCOPE_END_RANGE   SystemAllocationScope = SYSTEM_ALLOCATION_SCOPE_INSTANCE
-	SYSTEM_ALLOCATION_SCOPE_RANGE_SIZE  SystemAllocationScope = (SYSTEM_ALLOCATION_SCOPE_INSTANCE - SYSTEM_ALLOCATION_SCOPE_COMMAND + 1)
-	SYSTEM_ALLOCATION_SCOPE_MAX_ENUM    SystemAllocationScope = 2147483647
+	PIPELINE_CACHE_HEADER_VERSION_ONE         PipelineCacheHeaderVersion = 1
+	PIPELINE_CACHE_HEADER_VERSION_BEGIN_RANGE PipelineCacheHeaderVersion = PIPELINE_CACHE_HEADER_VERSION_ONE
+	PIPELINE_CACHE_HEADER_VERSION_END_RANGE   PipelineCacheHeaderVersion = PIPELINE_CACHE_HEADER_VERSION_ONE
+	PIPELINE_CACHE_HEADER_VERSION_RANGE_SIZE  PipelineCacheHeaderVersion = (PIPELINE_CACHE_HEADER_VERSION_ONE - PIPELINE_CACHE_HEADER_VERSION_ONE + 1)
+	PIPELINE_CACHE_HEADER_VERSION_MAX_ENUM    PipelineCacheHeaderVersion = 2147483647
 )
 
-func (p PFN_vkAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 SystemAllocationScope) (_ret unsafe.Pointer) {
-	var c struct {
-		arg0 unsafe.Pointer
-		arg1 C.size_t
-		arg2 C.size_t
-		arg3 C.VkSystemAllocationScope
-		_ret unsafe.Pointer
-	}
-	c.arg0 = arg0
-	c.arg1 = C.size_t(arg1)
-	c.arg2 = C.size_t(arg2)
-	c.arg3 = C.VkSystemAllocationScope(arg3)
-	c._ret = C.callPFN_vkAllocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
-	_ret = c._ret
-	return
-}
-
-type PFN_vkReallocationFunction struct {
-	Raw C.PFN_vkReallocationFunction
-}
-
-func (p PFN_vkReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 SystemAllocationScope) (_ret unsafe.Pointer) {
-	var c struct {
-		arg0 unsafe.Pointer
-		arg1 unsafe.Pointer
-		arg2 C.size_t
-		arg3 C.size_t
-		arg4 C.VkSystemAllocationScope
-		_ret unsafe.Pointer
-	}
-	c.arg0 = arg0
-	c.arg1 = arg1
-	c.arg2 = C.size_t(arg2)
-	c.arg3 = C.size_t(arg3)
-	c.arg4 = C.VkSystemAllocationScope(arg4)
-	c._ret = C.callPFN_vkReallocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4)
-	_ret = c._ret
-	return
-}
-
-type PFN_vkFreeFunction struct {
-	Raw C.PFN_vkFreeFunction
-}
-
-func (p PFN_vkFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
-	var c struct {
-		arg0 unsafe.Pointer
-		arg1 unsafe.Pointer
-	}
-	c.arg0 = arg0
-	c.arg1 = arg1
-	C.callPFN_vkFreeFunction(p.Raw, c.arg0, c.arg1)
-}
-
-type PFN_vkInternalAllocationNotification struct {
-	Raw C.PFN_vkInternalAllocationNotification
-}
-type InternalAllocationType int
+type Result int
 
 const (
-	INTERNAL_ALLOCATION_TYPE_EXECUTABLE  InternalAllocationType = 0
-	INTERNAL_ALLOCATION_TYPE_BEGIN_RANGE InternalAllocationType = INTERNAL_ALLOCATION_TYPE_EXECUTABLE
-	INTERNAL_ALLOCATION_TYPE_END_RANGE   InternalAllocationType = INTERNAL_ALLOCATION_TYPE_EXECUTABLE
-	INTERNAL_ALLOCATION_TYPE_RANGE_SIZE  InternalAllocationType = (INTERNAL_ALLOCATION_TYPE_EXECUTABLE - INTERNAL_ALLOCATION_TYPE_EXECUTABLE + 1)
-	INTERNAL_ALLOCATION_TYPE_MAX_ENUM    InternalAllocationType = 2147483647
+	SUCCESS                           Result = 0
+	NOT_READY                         Result = 1
+	TIMEOUT                           Result = 2
+	EVENT_SET                         Result = 3
+	EVENT_RESET                       Result = 4
+	INCOMPLETE                        Result = 5
+	ERROR_OUT_OF_HOST_MEMORY          Result = -1
+	ERROR_OUT_OF_DEVICE_MEMORY        Result = -2
+	ERROR_INITIALIZATION_FAILED       Result = -3
+	ERROR_DEVICE_LOST                 Result = -4
+	ERROR_MEMORY_MAP_FAILED           Result = -5
+	ERROR_LAYER_NOT_PRESENT           Result = -6
+	ERROR_EXTENSION_NOT_PRESENT       Result = -7
+	ERROR_FEATURE_NOT_PRESENT         Result = -8
+	ERROR_INCOMPATIBLE_DRIVER         Result = -9
+	ERROR_TOO_MANY_OBJECTS            Result = -10
+	ERROR_FORMAT_NOT_SUPPORTED        Result = -11
+	ERROR_FRAGMENTED_POOL             Result = -12
+	ERROR_OUT_OF_POOL_MEMORY          Result = -1000069000
+	ERROR_INVALID_EXTERNAL_HANDLE     Result = -1000072003
+	ERROR_SURFACE_LOST_KHR            Result = -1000000000
+	ERROR_NATIVE_WINDOW_IN_USE_KHR    Result = -1000000001
+	SUBOPTIMAL_KHR                    Result = 1000001003
+	ERROR_OUT_OF_DATE_KHR             Result = -1000001004
+	ERROR_INCOMPATIBLE_DISPLAY_KHR    Result = -1000003001
+	ERROR_VALIDATION_FAILED_EXT       Result = -1000011001
+	ERROR_INVALID_SHADER_NV           Result = -1000012000
+	ERROR_FRAGMENTATION_EXT           Result = -1000161000
+	ERROR_NOT_PERMITTED_EXT           Result = -1000174001
+	ERROR_OUT_OF_POOL_MEMORY_KHR      Result = ERROR_OUT_OF_POOL_MEMORY
+	ERROR_INVALID_EXTERNAL_HANDLE_KHR Result = ERROR_INVALID_EXTERNAL_HANDLE
+	RESULT_BEGIN_RANGE                Result = ERROR_FRAGMENTED_POOL
+	RESULT_END_RANGE                  Result = INCOMPLETE
+	RESULT_RANGE_SIZE                 Result = (INCOMPLETE - ERROR_FRAGMENTED_POOL + 1)
+	RESULT_MAX_ENUM                   Result = 2147483647
 )
 
-func (p PFN_vkInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
-	var c struct {
-		arg0 unsafe.Pointer
-		arg1 C.size_t
-		arg2 C.VkInternalAllocationType
-		arg3 C.VkSystemAllocationScope
-	}
-	c.arg0 = arg0
-	c.arg1 = C.size_t(arg1)
-	c.arg2 = C.VkInternalAllocationType(arg2)
-	c.arg3 = C.VkSystemAllocationScope(arg3)
-	C.callPFN_vkInternalAllocationNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
-}
-
-type PFN_vkInternalFreeNotification struct {
-	Raw C.PFN_vkInternalFreeNotification
-}
-
-func (p PFN_vkInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
-	var c struct {
-		arg0 unsafe.Pointer
-		arg1 C.size_t
-		arg2 C.VkInternalAllocationType
-		arg3 C.VkSystemAllocationScope
-	}
-	c.arg0 = arg0
-	c.arg1 = C.size_t(arg1)
-	c.arg2 = C.VkInternalAllocationType(arg2)
-	c.arg3 = C.VkSystemAllocationScope(arg3)
-	C.callPFN_vkInternalFreeNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
-}
-
-type PFN_vkVoidFunction struct {
-	Raw C.PFN_vkVoidFunction
-}
-
-func (p PFN_vkVoidFunction) Call() {
-	C.callPFN_vkVoidFunction(p.Raw)
-}
-
-type PFN_vkCreateInstance struct {
-	Raw C.PFN_vkCreateInstance
-}
 type StructureType int
 
 const (
@@ -451,6 +374,1354 @@ const (
 	STRUCTURE_TYPE_MAX_ENUM                                                     StructureType = 2147483647
 )
 
+type SystemAllocationScope int
+
+const (
+	SYSTEM_ALLOCATION_SCOPE_COMMAND     SystemAllocationScope = 0
+	SYSTEM_ALLOCATION_SCOPE_OBJECT      SystemAllocationScope = 1
+	SYSTEM_ALLOCATION_SCOPE_CACHE       SystemAllocationScope = 2
+	SYSTEM_ALLOCATION_SCOPE_DEVICE      SystemAllocationScope = 3
+	SYSTEM_ALLOCATION_SCOPE_INSTANCE    SystemAllocationScope = 4
+	SYSTEM_ALLOCATION_SCOPE_BEGIN_RANGE SystemAllocationScope = SYSTEM_ALLOCATION_SCOPE_COMMAND
+	SYSTEM_ALLOCATION_SCOPE_END_RANGE   SystemAllocationScope = SYSTEM_ALLOCATION_SCOPE_INSTANCE
+	SYSTEM_ALLOCATION_SCOPE_RANGE_SIZE  SystemAllocationScope = (SYSTEM_ALLOCATION_SCOPE_INSTANCE - SYSTEM_ALLOCATION_SCOPE_COMMAND + 1)
+	SYSTEM_ALLOCATION_SCOPE_MAX_ENUM    SystemAllocationScope = 2147483647
+)
+
+type InternalAllocationType int
+
+const (
+	INTERNAL_ALLOCATION_TYPE_EXECUTABLE  InternalAllocationType = 0
+	INTERNAL_ALLOCATION_TYPE_BEGIN_RANGE InternalAllocationType = INTERNAL_ALLOCATION_TYPE_EXECUTABLE
+	INTERNAL_ALLOCATION_TYPE_END_RANGE   InternalAllocationType = INTERNAL_ALLOCATION_TYPE_EXECUTABLE
+	INTERNAL_ALLOCATION_TYPE_RANGE_SIZE  InternalAllocationType = (INTERNAL_ALLOCATION_TYPE_EXECUTABLE - INTERNAL_ALLOCATION_TYPE_EXECUTABLE + 1)
+	INTERNAL_ALLOCATION_TYPE_MAX_ENUM    InternalAllocationType = 2147483647
+)
+
+type Format int
+
+const (
+	FORMAT_UNDEFINED                                      Format = 0
+	FORMAT_R4G4_UNORM_PACK8                               Format = 1
+	FORMAT_R4G4B4A4_UNORM_PACK16                          Format = 2
+	FORMAT_B4G4R4A4_UNORM_PACK16                          Format = 3
+	FORMAT_R5G6B5_UNORM_PACK16                            Format = 4
+	FORMAT_B5G6R5_UNORM_PACK16                            Format = 5
+	FORMAT_R5G5B5A1_UNORM_PACK16                          Format = 6
+	FORMAT_B5G5R5A1_UNORM_PACK16                          Format = 7
+	FORMAT_A1R5G5B5_UNORM_PACK16                          Format = 8
+	FORMAT_R8_UNORM                                       Format = 9
+	FORMAT_R8_SNORM                                       Format = 10
+	FORMAT_R8_USCALED                                     Format = 11
+	FORMAT_R8_SSCALED                                     Format = 12
+	FORMAT_R8_UINT                                        Format = 13
+	FORMAT_R8_SINT                                        Format = 14
+	FORMAT_R8_SRGB                                        Format = 15
+	FORMAT_R8G8_UNORM                                     Format = 16
+	FORMAT_R8G8_SNORM                                     Format = 17
+	FORMAT_R8G8_USCALED                                   Format = 18
+	FORMAT_R8G8_SSCALED                                   Format = 19
+	FORMAT_R8G8_UINT                                      Format = 20
+	FORMAT_R8G8_SINT                                      Format = 21
+	FORMAT_R8G8_SRGB                                      Format = 22
+	FORMAT_R8G8B8_UNORM                                   Format = 23
+	FORMAT_R8G8B8_SNORM                                   Format = 24
+	FORMAT_R8G8B8_USCALED                                 Format = 25
+	FORMAT_R8G8B8_SSCALED                                 Format = 26
+	FORMAT_R8G8B8_UINT                                    Format = 27
+	FORMAT_R8G8B8_SINT                                    Format = 28
+	FORMAT_R8G8B8_SRGB                                    Format = 29
+	FORMAT_B8G8R8_UNORM                                   Format = 30
+	FORMAT_B8G8R8_SNORM                                   Format = 31
+	FORMAT_B8G8R8_USCALED                                 Format = 32
+	FORMAT_B8G8R8_SSCALED                                 Format = 33
+	FORMAT_B8G8R8_UINT                                    Format = 34
+	FORMAT_B8G8R8_SINT                                    Format = 35
+	FORMAT_B8G8R8_SRGB                                    Format = 36
+	FORMAT_R8G8B8A8_UNORM                                 Format = 37
+	FORMAT_R8G8B8A8_SNORM                                 Format = 38
+	FORMAT_R8G8B8A8_USCALED                               Format = 39
+	FORMAT_R8G8B8A8_SSCALED                               Format = 40
+	FORMAT_R8G8B8A8_UINT                                  Format = 41
+	FORMAT_R8G8B8A8_SINT                                  Format = 42
+	FORMAT_R8G8B8A8_SRGB                                  Format = 43
+	FORMAT_B8G8R8A8_UNORM                                 Format = 44
+	FORMAT_B8G8R8A8_SNORM                                 Format = 45
+	FORMAT_B8G8R8A8_USCALED                               Format = 46
+	FORMAT_B8G8R8A8_SSCALED                               Format = 47
+	FORMAT_B8G8R8A8_UINT                                  Format = 48
+	FORMAT_B8G8R8A8_SINT                                  Format = 49
+	FORMAT_B8G8R8A8_SRGB                                  Format = 50
+	FORMAT_A8B8G8R8_UNORM_PACK32                          Format = 51
+	FORMAT_A8B8G8R8_SNORM_PACK32                          Format = 52
+	FORMAT_A8B8G8R8_USCALED_PACK32                        Format = 53
+	FORMAT_A8B8G8R8_SSCALED_PACK32                        Format = 54
+	FORMAT_A8B8G8R8_UINT_PACK32                           Format = 55
+	FORMAT_A8B8G8R8_SINT_PACK32                           Format = 56
+	FORMAT_A8B8G8R8_SRGB_PACK32                           Format = 57
+	FORMAT_A2R10G10B10_UNORM_PACK32                       Format = 58
+	FORMAT_A2R10G10B10_SNORM_PACK32                       Format = 59
+	FORMAT_A2R10G10B10_USCALED_PACK32                     Format = 60
+	FORMAT_A2R10G10B10_SSCALED_PACK32                     Format = 61
+	FORMAT_A2R10G10B10_UINT_PACK32                        Format = 62
+	FORMAT_A2R10G10B10_SINT_PACK32                        Format = 63
+	FORMAT_A2B10G10R10_UNORM_PACK32                       Format = 64
+	FORMAT_A2B10G10R10_SNORM_PACK32                       Format = 65
+	FORMAT_A2B10G10R10_USCALED_PACK32                     Format = 66
+	FORMAT_A2B10G10R10_SSCALED_PACK32                     Format = 67
+	FORMAT_A2B10G10R10_UINT_PACK32                        Format = 68
+	FORMAT_A2B10G10R10_SINT_PACK32                        Format = 69
+	FORMAT_R16_UNORM                                      Format = 70
+	FORMAT_R16_SNORM                                      Format = 71
+	FORMAT_R16_USCALED                                    Format = 72
+	FORMAT_R16_SSCALED                                    Format = 73
+	FORMAT_R16_UINT                                       Format = 74
+	FORMAT_R16_SINT                                       Format = 75
+	FORMAT_R16_SFLOAT                                     Format = 76
+	FORMAT_R16G16_UNORM                                   Format = 77
+	FORMAT_R16G16_SNORM                                   Format = 78
+	FORMAT_R16G16_USCALED                                 Format = 79
+	FORMAT_R16G16_SSCALED                                 Format = 80
+	FORMAT_R16G16_UINT                                    Format = 81
+	FORMAT_R16G16_SINT                                    Format = 82
+	FORMAT_R16G16_SFLOAT                                  Format = 83
+	FORMAT_R16G16B16_UNORM                                Format = 84
+	FORMAT_R16G16B16_SNORM                                Format = 85
+	FORMAT_R16G16B16_USCALED                              Format = 86
+	FORMAT_R16G16B16_SSCALED                              Format = 87
+	FORMAT_R16G16B16_UINT                                 Format = 88
+	FORMAT_R16G16B16_SINT                                 Format = 89
+	FORMAT_R16G16B16_SFLOAT                               Format = 90
+	FORMAT_R16G16B16A16_UNORM                             Format = 91
+	FORMAT_R16G16B16A16_SNORM                             Format = 92
+	FORMAT_R16G16B16A16_USCALED                           Format = 93
+	FORMAT_R16G16B16A16_SSCALED                           Format = 94
+	FORMAT_R16G16B16A16_UINT                              Format = 95
+	FORMAT_R16G16B16A16_SINT                              Format = 96
+	FORMAT_R16G16B16A16_SFLOAT                            Format = 97
+	FORMAT_R32_UINT                                       Format = 98
+	FORMAT_R32_SINT                                       Format = 99
+	FORMAT_R32_SFLOAT                                     Format = 100
+	FORMAT_R32G32_UINT                                    Format = 101
+	FORMAT_R32G32_SINT                                    Format = 102
+	FORMAT_R32G32_SFLOAT                                  Format = 103
+	FORMAT_R32G32B32_UINT                                 Format = 104
+	FORMAT_R32G32B32_SINT                                 Format = 105
+	FORMAT_R32G32B32_SFLOAT                               Format = 106
+	FORMAT_R32G32B32A32_UINT                              Format = 107
+	FORMAT_R32G32B32A32_SINT                              Format = 108
+	FORMAT_R32G32B32A32_SFLOAT                            Format = 109
+	FORMAT_R64_UINT                                       Format = 110
+	FORMAT_R64_SINT                                       Format = 111
+	FORMAT_R64_SFLOAT                                     Format = 112
+	FORMAT_R64G64_UINT                                    Format = 113
+	FORMAT_R64G64_SINT                                    Format = 114
+	FORMAT_R64G64_SFLOAT                                  Format = 115
+	FORMAT_R64G64B64_UINT                                 Format = 116
+	FORMAT_R64G64B64_SINT                                 Format = 117
+	FORMAT_R64G64B64_SFLOAT                               Format = 118
+	FORMAT_R64G64B64A64_UINT                              Format = 119
+	FORMAT_R64G64B64A64_SINT                              Format = 120
+	FORMAT_R64G64B64A64_SFLOAT                            Format = 121
+	FORMAT_B10G11R11_UFLOAT_PACK32                        Format = 122
+	FORMAT_E5B9G9R9_UFLOAT_PACK32                         Format = 123
+	FORMAT_D16_UNORM                                      Format = 124
+	FORMAT_X8_D24_UNORM_PACK32                            Format = 125
+	FORMAT_D32_SFLOAT                                     Format = 126
+	FORMAT_S8_UINT                                        Format = 127
+	FORMAT_D16_UNORM_S8_UINT                              Format = 128
+	FORMAT_D24_UNORM_S8_UINT                              Format = 129
+	FORMAT_D32_SFLOAT_S8_UINT                             Format = 130
+	FORMAT_BC1_RGB_UNORM_BLOCK                            Format = 131
+	FORMAT_BC1_RGB_SRGB_BLOCK                             Format = 132
+	FORMAT_BC1_RGBA_UNORM_BLOCK                           Format = 133
+	FORMAT_BC1_RGBA_SRGB_BLOCK                            Format = 134
+	FORMAT_BC2_UNORM_BLOCK                                Format = 135
+	FORMAT_BC2_SRGB_BLOCK                                 Format = 136
+	FORMAT_BC3_UNORM_BLOCK                                Format = 137
+	FORMAT_BC3_SRGB_BLOCK                                 Format = 138
+	FORMAT_BC4_UNORM_BLOCK                                Format = 139
+	FORMAT_BC4_SNORM_BLOCK                                Format = 140
+	FORMAT_BC5_UNORM_BLOCK                                Format = 141
+	FORMAT_BC5_SNORM_BLOCK                                Format = 142
+	FORMAT_BC6H_UFLOAT_BLOCK                              Format = 143
+	FORMAT_BC6H_SFLOAT_BLOCK                              Format = 144
+	FORMAT_BC7_UNORM_BLOCK                                Format = 145
+	FORMAT_BC7_SRGB_BLOCK                                 Format = 146
+	FORMAT_ETC2_R8G8B8_UNORM_BLOCK                        Format = 147
+	FORMAT_ETC2_R8G8B8_SRGB_BLOCK                         Format = 148
+	FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK                      Format = 149
+	FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK                       Format = 150
+	FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK                      Format = 151
+	FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK                       Format = 152
+	FORMAT_EAC_R11_UNORM_BLOCK                            Format = 153
+	FORMAT_EAC_R11_SNORM_BLOCK                            Format = 154
+	FORMAT_EAC_R11G11_UNORM_BLOCK                         Format = 155
+	FORMAT_EAC_R11G11_SNORM_BLOCK                         Format = 156
+	FORMAT_ASTC_4x4_UNORM_BLOCK                           Format = 157
+	FORMAT_ASTC_4x4_SRGB_BLOCK                            Format = 158
+	FORMAT_ASTC_5x4_UNORM_BLOCK                           Format = 159
+	FORMAT_ASTC_5x4_SRGB_BLOCK                            Format = 160
+	FORMAT_ASTC_5x5_UNORM_BLOCK                           Format = 161
+	FORMAT_ASTC_5x5_SRGB_BLOCK                            Format = 162
+	FORMAT_ASTC_6x5_UNORM_BLOCK                           Format = 163
+	FORMAT_ASTC_6x5_SRGB_BLOCK                            Format = 164
+	FORMAT_ASTC_6x6_UNORM_BLOCK                           Format = 165
+	FORMAT_ASTC_6x6_SRGB_BLOCK                            Format = 166
+	FORMAT_ASTC_8x5_UNORM_BLOCK                           Format = 167
+	FORMAT_ASTC_8x5_SRGB_BLOCK                            Format = 168
+	FORMAT_ASTC_8x6_UNORM_BLOCK                           Format = 169
+	FORMAT_ASTC_8x6_SRGB_BLOCK                            Format = 170
+	FORMAT_ASTC_8x8_UNORM_BLOCK                           Format = 171
+	FORMAT_ASTC_8x8_SRGB_BLOCK                            Format = 172
+	FORMAT_ASTC_10x5_UNORM_BLOCK                          Format = 173
+	FORMAT_ASTC_10x5_SRGB_BLOCK                           Format = 174
+	FORMAT_ASTC_10x6_UNORM_BLOCK                          Format = 175
+	FORMAT_ASTC_10x6_SRGB_BLOCK                           Format = 176
+	FORMAT_ASTC_10x8_UNORM_BLOCK                          Format = 177
+	FORMAT_ASTC_10x8_SRGB_BLOCK                           Format = 178
+	FORMAT_ASTC_10x10_UNORM_BLOCK                         Format = 179
+	FORMAT_ASTC_10x10_SRGB_BLOCK                          Format = 180
+	FORMAT_ASTC_12x10_UNORM_BLOCK                         Format = 181
+	FORMAT_ASTC_12x10_SRGB_BLOCK                          Format = 182
+	FORMAT_ASTC_12x12_UNORM_BLOCK                         Format = 183
+	FORMAT_ASTC_12x12_SRGB_BLOCK                          Format = 184
+	FORMAT_G8B8G8R8_422_UNORM                             Format = 1000156000
+	FORMAT_B8G8R8G8_422_UNORM                             Format = 1000156001
+	FORMAT_G8_B8_R8_3PLANE_420_UNORM                      Format = 1000156002
+	FORMAT_G8_B8R8_2PLANE_420_UNORM                       Format = 1000156003
+	FORMAT_G8_B8_R8_3PLANE_422_UNORM                      Format = 1000156004
+	FORMAT_G8_B8R8_2PLANE_422_UNORM                       Format = 1000156005
+	FORMAT_G8_B8_R8_3PLANE_444_UNORM                      Format = 1000156006
+	FORMAT_R10X6_UNORM_PACK16                             Format = 1000156007
+	FORMAT_R10X6G10X6_UNORM_2PACK16                       Format = 1000156008
+	FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16             Format = 1000156009
+	FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16         Format = 1000156010
+	FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16         Format = 1000156011
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16     Format = 1000156012
+	FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16      Format = 1000156013
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16     Format = 1000156014
+	FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16      Format = 1000156015
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16     Format = 1000156016
+	FORMAT_R12X4_UNORM_PACK16                             Format = 1000156017
+	FORMAT_R12X4G12X4_UNORM_2PACK16                       Format = 1000156018
+	FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16             Format = 1000156019
+	FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16         Format = 1000156020
+	FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16         Format = 1000156021
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16     Format = 1000156022
+	FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16      Format = 1000156023
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16     Format = 1000156024
+	FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16      Format = 1000156025
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16     Format = 1000156026
+	FORMAT_G16B16G16R16_422_UNORM                         Format = 1000156027
+	FORMAT_B16G16R16G16_422_UNORM                         Format = 1000156028
+	FORMAT_G16_B16_R16_3PLANE_420_UNORM                   Format = 1000156029
+	FORMAT_G16_B16R16_2PLANE_420_UNORM                    Format = 1000156030
+	FORMAT_G16_B16_R16_3PLANE_422_UNORM                   Format = 1000156031
+	FORMAT_G16_B16R16_2PLANE_422_UNORM                    Format = 1000156032
+	FORMAT_G16_B16_R16_3PLANE_444_UNORM                   Format = 1000156033
+	FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG                    Format = 1000054000
+	FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG                    Format = 1000054001
+	FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG                    Format = 1000054002
+	FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG                    Format = 1000054003
+	FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG                     Format = 1000054004
+	FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG                     Format = 1000054005
+	FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG                     Format = 1000054006
+	FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG                     Format = 1000054007
+	FORMAT_G8B8G8R8_422_UNORM_KHR                         Format = FORMAT_G8B8G8R8_422_UNORM
+	FORMAT_B8G8R8G8_422_UNORM_KHR                         Format = FORMAT_B8G8R8G8_422_UNORM
+	FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_420_UNORM
+	FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR                   Format = FORMAT_G8_B8R8_2PLANE_420_UNORM
+	FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_422_UNORM
+	FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR                   Format = FORMAT_G8_B8R8_2PLANE_422_UNORM
+	FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_444_UNORM
+	FORMAT_R10X6_UNORM_PACK16_KHR                         Format = FORMAT_R10X6_UNORM_PACK16
+	FORMAT_R10X6G10X6_UNORM_2PACK16_KHR                   Format = FORMAT_R10X6G10X6_UNORM_2PACK16
+	FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR         Format = FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
+	FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR     Format = FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
+	FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR     Format = FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
+	FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR  Format = FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
+	FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR  Format = FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
+	FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
+	FORMAT_R12X4_UNORM_PACK16_KHR                         Format = FORMAT_R12X4_UNORM_PACK16
+	FORMAT_R12X4G12X4_UNORM_2PACK16_KHR                   Format = FORMAT_R12X4G12X4_UNORM_2PACK16
+	FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR         Format = FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
+	FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR     Format = FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
+	FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR     Format = FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
+	FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR  Format = FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
+	FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR  Format = FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
+	FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
+	FORMAT_G16B16G16R16_422_UNORM_KHR                     Format = FORMAT_G16B16G16R16_422_UNORM
+	FORMAT_B16G16R16G16_422_UNORM_KHR                     Format = FORMAT_B16G16R16G16_422_UNORM
+	FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_420_UNORM
+	FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR                Format = FORMAT_G16_B16R16_2PLANE_420_UNORM
+	FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_422_UNORM
+	FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR                Format = FORMAT_G16_B16R16_2PLANE_422_UNORM
+	FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_444_UNORM
+	FORMAT_BEGIN_RANGE                                    Format = FORMAT_UNDEFINED
+	FORMAT_END_RANGE                                      Format = FORMAT_ASTC_12x12_SRGB_BLOCK
+	FORMAT_RANGE_SIZE                                     Format = (FORMAT_ASTC_12x12_SRGB_BLOCK - FORMAT_UNDEFINED + 1)
+	FORMAT_MAX_ENUM                                       Format = 2147483647
+)
+
+type ImageType int
+
+const (
+	IMAGE_TYPE_1D          ImageType = 0
+	IMAGE_TYPE_2D          ImageType = 1
+	IMAGE_TYPE_3D          ImageType = 2
+	IMAGE_TYPE_BEGIN_RANGE ImageType = IMAGE_TYPE_1D
+	IMAGE_TYPE_END_RANGE   ImageType = IMAGE_TYPE_3D
+	IMAGE_TYPE_RANGE_SIZE  ImageType = (IMAGE_TYPE_3D - IMAGE_TYPE_1D + 1)
+	IMAGE_TYPE_MAX_ENUM    ImageType = 2147483647
+)
+
+type ImageTiling int
+
+const (
+	IMAGE_TILING_OPTIMAL     ImageTiling = 0
+	IMAGE_TILING_LINEAR      ImageTiling = 1
+	IMAGE_TILING_BEGIN_RANGE ImageTiling = IMAGE_TILING_OPTIMAL
+	IMAGE_TILING_END_RANGE   ImageTiling = IMAGE_TILING_LINEAR
+	IMAGE_TILING_RANGE_SIZE  ImageTiling = (IMAGE_TILING_LINEAR - IMAGE_TILING_OPTIMAL + 1)
+	IMAGE_TILING_MAX_ENUM    ImageTiling = 2147483647
+)
+
+type PhysicalDeviceType int
+
+const (
+	PHYSICAL_DEVICE_TYPE_OTHER          PhysicalDeviceType = 0
+	PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU PhysicalDeviceType = 1
+	PHYSICAL_DEVICE_TYPE_DISCRETE_GPU   PhysicalDeviceType = 2
+	PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU    PhysicalDeviceType = 3
+	PHYSICAL_DEVICE_TYPE_CPU            PhysicalDeviceType = 4
+	PHYSICAL_DEVICE_TYPE_BEGIN_RANGE    PhysicalDeviceType = PHYSICAL_DEVICE_TYPE_OTHER
+	PHYSICAL_DEVICE_TYPE_END_RANGE      PhysicalDeviceType = PHYSICAL_DEVICE_TYPE_CPU
+	PHYSICAL_DEVICE_TYPE_RANGE_SIZE     PhysicalDeviceType = (PHYSICAL_DEVICE_TYPE_CPU - PHYSICAL_DEVICE_TYPE_OTHER + 1)
+	PHYSICAL_DEVICE_TYPE_MAX_ENUM       PhysicalDeviceType = 2147483647
+)
+
+type QueryType int
+
+const (
+	QUERY_TYPE_OCCLUSION           QueryType = 0
+	QUERY_TYPE_PIPELINE_STATISTICS QueryType = 1
+	QUERY_TYPE_TIMESTAMP           QueryType = 2
+	QUERY_TYPE_BEGIN_RANGE         QueryType = QUERY_TYPE_OCCLUSION
+	QUERY_TYPE_END_RANGE           QueryType = QUERY_TYPE_TIMESTAMP
+	QUERY_TYPE_RANGE_SIZE          QueryType = (QUERY_TYPE_TIMESTAMP - QUERY_TYPE_OCCLUSION + 1)
+	QUERY_TYPE_MAX_ENUM            QueryType = 2147483647
+)
+
+type SharingMode int
+
+const (
+	SHARING_MODE_EXCLUSIVE   SharingMode = 0
+	SHARING_MODE_CONCURRENT  SharingMode = 1
+	SHARING_MODE_BEGIN_RANGE SharingMode = SHARING_MODE_EXCLUSIVE
+	SHARING_MODE_END_RANGE   SharingMode = SHARING_MODE_CONCURRENT
+	SHARING_MODE_RANGE_SIZE  SharingMode = (SHARING_MODE_CONCURRENT - SHARING_MODE_EXCLUSIVE + 1)
+	SHARING_MODE_MAX_ENUM    SharingMode = 2147483647
+)
+
+type ImageLayout int
+
+const (
+	IMAGE_LAYOUT_UNDEFINED                                      ImageLayout = 0
+	IMAGE_LAYOUT_GENERAL                                        ImageLayout = 1
+	IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL                       ImageLayout = 2
+	IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL               ImageLayout = 3
+	IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL                ImageLayout = 4
+	IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL                       ImageLayout = 5
+	IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL                           ImageLayout = 6
+	IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL                           ImageLayout = 7
+	IMAGE_LAYOUT_PREINITIALIZED                                 ImageLayout = 8
+	IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL     ImageLayout = 1000117000
+	IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL     ImageLayout = 1000117001
+	IMAGE_LAYOUT_PRESENT_SRC_KHR                                ImageLayout = 1000001002
+	IMAGE_LAYOUT_SHARED_PRESENT_KHR                             ImageLayout = 1000111000
+	IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR ImageLayout = IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
+	IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR ImageLayout = IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
+	IMAGE_LAYOUT_BEGIN_RANGE                                    ImageLayout = IMAGE_LAYOUT_UNDEFINED
+	IMAGE_LAYOUT_END_RANGE                                      ImageLayout = IMAGE_LAYOUT_PREINITIALIZED
+	IMAGE_LAYOUT_RANGE_SIZE                                     ImageLayout = (IMAGE_LAYOUT_PREINITIALIZED - IMAGE_LAYOUT_UNDEFINED + 1)
+	IMAGE_LAYOUT_MAX_ENUM                                       ImageLayout = 2147483647
+)
+
+type ImageViewType int
+
+const (
+	IMAGE_VIEW_TYPE_1D          ImageViewType = 0
+	IMAGE_VIEW_TYPE_2D          ImageViewType = 1
+	IMAGE_VIEW_TYPE_3D          ImageViewType = 2
+	IMAGE_VIEW_TYPE_CUBE        ImageViewType = 3
+	IMAGE_VIEW_TYPE_1D_ARRAY    ImageViewType = 4
+	IMAGE_VIEW_TYPE_2D_ARRAY    ImageViewType = 5
+	IMAGE_VIEW_TYPE_CUBE_ARRAY  ImageViewType = 6
+	IMAGE_VIEW_TYPE_BEGIN_RANGE ImageViewType = IMAGE_VIEW_TYPE_1D
+	IMAGE_VIEW_TYPE_END_RANGE   ImageViewType = IMAGE_VIEW_TYPE_CUBE_ARRAY
+	IMAGE_VIEW_TYPE_RANGE_SIZE  ImageViewType = (IMAGE_VIEW_TYPE_CUBE_ARRAY - IMAGE_VIEW_TYPE_1D + 1)
+	IMAGE_VIEW_TYPE_MAX_ENUM    ImageViewType = 2147483647
+)
+
+type ComponentSwizzle int
+
+const (
+	COMPONENT_SWIZZLE_IDENTITY    ComponentSwizzle = 0
+	COMPONENT_SWIZZLE_ZERO        ComponentSwizzle = 1
+	COMPONENT_SWIZZLE_ONE         ComponentSwizzle = 2
+	COMPONENT_SWIZZLE_R           ComponentSwizzle = 3
+	COMPONENT_SWIZZLE_G           ComponentSwizzle = 4
+	COMPONENT_SWIZZLE_B           ComponentSwizzle = 5
+	COMPONENT_SWIZZLE_A           ComponentSwizzle = 6
+	COMPONENT_SWIZZLE_BEGIN_RANGE ComponentSwizzle = COMPONENT_SWIZZLE_IDENTITY
+	COMPONENT_SWIZZLE_END_RANGE   ComponentSwizzle = COMPONENT_SWIZZLE_A
+	COMPONENT_SWIZZLE_RANGE_SIZE  ComponentSwizzle = (COMPONENT_SWIZZLE_A - COMPONENT_SWIZZLE_IDENTITY + 1)
+	COMPONENT_SWIZZLE_MAX_ENUM    ComponentSwizzle = 2147483647
+)
+
+type VertexInputRate int
+
+const (
+	VERTEX_INPUT_RATE_VERTEX      VertexInputRate = 0
+	VERTEX_INPUT_RATE_INSTANCE    VertexInputRate = 1
+	VERTEX_INPUT_RATE_BEGIN_RANGE VertexInputRate = VERTEX_INPUT_RATE_VERTEX
+	VERTEX_INPUT_RATE_END_RANGE   VertexInputRate = VERTEX_INPUT_RATE_INSTANCE
+	VERTEX_INPUT_RATE_RANGE_SIZE  VertexInputRate = (VERTEX_INPUT_RATE_INSTANCE - VERTEX_INPUT_RATE_VERTEX + 1)
+	VERTEX_INPUT_RATE_MAX_ENUM    VertexInputRate = 2147483647
+)
+
+type PrimitiveTopology int
+
+const (
+	PRIMITIVE_TOPOLOGY_POINT_LIST                    PrimitiveTopology = 0
+	PRIMITIVE_TOPOLOGY_LINE_LIST                     PrimitiveTopology = 1
+	PRIMITIVE_TOPOLOGY_LINE_STRIP                    PrimitiveTopology = 2
+	PRIMITIVE_TOPOLOGY_TRIANGLE_LIST                 PrimitiveTopology = 3
+	PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP                PrimitiveTopology = 4
+	PRIMITIVE_TOPOLOGY_TRIANGLE_FAN                  PrimitiveTopology = 5
+	PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY      PrimitiveTopology = 6
+	PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY     PrimitiveTopology = 7
+	PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY  PrimitiveTopology = 8
+	PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY PrimitiveTopology = 9
+	PRIMITIVE_TOPOLOGY_PATCH_LIST                    PrimitiveTopology = 10
+	PRIMITIVE_TOPOLOGY_BEGIN_RANGE                   PrimitiveTopology = PRIMITIVE_TOPOLOGY_POINT_LIST
+	PRIMITIVE_TOPOLOGY_END_RANGE                     PrimitiveTopology = PRIMITIVE_TOPOLOGY_PATCH_LIST
+	PRIMITIVE_TOPOLOGY_RANGE_SIZE                    PrimitiveTopology = (PRIMITIVE_TOPOLOGY_PATCH_LIST - PRIMITIVE_TOPOLOGY_POINT_LIST + 1)
+	PRIMITIVE_TOPOLOGY_MAX_ENUM                      PrimitiveTopology = 2147483647
+)
+
+type PolygonMode int
+
+const (
+	POLYGON_MODE_FILL              PolygonMode = 0
+	POLYGON_MODE_LINE              PolygonMode = 1
+	POLYGON_MODE_POINT             PolygonMode = 2
+	POLYGON_MODE_FILL_RECTANGLE_NV PolygonMode = 1000153000
+	POLYGON_MODE_BEGIN_RANGE       PolygonMode = POLYGON_MODE_FILL
+	POLYGON_MODE_END_RANGE         PolygonMode = POLYGON_MODE_POINT
+	POLYGON_MODE_RANGE_SIZE        PolygonMode = (POLYGON_MODE_POINT - POLYGON_MODE_FILL + 1)
+	POLYGON_MODE_MAX_ENUM          PolygonMode = 2147483647
+)
+
+type FrontFace int
+
+const (
+	FRONT_FACE_COUNTER_CLOCKWISE FrontFace = 0
+	FRONT_FACE_CLOCKWISE         FrontFace = 1
+	FRONT_FACE_BEGIN_RANGE       FrontFace = FRONT_FACE_COUNTER_CLOCKWISE
+	FRONT_FACE_END_RANGE         FrontFace = FRONT_FACE_CLOCKWISE
+	FRONT_FACE_RANGE_SIZE        FrontFace = (FRONT_FACE_CLOCKWISE - FRONT_FACE_COUNTER_CLOCKWISE + 1)
+	FRONT_FACE_MAX_ENUM          FrontFace = 2147483647
+)
+
+type CompareOp int
+
+const (
+	COMPARE_OP_NEVER            CompareOp = 0
+	COMPARE_OP_LESS             CompareOp = 1
+	COMPARE_OP_EQUAL            CompareOp = 2
+	COMPARE_OP_LESS_OR_EQUAL    CompareOp = 3
+	COMPARE_OP_GREATER          CompareOp = 4
+	COMPARE_OP_NOT_EQUAL        CompareOp = 5
+	COMPARE_OP_GREATER_OR_EQUAL CompareOp = 6
+	COMPARE_OP_ALWAYS           CompareOp = 7
+	COMPARE_OP_BEGIN_RANGE      CompareOp = COMPARE_OP_NEVER
+	COMPARE_OP_END_RANGE        CompareOp = COMPARE_OP_ALWAYS
+	COMPARE_OP_RANGE_SIZE       CompareOp = (COMPARE_OP_ALWAYS - COMPARE_OP_NEVER + 1)
+	COMPARE_OP_MAX_ENUM         CompareOp = 2147483647
+)
+
+type StencilOp int
+
+const (
+	STENCIL_OP_KEEP                StencilOp = 0
+	STENCIL_OP_ZERO                StencilOp = 1
+	STENCIL_OP_REPLACE             StencilOp = 2
+	STENCIL_OP_INCREMENT_AND_CLAMP StencilOp = 3
+	STENCIL_OP_DECREMENT_AND_CLAMP StencilOp = 4
+	STENCIL_OP_INVERT              StencilOp = 5
+	STENCIL_OP_INCREMENT_AND_WRAP  StencilOp = 6
+	STENCIL_OP_DECREMENT_AND_WRAP  StencilOp = 7
+	STENCIL_OP_BEGIN_RANGE         StencilOp = STENCIL_OP_KEEP
+	STENCIL_OP_END_RANGE           StencilOp = STENCIL_OP_DECREMENT_AND_WRAP
+	STENCIL_OP_RANGE_SIZE          StencilOp = (STENCIL_OP_DECREMENT_AND_WRAP - STENCIL_OP_KEEP + 1)
+	STENCIL_OP_MAX_ENUM            StencilOp = 2147483647
+)
+
+type LogicOp int
+
+const (
+	LOGIC_OP_CLEAR         LogicOp = 0
+	LOGIC_OP_AND           LogicOp = 1
+	LOGIC_OP_AND_REVERSE   LogicOp = 2
+	LOGIC_OP_COPY          LogicOp = 3
+	LOGIC_OP_AND_INVERTED  LogicOp = 4
+	LOGIC_OP_NO_OP         LogicOp = 5
+	LOGIC_OP_XOR           LogicOp = 6
+	LOGIC_OP_OR            LogicOp = 7
+	LOGIC_OP_NOR           LogicOp = 8
+	LOGIC_OP_EQUIVALENT    LogicOp = 9
+	LOGIC_OP_INVERT        LogicOp = 10
+	LOGIC_OP_OR_REVERSE    LogicOp = 11
+	LOGIC_OP_COPY_INVERTED LogicOp = 12
+	LOGIC_OP_OR_INVERTED   LogicOp = 13
+	LOGIC_OP_NAND          LogicOp = 14
+	LOGIC_OP_SET           LogicOp = 15
+	LOGIC_OP_BEGIN_RANGE   LogicOp = LOGIC_OP_CLEAR
+	LOGIC_OP_END_RANGE     LogicOp = LOGIC_OP_SET
+	LOGIC_OP_RANGE_SIZE    LogicOp = (LOGIC_OP_SET - LOGIC_OP_CLEAR + 1)
+	LOGIC_OP_MAX_ENUM      LogicOp = 2147483647
+)
+
+type BlendFactor int
+
+const (
+	BLEND_FACTOR_ZERO                     BlendFactor = 0
+	BLEND_FACTOR_ONE                      BlendFactor = 1
+	BLEND_FACTOR_SRC_COLOR                BlendFactor = 2
+	BLEND_FACTOR_ONE_MINUS_SRC_COLOR      BlendFactor = 3
+	BLEND_FACTOR_DST_COLOR                BlendFactor = 4
+	BLEND_FACTOR_ONE_MINUS_DST_COLOR      BlendFactor = 5
+	BLEND_FACTOR_SRC_ALPHA                BlendFactor = 6
+	BLEND_FACTOR_ONE_MINUS_SRC_ALPHA      BlendFactor = 7
+	BLEND_FACTOR_DST_ALPHA                BlendFactor = 8
+	BLEND_FACTOR_ONE_MINUS_DST_ALPHA      BlendFactor = 9
+	BLEND_FACTOR_CONSTANT_COLOR           BlendFactor = 10
+	BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR BlendFactor = 11
+	BLEND_FACTOR_CONSTANT_ALPHA           BlendFactor = 12
+	BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA BlendFactor = 13
+	BLEND_FACTOR_SRC_ALPHA_SATURATE       BlendFactor = 14
+	BLEND_FACTOR_SRC1_COLOR               BlendFactor = 15
+	BLEND_FACTOR_ONE_MINUS_SRC1_COLOR     BlendFactor = 16
+	BLEND_FACTOR_SRC1_ALPHA               BlendFactor = 17
+	BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA     BlendFactor = 18
+	BLEND_FACTOR_BEGIN_RANGE              BlendFactor = BLEND_FACTOR_ZERO
+	BLEND_FACTOR_END_RANGE                BlendFactor = BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA
+	BLEND_FACTOR_RANGE_SIZE               BlendFactor = (BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA - BLEND_FACTOR_ZERO + 1)
+	BLEND_FACTOR_MAX_ENUM                 BlendFactor = 2147483647
+)
+
+type BlendOp int
+
+const (
+	BLEND_OP_ADD                    BlendOp = 0
+	BLEND_OP_SUBTRACT               BlendOp = 1
+	BLEND_OP_REVERSE_SUBTRACT       BlendOp = 2
+	BLEND_OP_MIN                    BlendOp = 3
+	BLEND_OP_MAX                    BlendOp = 4
+	BLEND_OP_ZERO_EXT               BlendOp = 1000148000
+	BLEND_OP_SRC_EXT                BlendOp = 1000148001
+	BLEND_OP_DST_EXT                BlendOp = 1000148002
+	BLEND_OP_SRC_OVER_EXT           BlendOp = 1000148003
+	BLEND_OP_DST_OVER_EXT           BlendOp = 1000148004
+	BLEND_OP_SRC_IN_EXT             BlendOp = 1000148005
+	BLEND_OP_DST_IN_EXT             BlendOp = 1000148006
+	BLEND_OP_SRC_OUT_EXT            BlendOp = 1000148007
+	BLEND_OP_DST_OUT_EXT            BlendOp = 1000148008
+	BLEND_OP_SRC_ATOP_EXT           BlendOp = 1000148009
+	BLEND_OP_DST_ATOP_EXT           BlendOp = 1000148010
+	BLEND_OP_XOR_EXT                BlendOp = 1000148011
+	BLEND_OP_MULTIPLY_EXT           BlendOp = 1000148012
+	BLEND_OP_SCREEN_EXT             BlendOp = 1000148013
+	BLEND_OP_OVERLAY_EXT            BlendOp = 1000148014
+	BLEND_OP_DARKEN_EXT             BlendOp = 1000148015
+	BLEND_OP_LIGHTEN_EXT            BlendOp = 1000148016
+	BLEND_OP_COLORDODGE_EXT         BlendOp = 1000148017
+	BLEND_OP_COLORBURN_EXT          BlendOp = 1000148018
+	BLEND_OP_HARDLIGHT_EXT          BlendOp = 1000148019
+	BLEND_OP_SOFTLIGHT_EXT          BlendOp = 1000148020
+	BLEND_OP_DIFFERENCE_EXT         BlendOp = 1000148021
+	BLEND_OP_EXCLUSION_EXT          BlendOp = 1000148022
+	BLEND_OP_INVERT_EXT             BlendOp = 1000148023
+	BLEND_OP_INVERT_RGB_EXT         BlendOp = 1000148024
+	BLEND_OP_LINEARDODGE_EXT        BlendOp = 1000148025
+	BLEND_OP_LINEARBURN_EXT         BlendOp = 1000148026
+	BLEND_OP_VIVIDLIGHT_EXT         BlendOp = 1000148027
+	BLEND_OP_LINEARLIGHT_EXT        BlendOp = 1000148028
+	BLEND_OP_PINLIGHT_EXT           BlendOp = 1000148029
+	BLEND_OP_HARDMIX_EXT            BlendOp = 1000148030
+	BLEND_OP_HSL_HUE_EXT            BlendOp = 1000148031
+	BLEND_OP_HSL_SATURATION_EXT     BlendOp = 1000148032
+	BLEND_OP_HSL_COLOR_EXT          BlendOp = 1000148033
+	BLEND_OP_HSL_LUMINOSITY_EXT     BlendOp = 1000148034
+	BLEND_OP_PLUS_EXT               BlendOp = 1000148035
+	BLEND_OP_PLUS_CLAMPED_EXT       BlendOp = 1000148036
+	BLEND_OP_PLUS_CLAMPED_ALPHA_EXT BlendOp = 1000148037
+	BLEND_OP_PLUS_DARKER_EXT        BlendOp = 1000148038
+	BLEND_OP_MINUS_EXT              BlendOp = 1000148039
+	BLEND_OP_MINUS_CLAMPED_EXT      BlendOp = 1000148040
+	BLEND_OP_CONTRAST_EXT           BlendOp = 1000148041
+	BLEND_OP_INVERT_OVG_EXT         BlendOp = 1000148042
+	BLEND_OP_RED_EXT                BlendOp = 1000148043
+	BLEND_OP_GREEN_EXT              BlendOp = 1000148044
+	BLEND_OP_BLUE_EXT               BlendOp = 1000148045
+	BLEND_OP_BEGIN_RANGE            BlendOp = BLEND_OP_ADD
+	BLEND_OP_END_RANGE              BlendOp = BLEND_OP_MAX
+	BLEND_OP_RANGE_SIZE             BlendOp = (BLEND_OP_MAX - BLEND_OP_ADD + 1)
+	BLEND_OP_MAX_ENUM               BlendOp = 2147483647
+)
+
+type DynamicState int
+
+const (
+	DYNAMIC_STATE_VIEWPORT              DynamicState = 0
+	DYNAMIC_STATE_SCISSOR               DynamicState = 1
+	DYNAMIC_STATE_LINE_WIDTH            DynamicState = 2
+	DYNAMIC_STATE_DEPTH_BIAS            DynamicState = 3
+	DYNAMIC_STATE_BLEND_CONSTANTS       DynamicState = 4
+	DYNAMIC_STATE_DEPTH_BOUNDS          DynamicState = 5
+	DYNAMIC_STATE_STENCIL_COMPARE_MASK  DynamicState = 6
+	DYNAMIC_STATE_STENCIL_WRITE_MASK    DynamicState = 7
+	DYNAMIC_STATE_STENCIL_REFERENCE     DynamicState = 8
+	DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DynamicState = 1000087000
+	DYNAMIC_STATE_DISCARD_RECTANGLE_EXT DynamicState = 1000099000
+	DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT  DynamicState = 1000143000
+	DYNAMIC_STATE_BEGIN_RANGE           DynamicState = DYNAMIC_STATE_VIEWPORT
+	DYNAMIC_STATE_END_RANGE             DynamicState = DYNAMIC_STATE_STENCIL_REFERENCE
+	DYNAMIC_STATE_RANGE_SIZE            DynamicState = (DYNAMIC_STATE_STENCIL_REFERENCE - DYNAMIC_STATE_VIEWPORT + 1)
+	DYNAMIC_STATE_MAX_ENUM              DynamicState = 2147483647
+)
+
+type Filter int
+
+const (
+	FILTER_NEAREST     Filter = 0
+	FILTER_LINEAR      Filter = 1
+	FILTER_CUBIC_IMG   Filter = 1000015000
+	FILTER_BEGIN_RANGE Filter = FILTER_NEAREST
+	FILTER_END_RANGE   Filter = FILTER_LINEAR
+	FILTER_RANGE_SIZE  Filter = (FILTER_LINEAR - FILTER_NEAREST + 1)
+	FILTER_MAX_ENUM    Filter = 2147483647
+)
+
+type SamplerMipmapMode int
+
+const (
+	SAMPLER_MIPMAP_MODE_NEAREST     SamplerMipmapMode = 0
+	SAMPLER_MIPMAP_MODE_LINEAR      SamplerMipmapMode = 1
+	SAMPLER_MIPMAP_MODE_BEGIN_RANGE SamplerMipmapMode = SAMPLER_MIPMAP_MODE_NEAREST
+	SAMPLER_MIPMAP_MODE_END_RANGE   SamplerMipmapMode = SAMPLER_MIPMAP_MODE_LINEAR
+	SAMPLER_MIPMAP_MODE_RANGE_SIZE  SamplerMipmapMode = (SAMPLER_MIPMAP_MODE_LINEAR - SAMPLER_MIPMAP_MODE_NEAREST + 1)
+	SAMPLER_MIPMAP_MODE_MAX_ENUM    SamplerMipmapMode = 2147483647
+)
+
+type SamplerAddressMode int
+
+const (
+	SAMPLER_ADDRESS_MODE_REPEAT               SamplerAddressMode = 0
+	SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT      SamplerAddressMode = 1
+	SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE        SamplerAddressMode = 2
+	SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER      SamplerAddressMode = 3
+	SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE SamplerAddressMode = 4
+	SAMPLER_ADDRESS_MODE_BEGIN_RANGE          SamplerAddressMode = SAMPLER_ADDRESS_MODE_REPEAT
+	SAMPLER_ADDRESS_MODE_END_RANGE            SamplerAddressMode = SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
+	SAMPLER_ADDRESS_MODE_RANGE_SIZE           SamplerAddressMode = (SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER - SAMPLER_ADDRESS_MODE_REPEAT + 1)
+	SAMPLER_ADDRESS_MODE_MAX_ENUM             SamplerAddressMode = 2147483647
+)
+
+type BorderColor int
+
+const (
+	BORDER_COLOR_FLOAT_TRANSPARENT_BLACK BorderColor = 0
+	BORDER_COLOR_INT_TRANSPARENT_BLACK   BorderColor = 1
+	BORDER_COLOR_FLOAT_OPAQUE_BLACK      BorderColor = 2
+	BORDER_COLOR_INT_OPAQUE_BLACK        BorderColor = 3
+	BORDER_COLOR_FLOAT_OPAQUE_WHITE      BorderColor = 4
+	BORDER_COLOR_INT_OPAQUE_WHITE        BorderColor = 5
+	BORDER_COLOR_BEGIN_RANGE             BorderColor = BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
+	BORDER_COLOR_END_RANGE               BorderColor = BORDER_COLOR_INT_OPAQUE_WHITE
+	BORDER_COLOR_RANGE_SIZE              BorderColor = (BORDER_COLOR_INT_OPAQUE_WHITE - BORDER_COLOR_FLOAT_TRANSPARENT_BLACK + 1)
+	BORDER_COLOR_MAX_ENUM                BorderColor = 2147483647
+)
+
+type DescriptorType int
+
+const (
+	DESCRIPTOR_TYPE_SAMPLER                DescriptorType = 0
+	DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DescriptorType = 1
+	DESCRIPTOR_TYPE_SAMPLED_IMAGE          DescriptorType = 2
+	DESCRIPTOR_TYPE_STORAGE_IMAGE          DescriptorType = 3
+	DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER   DescriptorType = 4
+	DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER   DescriptorType = 5
+	DESCRIPTOR_TYPE_UNIFORM_BUFFER         DescriptorType = 6
+	DESCRIPTOR_TYPE_STORAGE_BUFFER         DescriptorType = 7
+	DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DescriptorType = 8
+	DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DescriptorType = 9
+	DESCRIPTOR_TYPE_INPUT_ATTACHMENT       DescriptorType = 10
+	DESCRIPTOR_TYPE_BEGIN_RANGE            DescriptorType = DESCRIPTOR_TYPE_SAMPLER
+	DESCRIPTOR_TYPE_END_RANGE              DescriptorType = DESCRIPTOR_TYPE_INPUT_ATTACHMENT
+	DESCRIPTOR_TYPE_RANGE_SIZE             DescriptorType = (DESCRIPTOR_TYPE_INPUT_ATTACHMENT - DESCRIPTOR_TYPE_SAMPLER + 1)
+	DESCRIPTOR_TYPE_MAX_ENUM               DescriptorType = 2147483647
+)
+
+type AttachmentLoadOp int
+
+const (
+	ATTACHMENT_LOAD_OP_LOAD        AttachmentLoadOp = 0
+	ATTACHMENT_LOAD_OP_CLEAR       AttachmentLoadOp = 1
+	ATTACHMENT_LOAD_OP_DONT_CARE   AttachmentLoadOp = 2
+	ATTACHMENT_LOAD_OP_BEGIN_RANGE AttachmentLoadOp = ATTACHMENT_LOAD_OP_LOAD
+	ATTACHMENT_LOAD_OP_END_RANGE   AttachmentLoadOp = ATTACHMENT_LOAD_OP_DONT_CARE
+	ATTACHMENT_LOAD_OP_RANGE_SIZE  AttachmentLoadOp = (ATTACHMENT_LOAD_OP_DONT_CARE - ATTACHMENT_LOAD_OP_LOAD + 1)
+	ATTACHMENT_LOAD_OP_MAX_ENUM    AttachmentLoadOp = 2147483647
+)
+
+type AttachmentStoreOp int
+
+const (
+	ATTACHMENT_STORE_OP_STORE       AttachmentStoreOp = 0
+	ATTACHMENT_STORE_OP_DONT_CARE   AttachmentStoreOp = 1
+	ATTACHMENT_STORE_OP_BEGIN_RANGE AttachmentStoreOp = ATTACHMENT_STORE_OP_STORE
+	ATTACHMENT_STORE_OP_END_RANGE   AttachmentStoreOp = ATTACHMENT_STORE_OP_DONT_CARE
+	ATTACHMENT_STORE_OP_RANGE_SIZE  AttachmentStoreOp = (ATTACHMENT_STORE_OP_DONT_CARE - ATTACHMENT_STORE_OP_STORE + 1)
+	ATTACHMENT_STORE_OP_MAX_ENUM    AttachmentStoreOp = 2147483647
+)
+
+type PipelineBindPoint int
+
+const (
+	PIPELINE_BIND_POINT_GRAPHICS    PipelineBindPoint = 0
+	PIPELINE_BIND_POINT_COMPUTE     PipelineBindPoint = 1
+	PIPELINE_BIND_POINT_BEGIN_RANGE PipelineBindPoint = PIPELINE_BIND_POINT_GRAPHICS
+	PIPELINE_BIND_POINT_END_RANGE   PipelineBindPoint = PIPELINE_BIND_POINT_COMPUTE
+	PIPELINE_BIND_POINT_RANGE_SIZE  PipelineBindPoint = (PIPELINE_BIND_POINT_COMPUTE - PIPELINE_BIND_POINT_GRAPHICS + 1)
+	PIPELINE_BIND_POINT_MAX_ENUM    PipelineBindPoint = 2147483647
+)
+
+type CommandBufferLevel int
+
+const (
+	COMMAND_BUFFER_LEVEL_PRIMARY     CommandBufferLevel = 0
+	COMMAND_BUFFER_LEVEL_SECONDARY   CommandBufferLevel = 1
+	COMMAND_BUFFER_LEVEL_BEGIN_RANGE CommandBufferLevel = COMMAND_BUFFER_LEVEL_PRIMARY
+	COMMAND_BUFFER_LEVEL_END_RANGE   CommandBufferLevel = COMMAND_BUFFER_LEVEL_SECONDARY
+	COMMAND_BUFFER_LEVEL_RANGE_SIZE  CommandBufferLevel = (COMMAND_BUFFER_LEVEL_SECONDARY - COMMAND_BUFFER_LEVEL_PRIMARY + 1)
+	COMMAND_BUFFER_LEVEL_MAX_ENUM    CommandBufferLevel = 2147483647
+)
+
+type IndexType int
+
+const (
+	INDEX_TYPE_UINT16      IndexType = 0
+	INDEX_TYPE_UINT32      IndexType = 1
+	INDEX_TYPE_BEGIN_RANGE IndexType = INDEX_TYPE_UINT16
+	INDEX_TYPE_END_RANGE   IndexType = INDEX_TYPE_UINT32
+	INDEX_TYPE_RANGE_SIZE  IndexType = (INDEX_TYPE_UINT32 - INDEX_TYPE_UINT16 + 1)
+	INDEX_TYPE_MAX_ENUM    IndexType = 2147483647
+)
+
+type SubpassContents int
+
+const (
+	SUBPASS_CONTENTS_INLINE                    SubpassContents = 0
+	SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS SubpassContents = 1
+	SUBPASS_CONTENTS_BEGIN_RANGE               SubpassContents = SUBPASS_CONTENTS_INLINE
+	SUBPASS_CONTENTS_END_RANGE                 SubpassContents = SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+	SUBPASS_CONTENTS_RANGE_SIZE                SubpassContents = (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS - SUBPASS_CONTENTS_INLINE + 1)
+	SUBPASS_CONTENTS_MAX_ENUM                  SubpassContents = 2147483647
+)
+
+type ObjectType int
+
+const (
+	OBJECT_TYPE_UNKNOWN                        ObjectType = 0
+	OBJECT_TYPE_INSTANCE                       ObjectType = 1
+	OBJECT_TYPE_PHYSICAL_DEVICE                ObjectType = 2
+	OBJECT_TYPE_DEVICE                         ObjectType = 3
+	OBJECT_TYPE_QUEUE                          ObjectType = 4
+	OBJECT_TYPE_SEMAPHORE                      ObjectType = 5
+	OBJECT_TYPE_COMMAND_BUFFER                 ObjectType = 6
+	OBJECT_TYPE_FENCE                          ObjectType = 7
+	OBJECT_TYPE_DEVICE_MEMORY                  ObjectType = 8
+	OBJECT_TYPE_BUFFER                         ObjectType = 9
+	OBJECT_TYPE_IMAGE                          ObjectType = 10
+	OBJECT_TYPE_EVENT                          ObjectType = 11
+	OBJECT_TYPE_QUERY_POOL                     ObjectType = 12
+	OBJECT_TYPE_BUFFER_VIEW                    ObjectType = 13
+	OBJECT_TYPE_IMAGE_VIEW                     ObjectType = 14
+	OBJECT_TYPE_SHADER_MODULE                  ObjectType = 15
+	OBJECT_TYPE_PIPELINE_CACHE                 ObjectType = 16
+	OBJECT_TYPE_PIPELINE_LAYOUT                ObjectType = 17
+	OBJECT_TYPE_RENDER_PASS                    ObjectType = 18
+	OBJECT_TYPE_PIPELINE                       ObjectType = 19
+	OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT          ObjectType = 20
+	OBJECT_TYPE_SAMPLER                        ObjectType = 21
+	OBJECT_TYPE_DESCRIPTOR_POOL                ObjectType = 22
+	OBJECT_TYPE_DESCRIPTOR_SET                 ObjectType = 23
+	OBJECT_TYPE_FRAMEBUFFER                    ObjectType = 24
+	OBJECT_TYPE_COMMAND_POOL                   ObjectType = 25
+	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION       ObjectType = 1000156000
+	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE     ObjectType = 1000085000
+	OBJECT_TYPE_SURFACE_KHR                    ObjectType = 1000000000
+	OBJECT_TYPE_SWAPCHAIN_KHR                  ObjectType = 1000001000
+	OBJECT_TYPE_DISPLAY_KHR                    ObjectType = 1000002000
+	OBJECT_TYPE_DISPLAY_MODE_KHR               ObjectType = 1000002001
+	OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT      ObjectType = 1000011000
+	OBJECT_TYPE_OBJECT_TABLE_NVX               ObjectType = 1000086000
+	OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX   ObjectType = 1000086001
+	OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT      ObjectType = 1000128000
+	OBJECT_TYPE_VALIDATION_CACHE_EXT           ObjectType = 1000160000
+	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR ObjectType = OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR   ObjectType = OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+	OBJECT_TYPE_BEGIN_RANGE                    ObjectType = OBJECT_TYPE_UNKNOWN
+	OBJECT_TYPE_END_RANGE                      ObjectType = OBJECT_TYPE_COMMAND_POOL
+	OBJECT_TYPE_RANGE_SIZE                     ObjectType = (OBJECT_TYPE_COMMAND_POOL - OBJECT_TYPE_UNKNOWN + 1)
+	OBJECT_TYPE_MAX_ENUM                       ObjectType = 2147483647
+)
+
+type VendorId int
+
+const (
+	VENDOR_ID_VIV         VendorId = 65537
+	VENDOR_ID_VSI         VendorId = 65538
+	VENDOR_ID_KAZAN       VendorId = 65539
+	VENDOR_ID_BEGIN_RANGE VendorId = VENDOR_ID_VIV
+	VENDOR_ID_END_RANGE   VendorId = VENDOR_ID_KAZAN
+	VENDOR_ID_RANGE_SIZE  VendorId = (VENDOR_ID_KAZAN - VENDOR_ID_VIV + 1)
+	VENDOR_ID_MAX_ENUM    VendorId = 2147483647
+)
+
+type FormatFeatureFlagBits int
+
+const (
+	FORMAT_FEATURE_SAMPLED_IMAGE_BIT                                                               FormatFeatureFlagBits = 1
+	FORMAT_FEATURE_STORAGE_IMAGE_BIT                                                               FormatFeatureFlagBits = 2
+	FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT                                                        FormatFeatureFlagBits = 4
+	FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT                                                        FormatFeatureFlagBits = 8
+	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT                                                        FormatFeatureFlagBits = 16
+	FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT                                                 FormatFeatureFlagBits = 32
+	FORMAT_FEATURE_VERTEX_BUFFER_BIT                                                               FormatFeatureFlagBits = 64
+	FORMAT_FEATURE_COLOR_ATTACHMENT_BIT                                                            FormatFeatureFlagBits = 128
+	FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT                                                      FormatFeatureFlagBits = 256
+	FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT                                                    FormatFeatureFlagBits = 512
+	FORMAT_FEATURE_BLIT_SRC_BIT                                                                    FormatFeatureFlagBits = 1024
+	FORMAT_FEATURE_BLIT_DST_BIT                                                                    FormatFeatureFlagBits = 2048
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT                                                 FormatFeatureFlagBits = 4096
+	FORMAT_FEATURE_TRANSFER_SRC_BIT                                                                FormatFeatureFlagBits = 16384
+	FORMAT_FEATURE_TRANSFER_DST_BIT                                                                FormatFeatureFlagBits = 32768
+	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT                                                     FormatFeatureFlagBits = 131072
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT                                FormatFeatureFlagBits = 262144
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT               FormatFeatureFlagBits = 524288
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT               FormatFeatureFlagBits = 1048576
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT     FormatFeatureFlagBits = 2097152
+	FORMAT_FEATURE_DISJOINT_BIT                                                                    FormatFeatureFlagBits = 4194304
+	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT                                                      FormatFeatureFlagBits = 8388608
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_CUBIC_BIT_IMG                                              FormatFeatureFlagBits = 8192
+	FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_MINMAX_BIT_EXT                                             FormatFeatureFlagBits = 65536
+	FORMAT_FEATURE_TRANSFER_SRC_BIT_KHR                                                            FormatFeatureFlagBits = FORMAT_FEATURE_TRANSFER_SRC_BIT
+	FORMAT_FEATURE_TRANSFER_DST_BIT_KHR                                                            FormatFeatureFlagBits = FORMAT_FEATURE_TRANSFER_DST_BIT
+	FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT_KHR                                                 FormatFeatureFlagBits = FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT_KHR                            FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT_KHR           FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_SEPARATE_RECONSTRUCTION_FILTER_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT_KHR           FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_BIT
+	FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT_KHR FormatFeatureFlagBits = FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_CHROMA_RECONSTRUCTION_EXPLICIT_FORCEABLE_BIT
+	FORMAT_FEATURE_DISJOINT_BIT_KHR                                                                FormatFeatureFlagBits = FORMAT_FEATURE_DISJOINT_BIT
+	FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT_KHR                                                  FormatFeatureFlagBits = FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+	FORMAT_FEATURE_FLAG_BITS_MAX_ENUM                                                              FormatFeatureFlagBits = 2147483647
+)
+
+type ImageUsageFlagBits int
+
+const (
+	IMAGE_USAGE_TRANSFER_SRC_BIT             ImageUsageFlagBits = 1
+	IMAGE_USAGE_TRANSFER_DST_BIT             ImageUsageFlagBits = 2
+	IMAGE_USAGE_SAMPLED_BIT                  ImageUsageFlagBits = 4
+	IMAGE_USAGE_STORAGE_BIT                  ImageUsageFlagBits = 8
+	IMAGE_USAGE_COLOR_ATTACHMENT_BIT         ImageUsageFlagBits = 16
+	IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT ImageUsageFlagBits = 32
+	IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT     ImageUsageFlagBits = 64
+	IMAGE_USAGE_INPUT_ATTACHMENT_BIT         ImageUsageFlagBits = 128
+	IMAGE_USAGE_FLAG_BITS_MAX_ENUM           ImageUsageFlagBits = 2147483647
+)
+
+type ImageCreateFlagBits int
+
+const (
+	IMAGE_CREATE_SPARSE_BINDING_BIT                        ImageCreateFlagBits = 1
+	IMAGE_CREATE_SPARSE_RESIDENCY_BIT                      ImageCreateFlagBits = 2
+	IMAGE_CREATE_SPARSE_ALIASED_BIT                        ImageCreateFlagBits = 4
+	IMAGE_CREATE_MUTABLE_FORMAT_BIT                        ImageCreateFlagBits = 8
+	IMAGE_CREATE_CUBE_COMPATIBLE_BIT                       ImageCreateFlagBits = 16
+	IMAGE_CREATE_ALIAS_BIT                                 ImageCreateFlagBits = 1024
+	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT           ImageCreateFlagBits = 64
+	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT                   ImageCreateFlagBits = 32
+	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT           ImageCreateFlagBits = 128
+	IMAGE_CREATE_EXTENDED_USAGE_BIT                        ImageCreateFlagBits = 256
+	IMAGE_CREATE_PROTECTED_BIT                             ImageCreateFlagBits = 2048
+	IMAGE_CREATE_DISJOINT_BIT                              ImageCreateFlagBits = 512
+	IMAGE_CREATE_SAMPLE_LOCATIONS_COMPATIBLE_DEPTH_BIT_EXT ImageCreateFlagBits = 4096
+	IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR       ImageCreateFlagBits = IMAGE_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT
+	IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT_KHR               ImageCreateFlagBits = IMAGE_CREATE_2D_ARRAY_COMPATIBLE_BIT
+	IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT_KHR       ImageCreateFlagBits = IMAGE_CREATE_BLOCK_TEXEL_VIEW_COMPATIBLE_BIT
+	IMAGE_CREATE_EXTENDED_USAGE_BIT_KHR                    ImageCreateFlagBits = IMAGE_CREATE_EXTENDED_USAGE_BIT
+	IMAGE_CREATE_DISJOINT_BIT_KHR                          ImageCreateFlagBits = IMAGE_CREATE_DISJOINT_BIT
+	IMAGE_CREATE_ALIAS_BIT_KHR                             ImageCreateFlagBits = IMAGE_CREATE_ALIAS_BIT
+	IMAGE_CREATE_FLAG_BITS_MAX_ENUM                        ImageCreateFlagBits = 2147483647
+)
+
+type SampleCountFlagBits int
+
+const (
+	SAMPLE_COUNT_1_BIT              SampleCountFlagBits = 1
+	SAMPLE_COUNT_2_BIT              SampleCountFlagBits = 2
+	SAMPLE_COUNT_4_BIT              SampleCountFlagBits = 4
+	SAMPLE_COUNT_8_BIT              SampleCountFlagBits = 8
+	SAMPLE_COUNT_16_BIT             SampleCountFlagBits = 16
+	SAMPLE_COUNT_32_BIT             SampleCountFlagBits = 32
+	SAMPLE_COUNT_64_BIT             SampleCountFlagBits = 64
+	SAMPLE_COUNT_FLAG_BITS_MAX_ENUM SampleCountFlagBits = 2147483647
+)
+
+type QueueFlagBits int
+
+const (
+	QUEUE_GRAPHICS_BIT       QueueFlagBits = 1
+	QUEUE_COMPUTE_BIT        QueueFlagBits = 2
+	QUEUE_TRANSFER_BIT       QueueFlagBits = 4
+	QUEUE_SPARSE_BINDING_BIT QueueFlagBits = 8
+	QUEUE_PROTECTED_BIT      QueueFlagBits = 16
+	QUEUE_FLAG_BITS_MAX_ENUM QueueFlagBits = 2147483647
+)
+
+type MemoryPropertyFlagBits int
+
+const (
+	MEMORY_PROPERTY_DEVICE_LOCAL_BIT     MemoryPropertyFlagBits = 1
+	MEMORY_PROPERTY_HOST_VISIBLE_BIT     MemoryPropertyFlagBits = 2
+	MEMORY_PROPERTY_HOST_COHERENT_BIT    MemoryPropertyFlagBits = 4
+	MEMORY_PROPERTY_HOST_CACHED_BIT      MemoryPropertyFlagBits = 8
+	MEMORY_PROPERTY_LAZILY_ALLOCATED_BIT MemoryPropertyFlagBits = 16
+	MEMORY_PROPERTY_PROTECTED_BIT        MemoryPropertyFlagBits = 32
+	MEMORY_PROPERTY_FLAG_BITS_MAX_ENUM   MemoryPropertyFlagBits = 2147483647
+)
+
+type MemoryHeapFlagBits int
+
+const (
+	MEMORY_HEAP_DEVICE_LOCAL_BIT       MemoryHeapFlagBits = 1
+	MEMORY_HEAP_MULTI_INSTANCE_BIT     MemoryHeapFlagBits = 2
+	MEMORY_HEAP_MULTI_INSTANCE_BIT_KHR MemoryHeapFlagBits = MEMORY_HEAP_MULTI_INSTANCE_BIT
+	MEMORY_HEAP_FLAG_BITS_MAX_ENUM     MemoryHeapFlagBits = 2147483647
+)
+
+type DeviceQueueCreateFlagBits int
+
+const (
+	DEVICE_QUEUE_CREATE_PROTECTED_BIT      DeviceQueueCreateFlagBits = 1
+	DEVICE_QUEUE_CREATE_FLAG_BITS_MAX_ENUM DeviceQueueCreateFlagBits = 2147483647
+)
+
+type PipelineStageFlagBits int
+
+const (
+	PIPELINE_STAGE_TOP_OF_PIPE_BIT                    PipelineStageFlagBits = 1
+	PIPELINE_STAGE_DRAW_INDIRECT_BIT                  PipelineStageFlagBits = 2
+	PIPELINE_STAGE_VERTEX_INPUT_BIT                   PipelineStageFlagBits = 4
+	PIPELINE_STAGE_VERTEX_SHADER_BIT                  PipelineStageFlagBits = 8
+	PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    PipelineStageFlagBits = 16
+	PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PipelineStageFlagBits = 32
+	PIPELINE_STAGE_GEOMETRY_SHADER_BIT                PipelineStageFlagBits = 64
+	PIPELINE_STAGE_FRAGMENT_SHADER_BIT                PipelineStageFlagBits = 128
+	PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           PipelineStageFlagBits = 256
+	PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            PipelineStageFlagBits = 512
+	PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        PipelineStageFlagBits = 1024
+	PIPELINE_STAGE_COMPUTE_SHADER_BIT                 PipelineStageFlagBits = 2048
+	PIPELINE_STAGE_TRANSFER_BIT                       PipelineStageFlagBits = 4096
+	PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 PipelineStageFlagBits = 8192
+	PIPELINE_STAGE_HOST_BIT                           PipelineStageFlagBits = 16384
+	PIPELINE_STAGE_ALL_GRAPHICS_BIT                   PipelineStageFlagBits = 32768
+	PIPELINE_STAGE_ALL_COMMANDS_BIT                   PipelineStageFlagBits = 65536
+	PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT      PipelineStageFlagBits = 262144
+	PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX            PipelineStageFlagBits = 131072
+	PIPELINE_STAGE_FLAG_BITS_MAX_ENUM                 PipelineStageFlagBits = 2147483647
+)
+
+type ImageAspectFlagBits int
+
+const (
+	IMAGE_ASPECT_COLOR_BIT          ImageAspectFlagBits = 1
+	IMAGE_ASPECT_DEPTH_BIT          ImageAspectFlagBits = 2
+	IMAGE_ASPECT_STENCIL_BIT        ImageAspectFlagBits = 4
+	IMAGE_ASPECT_METADATA_BIT       ImageAspectFlagBits = 8
+	IMAGE_ASPECT_PLANE_0_BIT        ImageAspectFlagBits = 16
+	IMAGE_ASPECT_PLANE_1_BIT        ImageAspectFlagBits = 32
+	IMAGE_ASPECT_PLANE_2_BIT        ImageAspectFlagBits = 64
+	IMAGE_ASPECT_PLANE_0_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_0_BIT
+	IMAGE_ASPECT_PLANE_1_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_1_BIT
+	IMAGE_ASPECT_PLANE_2_BIT_KHR    ImageAspectFlagBits = IMAGE_ASPECT_PLANE_2_BIT
+	IMAGE_ASPECT_FLAG_BITS_MAX_ENUM ImageAspectFlagBits = 2147483647
+)
+
+type SparseImageFormatFlagBits int
+
+const (
+	SPARSE_IMAGE_FORMAT_SINGLE_MIPTAIL_BIT         SparseImageFormatFlagBits = 1
+	SPARSE_IMAGE_FORMAT_ALIGNED_MIP_SIZE_BIT       SparseImageFormatFlagBits = 2
+	SPARSE_IMAGE_FORMAT_NONSTANDARD_BLOCK_SIZE_BIT SparseImageFormatFlagBits = 4
+	SPARSE_IMAGE_FORMAT_FLAG_BITS_MAX_ENUM         SparseImageFormatFlagBits = 2147483647
+)
+
+type SparseMemoryBindFlagBits int
+
+const (
+	SPARSE_MEMORY_BIND_METADATA_BIT       SparseMemoryBindFlagBits = 1
+	SPARSE_MEMORY_BIND_FLAG_BITS_MAX_ENUM SparseMemoryBindFlagBits = 2147483647
+)
+
+type FenceCreateFlagBits int
+
+const (
+	FENCE_CREATE_SIGNALED_BIT       FenceCreateFlagBits = 1
+	FENCE_CREATE_FLAG_BITS_MAX_ENUM FenceCreateFlagBits = 2147483647
+)
+
+type QueryPipelineStatisticFlagBits int
+
+const (
+	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_VERTICES_BIT                    QueryPipelineStatisticFlagBits = 1
+	QUERY_PIPELINE_STATISTIC_INPUT_ASSEMBLY_PRIMITIVES_BIT                  QueryPipelineStatisticFlagBits = 2
+	QUERY_PIPELINE_STATISTIC_VERTEX_SHADER_INVOCATIONS_BIT                  QueryPipelineStatisticFlagBits = 4
+	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlagBits = 8
+	QUERY_PIPELINE_STATISTIC_GEOMETRY_SHADER_PRIMITIVES_BIT                 QueryPipelineStatisticFlagBits = 16
+	QUERY_PIPELINE_STATISTIC_CLIPPING_INVOCATIONS_BIT                       QueryPipelineStatisticFlagBits = 32
+	QUERY_PIPELINE_STATISTIC_CLIPPING_PRIMITIVES_BIT                        QueryPipelineStatisticFlagBits = 64
+	QUERY_PIPELINE_STATISTIC_FRAGMENT_SHADER_INVOCATIONS_BIT                QueryPipelineStatisticFlagBits = 128
+	QUERY_PIPELINE_STATISTIC_TESSELLATION_CONTROL_SHADER_PATCHES_BIT        QueryPipelineStatisticFlagBits = 256
+	QUERY_PIPELINE_STATISTIC_TESSELLATION_EVALUATION_SHADER_INVOCATIONS_BIT QueryPipelineStatisticFlagBits = 512
+	QUERY_PIPELINE_STATISTIC_COMPUTE_SHADER_INVOCATIONS_BIT                 QueryPipelineStatisticFlagBits = 1024
+	QUERY_PIPELINE_STATISTIC_FLAG_BITS_MAX_ENUM                             QueryPipelineStatisticFlagBits = 2147483647
+)
+
+type QueryResultFlagBits int
+
+const (
+	QUERY_RESULT_64_BIT                QueryResultFlagBits = 1
+	QUERY_RESULT_WAIT_BIT              QueryResultFlagBits = 2
+	QUERY_RESULT_WITH_AVAILABILITY_BIT QueryResultFlagBits = 4
+	QUERY_RESULT_PARTIAL_BIT           QueryResultFlagBits = 8
+	QUERY_RESULT_FLAG_BITS_MAX_ENUM    QueryResultFlagBits = 2147483647
+)
+
+type BufferCreateFlagBits int
+
+const (
+	BUFFER_CREATE_SPARSE_BINDING_BIT   BufferCreateFlagBits = 1
+	BUFFER_CREATE_SPARSE_RESIDENCY_BIT BufferCreateFlagBits = 2
+	BUFFER_CREATE_SPARSE_ALIASED_BIT   BufferCreateFlagBits = 4
+	BUFFER_CREATE_PROTECTED_BIT        BufferCreateFlagBits = 8
+	BUFFER_CREATE_FLAG_BITS_MAX_ENUM   BufferCreateFlagBits = 2147483647
+)
+
+type BufferUsageFlagBits int
+
+const (
+	BUFFER_USAGE_TRANSFER_SRC_BIT              BufferUsageFlagBits = 1
+	BUFFER_USAGE_TRANSFER_DST_BIT              BufferUsageFlagBits = 2
+	BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT      BufferUsageFlagBits = 4
+	BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT      BufferUsageFlagBits = 8
+	BUFFER_USAGE_UNIFORM_BUFFER_BIT            BufferUsageFlagBits = 16
+	BUFFER_USAGE_STORAGE_BUFFER_BIT            BufferUsageFlagBits = 32
+	BUFFER_USAGE_INDEX_BUFFER_BIT              BufferUsageFlagBits = 64
+	BUFFER_USAGE_VERTEX_BUFFER_BIT             BufferUsageFlagBits = 128
+	BUFFER_USAGE_INDIRECT_BUFFER_BIT           BufferUsageFlagBits = 256
+	BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT BufferUsageFlagBits = 512
+	BUFFER_USAGE_FLAG_BITS_MAX_ENUM            BufferUsageFlagBits = 2147483647
+)
+
+type PipelineCreateFlagBits int
+
+const (
+	PIPELINE_CREATE_DISABLE_OPTIMIZATION_BIT             PipelineCreateFlagBits = 1
+	PIPELINE_CREATE_ALLOW_DERIVATIVES_BIT                PipelineCreateFlagBits = 2
+	PIPELINE_CREATE_DERIVATIVE_BIT                       PipelineCreateFlagBits = 4
+	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT     PipelineCreateFlagBits = 8
+	PIPELINE_CREATE_DISPATCH_BASE                        PipelineCreateFlagBits = 16
+	PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT_KHR PipelineCreateFlagBits = PIPELINE_CREATE_VIEW_INDEX_FROM_DEVICE_INDEX_BIT
+	PIPELINE_CREATE_DISPATCH_BASE_KHR                    PipelineCreateFlagBits = PIPELINE_CREATE_DISPATCH_BASE
+	PIPELINE_CREATE_FLAG_BITS_MAX_ENUM                   PipelineCreateFlagBits = 2147483647
+)
+
+type ShaderStageFlagBits int
+
+const (
+	SHADER_STAGE_VERTEX_BIT                  ShaderStageFlagBits = 1
+	SHADER_STAGE_TESSELLATION_CONTROL_BIT    ShaderStageFlagBits = 2
+	SHADER_STAGE_TESSELLATION_EVALUATION_BIT ShaderStageFlagBits = 4
+	SHADER_STAGE_GEOMETRY_BIT                ShaderStageFlagBits = 8
+	SHADER_STAGE_FRAGMENT_BIT                ShaderStageFlagBits = 16
+	SHADER_STAGE_COMPUTE_BIT                 ShaderStageFlagBits = 32
+	SHADER_STAGE_ALL_GRAPHICS                ShaderStageFlagBits = 31
+	SHADER_STAGE_ALL                         ShaderStageFlagBits = 2147483647
+	SHADER_STAGE_FLAG_BITS_MAX_ENUM          ShaderStageFlagBits = 2147483647
+)
+
+type CullModeFlagBits int
+
+const (
+	CULL_MODE_NONE               CullModeFlagBits = 0
+	CULL_MODE_FRONT_BIT          CullModeFlagBits = 1
+	CULL_MODE_BACK_BIT           CullModeFlagBits = 2
+	CULL_MODE_FRONT_AND_BACK     CullModeFlagBits = 3
+	CULL_MODE_FLAG_BITS_MAX_ENUM CullModeFlagBits = 2147483647
+)
+
+type ColorComponentFlagBits int
+
+const (
+	COLOR_COMPONENT_R_BIT              ColorComponentFlagBits = 1
+	COLOR_COMPONENT_G_BIT              ColorComponentFlagBits = 2
+	COLOR_COMPONENT_B_BIT              ColorComponentFlagBits = 4
+	COLOR_COMPONENT_A_BIT              ColorComponentFlagBits = 8
+	COLOR_COMPONENT_FLAG_BITS_MAX_ENUM ColorComponentFlagBits = 2147483647
+)
+
+type DescriptorSetLayoutCreateFlagBits int
+
+const (
+	DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR        DescriptorSetLayoutCreateFlagBits = 1
+	DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT DescriptorSetLayoutCreateFlagBits = 2
+	DESCRIPTOR_SET_LAYOUT_CREATE_FLAG_BITS_MAX_ENUM             DescriptorSetLayoutCreateFlagBits = 2147483647
+)
+
+type DescriptorPoolCreateFlagBits int
+
+const (
+	DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT   DescriptorPoolCreateFlagBits = 1
+	DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT DescriptorPoolCreateFlagBits = 2
+	DESCRIPTOR_POOL_CREATE_FLAG_BITS_MAX_ENUM        DescriptorPoolCreateFlagBits = 2147483647
+)
+
+type AttachmentDescriptionFlagBits int
+
+const (
+	ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT      AttachmentDescriptionFlagBits = 1
+	ATTACHMENT_DESCRIPTION_FLAG_BITS_MAX_ENUM AttachmentDescriptionFlagBits = 2147483647
+)
+
+type SubpassDescriptionFlagBits int
+
+const (
+	SUBPASS_DESCRIPTION_PER_VIEW_ATTRIBUTES_BIT_NVX      SubpassDescriptionFlagBits = 1
+	SUBPASS_DESCRIPTION_PER_VIEW_POSITION_X_ONLY_BIT_NVX SubpassDescriptionFlagBits = 2
+	SUBPASS_DESCRIPTION_FLAG_BITS_MAX_ENUM               SubpassDescriptionFlagBits = 2147483647
+)
+
+type AccessFlagBits int
+
+const (
+	ACCESS_INDIRECT_COMMAND_READ_BIT                 AccessFlagBits = 1
+	ACCESS_INDEX_READ_BIT                            AccessFlagBits = 2
+	ACCESS_VERTEX_ATTRIBUTE_READ_BIT                 AccessFlagBits = 4
+	ACCESS_UNIFORM_READ_BIT                          AccessFlagBits = 8
+	ACCESS_INPUT_ATTACHMENT_READ_BIT                 AccessFlagBits = 16
+	ACCESS_SHADER_READ_BIT                           AccessFlagBits = 32
+	ACCESS_SHADER_WRITE_BIT                          AccessFlagBits = 64
+	ACCESS_COLOR_ATTACHMENT_READ_BIT                 AccessFlagBits = 128
+	ACCESS_COLOR_ATTACHMENT_WRITE_BIT                AccessFlagBits = 256
+	ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT         AccessFlagBits = 512
+	ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT        AccessFlagBits = 1024
+	ACCESS_TRANSFER_READ_BIT                         AccessFlagBits = 2048
+	ACCESS_TRANSFER_WRITE_BIT                        AccessFlagBits = 4096
+	ACCESS_HOST_READ_BIT                             AccessFlagBits = 8192
+	ACCESS_HOST_WRITE_BIT                            AccessFlagBits = 16384
+	ACCESS_MEMORY_READ_BIT                           AccessFlagBits = 32768
+	ACCESS_MEMORY_WRITE_BIT                          AccessFlagBits = 65536
+	ACCESS_CONDITIONAL_RENDERING_READ_BIT_EXT        AccessFlagBits = 1048576
+	ACCESS_COMMAND_PROCESS_READ_BIT_NVX              AccessFlagBits = 131072
+	ACCESS_COMMAND_PROCESS_WRITE_BIT_NVX             AccessFlagBits = 262144
+	ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT AccessFlagBits = 524288
+	ACCESS_FLAG_BITS_MAX_ENUM                        AccessFlagBits = 2147483647
+)
+
+type DependencyFlagBits int
+
+const (
+	DEPENDENCY_BY_REGION_BIT        DependencyFlagBits = 1
+	DEPENDENCY_DEVICE_GROUP_BIT     DependencyFlagBits = 4
+	DEPENDENCY_VIEW_LOCAL_BIT       DependencyFlagBits = 2
+	DEPENDENCY_VIEW_LOCAL_BIT_KHR   DependencyFlagBits = DEPENDENCY_VIEW_LOCAL_BIT
+	DEPENDENCY_DEVICE_GROUP_BIT_KHR DependencyFlagBits = DEPENDENCY_DEVICE_GROUP_BIT
+	DEPENDENCY_FLAG_BITS_MAX_ENUM   DependencyFlagBits = 2147483647
+)
+
+type CommandPoolCreateFlagBits int
+
+const (
+	COMMAND_POOL_CREATE_TRANSIENT_BIT            CommandPoolCreateFlagBits = 1
+	COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT CommandPoolCreateFlagBits = 2
+	COMMAND_POOL_CREATE_PROTECTED_BIT            CommandPoolCreateFlagBits = 4
+	COMMAND_POOL_CREATE_FLAG_BITS_MAX_ENUM       CommandPoolCreateFlagBits = 2147483647
+)
+
+type CommandPoolResetFlagBits int
+
+const (
+	COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT CommandPoolResetFlagBits = 1
+	COMMAND_POOL_RESET_FLAG_BITS_MAX_ENUM    CommandPoolResetFlagBits = 2147483647
+)
+
+type CommandBufferUsageFlagBits int
+
+const (
+	COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT      CommandBufferUsageFlagBits = 1
+	COMMAND_BUFFER_USAGE_RENDER_PASS_CONTINUE_BIT CommandBufferUsageFlagBits = 2
+	COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT     CommandBufferUsageFlagBits = 4
+	COMMAND_BUFFER_USAGE_FLAG_BITS_MAX_ENUM       CommandBufferUsageFlagBits = 2147483647
+)
+
+type QueryControlFlagBits int
+
+const (
+	QUERY_CONTROL_PRECISE_BIT        QueryControlFlagBits = 1
+	QUERY_CONTROL_FLAG_BITS_MAX_ENUM QueryControlFlagBits = 2147483647
+)
+
+type CommandBufferResetFlagBits int
+
+const (
+	COMMAND_BUFFER_RESET_RELEASE_RESOURCES_BIT CommandBufferResetFlagBits = 1
+	COMMAND_BUFFER_RESET_FLAG_BITS_MAX_ENUM    CommandBufferResetFlagBits = 2147483647
+)
+
+type StencilFaceFlagBits int
+
+const (
+	STENCIL_FACE_FRONT_BIT          StencilFaceFlagBits = 1
+	STENCIL_FACE_BACK_BIT           StencilFaceFlagBits = 2
+	STENCIL_FRONT_AND_BACK          StencilFaceFlagBits = 3
+	STENCIL_FACE_FLAG_BITS_MAX_ENUM StencilFaceFlagBits = 2147483647
+)
+
+type PFN_vkAllocationFunction struct {
+	Raw C.PFN_vkAllocationFunction
+}
+
+func (p PFN_vkAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 SystemAllocationScope) (_ret unsafe.Pointer) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.size_t
+		arg3 C.VkSystemAllocationScope
+		_ret unsafe.Pointer
+	}
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.size_t(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	c._ret = C.callPFN_vkAllocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	_ret = c._ret
+	return
+}
+
+type PFN_vkReallocationFunction struct {
+	Raw C.PFN_vkReallocationFunction
+}
+
+func (p PFN_vkReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 SystemAllocationScope) (_ret unsafe.Pointer) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 unsafe.Pointer
+		arg2 C.size_t
+		arg3 C.size_t
+		arg4 C.VkSystemAllocationScope
+		_ret unsafe.Pointer
+	}
+	c.arg0 = arg0
+	c.arg1 = arg1
+	c.arg2 = C.size_t(arg2)
+	c.arg3 = C.size_t(arg3)
+	c.arg4 = C.VkSystemAllocationScope(arg4)
+	c._ret = C.callPFN_vkReallocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4)
+	_ret = c._ret
+	return
+}
+
+type PFN_vkFreeFunction struct {
+	Raw C.PFN_vkFreeFunction
+}
+
+func (p PFN_vkFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 unsafe.Pointer
+	}
+	c.arg0 = arg0
+	c.arg1 = arg1
+	C.callPFN_vkFreeFunction(p.Raw, c.arg0, c.arg1)
+}
+
+type PFN_vkInternalAllocationNotification struct {
+	Raw C.PFN_vkInternalAllocationNotification
+}
+
+func (p PFN_vkInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.VkInternalAllocationType
+		arg3 C.VkSystemAllocationScope
+	}
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.VkInternalAllocationType(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	C.callPFN_vkInternalAllocationNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+}
+
+type PFN_vkInternalFreeNotification struct {
+	Raw C.PFN_vkInternalFreeNotification
+}
+
+func (p PFN_vkInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+	var c struct {
+		arg0 unsafe.Pointer
+		arg1 C.size_t
+		arg2 C.VkInternalAllocationType
+		arg3 C.VkSystemAllocationScope
+	}
+	c.arg0 = arg0
+	c.arg1 = C.size_t(arg1)
+	c.arg2 = C.VkInternalAllocationType(arg2)
+	c.arg3 = C.VkSystemAllocationScope(arg3)
+	C.callPFN_vkInternalFreeNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+}
+
+type PFN_vkVoidFunction struct {
+	Raw C.PFN_vkVoidFunction
+}
+
+func (p PFN_vkVoidFunction) Call() {
+	C.callPFN_vkVoidFunction(p.Raw)
+}
+
+type PFN_vkCreateInstance struct {
+	Raw C.PFN_vkCreateInstance
+}
 type Flags uint32
 type InstanceCreateFlags Flags
 type ApplicationInfo struct {
@@ -640,45 +1911,6 @@ func (g *AllocationCallbacks) fromC(c *C.VkAllocationCallbacks) {
 }
 
 type Instance C.VkInstance
-type Result int
-
-const (
-	SUCCESS                           Result = 0
-	NOT_READY                         Result = 1
-	TIMEOUT                           Result = 2
-	EVENT_SET                         Result = 3
-	EVENT_RESET                       Result = 4
-	INCOMPLETE                        Result = 5
-	ERROR_OUT_OF_HOST_MEMORY          Result = -1
-	ERROR_OUT_OF_DEVICE_MEMORY        Result = -2
-	ERROR_INITIALIZATION_FAILED       Result = -3
-	ERROR_DEVICE_LOST                 Result = -4
-	ERROR_MEMORY_MAP_FAILED           Result = -5
-	ERROR_LAYER_NOT_PRESENT           Result = -6
-	ERROR_EXTENSION_NOT_PRESENT       Result = -7
-	ERROR_FEATURE_NOT_PRESENT         Result = -8
-	ERROR_INCOMPATIBLE_DRIVER         Result = -9
-	ERROR_TOO_MANY_OBJECTS            Result = -10
-	ERROR_FORMAT_NOT_SUPPORTED        Result = -11
-	ERROR_FRAGMENTED_POOL             Result = -12
-	ERROR_OUT_OF_POOL_MEMORY          Result = -1000069000
-	ERROR_INVALID_EXTERNAL_HANDLE     Result = -1000072003
-	ERROR_SURFACE_LOST_KHR            Result = -1000000000
-	ERROR_NATIVE_WINDOW_IN_USE_KHR    Result = -1000000001
-	SUBOPTIMAL_KHR                    Result = 1000001003
-	ERROR_OUT_OF_DATE_KHR             Result = -1000001004
-	ERROR_INCOMPATIBLE_DISPLAY_KHR    Result = -1000003001
-	ERROR_VALIDATION_FAILED_EXT       Result = -1000011001
-	ERROR_INVALID_SHADER_NV           Result = -1000012000
-	ERROR_FRAGMENTATION_EXT           Result = -1000161000
-	ERROR_NOT_PERMITTED_EXT           Result = -1000174001
-	ERROR_OUT_OF_POOL_MEMORY_KHR      Result = ERROR_OUT_OF_POOL_MEMORY
-	ERROR_INVALID_EXTERNAL_HANDLE_KHR Result = ERROR_INVALID_EXTERNAL_HANDLE
-	RESULT_BEGIN_RANGE                Result = ERROR_FRAGMENTED_POOL
-	RESULT_END_RANGE                  Result = INCOMPLETE
-	RESULT_RANGE_SIZE                 Result = (INCOMPLETE - ERROR_FRAGMENTED_POOL + 1)
-	RESULT_MAX_ENUM                   Result = 2147483647
-)
 
 func (p PFN_vkCreateInstance) Call(createInfo *InstanceCreateInfo, allocator *AllocationCallbacks, instance *Instance) (_ret Result) {
 	var c struct {
@@ -1174,276 +2406,6 @@ func (p PFN_vkGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, fea
 type PFN_vkGetPhysicalDeviceFormatProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceFormatProperties
 }
-type Format int
-
-const (
-	FORMAT_UNDEFINED                                      Format = 0
-	FORMAT_R4G4_UNORM_PACK8                               Format = 1
-	FORMAT_R4G4B4A4_UNORM_PACK16                          Format = 2
-	FORMAT_B4G4R4A4_UNORM_PACK16                          Format = 3
-	FORMAT_R5G6B5_UNORM_PACK16                            Format = 4
-	FORMAT_B5G6R5_UNORM_PACK16                            Format = 5
-	FORMAT_R5G5B5A1_UNORM_PACK16                          Format = 6
-	FORMAT_B5G5R5A1_UNORM_PACK16                          Format = 7
-	FORMAT_A1R5G5B5_UNORM_PACK16                          Format = 8
-	FORMAT_R8_UNORM                                       Format = 9
-	FORMAT_R8_SNORM                                       Format = 10
-	FORMAT_R8_USCALED                                     Format = 11
-	FORMAT_R8_SSCALED                                     Format = 12
-	FORMAT_R8_UINT                                        Format = 13
-	FORMAT_R8_SINT                                        Format = 14
-	FORMAT_R8_SRGB                                        Format = 15
-	FORMAT_R8G8_UNORM                                     Format = 16
-	FORMAT_R8G8_SNORM                                     Format = 17
-	FORMAT_R8G8_USCALED                                   Format = 18
-	FORMAT_R8G8_SSCALED                                   Format = 19
-	FORMAT_R8G8_UINT                                      Format = 20
-	FORMAT_R8G8_SINT                                      Format = 21
-	FORMAT_R8G8_SRGB                                      Format = 22
-	FORMAT_R8G8B8_UNORM                                   Format = 23
-	FORMAT_R8G8B8_SNORM                                   Format = 24
-	FORMAT_R8G8B8_USCALED                                 Format = 25
-	FORMAT_R8G8B8_SSCALED                                 Format = 26
-	FORMAT_R8G8B8_UINT                                    Format = 27
-	FORMAT_R8G8B8_SINT                                    Format = 28
-	FORMAT_R8G8B8_SRGB                                    Format = 29
-	FORMAT_B8G8R8_UNORM                                   Format = 30
-	FORMAT_B8G8R8_SNORM                                   Format = 31
-	FORMAT_B8G8R8_USCALED                                 Format = 32
-	FORMAT_B8G8R8_SSCALED                                 Format = 33
-	FORMAT_B8G8R8_UINT                                    Format = 34
-	FORMAT_B8G8R8_SINT                                    Format = 35
-	FORMAT_B8G8R8_SRGB                                    Format = 36
-	FORMAT_R8G8B8A8_UNORM                                 Format = 37
-	FORMAT_R8G8B8A8_SNORM                                 Format = 38
-	FORMAT_R8G8B8A8_USCALED                               Format = 39
-	FORMAT_R8G8B8A8_SSCALED                               Format = 40
-	FORMAT_R8G8B8A8_UINT                                  Format = 41
-	FORMAT_R8G8B8A8_SINT                                  Format = 42
-	FORMAT_R8G8B8A8_SRGB                                  Format = 43
-	FORMAT_B8G8R8A8_UNORM                                 Format = 44
-	FORMAT_B8G8R8A8_SNORM                                 Format = 45
-	FORMAT_B8G8R8A8_USCALED                               Format = 46
-	FORMAT_B8G8R8A8_SSCALED                               Format = 47
-	FORMAT_B8G8R8A8_UINT                                  Format = 48
-	FORMAT_B8G8R8A8_SINT                                  Format = 49
-	FORMAT_B8G8R8A8_SRGB                                  Format = 50
-	FORMAT_A8B8G8R8_UNORM_PACK32                          Format = 51
-	FORMAT_A8B8G8R8_SNORM_PACK32                          Format = 52
-	FORMAT_A8B8G8R8_USCALED_PACK32                        Format = 53
-	FORMAT_A8B8G8R8_SSCALED_PACK32                        Format = 54
-	FORMAT_A8B8G8R8_UINT_PACK32                           Format = 55
-	FORMAT_A8B8G8R8_SINT_PACK32                           Format = 56
-	FORMAT_A8B8G8R8_SRGB_PACK32                           Format = 57
-	FORMAT_A2R10G10B10_UNORM_PACK32                       Format = 58
-	FORMAT_A2R10G10B10_SNORM_PACK32                       Format = 59
-	FORMAT_A2R10G10B10_USCALED_PACK32                     Format = 60
-	FORMAT_A2R10G10B10_SSCALED_PACK32                     Format = 61
-	FORMAT_A2R10G10B10_UINT_PACK32                        Format = 62
-	FORMAT_A2R10G10B10_SINT_PACK32                        Format = 63
-	FORMAT_A2B10G10R10_UNORM_PACK32                       Format = 64
-	FORMAT_A2B10G10R10_SNORM_PACK32                       Format = 65
-	FORMAT_A2B10G10R10_USCALED_PACK32                     Format = 66
-	FORMAT_A2B10G10R10_SSCALED_PACK32                     Format = 67
-	FORMAT_A2B10G10R10_UINT_PACK32                        Format = 68
-	FORMAT_A2B10G10R10_SINT_PACK32                        Format = 69
-	FORMAT_R16_UNORM                                      Format = 70
-	FORMAT_R16_SNORM                                      Format = 71
-	FORMAT_R16_USCALED                                    Format = 72
-	FORMAT_R16_SSCALED                                    Format = 73
-	FORMAT_R16_UINT                                       Format = 74
-	FORMAT_R16_SINT                                       Format = 75
-	FORMAT_R16_SFLOAT                                     Format = 76
-	FORMAT_R16G16_UNORM                                   Format = 77
-	FORMAT_R16G16_SNORM                                   Format = 78
-	FORMAT_R16G16_USCALED                                 Format = 79
-	FORMAT_R16G16_SSCALED                                 Format = 80
-	FORMAT_R16G16_UINT                                    Format = 81
-	FORMAT_R16G16_SINT                                    Format = 82
-	FORMAT_R16G16_SFLOAT                                  Format = 83
-	FORMAT_R16G16B16_UNORM                                Format = 84
-	FORMAT_R16G16B16_SNORM                                Format = 85
-	FORMAT_R16G16B16_USCALED                              Format = 86
-	FORMAT_R16G16B16_SSCALED                              Format = 87
-	FORMAT_R16G16B16_UINT                                 Format = 88
-	FORMAT_R16G16B16_SINT                                 Format = 89
-	FORMAT_R16G16B16_SFLOAT                               Format = 90
-	FORMAT_R16G16B16A16_UNORM                             Format = 91
-	FORMAT_R16G16B16A16_SNORM                             Format = 92
-	FORMAT_R16G16B16A16_USCALED                           Format = 93
-	FORMAT_R16G16B16A16_SSCALED                           Format = 94
-	FORMAT_R16G16B16A16_UINT                              Format = 95
-	FORMAT_R16G16B16A16_SINT                              Format = 96
-	FORMAT_R16G16B16A16_SFLOAT                            Format = 97
-	FORMAT_R32_UINT                                       Format = 98
-	FORMAT_R32_SINT                                       Format = 99
-	FORMAT_R32_SFLOAT                                     Format = 100
-	FORMAT_R32G32_UINT                                    Format = 101
-	FORMAT_R32G32_SINT                                    Format = 102
-	FORMAT_R32G32_SFLOAT                                  Format = 103
-	FORMAT_R32G32B32_UINT                                 Format = 104
-	FORMAT_R32G32B32_SINT                                 Format = 105
-	FORMAT_R32G32B32_SFLOAT                               Format = 106
-	FORMAT_R32G32B32A32_UINT                              Format = 107
-	FORMAT_R32G32B32A32_SINT                              Format = 108
-	FORMAT_R32G32B32A32_SFLOAT                            Format = 109
-	FORMAT_R64_UINT                                       Format = 110
-	FORMAT_R64_SINT                                       Format = 111
-	FORMAT_R64_SFLOAT                                     Format = 112
-	FORMAT_R64G64_UINT                                    Format = 113
-	FORMAT_R64G64_SINT                                    Format = 114
-	FORMAT_R64G64_SFLOAT                                  Format = 115
-	FORMAT_R64G64B64_UINT                                 Format = 116
-	FORMAT_R64G64B64_SINT                                 Format = 117
-	FORMAT_R64G64B64_SFLOAT                               Format = 118
-	FORMAT_R64G64B64A64_UINT                              Format = 119
-	FORMAT_R64G64B64A64_SINT                              Format = 120
-	FORMAT_R64G64B64A64_SFLOAT                            Format = 121
-	FORMAT_B10G11R11_UFLOAT_PACK32                        Format = 122
-	FORMAT_E5B9G9R9_UFLOAT_PACK32                         Format = 123
-	FORMAT_D16_UNORM                                      Format = 124
-	FORMAT_X8_D24_UNORM_PACK32                            Format = 125
-	FORMAT_D32_SFLOAT                                     Format = 126
-	FORMAT_S8_UINT                                        Format = 127
-	FORMAT_D16_UNORM_S8_UINT                              Format = 128
-	FORMAT_D24_UNORM_S8_UINT                              Format = 129
-	FORMAT_D32_SFLOAT_S8_UINT                             Format = 130
-	FORMAT_BC1_RGB_UNORM_BLOCK                            Format = 131
-	FORMAT_BC1_RGB_SRGB_BLOCK                             Format = 132
-	FORMAT_BC1_RGBA_UNORM_BLOCK                           Format = 133
-	FORMAT_BC1_RGBA_SRGB_BLOCK                            Format = 134
-	FORMAT_BC2_UNORM_BLOCK                                Format = 135
-	FORMAT_BC2_SRGB_BLOCK                                 Format = 136
-	FORMAT_BC3_UNORM_BLOCK                                Format = 137
-	FORMAT_BC3_SRGB_BLOCK                                 Format = 138
-	FORMAT_BC4_UNORM_BLOCK                                Format = 139
-	FORMAT_BC4_SNORM_BLOCK                                Format = 140
-	FORMAT_BC5_UNORM_BLOCK                                Format = 141
-	FORMAT_BC5_SNORM_BLOCK                                Format = 142
-	FORMAT_BC6H_UFLOAT_BLOCK                              Format = 143
-	FORMAT_BC6H_SFLOAT_BLOCK                              Format = 144
-	FORMAT_BC7_UNORM_BLOCK                                Format = 145
-	FORMAT_BC7_SRGB_BLOCK                                 Format = 146
-	FORMAT_ETC2_R8G8B8_UNORM_BLOCK                        Format = 147
-	FORMAT_ETC2_R8G8B8_SRGB_BLOCK                         Format = 148
-	FORMAT_ETC2_R8G8B8A1_UNORM_BLOCK                      Format = 149
-	FORMAT_ETC2_R8G8B8A1_SRGB_BLOCK                       Format = 150
-	FORMAT_ETC2_R8G8B8A8_UNORM_BLOCK                      Format = 151
-	FORMAT_ETC2_R8G8B8A8_SRGB_BLOCK                       Format = 152
-	FORMAT_EAC_R11_UNORM_BLOCK                            Format = 153
-	FORMAT_EAC_R11_SNORM_BLOCK                            Format = 154
-	FORMAT_EAC_R11G11_UNORM_BLOCK                         Format = 155
-	FORMAT_EAC_R11G11_SNORM_BLOCK                         Format = 156
-	FORMAT_ASTC_4x4_UNORM_BLOCK                           Format = 157
-	FORMAT_ASTC_4x4_SRGB_BLOCK                            Format = 158
-	FORMAT_ASTC_5x4_UNORM_BLOCK                           Format = 159
-	FORMAT_ASTC_5x4_SRGB_BLOCK                            Format = 160
-	FORMAT_ASTC_5x5_UNORM_BLOCK                           Format = 161
-	FORMAT_ASTC_5x5_SRGB_BLOCK                            Format = 162
-	FORMAT_ASTC_6x5_UNORM_BLOCK                           Format = 163
-	FORMAT_ASTC_6x5_SRGB_BLOCK                            Format = 164
-	FORMAT_ASTC_6x6_UNORM_BLOCK                           Format = 165
-	FORMAT_ASTC_6x6_SRGB_BLOCK                            Format = 166
-	FORMAT_ASTC_8x5_UNORM_BLOCK                           Format = 167
-	FORMAT_ASTC_8x5_SRGB_BLOCK                            Format = 168
-	FORMAT_ASTC_8x6_UNORM_BLOCK                           Format = 169
-	FORMAT_ASTC_8x6_SRGB_BLOCK                            Format = 170
-	FORMAT_ASTC_8x8_UNORM_BLOCK                           Format = 171
-	FORMAT_ASTC_8x8_SRGB_BLOCK                            Format = 172
-	FORMAT_ASTC_10x5_UNORM_BLOCK                          Format = 173
-	FORMAT_ASTC_10x5_SRGB_BLOCK                           Format = 174
-	FORMAT_ASTC_10x6_UNORM_BLOCK                          Format = 175
-	FORMAT_ASTC_10x6_SRGB_BLOCK                           Format = 176
-	FORMAT_ASTC_10x8_UNORM_BLOCK                          Format = 177
-	FORMAT_ASTC_10x8_SRGB_BLOCK                           Format = 178
-	FORMAT_ASTC_10x10_UNORM_BLOCK                         Format = 179
-	FORMAT_ASTC_10x10_SRGB_BLOCK                          Format = 180
-	FORMAT_ASTC_12x10_UNORM_BLOCK                         Format = 181
-	FORMAT_ASTC_12x10_SRGB_BLOCK                          Format = 182
-	FORMAT_ASTC_12x12_UNORM_BLOCK                         Format = 183
-	FORMAT_ASTC_12x12_SRGB_BLOCK                          Format = 184
-	FORMAT_G8B8G8R8_422_UNORM                             Format = 1000156000
-	FORMAT_B8G8R8G8_422_UNORM                             Format = 1000156001
-	FORMAT_G8_B8_R8_3PLANE_420_UNORM                      Format = 1000156002
-	FORMAT_G8_B8R8_2PLANE_420_UNORM                       Format = 1000156003
-	FORMAT_G8_B8_R8_3PLANE_422_UNORM                      Format = 1000156004
-	FORMAT_G8_B8R8_2PLANE_422_UNORM                       Format = 1000156005
-	FORMAT_G8_B8_R8_3PLANE_444_UNORM                      Format = 1000156006
-	FORMAT_R10X6_UNORM_PACK16                             Format = 1000156007
-	FORMAT_R10X6G10X6_UNORM_2PACK16                       Format = 1000156008
-	FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16             Format = 1000156009
-	FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16         Format = 1000156010
-	FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16         Format = 1000156011
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16     Format = 1000156012
-	FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16      Format = 1000156013
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16     Format = 1000156014
-	FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16      Format = 1000156015
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16     Format = 1000156016
-	FORMAT_R12X4_UNORM_PACK16                             Format = 1000156017
-	FORMAT_R12X4G12X4_UNORM_2PACK16                       Format = 1000156018
-	FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16             Format = 1000156019
-	FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16         Format = 1000156020
-	FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16         Format = 1000156021
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16     Format = 1000156022
-	FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16      Format = 1000156023
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16     Format = 1000156024
-	FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16      Format = 1000156025
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16     Format = 1000156026
-	FORMAT_G16B16G16R16_422_UNORM                         Format = 1000156027
-	FORMAT_B16G16R16G16_422_UNORM                         Format = 1000156028
-	FORMAT_G16_B16_R16_3PLANE_420_UNORM                   Format = 1000156029
-	FORMAT_G16_B16R16_2PLANE_420_UNORM                    Format = 1000156030
-	FORMAT_G16_B16_R16_3PLANE_422_UNORM                   Format = 1000156031
-	FORMAT_G16_B16R16_2PLANE_422_UNORM                    Format = 1000156032
-	FORMAT_G16_B16_R16_3PLANE_444_UNORM                   Format = 1000156033
-	FORMAT_PVRTC1_2BPP_UNORM_BLOCK_IMG                    Format = 1000054000
-	FORMAT_PVRTC1_4BPP_UNORM_BLOCK_IMG                    Format = 1000054001
-	FORMAT_PVRTC2_2BPP_UNORM_BLOCK_IMG                    Format = 1000054002
-	FORMAT_PVRTC2_4BPP_UNORM_BLOCK_IMG                    Format = 1000054003
-	FORMAT_PVRTC1_2BPP_SRGB_BLOCK_IMG                     Format = 1000054004
-	FORMAT_PVRTC1_4BPP_SRGB_BLOCK_IMG                     Format = 1000054005
-	FORMAT_PVRTC2_2BPP_SRGB_BLOCK_IMG                     Format = 1000054006
-	FORMAT_PVRTC2_4BPP_SRGB_BLOCK_IMG                     Format = 1000054007
-	FORMAT_G8B8G8R8_422_UNORM_KHR                         Format = FORMAT_G8B8G8R8_422_UNORM
-	FORMAT_B8G8R8G8_422_UNORM_KHR                         Format = FORMAT_B8G8R8G8_422_UNORM
-	FORMAT_G8_B8_R8_3PLANE_420_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_420_UNORM
-	FORMAT_G8_B8R8_2PLANE_420_UNORM_KHR                   Format = FORMAT_G8_B8R8_2PLANE_420_UNORM
-	FORMAT_G8_B8_R8_3PLANE_422_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_422_UNORM
-	FORMAT_G8_B8R8_2PLANE_422_UNORM_KHR                   Format = FORMAT_G8_B8R8_2PLANE_422_UNORM
-	FORMAT_G8_B8_R8_3PLANE_444_UNORM_KHR                  Format = FORMAT_G8_B8_R8_3PLANE_444_UNORM
-	FORMAT_R10X6_UNORM_PACK16_KHR                         Format = FORMAT_R10X6_UNORM_PACK16
-	FORMAT_R10X6G10X6_UNORM_2PACK16_KHR                   Format = FORMAT_R10X6G10X6_UNORM_2PACK16
-	FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16_KHR         Format = FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16
-	FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16_KHR     Format = FORMAT_G10X6B10X6G10X6R10X6_422_UNORM_4PACK16
-	FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16_KHR     Format = FORMAT_B10X6G10X6R10X6G10X6_422_UNORM_4PACK16
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16
-	FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_KHR  Format = FORMAT_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_422_UNORM_3PACK16
-	FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16_KHR  Format = FORMAT_G10X6_B10X6R10X6_2PLANE_422_UNORM_3PACK16
-	FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16_KHR Format = FORMAT_G10X6_B10X6_R10X6_3PLANE_444_UNORM_3PACK16
-	FORMAT_R12X4_UNORM_PACK16_KHR                         Format = FORMAT_R12X4_UNORM_PACK16
-	FORMAT_R12X4G12X4_UNORM_2PACK16_KHR                   Format = FORMAT_R12X4G12X4_UNORM_2PACK16
-	FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16_KHR         Format = FORMAT_R12X4G12X4B12X4A12X4_UNORM_4PACK16
-	FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16_KHR     Format = FORMAT_G12X4B12X4G12X4R12X4_422_UNORM_4PACK16
-	FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16_KHR     Format = FORMAT_B12X4G12X4R12X4G12X4_422_UNORM_4PACK16
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16
-	FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_KHR  Format = FORMAT_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_422_UNORM_3PACK16
-	FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16_KHR  Format = FORMAT_G12X4_B12X4R12X4_2PLANE_422_UNORM_3PACK16
-	FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16_KHR Format = FORMAT_G12X4_B12X4_R12X4_3PLANE_444_UNORM_3PACK16
-	FORMAT_G16B16G16R16_422_UNORM_KHR                     Format = FORMAT_G16B16G16R16_422_UNORM
-	FORMAT_B16G16R16G16_422_UNORM_KHR                     Format = FORMAT_B16G16R16G16_422_UNORM
-	FORMAT_G16_B16_R16_3PLANE_420_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_420_UNORM
-	FORMAT_G16_B16R16_2PLANE_420_UNORM_KHR                Format = FORMAT_G16_B16R16_2PLANE_420_UNORM
-	FORMAT_G16_B16_R16_3PLANE_422_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_422_UNORM
-	FORMAT_G16_B16R16_2PLANE_422_UNORM_KHR                Format = FORMAT_G16_B16R16_2PLANE_422_UNORM
-	FORMAT_G16_B16_R16_3PLANE_444_UNORM_KHR               Format = FORMAT_G16_B16_R16_3PLANE_444_UNORM
-	FORMAT_BEGIN_RANGE                                    Format = FORMAT_UNDEFINED
-	FORMAT_END_RANGE                                      Format = FORMAT_ASTC_12x12_SRGB_BLOCK
-	FORMAT_RANGE_SIZE                                     Format = (FORMAT_ASTC_12x12_SRGB_BLOCK - FORMAT_UNDEFINED + 1)
-	FORMAT_MAX_ENUM                                       Format = 2147483647
-)
-
 type FormatFeatureFlags Flags
 type FormatProperties struct {
 	LinearTilingFeatures  FormatFeatureFlags
@@ -1532,29 +2494,6 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDev
 type PFN_vkGetPhysicalDeviceImageFormatProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceImageFormatProperties
 }
-type ImageType int
-
-const (
-	IMAGE_TYPE_1D          ImageType = 0
-	IMAGE_TYPE_2D          ImageType = 1
-	IMAGE_TYPE_3D          ImageType = 2
-	IMAGE_TYPE_BEGIN_RANGE ImageType = IMAGE_TYPE_1D
-	IMAGE_TYPE_END_RANGE   ImageType = IMAGE_TYPE_3D
-	IMAGE_TYPE_RANGE_SIZE  ImageType = (IMAGE_TYPE_3D - IMAGE_TYPE_1D + 1)
-	IMAGE_TYPE_MAX_ENUM    ImageType = 2147483647
-)
-
-type ImageTiling int
-
-const (
-	IMAGE_TILING_OPTIMAL     ImageTiling = 0
-	IMAGE_TILING_LINEAR      ImageTiling = 1
-	IMAGE_TILING_BEGIN_RANGE ImageTiling = IMAGE_TILING_OPTIMAL
-	IMAGE_TILING_END_RANGE   ImageTiling = IMAGE_TILING_LINEAR
-	IMAGE_TILING_RANGE_SIZE  ImageTiling = (IMAGE_TILING_LINEAR - IMAGE_TILING_OPTIMAL + 1)
-	IMAGE_TILING_MAX_ENUM    ImageTiling = 2147483647
-)
-
 type ImageUsageFlags Flags
 type ImageCreateFlags Flags
 type Extent3D struct {
@@ -1672,20 +2611,6 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties) Call(physicalDevice Physic
 type PFN_vkGetPhysicalDeviceProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceProperties
 }
-type PhysicalDeviceType int
-
-const (
-	PHYSICAL_DEVICE_TYPE_OTHER          PhysicalDeviceType = 0
-	PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU PhysicalDeviceType = 1
-	PHYSICAL_DEVICE_TYPE_DISCRETE_GPU   PhysicalDeviceType = 2
-	PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU    PhysicalDeviceType = 3
-	PHYSICAL_DEVICE_TYPE_CPU            PhysicalDeviceType = 4
-	PHYSICAL_DEVICE_TYPE_BEGIN_RANGE    PhysicalDeviceType = PHYSICAL_DEVICE_TYPE_OTHER
-	PHYSICAL_DEVICE_TYPE_END_RANGE      PhysicalDeviceType = PHYSICAL_DEVICE_TYPE_CPU
-	PHYSICAL_DEVICE_TYPE_RANGE_SIZE     PhysicalDeviceType = (PHYSICAL_DEVICE_TYPE_CPU - PHYSICAL_DEVICE_TYPE_OTHER + 1)
-	PHYSICAL_DEVICE_TYPE_MAX_ENUM       PhysicalDeviceType = 2147483647
-)
-
 type PhysicalDeviceLimits struct {
 	MaxImageDimension1D                             uint32
 	MaxImageDimension2D                             uint32
@@ -3757,18 +4682,6 @@ func (p PFN_vkGetImageSparseMemoryRequirements) Call(device Device, image Image,
 type PFN_vkGetPhysicalDeviceSparseImageFormatProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties
 }
-type SampleCountFlagBits int
-
-const (
-	SAMPLE_COUNT_1_BIT              SampleCountFlagBits = 1
-	SAMPLE_COUNT_2_BIT              SampleCountFlagBits = 2
-	SAMPLE_COUNT_4_BIT              SampleCountFlagBits = 4
-	SAMPLE_COUNT_8_BIT              SampleCountFlagBits = 8
-	SAMPLE_COUNT_16_BIT             SampleCountFlagBits = 16
-	SAMPLE_COUNT_32_BIT             SampleCountFlagBits = 32
-	SAMPLE_COUNT_64_BIT             SampleCountFlagBits = 64
-	SAMPLE_COUNT_FLAG_BITS_MAX_ENUM SampleCountFlagBits = 2147483647
-)
 
 func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
 	var c struct {
@@ -4658,18 +5571,6 @@ type PFN_vkCreateQueryPool struct {
 	Raw C.PFN_vkCreateQueryPool
 }
 type QueryPoolCreateFlags Flags
-type QueryType int
-
-const (
-	QUERY_TYPE_OCCLUSION           QueryType = 0
-	QUERY_TYPE_PIPELINE_STATISTICS QueryType = 1
-	QUERY_TYPE_TIMESTAMP           QueryType = 2
-	QUERY_TYPE_BEGIN_RANGE         QueryType = QUERY_TYPE_OCCLUSION
-	QUERY_TYPE_END_RANGE           QueryType = QUERY_TYPE_TIMESTAMP
-	QUERY_TYPE_RANGE_SIZE          QueryType = (QUERY_TYPE_TIMESTAMP - QUERY_TYPE_OCCLUSION + 1)
-	QUERY_TYPE_MAX_ENUM            QueryType = 2147483647
-)
-
 type QueryPipelineStatisticFlags Flags
 type QueryPoolCreateInfo struct {
 	Next               Structure
@@ -4858,17 +5759,6 @@ type PFN_vkCreateBuffer struct {
 }
 type BufferCreateFlags Flags
 type BufferUsageFlags Flags
-type SharingMode int
-
-const (
-	SHARING_MODE_EXCLUSIVE   SharingMode = 0
-	SHARING_MODE_CONCURRENT  SharingMode = 1
-	SHARING_MODE_BEGIN_RANGE SharingMode = SHARING_MODE_EXCLUSIVE
-	SHARING_MODE_END_RANGE   SharingMode = SHARING_MODE_CONCURRENT
-	SHARING_MODE_RANGE_SIZE  SharingMode = (SHARING_MODE_CONCURRENT - SHARING_MODE_EXCLUSIVE + 1)
-	SHARING_MODE_MAX_ENUM    SharingMode = 2147483647
-)
-
 type BufferCreateInfo struct {
 	Next               Structure
 	Flags              BufferCreateFlags
@@ -5164,30 +6054,6 @@ func (p PFN_vkDestroyBufferView) Call(device Device, bufferView BufferView, allo
 type PFN_vkCreateImage struct {
 	Raw C.PFN_vkCreateImage
 }
-type ImageLayout int
-
-const (
-	IMAGE_LAYOUT_UNDEFINED                                      ImageLayout = 0
-	IMAGE_LAYOUT_GENERAL                                        ImageLayout = 1
-	IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL                       ImageLayout = 2
-	IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL               ImageLayout = 3
-	IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL                ImageLayout = 4
-	IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL                       ImageLayout = 5
-	IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL                           ImageLayout = 6
-	IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL                           ImageLayout = 7
-	IMAGE_LAYOUT_PREINITIALIZED                                 ImageLayout = 8
-	IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL     ImageLayout = 1000117000
-	IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL     ImageLayout = 1000117001
-	IMAGE_LAYOUT_PRESENT_SRC_KHR                                ImageLayout = 1000001002
-	IMAGE_LAYOUT_SHARED_PRESENT_KHR                             ImageLayout = 1000111000
-	IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL_KHR ImageLayout = IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL
-	IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL_KHR ImageLayout = IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL
-	IMAGE_LAYOUT_BEGIN_RANGE                                    ImageLayout = IMAGE_LAYOUT_UNDEFINED
-	IMAGE_LAYOUT_END_RANGE                                      ImageLayout = IMAGE_LAYOUT_PREINITIALIZED
-	IMAGE_LAYOUT_RANGE_SIZE                                     ImageLayout = (IMAGE_LAYOUT_PREINITIALIZED - IMAGE_LAYOUT_UNDEFINED + 1)
-	IMAGE_LAYOUT_MAX_ENUM                                       ImageLayout = 2147483647
-)
-
 type ImageCreateInfo struct {
 	Next               Structure
 	Flags              ImageCreateFlags
@@ -5446,38 +6312,6 @@ type PFN_vkCreateImageView struct {
 	Raw C.PFN_vkCreateImageView
 }
 type ImageViewCreateFlags Flags
-type ImageViewType int
-
-const (
-	IMAGE_VIEW_TYPE_1D          ImageViewType = 0
-	IMAGE_VIEW_TYPE_2D          ImageViewType = 1
-	IMAGE_VIEW_TYPE_3D          ImageViewType = 2
-	IMAGE_VIEW_TYPE_CUBE        ImageViewType = 3
-	IMAGE_VIEW_TYPE_1D_ARRAY    ImageViewType = 4
-	IMAGE_VIEW_TYPE_2D_ARRAY    ImageViewType = 5
-	IMAGE_VIEW_TYPE_CUBE_ARRAY  ImageViewType = 6
-	IMAGE_VIEW_TYPE_BEGIN_RANGE ImageViewType = IMAGE_VIEW_TYPE_1D
-	IMAGE_VIEW_TYPE_END_RANGE   ImageViewType = IMAGE_VIEW_TYPE_CUBE_ARRAY
-	IMAGE_VIEW_TYPE_RANGE_SIZE  ImageViewType = (IMAGE_VIEW_TYPE_CUBE_ARRAY - IMAGE_VIEW_TYPE_1D + 1)
-	IMAGE_VIEW_TYPE_MAX_ENUM    ImageViewType = 2147483647
-)
-
-type ComponentSwizzle int
-
-const (
-	COMPONENT_SWIZZLE_IDENTITY    ComponentSwizzle = 0
-	COMPONENT_SWIZZLE_ZERO        ComponentSwizzle = 1
-	COMPONENT_SWIZZLE_ONE         ComponentSwizzle = 2
-	COMPONENT_SWIZZLE_R           ComponentSwizzle = 3
-	COMPONENT_SWIZZLE_G           ComponentSwizzle = 4
-	COMPONENT_SWIZZLE_B           ComponentSwizzle = 5
-	COMPONENT_SWIZZLE_A           ComponentSwizzle = 6
-	COMPONENT_SWIZZLE_BEGIN_RANGE ComponentSwizzle = COMPONENT_SWIZZLE_IDENTITY
-	COMPONENT_SWIZZLE_END_RANGE   ComponentSwizzle = COMPONENT_SWIZZLE_A
-	COMPONENT_SWIZZLE_RANGE_SIZE  ComponentSwizzle = (COMPONENT_SWIZZLE_A - COMPONENT_SWIZZLE_IDENTITY + 1)
-	COMPONENT_SWIZZLE_MAX_ENUM    ComponentSwizzle = 2147483647
-)
-
 type ComponentMapping struct {
 	R ComponentSwizzle
 	G ComponentSwizzle
@@ -5978,20 +6812,6 @@ type PFN_vkCreateGraphicsPipelines struct {
 }
 type PipelineCreateFlags Flags
 type PipelineShaderStageCreateFlags Flags
-type ShaderStageFlagBits int
-
-const (
-	SHADER_STAGE_VERTEX_BIT                  ShaderStageFlagBits = 1
-	SHADER_STAGE_TESSELLATION_CONTROL_BIT    ShaderStageFlagBits = 2
-	SHADER_STAGE_TESSELLATION_EVALUATION_BIT ShaderStageFlagBits = 4
-	SHADER_STAGE_GEOMETRY_BIT                ShaderStageFlagBits = 8
-	SHADER_STAGE_FRAGMENT_BIT                ShaderStageFlagBits = 16
-	SHADER_STAGE_COMPUTE_BIT                 ShaderStageFlagBits = 32
-	SHADER_STAGE_ALL_GRAPHICS                ShaderStageFlagBits = 31
-	SHADER_STAGE_ALL                         ShaderStageFlagBits = 2147483647
-	SHADER_STAGE_FLAG_BITS_MAX_ENUM          ShaderStageFlagBits = 2147483647
-)
-
 type SpecializationMapEntry struct {
 	ConstantID uint32
 	Offset     uint32
@@ -6125,17 +6945,6 @@ func (s *PipelineShaderStageCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineVertexInputStateCreateFlags Flags
-type VertexInputRate int
-
-const (
-	VERTEX_INPUT_RATE_VERTEX      VertexInputRate = 0
-	VERTEX_INPUT_RATE_INSTANCE    VertexInputRate = 1
-	VERTEX_INPUT_RATE_BEGIN_RANGE VertexInputRate = VERTEX_INPUT_RATE_VERTEX
-	VERTEX_INPUT_RATE_END_RANGE   VertexInputRate = VERTEX_INPUT_RATE_INSTANCE
-	VERTEX_INPUT_RATE_RANGE_SIZE  VertexInputRate = (VERTEX_INPUT_RATE_INSTANCE - VERTEX_INPUT_RATE_VERTEX + 1)
-	VERTEX_INPUT_RATE_MAX_ENUM    VertexInputRate = 2147483647
-)
-
 type VertexInputBindingDescription struct {
 	Binding   uint32
 	Stride    uint32
@@ -6261,26 +7070,6 @@ func (s *PipelineVertexInputStateCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineInputAssemblyStateCreateFlags Flags
-type PrimitiveTopology int
-
-const (
-	PRIMITIVE_TOPOLOGY_POINT_LIST                    PrimitiveTopology = 0
-	PRIMITIVE_TOPOLOGY_LINE_LIST                     PrimitiveTopology = 1
-	PRIMITIVE_TOPOLOGY_LINE_STRIP                    PrimitiveTopology = 2
-	PRIMITIVE_TOPOLOGY_TRIANGLE_LIST                 PrimitiveTopology = 3
-	PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP                PrimitiveTopology = 4
-	PRIMITIVE_TOPOLOGY_TRIANGLE_FAN                  PrimitiveTopology = 5
-	PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY      PrimitiveTopology = 6
-	PRIMITIVE_TOPOLOGY_LINE_STRIP_WITH_ADJACENCY     PrimitiveTopology = 7
-	PRIMITIVE_TOPOLOGY_TRIANGLE_LIST_WITH_ADJACENCY  PrimitiveTopology = 8
-	PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP_WITH_ADJACENCY PrimitiveTopology = 9
-	PRIMITIVE_TOPOLOGY_PATCH_LIST                    PrimitiveTopology = 10
-	PRIMITIVE_TOPOLOGY_BEGIN_RANGE                   PrimitiveTopology = PRIMITIVE_TOPOLOGY_POINT_LIST
-	PRIMITIVE_TOPOLOGY_END_RANGE                     PrimitiveTopology = PRIMITIVE_TOPOLOGY_PATCH_LIST
-	PRIMITIVE_TOPOLOGY_RANGE_SIZE                    PrimitiveTopology = (PRIMITIVE_TOPOLOGY_PATCH_LIST - PRIMITIVE_TOPOLOGY_POINT_LIST + 1)
-	PRIMITIVE_TOPOLOGY_MAX_ENUM                      PrimitiveTopology = 2147483647
-)
-
 type PipelineInputAssemblyStateCreateInfo struct {
 	Next                   Structure
 	Flags                  PipelineInputAssemblyStateCreateFlags
@@ -6562,31 +7351,7 @@ func (s *PipelineViewportStateCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineRasterizationStateCreateFlags Flags
-type PolygonMode int
-
-const (
-	POLYGON_MODE_FILL              PolygonMode = 0
-	POLYGON_MODE_LINE              PolygonMode = 1
-	POLYGON_MODE_POINT             PolygonMode = 2
-	POLYGON_MODE_FILL_RECTANGLE_NV PolygonMode = 1000153000
-	POLYGON_MODE_BEGIN_RANGE       PolygonMode = POLYGON_MODE_FILL
-	POLYGON_MODE_END_RANGE         PolygonMode = POLYGON_MODE_POINT
-	POLYGON_MODE_RANGE_SIZE        PolygonMode = (POLYGON_MODE_POINT - POLYGON_MODE_FILL + 1)
-	POLYGON_MODE_MAX_ENUM          PolygonMode = 2147483647
-)
-
 type CullModeFlags Flags
-type FrontFace int
-
-const (
-	FRONT_FACE_COUNTER_CLOCKWISE FrontFace = 0
-	FRONT_FACE_CLOCKWISE         FrontFace = 1
-	FRONT_FACE_BEGIN_RANGE       FrontFace = FRONT_FACE_COUNTER_CLOCKWISE
-	FRONT_FACE_END_RANGE         FrontFace = FRONT_FACE_CLOCKWISE
-	FRONT_FACE_RANGE_SIZE        FrontFace = (FRONT_FACE_CLOCKWISE - FRONT_FACE_COUNTER_CLOCKWISE + 1)
-	FRONT_FACE_MAX_ENUM          FrontFace = 2147483647
-)
-
 type PipelineRasterizationStateCreateInfo struct {
 	Next                    Structure
 	Flags                   PipelineRasterizationStateCreateFlags
@@ -6804,40 +7569,6 @@ func (s *PipelineMultisampleStateCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineDepthStencilStateCreateFlags Flags
-type CompareOp int
-
-const (
-	COMPARE_OP_NEVER            CompareOp = 0
-	COMPARE_OP_LESS             CompareOp = 1
-	COMPARE_OP_EQUAL            CompareOp = 2
-	COMPARE_OP_LESS_OR_EQUAL    CompareOp = 3
-	COMPARE_OP_GREATER          CompareOp = 4
-	COMPARE_OP_NOT_EQUAL        CompareOp = 5
-	COMPARE_OP_GREATER_OR_EQUAL CompareOp = 6
-	COMPARE_OP_ALWAYS           CompareOp = 7
-	COMPARE_OP_BEGIN_RANGE      CompareOp = COMPARE_OP_NEVER
-	COMPARE_OP_END_RANGE        CompareOp = COMPARE_OP_ALWAYS
-	COMPARE_OP_RANGE_SIZE       CompareOp = (COMPARE_OP_ALWAYS - COMPARE_OP_NEVER + 1)
-	COMPARE_OP_MAX_ENUM         CompareOp = 2147483647
-)
-
-type StencilOp int
-
-const (
-	STENCIL_OP_KEEP                StencilOp = 0
-	STENCIL_OP_ZERO                StencilOp = 1
-	STENCIL_OP_REPLACE             StencilOp = 2
-	STENCIL_OP_INCREMENT_AND_CLAMP StencilOp = 3
-	STENCIL_OP_DECREMENT_AND_CLAMP StencilOp = 4
-	STENCIL_OP_INVERT              StencilOp = 5
-	STENCIL_OP_INCREMENT_AND_WRAP  StencilOp = 6
-	STENCIL_OP_DECREMENT_AND_WRAP  StencilOp = 7
-	STENCIL_OP_BEGIN_RANGE         StencilOp = STENCIL_OP_KEEP
-	STENCIL_OP_END_RANGE           StencilOp = STENCIL_OP_DECREMENT_AND_WRAP
-	STENCIL_OP_RANGE_SIZE          StencilOp = (STENCIL_OP_DECREMENT_AND_WRAP - STENCIL_OP_KEEP + 1)
-	STENCIL_OP_MAX_ENUM            StencilOp = 2147483647
-)
-
 type StencilOpState struct {
 	FailOp      StencilOp
 	PassOp      StencilOp
@@ -6966,119 +7697,6 @@ func (s *PipelineDepthStencilStateCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineColorBlendStateCreateFlags Flags
-type LogicOp int
-
-const (
-	LOGIC_OP_CLEAR         LogicOp = 0
-	LOGIC_OP_AND           LogicOp = 1
-	LOGIC_OP_AND_REVERSE   LogicOp = 2
-	LOGIC_OP_COPY          LogicOp = 3
-	LOGIC_OP_AND_INVERTED  LogicOp = 4
-	LOGIC_OP_NO_OP         LogicOp = 5
-	LOGIC_OP_XOR           LogicOp = 6
-	LOGIC_OP_OR            LogicOp = 7
-	LOGIC_OP_NOR           LogicOp = 8
-	LOGIC_OP_EQUIVALENT    LogicOp = 9
-	LOGIC_OP_INVERT        LogicOp = 10
-	LOGIC_OP_OR_REVERSE    LogicOp = 11
-	LOGIC_OP_COPY_INVERTED LogicOp = 12
-	LOGIC_OP_OR_INVERTED   LogicOp = 13
-	LOGIC_OP_NAND          LogicOp = 14
-	LOGIC_OP_SET           LogicOp = 15
-	LOGIC_OP_BEGIN_RANGE   LogicOp = LOGIC_OP_CLEAR
-	LOGIC_OP_END_RANGE     LogicOp = LOGIC_OP_SET
-	LOGIC_OP_RANGE_SIZE    LogicOp = (LOGIC_OP_SET - LOGIC_OP_CLEAR + 1)
-	LOGIC_OP_MAX_ENUM      LogicOp = 2147483647
-)
-
-type BlendFactor int
-
-const (
-	BLEND_FACTOR_ZERO                     BlendFactor = 0
-	BLEND_FACTOR_ONE                      BlendFactor = 1
-	BLEND_FACTOR_SRC_COLOR                BlendFactor = 2
-	BLEND_FACTOR_ONE_MINUS_SRC_COLOR      BlendFactor = 3
-	BLEND_FACTOR_DST_COLOR                BlendFactor = 4
-	BLEND_FACTOR_ONE_MINUS_DST_COLOR      BlendFactor = 5
-	BLEND_FACTOR_SRC_ALPHA                BlendFactor = 6
-	BLEND_FACTOR_ONE_MINUS_SRC_ALPHA      BlendFactor = 7
-	BLEND_FACTOR_DST_ALPHA                BlendFactor = 8
-	BLEND_FACTOR_ONE_MINUS_DST_ALPHA      BlendFactor = 9
-	BLEND_FACTOR_CONSTANT_COLOR           BlendFactor = 10
-	BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR BlendFactor = 11
-	BLEND_FACTOR_CONSTANT_ALPHA           BlendFactor = 12
-	BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA BlendFactor = 13
-	BLEND_FACTOR_SRC_ALPHA_SATURATE       BlendFactor = 14
-	BLEND_FACTOR_SRC1_COLOR               BlendFactor = 15
-	BLEND_FACTOR_ONE_MINUS_SRC1_COLOR     BlendFactor = 16
-	BLEND_FACTOR_SRC1_ALPHA               BlendFactor = 17
-	BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA     BlendFactor = 18
-	BLEND_FACTOR_BEGIN_RANGE              BlendFactor = BLEND_FACTOR_ZERO
-	BLEND_FACTOR_END_RANGE                BlendFactor = BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA
-	BLEND_FACTOR_RANGE_SIZE               BlendFactor = (BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA - BLEND_FACTOR_ZERO + 1)
-	BLEND_FACTOR_MAX_ENUM                 BlendFactor = 2147483647
-)
-
-type BlendOp int
-
-const (
-	BLEND_OP_ADD                    BlendOp = 0
-	BLEND_OP_SUBTRACT               BlendOp = 1
-	BLEND_OP_REVERSE_SUBTRACT       BlendOp = 2
-	BLEND_OP_MIN                    BlendOp = 3
-	BLEND_OP_MAX                    BlendOp = 4
-	BLEND_OP_ZERO_EXT               BlendOp = 1000148000
-	BLEND_OP_SRC_EXT                BlendOp = 1000148001
-	BLEND_OP_DST_EXT                BlendOp = 1000148002
-	BLEND_OP_SRC_OVER_EXT           BlendOp = 1000148003
-	BLEND_OP_DST_OVER_EXT           BlendOp = 1000148004
-	BLEND_OP_SRC_IN_EXT             BlendOp = 1000148005
-	BLEND_OP_DST_IN_EXT             BlendOp = 1000148006
-	BLEND_OP_SRC_OUT_EXT            BlendOp = 1000148007
-	BLEND_OP_DST_OUT_EXT            BlendOp = 1000148008
-	BLEND_OP_SRC_ATOP_EXT           BlendOp = 1000148009
-	BLEND_OP_DST_ATOP_EXT           BlendOp = 1000148010
-	BLEND_OP_XOR_EXT                BlendOp = 1000148011
-	BLEND_OP_MULTIPLY_EXT           BlendOp = 1000148012
-	BLEND_OP_SCREEN_EXT             BlendOp = 1000148013
-	BLEND_OP_OVERLAY_EXT            BlendOp = 1000148014
-	BLEND_OP_DARKEN_EXT             BlendOp = 1000148015
-	BLEND_OP_LIGHTEN_EXT            BlendOp = 1000148016
-	BLEND_OP_COLORDODGE_EXT         BlendOp = 1000148017
-	BLEND_OP_COLORBURN_EXT          BlendOp = 1000148018
-	BLEND_OP_HARDLIGHT_EXT          BlendOp = 1000148019
-	BLEND_OP_SOFTLIGHT_EXT          BlendOp = 1000148020
-	BLEND_OP_DIFFERENCE_EXT         BlendOp = 1000148021
-	BLEND_OP_EXCLUSION_EXT          BlendOp = 1000148022
-	BLEND_OP_INVERT_EXT             BlendOp = 1000148023
-	BLEND_OP_INVERT_RGB_EXT         BlendOp = 1000148024
-	BLEND_OP_LINEARDODGE_EXT        BlendOp = 1000148025
-	BLEND_OP_LINEARBURN_EXT         BlendOp = 1000148026
-	BLEND_OP_VIVIDLIGHT_EXT         BlendOp = 1000148027
-	BLEND_OP_LINEARLIGHT_EXT        BlendOp = 1000148028
-	BLEND_OP_PINLIGHT_EXT           BlendOp = 1000148029
-	BLEND_OP_HARDMIX_EXT            BlendOp = 1000148030
-	BLEND_OP_HSL_HUE_EXT            BlendOp = 1000148031
-	BLEND_OP_HSL_SATURATION_EXT     BlendOp = 1000148032
-	BLEND_OP_HSL_COLOR_EXT          BlendOp = 1000148033
-	BLEND_OP_HSL_LUMINOSITY_EXT     BlendOp = 1000148034
-	BLEND_OP_PLUS_EXT               BlendOp = 1000148035
-	BLEND_OP_PLUS_CLAMPED_EXT       BlendOp = 1000148036
-	BLEND_OP_PLUS_CLAMPED_ALPHA_EXT BlendOp = 1000148037
-	BLEND_OP_PLUS_DARKER_EXT        BlendOp = 1000148038
-	BLEND_OP_MINUS_EXT              BlendOp = 1000148039
-	BLEND_OP_MINUS_CLAMPED_EXT      BlendOp = 1000148040
-	BLEND_OP_CONTRAST_EXT           BlendOp = 1000148041
-	BLEND_OP_INVERT_OVG_EXT         BlendOp = 1000148042
-	BLEND_OP_RED_EXT                BlendOp = 1000148043
-	BLEND_OP_GREEN_EXT              BlendOp = 1000148044
-	BLEND_OP_BLUE_EXT               BlendOp = 1000148045
-	BLEND_OP_BEGIN_RANGE            BlendOp = BLEND_OP_ADD
-	BLEND_OP_END_RANGE              BlendOp = BLEND_OP_MAX
-	BLEND_OP_RANGE_SIZE             BlendOp = (BLEND_OP_MAX - BLEND_OP_ADD + 1)
-	BLEND_OP_MAX_ENUM               BlendOp = 2147483647
-)
-
 type ColorComponentFlags Flags
 type PipelineColorBlendAttachmentState struct {
 	BlendEnable         bool
@@ -7221,27 +7839,6 @@ func (s *PipelineColorBlendStateCreateInfo) SetNext(n Structure) {
 }
 
 type PipelineDynamicStateCreateFlags Flags
-type DynamicState int
-
-const (
-	DYNAMIC_STATE_VIEWPORT              DynamicState = 0
-	DYNAMIC_STATE_SCISSOR               DynamicState = 1
-	DYNAMIC_STATE_LINE_WIDTH            DynamicState = 2
-	DYNAMIC_STATE_DEPTH_BIAS            DynamicState = 3
-	DYNAMIC_STATE_BLEND_CONSTANTS       DynamicState = 4
-	DYNAMIC_STATE_DEPTH_BOUNDS          DynamicState = 5
-	DYNAMIC_STATE_STENCIL_COMPARE_MASK  DynamicState = 6
-	DYNAMIC_STATE_STENCIL_WRITE_MASK    DynamicState = 7
-	DYNAMIC_STATE_STENCIL_REFERENCE     DynamicState = 8
-	DYNAMIC_STATE_VIEWPORT_W_SCALING_NV DynamicState = 1000087000
-	DYNAMIC_STATE_DISCARD_RECTANGLE_EXT DynamicState = 1000099000
-	DYNAMIC_STATE_SAMPLE_LOCATIONS_EXT  DynamicState = 1000143000
-	DYNAMIC_STATE_BEGIN_RANGE           DynamicState = DYNAMIC_STATE_VIEWPORT
-	DYNAMIC_STATE_END_RANGE             DynamicState = DYNAMIC_STATE_STENCIL_REFERENCE
-	DYNAMIC_STATE_RANGE_SIZE            DynamicState = (DYNAMIC_STATE_STENCIL_REFERENCE - DYNAMIC_STATE_VIEWPORT + 1)
-	DYNAMIC_STATE_MAX_ENUM              DynamicState = 2147483647
-)
-
 type PipelineDynamicStateCreateInfo struct {
 	Next          Structure
 	Flags         PipelineDynamicStateCreateFlags
@@ -7845,58 +8442,6 @@ type PFN_vkCreateSampler struct {
 	Raw C.PFN_vkCreateSampler
 }
 type SamplerCreateFlags Flags
-type Filter int
-
-const (
-	FILTER_NEAREST     Filter = 0
-	FILTER_LINEAR      Filter = 1
-	FILTER_CUBIC_IMG   Filter = 1000015000
-	FILTER_BEGIN_RANGE Filter = FILTER_NEAREST
-	FILTER_END_RANGE   Filter = FILTER_LINEAR
-	FILTER_RANGE_SIZE  Filter = (FILTER_LINEAR - FILTER_NEAREST + 1)
-	FILTER_MAX_ENUM    Filter = 2147483647
-)
-
-type SamplerMipmapMode int
-
-const (
-	SAMPLER_MIPMAP_MODE_NEAREST     SamplerMipmapMode = 0
-	SAMPLER_MIPMAP_MODE_LINEAR      SamplerMipmapMode = 1
-	SAMPLER_MIPMAP_MODE_BEGIN_RANGE SamplerMipmapMode = SAMPLER_MIPMAP_MODE_NEAREST
-	SAMPLER_MIPMAP_MODE_END_RANGE   SamplerMipmapMode = SAMPLER_MIPMAP_MODE_LINEAR
-	SAMPLER_MIPMAP_MODE_RANGE_SIZE  SamplerMipmapMode = (SAMPLER_MIPMAP_MODE_LINEAR - SAMPLER_MIPMAP_MODE_NEAREST + 1)
-	SAMPLER_MIPMAP_MODE_MAX_ENUM    SamplerMipmapMode = 2147483647
-)
-
-type SamplerAddressMode int
-
-const (
-	SAMPLER_ADDRESS_MODE_REPEAT               SamplerAddressMode = 0
-	SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT      SamplerAddressMode = 1
-	SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE        SamplerAddressMode = 2
-	SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER      SamplerAddressMode = 3
-	SAMPLER_ADDRESS_MODE_MIRROR_CLAMP_TO_EDGE SamplerAddressMode = 4
-	SAMPLER_ADDRESS_MODE_BEGIN_RANGE          SamplerAddressMode = SAMPLER_ADDRESS_MODE_REPEAT
-	SAMPLER_ADDRESS_MODE_END_RANGE            SamplerAddressMode = SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER
-	SAMPLER_ADDRESS_MODE_RANGE_SIZE           SamplerAddressMode = (SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER - SAMPLER_ADDRESS_MODE_REPEAT + 1)
-	SAMPLER_ADDRESS_MODE_MAX_ENUM             SamplerAddressMode = 2147483647
-)
-
-type BorderColor int
-
-const (
-	BORDER_COLOR_FLOAT_TRANSPARENT_BLACK BorderColor = 0
-	BORDER_COLOR_INT_TRANSPARENT_BLACK   BorderColor = 1
-	BORDER_COLOR_FLOAT_OPAQUE_BLACK      BorderColor = 2
-	BORDER_COLOR_INT_OPAQUE_BLACK        BorderColor = 3
-	BORDER_COLOR_FLOAT_OPAQUE_WHITE      BorderColor = 4
-	BORDER_COLOR_INT_OPAQUE_WHITE        BorderColor = 5
-	BORDER_COLOR_BEGIN_RANGE             BorderColor = BORDER_COLOR_FLOAT_TRANSPARENT_BLACK
-	BORDER_COLOR_END_RANGE               BorderColor = BORDER_COLOR_INT_OPAQUE_WHITE
-	BORDER_COLOR_RANGE_SIZE              BorderColor = (BORDER_COLOR_INT_OPAQUE_WHITE - BORDER_COLOR_FLOAT_TRANSPARENT_BLACK + 1)
-	BORDER_COLOR_MAX_ENUM                BorderColor = 2147483647
-)
-
 type SamplerCreateInfo struct {
 	Next                    Structure
 	Flags                   SamplerCreateFlags
@@ -8065,26 +8610,6 @@ type PFN_vkCreateDescriptorSetLayout struct {
 	Raw C.PFN_vkCreateDescriptorSetLayout
 }
 type DescriptorSetLayoutCreateFlags Flags
-type DescriptorType int
-
-const (
-	DESCRIPTOR_TYPE_SAMPLER                DescriptorType = 0
-	DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER DescriptorType = 1
-	DESCRIPTOR_TYPE_SAMPLED_IMAGE          DescriptorType = 2
-	DESCRIPTOR_TYPE_STORAGE_IMAGE          DescriptorType = 3
-	DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER   DescriptorType = 4
-	DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER   DescriptorType = 5
-	DESCRIPTOR_TYPE_UNIFORM_BUFFER         DescriptorType = 6
-	DESCRIPTOR_TYPE_STORAGE_BUFFER         DescriptorType = 7
-	DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC DescriptorType = 8
-	DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC DescriptorType = 9
-	DESCRIPTOR_TYPE_INPUT_ATTACHMENT       DescriptorType = 10
-	DESCRIPTOR_TYPE_BEGIN_RANGE            DescriptorType = DESCRIPTOR_TYPE_SAMPLER
-	DESCRIPTOR_TYPE_END_RANGE              DescriptorType = DESCRIPTOR_TYPE_INPUT_ATTACHMENT
-	DESCRIPTOR_TYPE_RANGE_SIZE             DescriptorType = (DESCRIPTOR_TYPE_INPUT_ATTACHMENT - DESCRIPTOR_TYPE_SAMPLER + 1)
-	DESCRIPTOR_TYPE_MAX_ENUM               DescriptorType = 2147483647
-)
-
 type DescriptorSetLayoutBinding struct {
 	Binding           uint32
 	DescriptorType    DescriptorType
@@ -8909,29 +9434,6 @@ type PFN_vkCreateRenderPass struct {
 }
 type RenderPassCreateFlags Flags
 type AttachmentDescriptionFlags Flags
-type AttachmentLoadOp int
-
-const (
-	ATTACHMENT_LOAD_OP_LOAD        AttachmentLoadOp = 0
-	ATTACHMENT_LOAD_OP_CLEAR       AttachmentLoadOp = 1
-	ATTACHMENT_LOAD_OP_DONT_CARE   AttachmentLoadOp = 2
-	ATTACHMENT_LOAD_OP_BEGIN_RANGE AttachmentLoadOp = ATTACHMENT_LOAD_OP_LOAD
-	ATTACHMENT_LOAD_OP_END_RANGE   AttachmentLoadOp = ATTACHMENT_LOAD_OP_DONT_CARE
-	ATTACHMENT_LOAD_OP_RANGE_SIZE  AttachmentLoadOp = (ATTACHMENT_LOAD_OP_DONT_CARE - ATTACHMENT_LOAD_OP_LOAD + 1)
-	ATTACHMENT_LOAD_OP_MAX_ENUM    AttachmentLoadOp = 2147483647
-)
-
-type AttachmentStoreOp int
-
-const (
-	ATTACHMENT_STORE_OP_STORE       AttachmentStoreOp = 0
-	ATTACHMENT_STORE_OP_DONT_CARE   AttachmentStoreOp = 1
-	ATTACHMENT_STORE_OP_BEGIN_RANGE AttachmentStoreOp = ATTACHMENT_STORE_OP_STORE
-	ATTACHMENT_STORE_OP_END_RANGE   AttachmentStoreOp = ATTACHMENT_STORE_OP_DONT_CARE
-	ATTACHMENT_STORE_OP_RANGE_SIZE  AttachmentStoreOp = (ATTACHMENT_STORE_OP_DONT_CARE - ATTACHMENT_STORE_OP_STORE + 1)
-	ATTACHMENT_STORE_OP_MAX_ENUM    AttachmentStoreOp = 2147483647
-)
-
 type AttachmentDescription struct {
 	Flags          AttachmentDescriptionFlags
 	Format         Format
@@ -8984,17 +9486,6 @@ func (g *AttachmentDescription) fromC(c *C.VkAttachmentDescription) {
 }
 
 type SubpassDescriptionFlags Flags
-type PipelineBindPoint int
-
-const (
-	PIPELINE_BIND_POINT_GRAPHICS    PipelineBindPoint = 0
-	PIPELINE_BIND_POINT_COMPUTE     PipelineBindPoint = 1
-	PIPELINE_BIND_POINT_BEGIN_RANGE PipelineBindPoint = PIPELINE_BIND_POINT_GRAPHICS
-	PIPELINE_BIND_POINT_END_RANGE   PipelineBindPoint = PIPELINE_BIND_POINT_COMPUTE
-	PIPELINE_BIND_POINT_RANGE_SIZE  PipelineBindPoint = (PIPELINE_BIND_POINT_COMPUTE - PIPELINE_BIND_POINT_GRAPHICS + 1)
-	PIPELINE_BIND_POINT_MAX_ENUM    PipelineBindPoint = 2147483647
-)
-
 type AttachmentReference struct {
 	Attachment uint32
 	Layout     ImageLayout
@@ -9542,17 +10033,6 @@ func (p PFN_vkResetCommandPool) Call(device Device, commandPool CommandPool, fla
 type PFN_vkAllocateCommandBuffers struct {
 	Raw C.PFN_vkAllocateCommandBuffers
 }
-type CommandBufferLevel int
-
-const (
-	COMMAND_BUFFER_LEVEL_PRIMARY     CommandBufferLevel = 0
-	COMMAND_BUFFER_LEVEL_SECONDARY   CommandBufferLevel = 1
-	COMMAND_BUFFER_LEVEL_BEGIN_RANGE CommandBufferLevel = COMMAND_BUFFER_LEVEL_PRIMARY
-	COMMAND_BUFFER_LEVEL_END_RANGE   CommandBufferLevel = COMMAND_BUFFER_LEVEL_SECONDARY
-	COMMAND_BUFFER_LEVEL_RANGE_SIZE  CommandBufferLevel = (COMMAND_BUFFER_LEVEL_SECONDARY - COMMAND_BUFFER_LEVEL_PRIMARY + 1)
-	COMMAND_BUFFER_LEVEL_MAX_ENUM    CommandBufferLevel = 2147483647
-)
-
 type CommandBufferAllocateInfo struct {
 	Next               Structure
 	CommandPool        CommandPool
@@ -10122,16 +10602,6 @@ func (p PFN_vkCmdBindDescriptorSets) Call(commandBuffer CommandBuffer, pipelineB
 type PFN_vkCmdBindIndexBuffer struct {
 	Raw C.PFN_vkCmdBindIndexBuffer
 }
-type IndexType int
-
-const (
-	INDEX_TYPE_UINT16      IndexType = 0
-	INDEX_TYPE_UINT32      IndexType = 1
-	INDEX_TYPE_BEGIN_RANGE IndexType = INDEX_TYPE_UINT16
-	INDEX_TYPE_END_RANGE   IndexType = INDEX_TYPE_UINT32
-	INDEX_TYPE_RANGE_SIZE  IndexType = (INDEX_TYPE_UINT32 - INDEX_TYPE_UINT16 + 1)
-	INDEX_TYPE_MAX_ENUM    IndexType = 2147483647
-)
 
 func (p PFN_vkCmdBindIndexBuffer) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, indexType IndexType) {
 	var c struct {
@@ -11496,30 +11966,6 @@ func (p PFN_vkCmdResetQueryPool) Call(commandBuffer CommandBuffer, queryPool Que
 type PFN_vkCmdWriteTimestamp struct {
 	Raw C.PFN_vkCmdWriteTimestamp
 }
-type PipelineStageFlagBits int
-
-const (
-	PIPELINE_STAGE_TOP_OF_PIPE_BIT                    PipelineStageFlagBits = 1
-	PIPELINE_STAGE_DRAW_INDIRECT_BIT                  PipelineStageFlagBits = 2
-	PIPELINE_STAGE_VERTEX_INPUT_BIT                   PipelineStageFlagBits = 4
-	PIPELINE_STAGE_VERTEX_SHADER_BIT                  PipelineStageFlagBits = 8
-	PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    PipelineStageFlagBits = 16
-	PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PipelineStageFlagBits = 32
-	PIPELINE_STAGE_GEOMETRY_SHADER_BIT                PipelineStageFlagBits = 64
-	PIPELINE_STAGE_FRAGMENT_SHADER_BIT                PipelineStageFlagBits = 128
-	PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           PipelineStageFlagBits = 256
-	PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            PipelineStageFlagBits = 512
-	PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        PipelineStageFlagBits = 1024
-	PIPELINE_STAGE_COMPUTE_SHADER_BIT                 PipelineStageFlagBits = 2048
-	PIPELINE_STAGE_TRANSFER_BIT                       PipelineStageFlagBits = 4096
-	PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 PipelineStageFlagBits = 8192
-	PIPELINE_STAGE_HOST_BIT                           PipelineStageFlagBits = 16384
-	PIPELINE_STAGE_ALL_GRAPHICS_BIT                   PipelineStageFlagBits = 32768
-	PIPELINE_STAGE_ALL_COMMANDS_BIT                   PipelineStageFlagBits = 65536
-	PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT      PipelineStageFlagBits = 262144
-	PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX            PipelineStageFlagBits = 131072
-	PIPELINE_STAGE_FLAG_BITS_MAX_ENUM                 PipelineStageFlagBits = 2147483647
-)
 
 func (p PFN_vkCmdWriteTimestamp) Call(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, queryPool QueryPool, query uint32) {
 	var c struct {
@@ -11678,18 +12124,6 @@ func (s *RenderPassBeginInfo) GetNext() Structure {
 func (s *RenderPassBeginInfo) SetNext(n Structure) {
 	s.Next = n
 }
-
-type SubpassContents int
-
-const (
-	SUBPASS_CONTENTS_INLINE                    SubpassContents = 0
-	SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS SubpassContents = 1
-	SUBPASS_CONTENTS_BEGIN_RANGE               SubpassContents = SUBPASS_CONTENTS_INLINE
-	SUBPASS_CONTENTS_END_RANGE                 SubpassContents = SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
-	SUBPASS_CONTENTS_RANGE_SIZE                SubpassContents = (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS - SUBPASS_CONTENTS_INLINE + 1)
-	SUBPASS_CONTENTS_MAX_ENUM                  SubpassContents = 2147483647
-)
-
 func (p PFN_vkCmdBeginRenderPass) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, contents SubpassContents) {
 	var c struct {
 		commandBuffer    C.VkCommandBuffer
@@ -14805,6 +15239,228 @@ func CmdExecuteCommands(commandBuffer CommandBuffer, commandBuffers []CommandBuf
 	C.vkCmdExecuteCommands(c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
 }
 
+type PointClippingBehavior int
+
+const (
+	POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES           PointClippingBehavior = 0
+	POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY     PointClippingBehavior = 1
+	POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES_KHR       PointClippingBehavior = POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+	POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY_KHR PointClippingBehavior = POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
+	POINT_CLIPPING_BEHAVIOR_BEGIN_RANGE               PointClippingBehavior = POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES
+	POINT_CLIPPING_BEHAVIOR_END_RANGE                 PointClippingBehavior = POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY
+	POINT_CLIPPING_BEHAVIOR_RANGE_SIZE                PointClippingBehavior = (POINT_CLIPPING_BEHAVIOR_USER_CLIP_PLANES_ONLY - POINT_CLIPPING_BEHAVIOR_ALL_CLIP_PLANES + 1)
+	POINT_CLIPPING_BEHAVIOR_MAX_ENUM                  PointClippingBehavior = 2147483647
+)
+
+type TessellationDomainOrigin int
+
+const (
+	TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT     TessellationDomainOrigin = 0
+	TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT     TessellationDomainOrigin = 1
+	TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT_KHR TessellationDomainOrigin = TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+	TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT_KHR TessellationDomainOrigin = TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
+	TESSELLATION_DOMAIN_ORIGIN_BEGIN_RANGE    TessellationDomainOrigin = TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT
+	TESSELLATION_DOMAIN_ORIGIN_END_RANGE      TessellationDomainOrigin = TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT
+	TESSELLATION_DOMAIN_ORIGIN_RANGE_SIZE     TessellationDomainOrigin = (TESSELLATION_DOMAIN_ORIGIN_LOWER_LEFT - TESSELLATION_DOMAIN_ORIGIN_UPPER_LEFT + 1)
+	TESSELLATION_DOMAIN_ORIGIN_MAX_ENUM       TessellationDomainOrigin = 2147483647
+)
+
+type SamplerYcbcrModelConversion int
+
+const (
+	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY       SamplerYcbcrModelConversion = 0
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY     SamplerYcbcrModelConversion = 1
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709          SamplerYcbcrModelConversion = 2
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601          SamplerYcbcrModelConversion = 3
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020         SamplerYcbcrModelConversion = 4
+	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY_KHR   SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY_KHR SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020_KHR     SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+	SAMPLER_YCBCR_MODEL_CONVERSION_BEGIN_RANGE        SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_END_RANGE          SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+	SAMPLER_YCBCR_MODEL_CONVERSION_RANGE_SIZE         SamplerYcbcrModelConversion = (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 - SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY + 1)
+	SAMPLER_YCBCR_MODEL_CONVERSION_MAX_ENUM           SamplerYcbcrModelConversion = 2147483647
+)
+
+type SamplerYcbcrRange int
+
+const (
+	SAMPLER_YCBCR_RANGE_ITU_FULL       SamplerYcbcrRange = 0
+	SAMPLER_YCBCR_RANGE_ITU_NARROW     SamplerYcbcrRange = 1
+	SAMPLER_YCBCR_RANGE_ITU_FULL_KHR   SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
+	SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
+	SAMPLER_YCBCR_RANGE_BEGIN_RANGE    SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
+	SAMPLER_YCBCR_RANGE_END_RANGE      SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
+	SAMPLER_YCBCR_RANGE_RANGE_SIZE     SamplerYcbcrRange = (SAMPLER_YCBCR_RANGE_ITU_NARROW - SAMPLER_YCBCR_RANGE_ITU_FULL + 1)
+	SAMPLER_YCBCR_RANGE_MAX_ENUM       SamplerYcbcrRange = 2147483647
+)
+
+type ChromaLocation int
+
+const (
+	CHROMA_LOCATION_COSITED_EVEN     ChromaLocation = 0
+	CHROMA_LOCATION_MIDPOINT         ChromaLocation = 1
+	CHROMA_LOCATION_COSITED_EVEN_KHR ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
+	CHROMA_LOCATION_MIDPOINT_KHR     ChromaLocation = CHROMA_LOCATION_MIDPOINT
+	CHROMA_LOCATION_BEGIN_RANGE      ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
+	CHROMA_LOCATION_END_RANGE        ChromaLocation = CHROMA_LOCATION_MIDPOINT
+	CHROMA_LOCATION_RANGE_SIZE       ChromaLocation = (CHROMA_LOCATION_MIDPOINT - CHROMA_LOCATION_COSITED_EVEN + 1)
+	CHROMA_LOCATION_MAX_ENUM         ChromaLocation = 2147483647
+)
+
+type DescriptorUpdateTemplateType int
+
+const (
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       DescriptorUpdateTemplateType = 0
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR DescriptorUpdateTemplateType = 1
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR   DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_BEGIN_RANGE          DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_END_RANGE            DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_RANGE_SIZE           DescriptorUpdateTemplateType = (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET - DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET + 1)
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_MAX_ENUM             DescriptorUpdateTemplateType = 2147483647
+)
+
+type SubgroupFeatureFlagBits int
+
+const (
+	SUBGROUP_FEATURE_BASIC_BIT            SubgroupFeatureFlagBits = 1
+	SUBGROUP_FEATURE_VOTE_BIT             SubgroupFeatureFlagBits = 2
+	SUBGROUP_FEATURE_ARITHMETIC_BIT       SubgroupFeatureFlagBits = 4
+	SUBGROUP_FEATURE_BALLOT_BIT           SubgroupFeatureFlagBits = 8
+	SUBGROUP_FEATURE_SHUFFLE_BIT          SubgroupFeatureFlagBits = 16
+	SUBGROUP_FEATURE_SHUFFLE_RELATIVE_BIT SubgroupFeatureFlagBits = 32
+	SUBGROUP_FEATURE_CLUSTERED_BIT        SubgroupFeatureFlagBits = 64
+	SUBGROUP_FEATURE_QUAD_BIT             SubgroupFeatureFlagBits = 128
+	SUBGROUP_FEATURE_PARTITIONED_BIT_NV   SubgroupFeatureFlagBits = 256
+	SUBGROUP_FEATURE_FLAG_BITS_MAX_ENUM   SubgroupFeatureFlagBits = 2147483647
+)
+
+type PeerMemoryFeatureFlagBits int
+
+const (
+	PEER_MEMORY_FEATURE_COPY_SRC_BIT        PeerMemoryFeatureFlagBits = 1
+	PEER_MEMORY_FEATURE_COPY_DST_BIT        PeerMemoryFeatureFlagBits = 2
+	PEER_MEMORY_FEATURE_GENERIC_SRC_BIT     PeerMemoryFeatureFlagBits = 4
+	PEER_MEMORY_FEATURE_GENERIC_DST_BIT     PeerMemoryFeatureFlagBits = 8
+	PEER_MEMORY_FEATURE_COPY_SRC_BIT_KHR    PeerMemoryFeatureFlagBits = PEER_MEMORY_FEATURE_COPY_SRC_BIT
+	PEER_MEMORY_FEATURE_COPY_DST_BIT_KHR    PeerMemoryFeatureFlagBits = PEER_MEMORY_FEATURE_COPY_DST_BIT
+	PEER_MEMORY_FEATURE_GENERIC_SRC_BIT_KHR PeerMemoryFeatureFlagBits = PEER_MEMORY_FEATURE_GENERIC_SRC_BIT
+	PEER_MEMORY_FEATURE_GENERIC_DST_BIT_KHR PeerMemoryFeatureFlagBits = PEER_MEMORY_FEATURE_GENERIC_DST_BIT
+	PEER_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM  PeerMemoryFeatureFlagBits = 2147483647
+)
+
+type MemoryAllocateFlagBits int
+
+const (
+	MEMORY_ALLOCATE_DEVICE_MASK_BIT     MemoryAllocateFlagBits = 1
+	MEMORY_ALLOCATE_DEVICE_MASK_BIT_KHR MemoryAllocateFlagBits = MEMORY_ALLOCATE_DEVICE_MASK_BIT
+	MEMORY_ALLOCATE_FLAG_BITS_MAX_ENUM  MemoryAllocateFlagBits = 2147483647
+)
+
+type ExternalMemoryHandleTypeFlagBits int
+
+const (
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT                       ExternalMemoryHandleTypeFlagBits = 1
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                    ExternalMemoryHandleTypeFlagBits = 2
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT                ExternalMemoryHandleTypeFlagBits = 4
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT                   ExternalMemoryHandleTypeFlagBits = 8
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT               ExternalMemoryHandleTypeFlagBits = 16
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                      ExternalMemoryHandleTypeFlagBits = 32
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                  ExternalMemoryHandleTypeFlagBits = 64
+	EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT                     ExternalMemoryHandleTypeFlagBits = 512
+	EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID ExternalMemoryHandleTypeFlagBits = 1024
+	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT             ExternalMemoryHandleTypeFlagBits = 128
+	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT  ExternalMemoryHandleTypeFlagBits = 256
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR                   ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR                ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR            ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT_KHR               ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT_KHR           ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT_KHR                  ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT_KHR              ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM                  ExternalMemoryHandleTypeFlagBits = 2147483647
+)
+
+type ExternalMemoryFeatureFlagBits int
+
+const (
+	EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT     ExternalMemoryFeatureFlagBits = 1
+	EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT         ExternalMemoryFeatureFlagBits = 2
+	EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT         ExternalMemoryFeatureFlagBits = 4
+	EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_KHR ExternalMemoryFeatureFlagBits = EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT
+	EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_KHR     ExternalMemoryFeatureFlagBits = EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT
+	EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_KHR     ExternalMemoryFeatureFlagBits = EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT
+	EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM     ExternalMemoryFeatureFlagBits = 2147483647
+)
+
+type ExternalFenceHandleTypeFlagBits int
+
+const (
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalFenceHandleTypeFlagBits = 1
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalFenceHandleTypeFlagBits = 2
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalFenceHandleTypeFlagBits = 4
+	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT              ExternalFenceHandleTypeFlagBits = 8
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalFenceHandleTypeFlagBits = 2147483647
+)
+
+type ExternalFenceFeatureFlagBits int
+
+const (
+	EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT     ExternalFenceFeatureFlagBits = 1
+	EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT     ExternalFenceFeatureFlagBits = 2
+	EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT_KHR ExternalFenceFeatureFlagBits = EXTERNAL_FENCE_FEATURE_EXPORTABLE_BIT
+	EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT_KHR ExternalFenceFeatureFlagBits = EXTERNAL_FENCE_FEATURE_IMPORTABLE_BIT
+	EXTERNAL_FENCE_FEATURE_FLAG_BITS_MAX_ENUM ExternalFenceFeatureFlagBits = 2147483647
+)
+
+type FenceImportFlagBits int
+
+const (
+	FENCE_IMPORT_TEMPORARY_BIT      FenceImportFlagBits = 1
+	FENCE_IMPORT_TEMPORARY_BIT_KHR  FenceImportFlagBits = FENCE_IMPORT_TEMPORARY_BIT
+	FENCE_IMPORT_FLAG_BITS_MAX_ENUM FenceImportFlagBits = 2147483647
+)
+
+type SemaphoreImportFlagBits int
+
+const (
+	SEMAPHORE_IMPORT_TEMPORARY_BIT      SemaphoreImportFlagBits = 1
+	SEMAPHORE_IMPORT_TEMPORARY_BIT_KHR  SemaphoreImportFlagBits = SEMAPHORE_IMPORT_TEMPORARY_BIT
+	SEMAPHORE_IMPORT_FLAG_BITS_MAX_ENUM SemaphoreImportFlagBits = 2147483647
+)
+
+type ExternalSemaphoreHandleTypeFlagBits int
+
+const (
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalSemaphoreHandleTypeFlagBits = 1
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalSemaphoreHandleTypeFlagBits = 2
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalSemaphoreHandleTypeFlagBits = 4
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          ExternalSemaphoreHandleTypeFlagBits = 8
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT              ExternalSemaphoreHandleTypeFlagBits = 16
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR      ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalSemaphoreHandleTypeFlagBits = 2147483647
+)
+
+type ExternalSemaphoreFeatureFlagBits int
+
+const (
+	EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT     ExternalSemaphoreFeatureFlagBits = 1
+	EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT     ExternalSemaphoreFeatureFlagBits = 2
+	EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT_KHR ExternalSemaphoreFeatureFlagBits = EXTERNAL_SEMAPHORE_FEATURE_EXPORTABLE_BIT
+	EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT_KHR ExternalSemaphoreFeatureFlagBits = EXTERNAL_SEMAPHORE_FEATURE_IMPORTABLE_BIT
+	EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM ExternalSemaphoreFeatureFlagBits = 2147483647
+)
+
 type PFN_vkEnumerateInstanceVersion struct {
 	Raw C.PFN_vkEnumerateInstanceVersion
 }
@@ -16117,51 +16773,6 @@ func (p PFN_vkGetDeviceQueue2) Call(device Device, queueInfo *DeviceQueueInfo2, 
 type PFN_vkCreateSamplerYcbcrConversion struct {
 	Raw C.PFN_vkCreateSamplerYcbcrConversion
 }
-type SamplerYcbcrModelConversion int
-
-const (
-	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY       SamplerYcbcrModelConversion = 0
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY     SamplerYcbcrModelConversion = 1
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709          SamplerYcbcrModelConversion = 2
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601          SamplerYcbcrModelConversion = 3
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020         SamplerYcbcrModelConversion = 4
-	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY_KHR   SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY_KHR SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
-	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020_KHR     SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
-	SAMPLER_YCBCR_MODEL_CONVERSION_BEGIN_RANGE        SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
-	SAMPLER_YCBCR_MODEL_CONVERSION_END_RANGE          SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
-	SAMPLER_YCBCR_MODEL_CONVERSION_RANGE_SIZE         SamplerYcbcrModelConversion = (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 - SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY + 1)
-	SAMPLER_YCBCR_MODEL_CONVERSION_MAX_ENUM           SamplerYcbcrModelConversion = 2147483647
-)
-
-type SamplerYcbcrRange int
-
-const (
-	SAMPLER_YCBCR_RANGE_ITU_FULL       SamplerYcbcrRange = 0
-	SAMPLER_YCBCR_RANGE_ITU_NARROW     SamplerYcbcrRange = 1
-	SAMPLER_YCBCR_RANGE_ITU_FULL_KHR   SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
-	SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
-	SAMPLER_YCBCR_RANGE_BEGIN_RANGE    SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
-	SAMPLER_YCBCR_RANGE_END_RANGE      SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
-	SAMPLER_YCBCR_RANGE_RANGE_SIZE     SamplerYcbcrRange = (SAMPLER_YCBCR_RANGE_ITU_NARROW - SAMPLER_YCBCR_RANGE_ITU_FULL + 1)
-	SAMPLER_YCBCR_RANGE_MAX_ENUM       SamplerYcbcrRange = 2147483647
-)
-
-type ChromaLocation int
-
-const (
-	CHROMA_LOCATION_COSITED_EVEN     ChromaLocation = 0
-	CHROMA_LOCATION_MIDPOINT         ChromaLocation = 1
-	CHROMA_LOCATION_COSITED_EVEN_KHR ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
-	CHROMA_LOCATION_MIDPOINT_KHR     ChromaLocation = CHROMA_LOCATION_MIDPOINT
-	CHROMA_LOCATION_BEGIN_RANGE      ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
-	CHROMA_LOCATION_END_RANGE        ChromaLocation = CHROMA_LOCATION_MIDPOINT
-	CHROMA_LOCATION_RANGE_SIZE       ChromaLocation = (CHROMA_LOCATION_MIDPOINT - CHROMA_LOCATION_COSITED_EVEN + 1)
-	CHROMA_LOCATION_MAX_ENUM         ChromaLocation = 2147483647
-)
-
 type SamplerYcbcrConversionCreateInfo struct {
 	Next                        Structure
 	Format                      Format
@@ -16307,18 +16918,6 @@ func (g *DescriptorUpdateTemplateEntry) fromC(c *C.VkDescriptorUpdateTemplateEnt
 	g.Offset = uint(c.offset)
 	g.Stride = uint(c.stride)
 }
-
-type DescriptorUpdateTemplateType int
-
-const (
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       DescriptorUpdateTemplateType = 0
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR DescriptorUpdateTemplateType = 1
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR   DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_BEGIN_RANGE          DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_END_RANGE            DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_RANGE_SIZE           DescriptorUpdateTemplateType = (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET - DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET + 1)
-	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_MAX_ENUM             DescriptorUpdateTemplateType = 2147483647
-)
 
 type DescriptorUpdateTemplateCreateInfo struct {
 	Next                    Structure
@@ -16487,30 +17086,6 @@ func (p PFN_vkUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet
 type PFN_vkGetPhysicalDeviceExternalBufferProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceExternalBufferProperties
 }
-type ExternalMemoryHandleTypeFlagBits int
-
-const (
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT                       ExternalMemoryHandleTypeFlagBits = 1
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                    ExternalMemoryHandleTypeFlagBits = 2
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT                ExternalMemoryHandleTypeFlagBits = 4
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT                   ExternalMemoryHandleTypeFlagBits = 8
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT               ExternalMemoryHandleTypeFlagBits = 16
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                      ExternalMemoryHandleTypeFlagBits = 32
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                  ExternalMemoryHandleTypeFlagBits = 64
-	EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT                     ExternalMemoryHandleTypeFlagBits = 512
-	EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID ExternalMemoryHandleTypeFlagBits = 1024
-	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT             ExternalMemoryHandleTypeFlagBits = 128
-	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT  ExternalMemoryHandleTypeFlagBits = 256
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR                   ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR                ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR            ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT_KHR               ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT_KHR           ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT_KHR                  ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT_KHR              ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
-	EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM                  ExternalMemoryHandleTypeFlagBits = 2147483647
-)
-
 type PhysicalDeviceExternalBufferInfo struct {
 	Next       Structure
 	Flags      BufferCreateFlags
@@ -16719,20 +17294,6 @@ func (p PFN_vkGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice Phy
 type PFN_vkGetPhysicalDeviceExternalFenceProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceExternalFenceProperties
 }
-type ExternalFenceHandleTypeFlagBits int
-
-const (
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalFenceHandleTypeFlagBits = 1
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalFenceHandleTypeFlagBits = 2
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalFenceHandleTypeFlagBits = 4
-	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT              ExternalFenceHandleTypeFlagBits = 8
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
-	EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalFenceHandleTypeFlagBits = 2147483647
-)
-
 type PhysicalDeviceExternalFenceInfo struct {
 	Next       Structure
 	HandleType ExternalFenceHandleTypeFlagBits
@@ -16892,22 +17453,6 @@ func (p PFN_vkGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice Phys
 type PFN_vkGetPhysicalDeviceExternalSemaphoreProperties struct {
 	Raw C.PFN_vkGetPhysicalDeviceExternalSemaphoreProperties
 }
-type ExternalSemaphoreHandleTypeFlagBits int
-
-const (
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalSemaphoreHandleTypeFlagBits = 1
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalSemaphoreHandleTypeFlagBits = 2
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalSemaphoreHandleTypeFlagBits = 4
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          ExternalSemaphoreHandleTypeFlagBits = 8
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT              ExternalSemaphoreHandleTypeFlagBits = 16
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR      ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
-	EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalSemaphoreHandleTypeFlagBits = 2147483647
-)
-
 type PhysicalDeviceExternalSemaphoreInfo struct {
 	Next       Structure
 	HandleType ExternalSemaphoreHandleTypeFlagBits
@@ -17727,6 +18272,70 @@ func GetDescriptorSetLayoutSupport(device Device, createInfo *DescriptorSetLayou
 	support.fromC(c.pSupport)
 }
 
+type ColorSpaceKHR int
+
+const (
+	COLOR_SPACE_SRGB_NONLINEAR_KHR          ColorSpaceKHR = 0
+	COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT    ColorSpaceKHR = 1000104001
+	COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT    ColorSpaceKHR = 1000104002
+	COLOR_SPACE_DCI_P3_LINEAR_EXT           ColorSpaceKHR = 1000104003
+	COLOR_SPACE_DCI_P3_NONLINEAR_EXT        ColorSpaceKHR = 1000104004
+	COLOR_SPACE_BT709_LINEAR_EXT            ColorSpaceKHR = 1000104005
+	COLOR_SPACE_BT709_NONLINEAR_EXT         ColorSpaceKHR = 1000104006
+	COLOR_SPACE_BT2020_LINEAR_EXT           ColorSpaceKHR = 1000104007
+	COLOR_SPACE_HDR10_ST2084_EXT            ColorSpaceKHR = 1000104008
+	COLOR_SPACE_DOLBYVISION_EXT             ColorSpaceKHR = 1000104009
+	COLOR_SPACE_HDR10_HLG_EXT               ColorSpaceKHR = 1000104010
+	COLOR_SPACE_ADOBERGB_LINEAR_EXT         ColorSpaceKHR = 1000104011
+	COLOR_SPACE_ADOBERGB_NONLINEAR_EXT      ColorSpaceKHR = 1000104012
+	COLOR_SPACE_PASS_THROUGH_EXT            ColorSpaceKHR = 1000104013
+	COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT ColorSpaceKHR = 1000104014
+	COLOR_SPACE_BEGIN_RANGE_KHR             ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
+	COLOR_SPACE_END_RANGE_KHR               ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
+	COLOR_SPACE_RANGE_SIZE_KHR              ColorSpaceKHR = (COLOR_SPACE_SRGB_NONLINEAR_KHR - COLOR_SPACE_SRGB_NONLINEAR_KHR + 1)
+	COLOR_SPACE_MAX_ENUM_KHR                ColorSpaceKHR = 2147483647
+)
+
+type PresentModeKHR int
+
+const (
+	PRESENT_MODE_IMMEDIATE_KHR                 PresentModeKHR = 0
+	PRESENT_MODE_MAILBOX_KHR                   PresentModeKHR = 1
+	PRESENT_MODE_FIFO_KHR                      PresentModeKHR = 2
+	PRESENT_MODE_FIFO_RELAXED_KHR              PresentModeKHR = 3
+	PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR     PresentModeKHR = 1000111000
+	PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR PresentModeKHR = 1000111001
+	PRESENT_MODE_BEGIN_RANGE_KHR               PresentModeKHR = PRESENT_MODE_IMMEDIATE_KHR
+	PRESENT_MODE_END_RANGE_KHR                 PresentModeKHR = PRESENT_MODE_FIFO_RELAXED_KHR
+	PRESENT_MODE_RANGE_SIZE_KHR                PresentModeKHR = (PRESENT_MODE_FIFO_RELAXED_KHR - PRESENT_MODE_IMMEDIATE_KHR + 1)
+	PRESENT_MODE_MAX_ENUM_KHR                  PresentModeKHR = 2147483647
+)
+
+type SurfaceTransformFlagBitsKHR int
+
+const (
+	SURFACE_TRANSFORM_IDENTITY_BIT_KHR                     SurfaceTransformFlagBitsKHR = 1
+	SURFACE_TRANSFORM_ROTATE_90_BIT_KHR                    SurfaceTransformFlagBitsKHR = 2
+	SURFACE_TRANSFORM_ROTATE_180_BIT_KHR                   SurfaceTransformFlagBitsKHR = 4
+	SURFACE_TRANSFORM_ROTATE_270_BIT_KHR                   SurfaceTransformFlagBitsKHR = 8
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR            SurfaceTransformFlagBitsKHR = 16
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR  SurfaceTransformFlagBitsKHR = 32
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR SurfaceTransformFlagBitsKHR = 64
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR SurfaceTransformFlagBitsKHR = 128
+	SURFACE_TRANSFORM_INHERIT_BIT_KHR                      SurfaceTransformFlagBitsKHR = 256
+	SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR               SurfaceTransformFlagBitsKHR = 2147483647
+)
+
+type CompositeAlphaFlagBitsKHR int
+
+const (
+	COMPOSITE_ALPHA_OPAQUE_BIT_KHR          CompositeAlphaFlagBitsKHR = 1
+	COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  CompositeAlphaFlagBitsKHR = 2
+	COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR CompositeAlphaFlagBitsKHR = 4
+	COMPOSITE_ALPHA_INHERIT_BIT_KHR         CompositeAlphaFlagBitsKHR = 8
+	COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR  CompositeAlphaFlagBitsKHR = 2147483647
+)
+
 type PFN_vkDestroySurfaceKHR struct {
 	Raw C.PFN_vkDestroySurfaceKHR
 }
@@ -17784,21 +18393,6 @@ type PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
 }
 type SurfaceTransformFlagsKHR Flags
-type SurfaceTransformFlagBitsKHR int
-
-const (
-	SURFACE_TRANSFORM_IDENTITY_BIT_KHR                     SurfaceTransformFlagBitsKHR = 1
-	SURFACE_TRANSFORM_ROTATE_90_BIT_KHR                    SurfaceTransformFlagBitsKHR = 2
-	SURFACE_TRANSFORM_ROTATE_180_BIT_KHR                   SurfaceTransformFlagBitsKHR = 4
-	SURFACE_TRANSFORM_ROTATE_270_BIT_KHR                   SurfaceTransformFlagBitsKHR = 8
-	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR            SurfaceTransformFlagBitsKHR = 16
-	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR  SurfaceTransformFlagBitsKHR = 32
-	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR SurfaceTransformFlagBitsKHR = 64
-	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR SurfaceTransformFlagBitsKHR = 128
-	SURFACE_TRANSFORM_INHERIT_BIT_KHR                      SurfaceTransformFlagBitsKHR = 256
-	SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR               SurfaceTransformFlagBitsKHR = 2147483647
-)
-
 type CompositeAlphaFlagsKHR Flags
 type SurfaceCapabilitiesKHR struct {
 	MinImageCount           uint32
@@ -17911,30 +18505,6 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice Physi
 type PFN_vkGetPhysicalDeviceSurfaceFormatsKHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
 }
-type ColorSpaceKHR int
-
-const (
-	COLOR_SPACE_SRGB_NONLINEAR_KHR          ColorSpaceKHR = 0
-	COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT    ColorSpaceKHR = 1000104001
-	COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT    ColorSpaceKHR = 1000104002
-	COLOR_SPACE_DCI_P3_LINEAR_EXT           ColorSpaceKHR = 1000104003
-	COLOR_SPACE_DCI_P3_NONLINEAR_EXT        ColorSpaceKHR = 1000104004
-	COLOR_SPACE_BT709_LINEAR_EXT            ColorSpaceKHR = 1000104005
-	COLOR_SPACE_BT709_NONLINEAR_EXT         ColorSpaceKHR = 1000104006
-	COLOR_SPACE_BT2020_LINEAR_EXT           ColorSpaceKHR = 1000104007
-	COLOR_SPACE_HDR10_ST2084_EXT            ColorSpaceKHR = 1000104008
-	COLOR_SPACE_DOLBYVISION_EXT             ColorSpaceKHR = 1000104009
-	COLOR_SPACE_HDR10_HLG_EXT               ColorSpaceKHR = 1000104010
-	COLOR_SPACE_ADOBERGB_LINEAR_EXT         ColorSpaceKHR = 1000104011
-	COLOR_SPACE_ADOBERGB_NONLINEAR_EXT      ColorSpaceKHR = 1000104012
-	COLOR_SPACE_PASS_THROUGH_EXT            ColorSpaceKHR = 1000104013
-	COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT ColorSpaceKHR = 1000104014
-	COLOR_SPACE_BEGIN_RANGE_KHR             ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
-	COLOR_SPACE_END_RANGE_KHR               ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
-	COLOR_SPACE_RANGE_SIZE_KHR              ColorSpaceKHR = (COLOR_SPACE_SRGB_NONLINEAR_KHR - COLOR_SPACE_SRGB_NONLINEAR_KHR + 1)
-	COLOR_SPACE_MAX_ENUM_KHR                ColorSpaceKHR = 2147483647
-)
-
 type SurfaceFormatKHR struct {
 	Format     Format
 	ColorSpace ColorSpaceKHR
@@ -17980,20 +18550,6 @@ func (p PFN_vkGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDe
 type PFN_vkGetPhysicalDeviceSurfacePresentModesKHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
 }
-type PresentModeKHR int
-
-const (
-	PRESENT_MODE_IMMEDIATE_KHR                 PresentModeKHR = 0
-	PRESENT_MODE_MAILBOX_KHR                   PresentModeKHR = 1
-	PRESENT_MODE_FIFO_KHR                      PresentModeKHR = 2
-	PRESENT_MODE_FIFO_RELAXED_KHR              PresentModeKHR = 3
-	PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR     PresentModeKHR = 1000111000
-	PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR PresentModeKHR = 1000111001
-	PRESENT_MODE_BEGIN_RANGE_KHR               PresentModeKHR = PRESENT_MODE_IMMEDIATE_KHR
-	PRESENT_MODE_END_RANGE_KHR                 PresentModeKHR = PRESENT_MODE_FIFO_RELAXED_KHR
-	PRESENT_MODE_RANGE_SIZE_KHR                PresentModeKHR = (PRESENT_MODE_FIFO_RELAXED_KHR - PRESENT_MODE_IMMEDIATE_KHR + 1)
-	PRESENT_MODE_MAX_ENUM_KHR                  PresentModeKHR = 2147483647
-)
 
 func (p PFN_vkGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes []PresentModeKHR) (_ret Result) {
 	var c struct {
@@ -18024,20 +18580,28 @@ func (p PFN_vkGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice Physi
 	return
 }
 
+type SwapchainCreateFlagBitsKHR int
+
+const (
+	SWAPCHAIN_CREATE_SPLIT_INSTANCE_BIND_REGIONS_BIT_KHR SwapchainCreateFlagBitsKHR = 1
+	SWAPCHAIN_CREATE_PROTECTED_BIT_KHR                   SwapchainCreateFlagBitsKHR = 2
+	SWAPCHAIN_CREATE_FLAG_BITS_MAX_ENUM_KHR              SwapchainCreateFlagBitsKHR = 2147483647
+)
+
+type DeviceGroupPresentModeFlagBitsKHR int
+
+const (
+	DEVICE_GROUP_PRESENT_MODE_LOCAL_BIT_KHR              DeviceGroupPresentModeFlagBitsKHR = 1
+	DEVICE_GROUP_PRESENT_MODE_REMOTE_BIT_KHR             DeviceGroupPresentModeFlagBitsKHR = 2
+	DEVICE_GROUP_PRESENT_MODE_SUM_BIT_KHR                DeviceGroupPresentModeFlagBitsKHR = 4
+	DEVICE_GROUP_PRESENT_MODE_LOCAL_MULTI_DEVICE_BIT_KHR DeviceGroupPresentModeFlagBitsKHR = 8
+	DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR     DeviceGroupPresentModeFlagBitsKHR = 2147483647
+)
+
 type PFN_vkCreateSwapchainKHR struct {
 	Raw C.PFN_vkCreateSwapchainKHR
 }
 type SwapchainCreateFlagsKHR Flags
-type CompositeAlphaFlagBitsKHR int
-
-const (
-	COMPOSITE_ALPHA_OPAQUE_BIT_KHR          CompositeAlphaFlagBitsKHR = 1
-	COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  CompositeAlphaFlagBitsKHR = 2
-	COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR CompositeAlphaFlagBitsKHR = 4
-	COMPOSITE_ALPHA_INHERIT_BIT_KHR         CompositeAlphaFlagBitsKHR = 8
-	COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR  CompositeAlphaFlagBitsKHR = 2147483647
-)
-
 type SwapchainKHR C.VkSwapchainKHR
 type SwapchainCreateInfoKHR struct {
 	Next               Structure
@@ -18629,6 +19193,16 @@ func (p PFN_vkAcquireNextImage2KHR) Call(device Device, acquireInfo *AcquireNext
 	return
 }
 
+type DisplayPlaneAlphaFlagBitsKHR int
+
+const (
+	DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 1
+	DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 2
+	DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               DisplayPlaneAlphaFlagBitsKHR = 4
+	DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR DisplayPlaneAlphaFlagBitsKHR = 8
+	DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR          DisplayPlaneAlphaFlagBitsKHR = 2147483647
+)
+
 type PFN_vkGetPhysicalDeviceDisplayPropertiesKHR struct {
 	Raw C.PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
 }
@@ -19023,16 +19597,6 @@ type PFN_vkCreateDisplayPlaneSurfaceKHR struct {
 	Raw C.PFN_vkCreateDisplayPlaneSurfaceKHR
 }
 type DisplaySurfaceCreateFlagsKHR Flags
-type DisplayPlaneAlphaFlagBitsKHR int
-
-const (
-	DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 1
-	DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 2
-	DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               DisplayPlaneAlphaFlagBitsKHR = 4
-	DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR DisplayPlaneAlphaFlagBitsKHR = 8
-	DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR          DisplayPlaneAlphaFlagBitsKHR = 2147483647
-)
-
 type DisplaySurfaceCreateInfoKHR struct {
 	Next            Structure
 	Flags           DisplaySurfaceCreateFlagsKHR
@@ -21641,10 +22205,6 @@ func (p PFN_vkCmdDrawIndexedIndirectCountKHR) Call(commandBuffer CommandBuffer, 
 	C.callPFN_vkCmdDrawIndexedIndirectCountKHR(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
-type PFN_vkDebugReportCallbackEXT struct {
-	Raw C.PFN_vkDebugReportCallbackEXT
-}
-type DebugReportFlagsEXT Flags
 type DebugReportObjectTypeEXT int
 
 const (
@@ -21691,6 +22251,22 @@ const (
 	DEBUG_REPORT_OBJECT_TYPE_RANGE_SIZE_EXT                     DebugReportObjectTypeEXT = (DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT - DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT + 1)
 	DEBUG_REPORT_OBJECT_TYPE_MAX_ENUM_EXT                       DebugReportObjectTypeEXT = 2147483647
 )
+
+type DebugReportFlagBitsEXT int
+
+const (
+	DEBUG_REPORT_INFORMATION_BIT_EXT         DebugReportFlagBitsEXT = 1
+	DEBUG_REPORT_WARNING_BIT_EXT             DebugReportFlagBitsEXT = 2
+	DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT DebugReportFlagBitsEXT = 4
+	DEBUG_REPORT_ERROR_BIT_EXT               DebugReportFlagBitsEXT = 8
+	DEBUG_REPORT_DEBUG_BIT_EXT               DebugReportFlagBitsEXT = 16
+	DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT      DebugReportFlagBitsEXT = 2147483647
+)
+
+type PFN_vkDebugReportCallbackEXT struct {
+	Raw C.PFN_vkDebugReportCallbackEXT
+}
+type DebugReportFlagsEXT Flags
 
 func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret bool) {
 	var c struct {
@@ -21889,6 +22465,17 @@ func (p PFN_vkDebugReportMessageEXT) Call(instance Instance, flags DebugReportFl
 	c.pMessage = toCString(message, _sa)
 	C.callPFN_vkDebugReportMessageEXT(p.Raw, c.instance, c.flags, c.objectType, c.object, c.location, c.messageCode, c.pLayerPrefix, c.pMessage)
 }
+
+type RasterizationOrderAMD int
+
+const (
+	RASTERIZATION_ORDER_STRICT_AMD      RasterizationOrderAMD = 0
+	RASTERIZATION_ORDER_RELAXED_AMD     RasterizationOrderAMD = 1
+	RASTERIZATION_ORDER_BEGIN_RANGE_AMD RasterizationOrderAMD = RASTERIZATION_ORDER_STRICT_AMD
+	RASTERIZATION_ORDER_END_RANGE_AMD   RasterizationOrderAMD = RASTERIZATION_ORDER_RELAXED_AMD
+	RASTERIZATION_ORDER_RANGE_SIZE_AMD  RasterizationOrderAMD = (RASTERIZATION_ORDER_RELAXED_AMD - RASTERIZATION_ORDER_STRICT_AMD + 1)
+	RASTERIZATION_ORDER_MAX_ENUM_AMD    RasterizationOrderAMD = 2147483647
+)
 
 type PFN_vkDebugMarkerSetObjectTagEXT struct {
 	Raw C.PFN_vkDebugMarkerSetObjectTagEXT
@@ -22182,9 +22769,6 @@ func (p PFN_vkCmdDrawIndexedIndirectCountAMD) Call(commandBuffer CommandBuffer, 
 	C.callPFN_vkCmdDrawIndexedIndirectCountAMD(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
-type PFN_vkGetShaderInfoAMD struct {
-	Raw C.PFN_vkGetShaderInfoAMD
-}
 type ShaderInfoTypeAMD int
 
 const (
@@ -22196,6 +22780,10 @@ const (
 	SHADER_INFO_TYPE_RANGE_SIZE_AMD  ShaderInfoTypeAMD = (SHADER_INFO_TYPE_DISASSEMBLY_AMD - SHADER_INFO_TYPE_STATISTICS_AMD + 1)
 	SHADER_INFO_TYPE_MAX_ENUM_AMD    ShaderInfoTypeAMD = 2147483647
 )
+
+type PFN_vkGetShaderInfoAMD struct {
+	Raw C.PFN_vkGetShaderInfoAMD
+}
 
 func (p PFN_vkGetShaderInfoAMD) Call(device Device, pipeline Pipeline, shaderStage ShaderStageFlagBits, infoType ShaderInfoTypeAMD, infoSize *uint, info unsafe.Pointer) (_ret Result) {
 	var c struct {
@@ -22223,6 +22811,25 @@ func (p PFN_vkGetShaderInfoAMD) Call(device Device, pipeline Pipeline, shaderSta
 	*infoSize = uint(*c.pInfoSize)
 	return
 }
+
+type ExternalMemoryHandleTypeFlagBitsNV int
+
+const (
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_NV     ExternalMemoryHandleTypeFlagBitsNV = 1
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_NV ExternalMemoryHandleTypeFlagBitsNV = 2
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_BIT_NV      ExternalMemoryHandleTypeFlagBitsNV = 4
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_IMAGE_KMT_BIT_NV  ExternalMemoryHandleTypeFlagBitsNV = 8
+	EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM_NV   ExternalMemoryHandleTypeFlagBitsNV = 2147483647
+)
+
+type ExternalMemoryFeatureFlagBitsNV int
+
+const (
+	EXTERNAL_MEMORY_FEATURE_DEDICATED_ONLY_BIT_NV ExternalMemoryFeatureFlagBitsNV = 1
+	EXTERNAL_MEMORY_FEATURE_EXPORTABLE_BIT_NV     ExternalMemoryFeatureFlagBitsNV = 2
+	EXTERNAL_MEMORY_FEATURE_IMPORTABLE_BIT_NV     ExternalMemoryFeatureFlagBitsNV = 4
+	EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV ExternalMemoryFeatureFlagBitsNV = 2147483647
+)
 
 type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV struct {
 	Raw C.PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
@@ -22353,6 +22960,24 @@ func (p PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDev
 	return
 }
 
+type ValidationCheckEXT int
+
+const (
+	VALIDATION_CHECK_ALL_EXT         ValidationCheckEXT = 0
+	VALIDATION_CHECK_SHADERS_EXT     ValidationCheckEXT = 1
+	VALIDATION_CHECK_BEGIN_RANGE_EXT ValidationCheckEXT = VALIDATION_CHECK_ALL_EXT
+	VALIDATION_CHECK_END_RANGE_EXT   ValidationCheckEXT = VALIDATION_CHECK_SHADERS_EXT
+	VALIDATION_CHECK_RANGE_SIZE_EXT  ValidationCheckEXT = (VALIDATION_CHECK_SHADERS_EXT - VALIDATION_CHECK_ALL_EXT + 1)
+	VALIDATION_CHECK_MAX_ENUM_EXT    ValidationCheckEXT = 2147483647
+)
+
+type ConditionalRenderingFlagBitsEXT int
+
+const (
+	CONDITIONAL_RENDERING_INVERTED_BIT_EXT       ConditionalRenderingFlagBitsEXT = 1
+	CONDITIONAL_RENDERING_FLAG_BITS_MAX_ENUM_EXT ConditionalRenderingFlagBitsEXT = 2147483647
+)
+
 type PFN_vkCmdBeginConditionalRenderingEXT struct {
 	Raw C.PFN_vkCmdBeginConditionalRenderingEXT
 }
@@ -22450,11 +23075,6 @@ func (p PFN_vkCmdEndConditionalRenderingEXT) Call(commandBuffer CommandBuffer) {
 	C.callPFN_vkCmdEndConditionalRenderingEXT(p.Raw, c.commandBuffer)
 }
 
-type PFN_vkCmdProcessCommandsNVX struct {
-	Raw C.PFN_vkCmdProcessCommandsNVX
-}
-type ObjectTableNVX C.VkObjectTableNVX
-type IndirectCommandsLayoutNVX C.VkIndirectCommandsLayoutNVX
 type IndirectCommandsTokenTypeNVX int
 
 const (
@@ -22472,6 +23092,43 @@ const (
 	INDIRECT_COMMANDS_TOKEN_TYPE_MAX_ENUM_NVX       IndirectCommandsTokenTypeNVX = 2147483647
 )
 
+type ObjectEntryTypeNVX int
+
+const (
+	OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX ObjectEntryTypeNVX = 0
+	OBJECT_ENTRY_TYPE_PIPELINE_NVX       ObjectEntryTypeNVX = 1
+	OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX   ObjectEntryTypeNVX = 2
+	OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX  ObjectEntryTypeNVX = 3
+	OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX  ObjectEntryTypeNVX = 4
+	OBJECT_ENTRY_TYPE_BEGIN_RANGE_NVX    ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX
+	OBJECT_ENTRY_TYPE_END_RANGE_NVX      ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX
+	OBJECT_ENTRY_TYPE_RANGE_SIZE_NVX     ObjectEntryTypeNVX = (OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX - OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX + 1)
+	OBJECT_ENTRY_TYPE_MAX_ENUM_NVX       ObjectEntryTypeNVX = 2147483647
+)
+
+type IndirectCommandsLayoutUsageFlagBitsNVX int
+
+const (
+	INDIRECT_COMMANDS_LAYOUT_USAGE_UNORDERED_SEQUENCES_BIT_NVX IndirectCommandsLayoutUsageFlagBitsNVX = 1
+	INDIRECT_COMMANDS_LAYOUT_USAGE_SPARSE_SEQUENCES_BIT_NVX    IndirectCommandsLayoutUsageFlagBitsNVX = 2
+	INDIRECT_COMMANDS_LAYOUT_USAGE_EMPTY_EXECUTIONS_BIT_NVX    IndirectCommandsLayoutUsageFlagBitsNVX = 4
+	INDIRECT_COMMANDS_LAYOUT_USAGE_INDEXED_SEQUENCES_BIT_NVX   IndirectCommandsLayoutUsageFlagBitsNVX = 8
+	INDIRECT_COMMANDS_LAYOUT_USAGE_FLAG_BITS_MAX_ENUM_NVX      IndirectCommandsLayoutUsageFlagBitsNVX = 2147483647
+)
+
+type ObjectEntryUsageFlagBitsNVX int
+
+const (
+	OBJECT_ENTRY_USAGE_GRAPHICS_BIT_NVX       ObjectEntryUsageFlagBitsNVX = 1
+	OBJECT_ENTRY_USAGE_COMPUTE_BIT_NVX        ObjectEntryUsageFlagBitsNVX = 2
+	OBJECT_ENTRY_USAGE_FLAG_BITS_MAX_ENUM_NVX ObjectEntryUsageFlagBitsNVX = 2147483647
+)
+
+type PFN_vkCmdProcessCommandsNVX struct {
+	Raw C.PFN_vkCmdProcessCommandsNVX
+}
+type ObjectTableNVX C.VkObjectTableNVX
+type IndirectCommandsLayoutNVX C.VkIndirectCommandsLayoutNVX
 type IndirectCommandsTokenNVX struct {
 	TokenType IndirectCommandsTokenTypeNVX
 	Buffer    Buffer
@@ -22815,20 +23472,6 @@ func (p PFN_vkDestroyIndirectCommandsLayoutNVX) Call(device Device, indirectComm
 type PFN_vkCreateObjectTableNVX struct {
 	Raw C.PFN_vkCreateObjectTableNVX
 }
-type ObjectEntryTypeNVX int
-
-const (
-	OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX ObjectEntryTypeNVX = 0
-	OBJECT_ENTRY_TYPE_PIPELINE_NVX       ObjectEntryTypeNVX = 1
-	OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX   ObjectEntryTypeNVX = 2
-	OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX  ObjectEntryTypeNVX = 3
-	OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX  ObjectEntryTypeNVX = 4
-	OBJECT_ENTRY_TYPE_BEGIN_RANGE_NVX    ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX
-	OBJECT_ENTRY_TYPE_END_RANGE_NVX      ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX
-	OBJECT_ENTRY_TYPE_RANGE_SIZE_NVX     ObjectEntryTypeNVX = (OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX - OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX + 1)
-	OBJECT_ENTRY_TYPE_MAX_ENUM_NVX       ObjectEntryTypeNVX = 2147483647
-)
-
 type ObjectEntryUsageFlagsNVX Flags
 type ObjectTableCreateInfoNVX struct {
 	Next                           Structure
@@ -23272,6 +23915,13 @@ func (p PFN_vkReleaseDisplayEXT) Call(physicalDevice PhysicalDevice, display Dis
 	return
 }
 
+type SurfaceCounterFlagBitsEXT int
+
+const (
+	SURFACE_COUNTER_VBLANK_EXT             SurfaceCounterFlagBitsEXT = 1
+	SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT SurfaceCounterFlagBitsEXT = 2147483647
+)
+
 type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT struct {
 	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
 }
@@ -23431,9 +24081,6 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice Phys
 	return
 }
 
-type PFN_vkDisplayPowerControlEXT struct {
-	Raw C.PFN_vkDisplayPowerControlEXT
-}
 type DisplayPowerStateEXT int
 
 const (
@@ -23446,6 +24093,29 @@ const (
 	DISPLAY_POWER_STATE_MAX_ENUM_EXT    DisplayPowerStateEXT = 2147483647
 )
 
+type DeviceEventTypeEXT int
+
+const (
+	DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT DeviceEventTypeEXT = 0
+	DEVICE_EVENT_TYPE_BEGIN_RANGE_EXT     DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
+	DEVICE_EVENT_TYPE_END_RANGE_EXT       DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
+	DEVICE_EVENT_TYPE_RANGE_SIZE_EXT      DeviceEventTypeEXT = (DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT - DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT + 1)
+	DEVICE_EVENT_TYPE_MAX_ENUM_EXT        DeviceEventTypeEXT = 2147483647
+)
+
+type DisplayEventTypeEXT int
+
+const (
+	DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT DisplayEventTypeEXT = 0
+	DISPLAY_EVENT_TYPE_BEGIN_RANGE_EXT     DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
+	DISPLAY_EVENT_TYPE_END_RANGE_EXT       DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
+	DISPLAY_EVENT_TYPE_RANGE_SIZE_EXT      DisplayEventTypeEXT = (DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT - DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT + 1)
+	DISPLAY_EVENT_TYPE_MAX_ENUM_EXT        DisplayEventTypeEXT = 2147483647
+)
+
+type PFN_vkDisplayPowerControlEXT struct {
+	Raw C.PFN_vkDisplayPowerControlEXT
+}
 type DisplayPowerInfoEXT struct {
 	Next       Structure
 	PowerState DisplayPowerStateEXT
@@ -23507,16 +24177,6 @@ func (p PFN_vkDisplayPowerControlEXT) Call(device Device, display DisplayKHR, di
 type PFN_vkRegisterDeviceEventEXT struct {
 	Raw C.PFN_vkRegisterDeviceEventEXT
 }
-type DeviceEventTypeEXT int
-
-const (
-	DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT DeviceEventTypeEXT = 0
-	DEVICE_EVENT_TYPE_BEGIN_RANGE_EXT     DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
-	DEVICE_EVENT_TYPE_END_RANGE_EXT       DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
-	DEVICE_EVENT_TYPE_RANGE_SIZE_EXT      DeviceEventTypeEXT = (DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT - DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT + 1)
-	DEVICE_EVENT_TYPE_MAX_ENUM_EXT        DeviceEventTypeEXT = 2147483647
-)
-
 type DeviceEventInfoEXT struct {
 	Next        Structure
 	DeviceEvent DeviceEventTypeEXT
@@ -23587,16 +24247,6 @@ func (p PFN_vkRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *Devic
 type PFN_vkRegisterDisplayEventEXT struct {
 	Raw C.PFN_vkRegisterDisplayEventEXT
 }
-type DisplayEventTypeEXT int
-
-const (
-	DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT DisplayEventTypeEXT = 0
-	DISPLAY_EVENT_TYPE_BEGIN_RANGE_EXT     DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
-	DISPLAY_EVENT_TYPE_END_RANGE_EXT       DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
-	DISPLAY_EVENT_TYPE_RANGE_SIZE_EXT      DisplayEventTypeEXT = (DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT - DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT + 1)
-	DISPLAY_EVENT_TYPE_MAX_ENUM_EXT        DisplayEventTypeEXT = 2147483647
-)
-
 type DisplayEventInfoEXT struct {
 	Next         Structure
 	DisplayEvent DisplayEventTypeEXT
@@ -23669,12 +24319,6 @@ func (p PFN_vkRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, d
 type PFN_vkGetSwapchainCounterEXT struct {
 	Raw C.PFN_vkGetSwapchainCounterEXT
 }
-type SurfaceCounterFlagBitsEXT int
-
-const (
-	SURFACE_COUNTER_VBLANK_EXT             SurfaceCounterFlagBitsEXT = 1
-	SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT SurfaceCounterFlagBitsEXT = 2147483647
-)
 
 func (p PFN_vkGetSwapchainCounterEXT) Call(device Device, swapchain SwapchainKHR, counter SurfaceCounterFlagBitsEXT, counterValue *uint64) (_ret Result) {
 	var c struct {
@@ -23787,6 +24431,34 @@ func (p PFN_vkGetPastPresentationTimingGOOGLE) Call(device Device, swapchain Swa
 	return
 }
 
+type ViewportCoordinateSwizzleNV int
+
+const (
+	VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV  ViewportCoordinateSwizzleNV = 0
+	VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_X_NV  ViewportCoordinateSwizzleNV = 1
+	VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Y_NV  ViewportCoordinateSwizzleNV = 2
+	VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Y_NV  ViewportCoordinateSwizzleNV = 3
+	VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_Z_NV  ViewportCoordinateSwizzleNV = 4
+	VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_Z_NV  ViewportCoordinateSwizzleNV = 5
+	VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_W_NV  ViewportCoordinateSwizzleNV = 6
+	VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV  ViewportCoordinateSwizzleNV = 7
+	VIEWPORT_COORDINATE_SWIZZLE_BEGIN_RANGE_NV ViewportCoordinateSwizzleNV = VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV
+	VIEWPORT_COORDINATE_SWIZZLE_END_RANGE_NV   ViewportCoordinateSwizzleNV = VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV
+	VIEWPORT_COORDINATE_SWIZZLE_RANGE_SIZE_NV  ViewportCoordinateSwizzleNV = (VIEWPORT_COORDINATE_SWIZZLE_NEGATIVE_W_NV - VIEWPORT_COORDINATE_SWIZZLE_POSITIVE_X_NV + 1)
+	VIEWPORT_COORDINATE_SWIZZLE_MAX_ENUM_NV    ViewportCoordinateSwizzleNV = 2147483647
+)
+
+type DiscardRectangleModeEXT int
+
+const (
+	DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT   DiscardRectangleModeEXT = 0
+	DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT   DiscardRectangleModeEXT = 1
+	DISCARD_RECTANGLE_MODE_BEGIN_RANGE_EXT DiscardRectangleModeEXT = DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT
+	DISCARD_RECTANGLE_MODE_END_RANGE_EXT   DiscardRectangleModeEXT = DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT
+	DISCARD_RECTANGLE_MODE_RANGE_SIZE_EXT  DiscardRectangleModeEXT = (DISCARD_RECTANGLE_MODE_EXCLUSIVE_EXT - DISCARD_RECTANGLE_MODE_INCLUSIVE_EXT + 1)
+	DISCARD_RECTANGLE_MODE_MAX_ENUM_EXT    DiscardRectangleModeEXT = 2147483647
+)
+
 type PFN_vkCmdSetDiscardRectangleEXT struct {
 	Raw C.PFN_vkCmdSetDiscardRectangleEXT
 }
@@ -23812,6 +24484,18 @@ func (p PFN_vkCmdSetDiscardRectangleEXT) Call(commandBuffer CommandBuffer, first
 	}
 	C.callPFN_vkCmdSetDiscardRectangleEXT(p.Raw, c.commandBuffer, c.firstDiscardRectangle, c.discardRectangleCount, c.pDiscardRectangles)
 }
+
+type ConservativeRasterizationModeEXT int
+
+const (
+	CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT      ConservativeRasterizationModeEXT = 0
+	CONSERVATIVE_RASTERIZATION_MODE_OVERESTIMATE_EXT  ConservativeRasterizationModeEXT = 1
+	CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT ConservativeRasterizationModeEXT = 2
+	CONSERVATIVE_RASTERIZATION_MODE_BEGIN_RANGE_EXT   ConservativeRasterizationModeEXT = CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT
+	CONSERVATIVE_RASTERIZATION_MODE_END_RANGE_EXT     ConservativeRasterizationModeEXT = CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT
+	CONSERVATIVE_RASTERIZATION_MODE_RANGE_SIZE_EXT    ConservativeRasterizationModeEXT = (CONSERVATIVE_RASTERIZATION_MODE_UNDERESTIMATE_EXT - CONSERVATIVE_RASTERIZATION_MODE_DISABLED_EXT + 1)
+	CONSERVATIVE_RASTERIZATION_MODE_MAX_ENUM_EXT      ConservativeRasterizationModeEXT = 2147483647
+)
 
 type PFN_vkSetHdrMetadataEXT struct {
 	Raw C.PFN_vkSetHdrMetadataEXT
@@ -23917,9 +24601,6 @@ func (p PFN_vkSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, 
 	C.callPFN_vkSetHdrMetadataEXT(p.Raw, c.device, c.swapchainCount, c.pSwapchains, c.pMetadata)
 }
 
-type PFN_vkDebugUtilsMessengerCallbackEXT struct {
-	Raw C.PFN_vkDebugUtilsMessengerCallbackEXT
-}
 type DebugUtilsMessageSeverityFlagBitsEXT int
 
 const (
@@ -23930,6 +24611,18 @@ const (
 	DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT DebugUtilsMessageSeverityFlagBitsEXT = 2147483647
 )
 
+type DebugUtilsMessageTypeFlagBitsEXT int
+
+const (
+	DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT        DebugUtilsMessageTypeFlagBitsEXT = 1
+	DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT     DebugUtilsMessageTypeFlagBitsEXT = 2
+	DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT    DebugUtilsMessageTypeFlagBitsEXT = 4
+	DEBUG_UTILS_MESSAGE_TYPE_FLAG_BITS_MAX_ENUM_EXT DebugUtilsMessageTypeFlagBitsEXT = 2147483647
+)
+
+type PFN_vkDebugUtilsMessengerCallbackEXT struct {
+	Raw C.PFN_vkDebugUtilsMessengerCallbackEXT
+}
 type DebugUtilsMessageTypeFlagsEXT Flags
 type DebugUtilsMessengerCallbackDataFlagsEXT Flags
 type DebugUtilsLabelEXT struct {
@@ -23977,54 +24670,6 @@ func (s *DebugUtilsLabelEXT) GetNext() Structure {
 func (s *DebugUtilsLabelEXT) SetNext(n Structure) {
 	s.Next = n
 }
-
-type ObjectType int
-
-const (
-	OBJECT_TYPE_UNKNOWN                        ObjectType = 0
-	OBJECT_TYPE_INSTANCE                       ObjectType = 1
-	OBJECT_TYPE_PHYSICAL_DEVICE                ObjectType = 2
-	OBJECT_TYPE_DEVICE                         ObjectType = 3
-	OBJECT_TYPE_QUEUE                          ObjectType = 4
-	OBJECT_TYPE_SEMAPHORE                      ObjectType = 5
-	OBJECT_TYPE_COMMAND_BUFFER                 ObjectType = 6
-	OBJECT_TYPE_FENCE                          ObjectType = 7
-	OBJECT_TYPE_DEVICE_MEMORY                  ObjectType = 8
-	OBJECT_TYPE_BUFFER                         ObjectType = 9
-	OBJECT_TYPE_IMAGE                          ObjectType = 10
-	OBJECT_TYPE_EVENT                          ObjectType = 11
-	OBJECT_TYPE_QUERY_POOL                     ObjectType = 12
-	OBJECT_TYPE_BUFFER_VIEW                    ObjectType = 13
-	OBJECT_TYPE_IMAGE_VIEW                     ObjectType = 14
-	OBJECT_TYPE_SHADER_MODULE                  ObjectType = 15
-	OBJECT_TYPE_PIPELINE_CACHE                 ObjectType = 16
-	OBJECT_TYPE_PIPELINE_LAYOUT                ObjectType = 17
-	OBJECT_TYPE_RENDER_PASS                    ObjectType = 18
-	OBJECT_TYPE_PIPELINE                       ObjectType = 19
-	OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT          ObjectType = 20
-	OBJECT_TYPE_SAMPLER                        ObjectType = 21
-	OBJECT_TYPE_DESCRIPTOR_POOL                ObjectType = 22
-	OBJECT_TYPE_DESCRIPTOR_SET                 ObjectType = 23
-	OBJECT_TYPE_FRAMEBUFFER                    ObjectType = 24
-	OBJECT_TYPE_COMMAND_POOL                   ObjectType = 25
-	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION       ObjectType = 1000156000
-	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE     ObjectType = 1000085000
-	OBJECT_TYPE_SURFACE_KHR                    ObjectType = 1000000000
-	OBJECT_TYPE_SWAPCHAIN_KHR                  ObjectType = 1000001000
-	OBJECT_TYPE_DISPLAY_KHR                    ObjectType = 1000002000
-	OBJECT_TYPE_DISPLAY_MODE_KHR               ObjectType = 1000002001
-	OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT      ObjectType = 1000011000
-	OBJECT_TYPE_OBJECT_TABLE_NVX               ObjectType = 1000086000
-	OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX   ObjectType = 1000086001
-	OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT      ObjectType = 1000128000
-	OBJECT_TYPE_VALIDATION_CACHE_EXT           ObjectType = 1000160000
-	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR ObjectType = OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
-	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR   ObjectType = OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
-	OBJECT_TYPE_BEGIN_RANGE                    ObjectType = OBJECT_TYPE_UNKNOWN
-	OBJECT_TYPE_END_RANGE                      ObjectType = OBJECT_TYPE_COMMAND_POOL
-	OBJECT_TYPE_RANGE_SIZE                     ObjectType = (OBJECT_TYPE_COMMAND_POOL - OBJECT_TYPE_UNKNOWN + 1)
-	OBJECT_TYPE_MAX_ENUM                       ObjectType = 2147483647
-)
 
 type DebugUtilsObjectNameInfoEXT struct {
 	Next         Structure
@@ -24602,6 +25247,18 @@ func (p PFN_vkSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverit
 	C.callPFN_vkSubmitDebugUtilsMessageEXT(p.Raw, c.instance, c.messageSeverity, c.messageTypes, c.pCallbackData)
 }
 
+type SamplerReductionModeEXT int
+
+const (
+	SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT SamplerReductionModeEXT = 0
+	SAMPLER_REDUCTION_MODE_MIN_EXT              SamplerReductionModeEXT = 1
+	SAMPLER_REDUCTION_MODE_MAX_EXT              SamplerReductionModeEXT = 2
+	SAMPLER_REDUCTION_MODE_BEGIN_RANGE_EXT      SamplerReductionModeEXT = SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT
+	SAMPLER_REDUCTION_MODE_END_RANGE_EXT        SamplerReductionModeEXT = SAMPLER_REDUCTION_MODE_MAX_EXT
+	SAMPLER_REDUCTION_MODE_RANGE_SIZE_EXT       SamplerReductionModeEXT = (SAMPLER_REDUCTION_MODE_MAX_EXT - SAMPLER_REDUCTION_MODE_WEIGHTED_AVERAGE_EXT + 1)
+	SAMPLER_REDUCTION_MODE_MAX_ENUM_EXT         SamplerReductionModeEXT = 2147483647
+)
+
 type PFN_vkCmdSetSampleLocationsEXT struct {
 	Raw C.PFN_vkCmdSetSampleLocationsEXT
 }
@@ -24751,6 +25408,41 @@ func (p PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice Phy
 	}
 	C.callPFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(p.Raw, c.physicalDevice, c.samples, c.pMultisampleProperties)
 }
+
+type BlendOverlapEXT int
+
+const (
+	BLEND_OVERLAP_UNCORRELATED_EXT BlendOverlapEXT = 0
+	BLEND_OVERLAP_DISJOINT_EXT     BlendOverlapEXT = 1
+	BLEND_OVERLAP_CONJOINT_EXT     BlendOverlapEXT = 2
+	BLEND_OVERLAP_BEGIN_RANGE_EXT  BlendOverlapEXT = BLEND_OVERLAP_UNCORRELATED_EXT
+	BLEND_OVERLAP_END_RANGE_EXT    BlendOverlapEXT = BLEND_OVERLAP_CONJOINT_EXT
+	BLEND_OVERLAP_RANGE_SIZE_EXT   BlendOverlapEXT = (BLEND_OVERLAP_CONJOINT_EXT - BLEND_OVERLAP_UNCORRELATED_EXT + 1)
+	BLEND_OVERLAP_MAX_ENUM_EXT     BlendOverlapEXT = 2147483647
+)
+
+type CoverageModulationModeNV int
+
+const (
+	COVERAGE_MODULATION_MODE_NONE_NV        CoverageModulationModeNV = 0
+	COVERAGE_MODULATION_MODE_RGB_NV         CoverageModulationModeNV = 1
+	COVERAGE_MODULATION_MODE_ALPHA_NV       CoverageModulationModeNV = 2
+	COVERAGE_MODULATION_MODE_RGBA_NV        CoverageModulationModeNV = 3
+	COVERAGE_MODULATION_MODE_BEGIN_RANGE_NV CoverageModulationModeNV = COVERAGE_MODULATION_MODE_NONE_NV
+	COVERAGE_MODULATION_MODE_END_RANGE_NV   CoverageModulationModeNV = COVERAGE_MODULATION_MODE_RGBA_NV
+	COVERAGE_MODULATION_MODE_RANGE_SIZE_NV  CoverageModulationModeNV = (COVERAGE_MODULATION_MODE_RGBA_NV - COVERAGE_MODULATION_MODE_NONE_NV + 1)
+	COVERAGE_MODULATION_MODE_MAX_ENUM_NV    CoverageModulationModeNV = 2147483647
+)
+
+type ValidationCacheHeaderVersionEXT int
+
+const (
+	VALIDATION_CACHE_HEADER_VERSION_ONE_EXT         ValidationCacheHeaderVersionEXT = 1
+	VALIDATION_CACHE_HEADER_VERSION_BEGIN_RANGE_EXT ValidationCacheHeaderVersionEXT = VALIDATION_CACHE_HEADER_VERSION_ONE_EXT
+	VALIDATION_CACHE_HEADER_VERSION_END_RANGE_EXT   ValidationCacheHeaderVersionEXT = VALIDATION_CACHE_HEADER_VERSION_ONE_EXT
+	VALIDATION_CACHE_HEADER_VERSION_RANGE_SIZE_EXT  ValidationCacheHeaderVersionEXT = (VALIDATION_CACHE_HEADER_VERSION_ONE_EXT - VALIDATION_CACHE_HEADER_VERSION_ONE_EXT + 1)
+	VALIDATION_CACHE_HEADER_VERSION_MAX_ENUM_EXT    ValidationCacheHeaderVersionEXT = 2147483647
+)
 
 type PFN_vkCreateValidationCacheEXT struct {
 	Raw C.PFN_vkCreateValidationCacheEXT
@@ -24940,6 +25632,29 @@ func (p PFN_vkGetValidationCacheDataEXT) Call(device Device, validationCache Val
 	*dataSize = uint(*c.pDataSize)
 	return
 }
+
+type DescriptorBindingFlagBitsEXT int
+
+const (
+	DESCRIPTOR_BINDING_UPDATE_AFTER_BIND_BIT_EXT           DescriptorBindingFlagBitsEXT = 1
+	DESCRIPTOR_BINDING_UPDATE_UNUSED_WHILE_PENDING_BIT_EXT DescriptorBindingFlagBitsEXT = 2
+	DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT_EXT             DescriptorBindingFlagBitsEXT = 4
+	DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT_EXT   DescriptorBindingFlagBitsEXT = 8
+	DESCRIPTOR_BINDING_FLAG_BITS_MAX_ENUM_EXT              DescriptorBindingFlagBitsEXT = 2147483647
+)
+
+type QueueGlobalPriorityEXT int
+
+const (
+	QUEUE_GLOBAL_PRIORITY_LOW_EXT         QueueGlobalPriorityEXT = 128
+	QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT      QueueGlobalPriorityEXT = 256
+	QUEUE_GLOBAL_PRIORITY_HIGH_EXT        QueueGlobalPriorityEXT = 512
+	QUEUE_GLOBAL_PRIORITY_REALTIME_EXT    QueueGlobalPriorityEXT = 1024
+	QUEUE_GLOBAL_PRIORITY_BEGIN_RANGE_EXT QueueGlobalPriorityEXT = QUEUE_GLOBAL_PRIORITY_LOW_EXT
+	QUEUE_GLOBAL_PRIORITY_END_RANGE_EXT   QueueGlobalPriorityEXT = QUEUE_GLOBAL_PRIORITY_REALTIME_EXT
+	QUEUE_GLOBAL_PRIORITY_RANGE_SIZE_EXT  QueueGlobalPriorityEXT = (QUEUE_GLOBAL_PRIORITY_REALTIME_EXT - QUEUE_GLOBAL_PRIORITY_LOW_EXT + 1)
+	QUEUE_GLOBAL_PRIORITY_MAX_ENUM_EXT    QueueGlobalPriorityEXT = 2147483647
+)
 
 type PFN_vkGetMemoryHostPointerPropertiesEXT struct {
 	Raw C.PFN_vkGetMemoryHostPointerPropertiesEXT

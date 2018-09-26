@@ -437,18 +437,19 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 	if info, ok := g.types[decl.Name]; ok {
 		return info
 	}
-	info := &typeInfo{}
+	var info *typeInfo
+
+	info = &typeInfo{}
 	g.types[decl.Name] = info
 
-	name := strings.TrimPrefix(decl.Name, "enum ")
-	goname := trimPrefixs(name, "Vk")
+	goname := trimPrefixs(decl.Name, "Vk")
 	info.gotype = ident(goname)
-	if _, ok := g.nodes[name]; ok {
-		info.ctype = ident("C." + name)
-		info.csize = ident("C.sizeof_" + name)
+	if _, ok := g.nodes[decl.Name]; ok {
+		info.ctype = ident("C." + decl.Name)
+		info.csize = ident("C.sizeof_" + decl.Name)
 	} else {
-		info.ctype = ident("C.enum" + name)
-		info.csize = ident("C.sizeof_enum_" + name)
+		info.ctype = ident("C.enum" + decl.Name)
+		info.csize = ident("C.sizeof_enum_" + decl.Name)
 	}
 
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
@@ -1422,6 +1423,10 @@ func (g *generator) process(src Source) {
 			}
 		case *cast.RecordDecl:
 		case *cast.EnumDecl:
+			if strings.HasPrefix(n.Name, "Vk") {
+				// println(n.Name)
+				g.genEnumType(n)
+			}
 		case *cast.FunctionDecl:
 			re := regexp.MustCompile(`.*(KHR)|(EXT)|(AMD)|(ANDROID)|(GOOGLE)|(IMG)|(MVK)|(NN)|(NVX)|(NV)$`)
 			if !re.MatchString(n.Name) {
