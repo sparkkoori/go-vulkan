@@ -199,11 +199,11 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 	}
 
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-		return assignStmt1n1(cvar, ident("g.Raw"))
+		return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
 	}
 
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-		return assignStmt1n1(ident("g.Raw"), cvar)
+		return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
 	}
 
 	return info
