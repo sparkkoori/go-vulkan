@@ -4,6 +4,7 @@ import (
 	"fmt"
 	goast "go/ast"
 	"go/token"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -1265,7 +1266,10 @@ func (g *generator) process(src Source) {
 		case *cast.RecordDecl:
 		case *cast.EnumDecl:
 		case *cast.FunctionDecl:
-			g.genFunc(n)
+			re := regexp.MustCompile(`.*(KHR)|(EXT)|(AMD)|(ANDROID)|(GOOGLE)|(IMG)|(MVK)|(NN)|(NVX)|(NV)$`)
+			if !re.MatchString(n.Name) {
+				g.genFunc(n)
+			}
 		default:
 			halt("Unkown node in source", node)
 		}

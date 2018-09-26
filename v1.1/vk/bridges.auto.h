@@ -13,7 +13,3 @@ void callPFN_vkInternalFreeNotification(PFN_vkInternalFreeNotification f, void *
 
 void callPFN_vkVoidFunction(PFN_vkVoidFunction f);
 
-VkBool32 callPFN_vkDebugReportCallbackEXT(PFN_vkDebugReportCallbackEXT f, VkDebugReportFlagsEXT arg0,  VkDebugReportObjectTypeEXT arg1,  uint64_t arg2,  size_t arg3,  int32_t arg4,  const char * arg5,  const char * arg6,  void * arg7);
-
-VkBool32 callPFN_vkDebugUtilsMessengerCallbackEXT(PFN_vkDebugUtilsMessengerCallbackEXT f, VkDebugUtilsMessageSeverityFlagBitsEXT arg0,  VkDebugUtilsMessageTypeFlagsEXT arg1,  const VkDebugUtilsMessengerCallbackDataEXT * arg2,  void * arg3);
-
