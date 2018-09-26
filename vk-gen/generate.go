@@ -101,19 +101,21 @@ func (g *generator) mapRecordType(n *cast.RecordType, pid string) *typeInfo {
 		decl = node.(*cast.RecordDecl)
 	}
 
-	//Incomplete Struct
-	if !decl.Definition {
-		info := &typeInfo{}
-		info.gotype = ident("C.struct_" + decl.Name)
-		info.ctype = ident("C.struct_" + decl.Name)
-		info.csize = nil
-		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-			return assignStmt1n1(govar, cvar)
+	if strings.HasPrefix(n.Type, "struct ") {
+		//Incomplete Struct
+		if !decl.Definition {
+			info := &typeInfo{}
+			info.gotype = ident("C.struct_" + decl.Name)
+			info.ctype = ident("C.struct_" + decl.Name)
+			info.csize = nil
+			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, cvar)
+			}
+			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, govar)
+			}
+			return info
 		}
-		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-			return assignStmt1n1(cvar, govar)
-		}
-		return info
 	}
 
 	if decl.Name != "" {
@@ -125,6 +127,88 @@ func (g *generator) mapRecordType(n *cast.RecordType, pid string) *typeInfo {
 }
 
 func (g *generator) genRecordType(decl *cast.RecordDecl) *typeInfo {
+	switch decl.Kind {
+	case "struct":
+		return g.genRecordTypeStruct(decl)
+	case "union":
+		return g.genRecordTypeUnion(decl)
+	}
+	halt("Unkown record type", decl)
+	return nil
+}
+
+func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
+	if info, ok := g.types[decl.Name]; ok {
+		return info
+	}
+	var info *typeInfo = &typeInfo{}
+	g.types[decl.Name] = info
+
+	info.gotype = ident(trimPrefixs(decl.Name, "Vk"))
+	if _, ok := g.nodes[decl.Name]; ok {
+		//same name typedef exists
+		info.ctype = ident("C." + decl.Name)
+		info.csize = ident("C.sizeof_" + decl.Name)
+	} else {
+		info.ctype = ident("C.union_" + decl.Name)
+		info.csize = ident("C.sizeof_union_" + decl.Name)
+	}
+
+	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
+		Struct: token.Pos(1),
+		Fields: &goast.FieldList{
+			Opening: token.Pos(1),
+			List:    []*goast.Field{field(info.ctype, ident("Raw"))},
+			Closing: token.Pos(1),
+		},
+	}))
+
+	recv := field(starExpr(info.gotype), ident("g"))
+	for _, fieldDecl := range decl.ChildNodes {
+		dn := fieldDecl.(*cast.FieldDecl)
+		id := decl.Name + "." + dn.Name
+		finfo := g.mapType(dn.ChildNodes[0], id)
+		gostr := toGoFieldName(dn.Name)
+
+		//assign
+		funcType0 := funcType([]*goast.Field{
+			field(finfo.gotype, ident("v")),
+		}, nil)
+		stmts0 := []goast.Stmt{}
+		{
+			stmts0 = append(stmts0, varDeclStmt(finfo.ctype, ident("cv")))
+			stmts0 = append(stmts0, finfo.go2c(ident("v"), ident("cv")))
+			lhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("&g.Raw"))))
+			stmts0 = append(stmts0, assignStmt1n1(lhs, ident("cv")))
+		}
+		g.target.addGo(funcDecl(ident("Assgin"+upFirst(gostr)), recv, funcType0, stmts0...))
+
+		//get
+		funcType1 := funcType(nil, []*goast.Field{
+			field(finfo.gotype, ident("v")),
+		})
+		stmts1 := []goast.Stmt{}
+		{
+			rhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("&g.Raw"))))
+			stmts1 = append(stmts1, assignStmt1n1D(ident("cv"), rhs))
+			stmts1 = append(stmts1, finfo.c2go(ident("v"), ident("cv")))
+			stmts1 = append(stmts1, &goast.ReturnStmt{})
+		}
+		g.target.addGo(funcDecl(ident(upFirst(gostr)), recv, funcType1, stmts1...))
+	}
+
+	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+		return assignStmt1n1(cvar, ident("g.Raw"))
+	}
+
+	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+		return assignStmt1n1(ident("g.Raw"), cvar)
+	}
+
+	return info
+}
+
+func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 	if info, ok := g.types[decl.Name]; ok {
 		return info
 	}
@@ -1147,7 +1231,7 @@ func (g *generator) process(src Source) {
 		case *cast.TypedefDecl:
 			g.nodes[n.Name] = n
 		case *cast.RecordDecl:
-			g.nodes["struct "+n.Name] = n
+			g.nodes[n.Kind+" "+n.Name] = n
 		case *cast.EnumDecl:
 			g.nodes["enum "+n.Name] = n
 		case *cast.FunctionDecl:

@@ -9582,3 +9582,8298 @@ func CmdFillBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset Devi
 	c.data = C.uint32_t(data)
 	C.vkCmdFillBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)
 }
+
+type ClearColorValue struct{ Raw C.VkClearColorValue }
+
+func (g *ClearColorValue) AssginFloat32(v [4]float32) {
+	var cv [4]C.float
+	for i, _ := range v {
+		cv[i] = C.float(v[i])
+	}
+	*(*[4]C.float)(unsafe.Pointer(&g.Raw)) = cv
+}
+func (g *ClearColorValue) Float32() (v [4]float32) {
+	cv := *(*[4]C.float)(unsafe.Pointer(&g.Raw))
+	for i, _ := range v {
+		v[i] = float32(cv[i])
+	}
+	return
+}
+func (g *ClearColorValue) AssginInt32(v [4]int32) {
+	var cv [4]C.int32_t
+	for i, _ := range v {
+		cv[i] = C.int32_t(v[i])
+	}
+	*(*[4]C.int32_t)(unsafe.Pointer(&g.Raw)) = cv
+}
+func (g *ClearColorValue) Int32() (v [4]int32) {
+	cv := *(*[4]C.int32_t)(unsafe.Pointer(&g.Raw))
+	for i, _ := range v {
+		v[i] = int32(cv[i])
+	}
+	return
+}
+func (g *ClearColorValue) AssginUint32(v [4]uint32) {
+	var cv [4]C.uint32_t
+	for i, _ := range v {
+		cv[i] = C.uint32_t(v[i])
+	}
+	*(*[4]C.uint32_t)(unsafe.Pointer(&g.Raw)) = cv
+}
+func (g *ClearColorValue) Uint32() (v [4]uint32) {
+	cv := *(*[4]C.uint32_t)(unsafe.Pointer(&g.Raw))
+	for i, _ := range v {
+		v[i] = uint32(cv[i])
+	}
+	return
+}
+func CmdClearColorImage(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, color *ClearColorValue, ranges []ImageSubresourceRange) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		image         C.VkImage
+		imageLayout   C.VkImageLayout
+		pColor        *C.VkClearColorValue
+		rangeCount    C.uint32_t
+		pRanges       *C.VkImageSubresourceRange
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.image = C.VkImage(image)
+	c.imageLayout = C.VkImageLayout(imageLayout)
+	{
+		c.pColor = (*C.VkClearColorValue)(_sa.alloc(C.sizeof_VkClearColorValue))
+		*c.pColor = g.Raw
+	}
+	c.rangeCount = C.uint32_t(len(ranges))
+	{
+		c.pRanges = (*C.VkImageSubresourceRange)(_sa.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
+		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
+		for i3, _ := range ranges {
+			ranges[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdClearColorImage(c.commandBuffer, c.image, c.imageLayout, c.pColor, c.rangeCount, c.pRanges)
+}
+
+type ClearDepthStencilValue struct {
+	Depth   float32
+	Stencil uint32
+}
+
+func (g *ClearDepthStencilValue) toC(c *C.VkClearDepthStencilValue) {
+	c.depth = C.float(g.Depth)
+	c.stencil = C.uint32_t(g.Stencil)
+}
+func (g *ClearDepthStencilValue) fromC(c *C.VkClearDepthStencilValue) {
+	g.Depth = float32(c.depth)
+	g.Stencil = uint32(c.stencil)
+}
+func CmdClearDepthStencilImage(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, depthStencil *ClearDepthStencilValue, ranges []ImageSubresourceRange) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		image         C.VkImage
+		imageLayout   C.VkImageLayout
+		pDepthStencil *C.VkClearDepthStencilValue
+		rangeCount    C.uint32_t
+		pRanges       *C.VkImageSubresourceRange
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.image = C.VkImage(image)
+	c.imageLayout = C.VkImageLayout(imageLayout)
+	{
+		c.pDepthStencil = (*C.VkClearDepthStencilValue)(_sa.alloc(C.sizeof_VkClearDepthStencilValue))
+		depthStencil.toC(c.pDepthStencil)
+	}
+	c.rangeCount = C.uint32_t(len(ranges))
+	{
+		c.pRanges = (*C.VkImageSubresourceRange)(_sa.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
+		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
+		for i3, _ := range ranges {
+			ranges[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdClearDepthStencilImage(c.commandBuffer, c.image, c.imageLayout, c.pDepthStencil, c.rangeCount, c.pRanges)
+}
+
+type ClearValue struct{ Raw C.VkClearValue }
+
+func (g *ClearValue) AssginColor(v ClearColorValue) {
+	var cv C.VkClearColorValue
+	cv = g.Raw
+	*(*C.VkClearColorValue)(unsafe.Pointer(&g.Raw)) = cv
+}
+func (g *ClearValue) Color() (v ClearColorValue) {
+	cv := *(*C.VkClearColorValue)(unsafe.Pointer(&g.Raw))
+	g.Raw = cv
+	return
+}
+func (g *ClearValue) AssginDepthStencil(v ClearDepthStencilValue) {
+	var cv C.VkClearDepthStencilValue
+	v.toC(&cv)
+	*(*C.VkClearDepthStencilValue)(unsafe.Pointer(&g.Raw)) = cv
+}
+func (g *ClearValue) DepthStencil() (v ClearDepthStencilValue) {
+	cv := *(*C.VkClearDepthStencilValue)(unsafe.Pointer(&g.Raw))
+	v.fromC(&cv)
+	return
+}
+
+type ClearAttachment struct {
+	AspectMask      ImageAspectFlags
+	ColorAttachment uint32
+	ClearValue      ClearValue
+}
+
+func (g *ClearAttachment) toC(c *C.VkClearAttachment) {
+	{
+		var temp_in_VkImageAspectFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
+	}
+	c.colorAttachment = C.uint32_t(g.ColorAttachment)
+	c.clearValue = g.Raw
+}
+func (g *ClearAttachment) fromC(c *C.VkClearAttachment) {
+	{
+		var temp_in_VkImageAspectFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
+		}
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
+	}
+	g.ColorAttachment = uint32(c.colorAttachment)
+	g.Raw = c.clearValue
+}
+
+type ClearRect struct {
+	Rect           Rect2D
+	BaseArrayLayer uint32
+	LayerCount     uint32
+}
+
+func (g *ClearRect) toC(c *C.VkClearRect) {
+	g.Rect.toC(&c.rect)
+	c.baseArrayLayer = C.uint32_t(g.BaseArrayLayer)
+	c.layerCount = C.uint32_t(g.LayerCount)
+}
+func (g *ClearRect) fromC(c *C.VkClearRect) {
+	g.Rect.fromC(&c.rect)
+	g.BaseArrayLayer = uint32(c.baseArrayLayer)
+	g.LayerCount = uint32(c.layerCount)
+}
+func CmdClearAttachments(commandBuffer CommandBuffer, attachments []ClearAttachment, rects []ClearRect) {
+	var c struct {
+		commandBuffer   C.VkCommandBuffer
+		attachmentCount C.uint32_t
+		pAttachments    *C.VkClearAttachment
+		rectCount       C.uint32_t
+		pRects          *C.VkClearRect
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.attachmentCount = C.uint32_t(len(attachments))
+	{
+		c.pAttachments = (*C.VkClearAttachment)(_sa.alloc(C.sizeof_VkClearAttachment * uint(len(attachments))))
+		slice3 := (*[1 << 31]C.VkClearAttachment)(unsafe.Pointer(c.pAttachments))[:len(attachments):len(attachments)]
+		for i3, _ := range attachments {
+			attachments[i3].toC(&slice3[i3])
+		}
+	}
+	c.rectCount = C.uint32_t(len(rects))
+	{
+		c.pRects = (*C.VkClearRect)(_sa.alloc(C.sizeof_VkClearRect * uint(len(rects))))
+		slice3 := (*[1 << 31]C.VkClearRect)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
+		for i3, _ := range rects {
+			rects[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdClearAttachments(c.commandBuffer, c.attachmentCount, c.pAttachments, c.rectCount, c.pRects)
+}
+
+type ImageResolve struct {
+	SrcSubresource ImageSubresourceLayers
+	SrcOffset      Offset3D
+	DstSubresource ImageSubresourceLayers
+	DstOffset      Offset3D
+	Extent         Extent3D
+}
+
+func (g *ImageResolve) toC(c *C.VkImageResolve) {
+	g.SrcSubresource.toC(&c.srcSubresource)
+	g.SrcOffset.toC(&c.srcOffset)
+	g.DstSubresource.toC(&c.dstSubresource)
+	g.DstOffset.toC(&c.dstOffset)
+	g.Extent.toC(&c.extent)
+}
+func (g *ImageResolve) fromC(c *C.VkImageResolve) {
+	g.SrcSubresource.fromC(&c.srcSubresource)
+	g.SrcOffset.fromC(&c.srcOffset)
+	g.DstSubresource.fromC(&c.dstSubresource)
+	g.DstOffset.fromC(&c.dstOffset)
+	g.Extent.fromC(&c.extent)
+}
+func CmdResolveImage(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) {
+	var c struct {
+		commandBuffer  C.VkCommandBuffer
+		srcImage       C.VkImage
+		srcImageLayout C.VkImageLayout
+		dstImage       C.VkImage
+		dstImageLayout C.VkImageLayout
+		regionCount    C.uint32_t
+		pRegions       *C.VkImageResolve
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.srcImage = C.VkImage(srcImage)
+	c.srcImageLayout = C.VkImageLayout(srcImageLayout)
+	c.dstImage = C.VkImage(dstImage)
+	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
+	c.regionCount = C.uint32_t(len(regions))
+	{
+		c.pRegions = (*C.VkImageResolve)(_sa.alloc(C.sizeof_VkImageResolve * uint(len(regions))))
+		slice3 := (*[1 << 31]C.VkImageResolve)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
+		for i3, _ := range regions {
+			regions[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdResolveImage(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
+}
+func CmdSetEvent(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		event         C.VkEvent
+		stageMask     C.VkPipelineStageFlags
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.event = C.VkEvent(event)
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	C.vkCmdSetEvent(c.commandBuffer, c.event, c.stageMask)
+}
+func CmdResetEvent(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		event         C.VkEvent
+		stageMask     C.VkPipelineStageFlags
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.event = C.VkEvent(event)
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	C.vkCmdResetEvent(c.commandBuffer, c.event, c.stageMask)
+}
+
+type MemoryBarrier struct {
+	Type          StructureType
+	Next          unsafe.Pointer
+	SrcAccessMask AccessFlags
+	DstAccessMask AccessFlags
+}
+
+func (g *MemoryBarrier) toC(c *C.VkMemoryBarrier) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+}
+func (g *MemoryBarrier) fromC(c *C.VkMemoryBarrier) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+}
+
+type BufferMemoryBarrier struct {
+	Type                StructureType
+	Next                unsafe.Pointer
+	SrcAccessMask       AccessFlags
+	DstAccessMask       AccessFlags
+	SrcQueueFamilyIndex uint32
+	DstQueueFamilyIndex uint32
+	Buffer              Buffer
+	Offset              DeviceSize
+	Size                DeviceSize
+}
+
+func (g *BufferMemoryBarrier) toC(c *C.VkBufferMemoryBarrier) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	c.srcQueueFamilyIndex = C.uint32_t(g.SrcQueueFamilyIndex)
+	c.dstQueueFamilyIndex = C.uint32_t(g.DstQueueFamilyIndex)
+	c.buffer = C.VkBuffer(g.Buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
+		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func (g *BufferMemoryBarrier) fromC(c *C.VkBufferMemoryBarrier) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	g.SrcQueueFamilyIndex = uint32(c.srcQueueFamilyIndex)
+	g.DstQueueFamilyIndex = uint32(c.dstQueueFamilyIndex)
+	g.Buffer = Buffer(c.buffer)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
+		g.Size = DeviceSize(temp_in_VkDeviceSize)
+	}
+}
+
+type ImageMemoryBarrier struct {
+	Type                StructureType
+	Next                unsafe.Pointer
+	SrcAccessMask       AccessFlags
+	DstAccessMask       AccessFlags
+	OldLayout           ImageLayout
+	NewLayout           ImageLayout
+	SrcQueueFamilyIndex uint32
+	DstQueueFamilyIndex uint32
+	Image               Image
+	SubresourceRange    ImageSubresourceRange
+}
+
+func (g *ImageMemoryBarrier) toC(c *C.VkImageMemoryBarrier) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	c.oldLayout = C.VkImageLayout(g.OldLayout)
+	c.newLayout = C.VkImageLayout(g.NewLayout)
+	c.srcQueueFamilyIndex = C.uint32_t(g.SrcQueueFamilyIndex)
+	c.dstQueueFamilyIndex = C.uint32_t(g.DstQueueFamilyIndex)
+	c.image = C.VkImage(g.Image)
+	g.SubresourceRange.toC(&c.subresourceRange)
+}
+func (g *ImageMemoryBarrier) fromC(c *C.VkImageMemoryBarrier) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	g.OldLayout = ImageLayout(c.oldLayout)
+	g.NewLayout = ImageLayout(c.newLayout)
+	g.SrcQueueFamilyIndex = uint32(c.srcQueueFamilyIndex)
+	g.DstQueueFamilyIndex = uint32(c.dstQueueFamilyIndex)
+	g.Image = Image(c.image)
+	g.SubresourceRange.fromC(&c.subresourceRange)
+}
+func CmdWaitEvents(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
+	var c struct {
+		commandBuffer            C.VkCommandBuffer
+		eventCount               C.uint32_t
+		pEvents                  *C.VkEvent
+		srcStageMask             C.VkPipelineStageFlags
+		dstStageMask             C.VkPipelineStageFlags
+		memoryBarrierCount       C.uint32_t
+		pMemoryBarriers          *C.VkMemoryBarrier
+		bufferMemoryBarrierCount C.uint32_t
+		pBufferMemoryBarriers    *C.VkBufferMemoryBarrier
+		imageMemoryBarrierCount  C.uint32_t
+		pImageMemoryBarriers     *C.VkImageMemoryBarrier
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.eventCount = C.uint32_t(len(events))
+	{
+		c.pEvents = (*C.VkEvent)(_sa.alloc(C.sizeof_VkEvent * uint(len(events))))
+		slice3 := (*[1 << 31]C.VkEvent)(unsafe.Pointer(c.pEvents))[:len(events):len(events)]
+		for i3, _ := range events {
+			slice3[i3] = C.VkEvent(events[i3])
+		}
+	}
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
+	{
+		c.pMemoryBarriers = (*C.VkMemoryBarrier)(_sa.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
+		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
+		for i3, _ := range memoryBarriers {
+			memoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
+	{
+		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(_sa.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
+		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
+		for i3, _ := range bufferMemoryBarriers {
+			bufferMemoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
+	{
+		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(_sa.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
+		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
+		for i3, _ := range imageMemoryBarriers {
+			imageMemoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdWaitEvents(c.commandBuffer, c.eventCount, c.pEvents, c.srcStageMask, c.dstStageMask, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
+}
+func CmdPipelineBarrier(commandBuffer CommandBuffer, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, dependencyFlags DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
+	var c struct {
+		commandBuffer            C.VkCommandBuffer
+		srcStageMask             C.VkPipelineStageFlags
+		dstStageMask             C.VkPipelineStageFlags
+		dependencyFlags          C.VkDependencyFlags
+		memoryBarrierCount       C.uint32_t
+		pMemoryBarriers          *C.VkMemoryBarrier
+		bufferMemoryBarrierCount C.uint32_t
+		pBufferMemoryBarriers    *C.VkBufferMemoryBarrier
+		imageMemoryBarrierCount  C.uint32_t
+		pImageMemoryBarriers     *C.VkImageMemoryBarrier
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkDependencyFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dependencyFlags)))
+			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
+	}
+	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
+	{
+		c.pMemoryBarriers = (*C.VkMemoryBarrier)(_sa.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
+		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
+		for i3, _ := range memoryBarriers {
+			memoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
+	{
+		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(_sa.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
+		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
+		for i3, _ := range bufferMemoryBarriers {
+			bufferMemoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
+	{
+		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(_sa.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
+		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
+		for i3, _ := range imageMemoryBarriers {
+			imageMemoryBarriers[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdPipelineBarrier(c.commandBuffer, c.srcStageMask, c.dstStageMask, c.dependencyFlags, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
+}
+func CmdBeginQuery(commandBuffer CommandBuffer, queryPool QueryPool, query uint32, flags QueryControlFlags) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		queryPool     C.VkQueryPool
+		query         C.uint32_t
+		flags         C.VkQueryControlFlags
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.queryPool = C.VkQueryPool(queryPool)
+	c.query = C.uint32_t(query)
+	{
+		var temp_in_VkQueryControlFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkQueryControlFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
+	}
+	C.vkCmdBeginQuery(c.commandBuffer, c.queryPool, c.query, c.flags)
+}
+func CmdEndQuery(commandBuffer CommandBuffer, queryPool QueryPool, query uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		queryPool     C.VkQueryPool
+		query         C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.queryPool = C.VkQueryPool(queryPool)
+	c.query = C.uint32_t(query)
+	C.vkCmdEndQuery(c.commandBuffer, c.queryPool, c.query)
+}
+func CmdResetQueryPool(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		queryPool     C.VkQueryPool
+		firstQuery    C.uint32_t
+		queryCount    C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.queryPool = C.VkQueryPool(queryPool)
+	c.firstQuery = C.uint32_t(firstQuery)
+	c.queryCount = C.uint32_t(queryCount)
+	C.vkCmdResetQueryPool(c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount)
+}
+
+type PipelineStageFlagBits int
+
+const (
+	PIPELINE_STAGE_TOP_OF_PIPE_BIT                    PipelineStageFlagBits = 1
+	PIPELINE_STAGE_DRAW_INDIRECT_BIT                  PipelineStageFlagBits = 2
+	PIPELINE_STAGE_VERTEX_INPUT_BIT                   PipelineStageFlagBits = 4
+	PIPELINE_STAGE_VERTEX_SHADER_BIT                  PipelineStageFlagBits = 8
+	PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT    PipelineStageFlagBits = 16
+	PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT PipelineStageFlagBits = 32
+	PIPELINE_STAGE_GEOMETRY_SHADER_BIT                PipelineStageFlagBits = 64
+	PIPELINE_STAGE_FRAGMENT_SHADER_BIT                PipelineStageFlagBits = 128
+	PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT           PipelineStageFlagBits = 256
+	PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT            PipelineStageFlagBits = 512
+	PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT        PipelineStageFlagBits = 1024
+	PIPELINE_STAGE_COMPUTE_SHADER_BIT                 PipelineStageFlagBits = 2048
+	PIPELINE_STAGE_TRANSFER_BIT                       PipelineStageFlagBits = 4096
+	PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT                 PipelineStageFlagBits = 8192
+	PIPELINE_STAGE_HOST_BIT                           PipelineStageFlagBits = 16384
+	PIPELINE_STAGE_ALL_GRAPHICS_BIT                   PipelineStageFlagBits = 32768
+	PIPELINE_STAGE_ALL_COMMANDS_BIT                   PipelineStageFlagBits = 65536
+	PIPELINE_STAGE_CONDITIONAL_RENDERING_BIT_EXT      PipelineStageFlagBits = 262144
+	PIPELINE_STAGE_COMMAND_PROCESS_BIT_NVX            PipelineStageFlagBits = 131072
+	PIPELINE_STAGE_FLAG_BITS_MAX_ENUM                 PipelineStageFlagBits = 2147483647
+)
+
+func CmdWriteTimestamp(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, queryPool QueryPool, query uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pipelineStage C.VkPipelineStageFlagBits
+		queryPool     C.VkQueryPool
+		query         C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.pipelineStage = C.VkPipelineStageFlagBits(pipelineStage)
+	c.queryPool = C.VkQueryPool(queryPool)
+	c.query = C.uint32_t(query)
+	C.vkCmdWriteTimestamp(c.commandBuffer, c.pipelineStage, c.queryPool, c.query)
+}
+func CmdCopyQueryPoolResults(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32, dstBuffer Buffer, dstOffset DeviceSize, stride DeviceSize, flags QueryResultFlags) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		queryPool     C.VkQueryPool
+		firstQuery    C.uint32_t
+		queryCount    C.uint32_t
+		dstBuffer     C.VkBuffer
+		dstOffset     C.VkDeviceSize
+		stride        C.VkDeviceSize
+		flags         C.VkQueryResultFlags
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.queryPool = C.VkQueryPool(queryPool)
+	c.firstQuery = C.uint32_t(firstQuery)
+	c.queryCount = C.uint32_t(queryCount)
+	c.dstBuffer = C.VkBuffer(dstBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
+		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
+		c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkQueryResultFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
+	}
+	C.vkCmdCopyQueryPoolResults(c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount, c.dstBuffer, c.dstOffset, c.stride, c.flags)
+}
+func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageFlags ShaderStageFlags, offset uint32, values []byte) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		layout        C.VkPipelineLayout
+		stageFlags    C.VkShaderStageFlags
+		offset        C.uint32_t
+		size          C.uint32_t
+		pValues       unsafe.Pointer
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.layout = C.VkPipelineLayout(layout)
+	{
+		var temp_in_VkShaderStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageFlags)))
+			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
+	}
+	c.offset = C.uint32_t(offset)
+	c.size = C.uint32_t(len(values))
+	{
+		c.pValues = _sa.alloc(C.sizeof_void_pointer * uint(len(values)))
+		slice3 := (*[1 << 31]byte)(c.pValues)[:len(values):len(values)]
+		for i3, _ := range values {
+			slice3[i3] = values[i3]
+		}
+	}
+	C.vkCmdPushConstants(c.commandBuffer, c.layout, c.stageFlags, c.offset, c.size, c.pValues)
+}
+
+type RenderPassBeginInfo struct {
+	Type        StructureType
+	Next        unsafe.Pointer
+	RenderPass  RenderPass
+	Framebuffer Framebuffer
+	RenderArea  Rect2D
+	ClearValues []ClearValue
+}
+
+func (g *RenderPassBeginInfo) toC(c *C.VkRenderPassBeginInfo, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.renderPass = C.VkRenderPass(g.RenderPass)
+	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
+	g.RenderArea.toC(&c.renderArea)
+	c.clearValueCount = C.uint32_t(len(g.ClearValues))
+	{
+		c.pClearValues = (*C.VkClearValue)(_sa.alloc(C.sizeof_VkClearValue * uint(len(g.ClearValues))))
+		slice2 := (*[1 << 31]C.VkClearValue)(unsafe.Pointer(c.pClearValues))[:len(g.ClearValues):len(g.ClearValues)]
+		for i2, _ := range g.ClearValues {
+			slice2[i2] = g.Raw
+		}
+	}
+}
+func (g *RenderPassBeginInfo) fromC(c *C.VkRenderPassBeginInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.RenderPass = RenderPass(c.renderPass)
+	g.Framebuffer = Framebuffer(c.framebuffer)
+	g.RenderArea.fromC(&c.renderArea)
+	g.ClearValues = make([]ClearValue, int(c.clearValueCount))
+	{
+		slice2 := (*[1 << 31]C.VkClearValue)(unsafe.Pointer(c.pClearValues))[:len(g.ClearValues):len(g.ClearValues)]
+		for i2, _ := range g.ClearValues {
+			g.Raw = slice2[i2]
+		}
+	}
+}
+
+type SubpassContents int
+
+const (
+	SUBPASS_CONTENTS_INLINE                    SubpassContents = 0
+	SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS SubpassContents = 1
+	SUBPASS_CONTENTS_BEGIN_RANGE               SubpassContents = SUBPASS_CONTENTS_INLINE
+	SUBPASS_CONTENTS_END_RANGE                 SubpassContents = SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS
+	SUBPASS_CONTENTS_RANGE_SIZE                SubpassContents = (SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS - SUBPASS_CONTENTS_INLINE + 1)
+	SUBPASS_CONTENTS_MAX_ENUM                  SubpassContents = 2147483647
+)
+
+func CmdBeginRenderPass(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, contents SubpassContents) {
+	var c struct {
+		commandBuffer    C.VkCommandBuffer
+		pRenderPassBegin *C.VkRenderPassBeginInfo
+		contents         C.VkSubpassContents
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pRenderPassBegin = (*C.VkRenderPassBeginInfo)(_sa.alloc(C.sizeof_VkRenderPassBeginInfo))
+		renderPassBegin.toC(c.pRenderPassBegin, _sa)
+	}
+	c.contents = C.VkSubpassContents(contents)
+	C.vkCmdBeginRenderPass(c.commandBuffer, c.pRenderPassBegin, c.contents)
+}
+func CmdNextSubpass(commandBuffer CommandBuffer, contents SubpassContents) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		contents      C.VkSubpassContents
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.contents = C.VkSubpassContents(contents)
+	C.vkCmdNextSubpass(c.commandBuffer, c.contents)
+}
+func CmdEndRenderPass(commandBuffer CommandBuffer) {
+	var c struct{ commandBuffer C.VkCommandBuffer }
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	C.vkCmdEndRenderPass(c.commandBuffer)
+}
+func CmdExecuteCommands(commandBuffer CommandBuffer, commandBuffers []CommandBuffer) {
+	var c struct {
+		commandBuffer      C.VkCommandBuffer
+		commandBufferCount C.uint32_t
+		pCommandBuffers    *C.VkCommandBuffer
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.commandBufferCount = C.uint32_t(len(commandBuffers))
+	{
+		c.pCommandBuffers = (*C.VkCommandBuffer)(_sa.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
+		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
+		for i3, _ := range commandBuffers {
+			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
+		}
+	}
+	C.vkCmdExecuteCommands(c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
+}
+func EnumerateInstanceVersion(apiVersion *uint32) (_ret Result) {
+	var c struct {
+		pApiVersion *C.uint32_t
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		c.pApiVersion = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pApiVersion = C.uint32_t(*apiVersion)
+	}
+	c._ret = C.vkEnumerateInstanceVersion(c.pApiVersion)
+	_ret = Result(c._ret)
+	*apiVersion = uint32(*c.pApiVersion)
+	return
+}
+
+type BindBufferMemoryInfo struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	Buffer       Buffer
+	Memory       DeviceMemory
+	MemoryOffset DeviceSize
+}
+
+func (g *BindBufferMemoryInfo) toC(c *C.VkBindBufferMemoryInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.buffer = C.VkBuffer(g.Buffer)
+	c.memory = C.VkDeviceMemory(g.Memory)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func (g *BindBufferMemoryInfo) fromC(c *C.VkBindBufferMemoryInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Buffer = Buffer(c.buffer)
+	g.Memory = DeviceMemory(c.memory)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
+		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func BindBufferMemory2(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		bindInfoCount C.uint32_t
+		pBindInfos    *C.VkBindBufferMemoryInfo
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.bindInfoCount = C.uint32_t(len(bindInfos))
+	{
+		c.pBindInfos = (*C.VkBindBufferMemoryInfo)(_sa.alloc(C.sizeof_VkBindBufferMemoryInfo * uint(len(bindInfos))))
+		slice3 := (*[1 << 31]C.VkBindBufferMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
+		for i3, _ := range bindInfos {
+			bindInfos[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkBindBufferMemory2(c.device, c.bindInfoCount, c.pBindInfos)
+	_ret = Result(c._ret)
+	return
+}
+
+type BindImageMemoryInfo struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	Image        Image
+	Memory       DeviceMemory
+	MemoryOffset DeviceSize
+}
+
+func (g *BindImageMemoryInfo) toC(c *C.VkBindImageMemoryInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.image = C.VkImage(g.Image)
+	c.memory = C.VkDeviceMemory(g.Memory)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
+		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func (g *BindImageMemoryInfo) fromC(c *C.VkBindImageMemoryInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Image = Image(c.image)
+	g.Memory = DeviceMemory(c.memory)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
+		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func BindImageMemory2(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		bindInfoCount C.uint32_t
+		pBindInfos    *C.VkBindImageMemoryInfo
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.bindInfoCount = C.uint32_t(len(bindInfos))
+	{
+		c.pBindInfos = (*C.VkBindImageMemoryInfo)(_sa.alloc(C.sizeof_VkBindImageMemoryInfo * uint(len(bindInfos))))
+		slice3 := (*[1 << 31]C.VkBindImageMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
+		for i3, _ := range bindInfos {
+			bindInfos[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkBindImageMemory2(c.device, c.bindInfoCount, c.pBindInfos)
+	_ret = Result(c._ret)
+	return
+}
+
+type PeerMemoryFeatureFlags Flags
+
+func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+	var c struct {
+		device              C.VkDevice
+		heapIndex           C.uint32_t
+		localDeviceIndex    C.uint32_t
+		remoteDeviceIndex   C.uint32_t
+		pPeerMemoryFeatures *C.VkPeerMemoryFeatureFlags
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.heapIndex = C.uint32_t(heapIndex)
+	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
+	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
+	{
+		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(_sa.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
+		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
+		for i3, _ := range peerMemoryFeatures {
+			{
+				var temp_in_VkPeerMemoryFeatureFlags C.VkFlags
+				{
+					var temp_in_VkFlags C.uint32_t
+					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i3])))
+					temp_in_VkPeerMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
+				}
+				slice3[i3] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
+			}
+		}
+	}
+	C.vkGetDeviceGroupPeerMemoryFeatures(c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
+}
+func CmdSetDeviceMask(commandBuffer CommandBuffer, deviceMask uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		deviceMask    C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.deviceMask = C.uint32_t(deviceMask)
+	C.vkCmdSetDeviceMask(c.commandBuffer, c.deviceMask)
+}
+func CmdDispatchBase(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		baseGroupX    C.uint32_t
+		baseGroupY    C.uint32_t
+		baseGroupZ    C.uint32_t
+		groupCountX   C.uint32_t
+		groupCountY   C.uint32_t
+		groupCountZ   C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.baseGroupX = C.uint32_t(baseGroupX)
+	c.baseGroupY = C.uint32_t(baseGroupY)
+	c.baseGroupZ = C.uint32_t(baseGroupZ)
+	c.groupCountX = C.uint32_t(groupCountX)
+	c.groupCountY = C.uint32_t(groupCountY)
+	c.groupCountZ = C.uint32_t(groupCountZ)
+	C.vkCmdDispatchBase(c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
+}
+
+type PhysicalDeviceGroupProperties struct {
+	Type                StructureType
+	Next                unsafe.Pointer
+	PhysicalDeviceCount uint32
+	PhysicalDevices     [32]PhysicalDevice
+	SubsetAllocation    Bool32
+}
+
+func (g *PhysicalDeviceGroupProperties) toC(c *C.VkPhysicalDeviceGroupProperties) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.physicalDeviceCount = C.uint32_t(g.PhysicalDeviceCount)
+	for i, _ := range g.PhysicalDevices {
+		c.physicalDevices[i] = C.VkPhysicalDevice(g.PhysicalDevices[i])
+	}
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.SubsetAllocation))
+		c.subsetAllocation = C.VkBool32(temp_in_VkBool32)
+	}
+}
+func (g *PhysicalDeviceGroupProperties) fromC(c *C.VkPhysicalDeviceGroupProperties) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.PhysicalDeviceCount = uint32(c.physicalDeviceCount)
+	for i, _ := range g.PhysicalDevices {
+		g.PhysicalDevices[i] = PhysicalDevice(c.physicalDevices[i])
+	}
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.subsetAllocation))
+		g.SubsetAllocation = Bool32(temp_in_VkBool32)
+	}
+}
+func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+	var c struct {
+		instance                       C.VkInstance
+		pPhysicalDeviceGroupCount      *C.uint32_t
+		pPhysicalDeviceGroupProperties *C.VkPhysicalDeviceGroupProperties
+		_ret                           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		c.pPhysicalDeviceGroupCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPhysicalDeviceGroupCount = C.uint32_t(*physicalDeviceGroupCount)
+	}
+	{
+		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
+		for i3, _ := range physicalDeviceGroupProperties {
+			physicalDeviceGroupProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkEnumeratePhysicalDeviceGroups(c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
+	_ret = Result(c._ret)
+	*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
+	return
+}
+
+type ImageMemoryRequirementsInfo2 struct {
+	Type  StructureType
+	Next  unsafe.Pointer
+	Image Image
+}
+
+func (g *ImageMemoryRequirementsInfo2) toC(c *C.VkImageMemoryRequirementsInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.image = C.VkImage(g.Image)
+}
+func (g *ImageMemoryRequirementsInfo2) fromC(c *C.VkImageMemoryRequirementsInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Image = Image(c.image)
+}
+
+type MemoryRequirements2 struct {
+	Type               StructureType
+	Next               unsafe.Pointer
+	MemoryRequirements MemoryRequirements
+}
+
+func (g *MemoryRequirements2) toC(c *C.VkMemoryRequirements2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.MemoryRequirements.toC(&c.memoryRequirements)
+}
+func (g *MemoryRequirements2) fromC(c *C.VkMemoryRequirements2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MemoryRequirements.fromC(&c.memoryRequirements)
+}
+func GetImageMemoryRequirements2(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+	var c struct {
+		device              C.VkDevice
+		pInfo               *C.VkImageMemoryRequirementsInfo2
+		pMemoryRequirements *C.VkMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkImageMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkImageMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
+		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
+		for i3, _ := range memoryRequirements {
+			memoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetImageMemoryRequirements2(c.device, c.pInfo, c.pMemoryRequirements)
+}
+
+type BufferMemoryRequirementsInfo2 struct {
+	Type   StructureType
+	Next   unsafe.Pointer
+	Buffer Buffer
+}
+
+func (g *BufferMemoryRequirementsInfo2) toC(c *C.VkBufferMemoryRequirementsInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.buffer = C.VkBuffer(g.Buffer)
+}
+func (g *BufferMemoryRequirementsInfo2) fromC(c *C.VkBufferMemoryRequirementsInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Buffer = Buffer(c.buffer)
+}
+func GetBufferMemoryRequirements2(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+	var c struct {
+		device              C.VkDevice
+		pInfo               *C.VkBufferMemoryRequirementsInfo2
+		pMemoryRequirements *C.VkMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkBufferMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkBufferMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
+		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
+		for i3, _ := range memoryRequirements {
+			memoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetBufferMemoryRequirements2(c.device, c.pInfo, c.pMemoryRequirements)
+}
+
+type ImageSparseMemoryRequirementsInfo2 struct {
+	Type  StructureType
+	Next  unsafe.Pointer
+	Image Image
+}
+
+func (g *ImageSparseMemoryRequirementsInfo2) toC(c *C.VkImageSparseMemoryRequirementsInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.image = C.VkImage(g.Image)
+}
+func (g *ImageSparseMemoryRequirementsInfo2) fromC(c *C.VkImageSparseMemoryRequirementsInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Image = Image(c.image)
+}
+
+type SparseImageMemoryRequirements2 struct {
+	Type               StructureType
+	Next               unsafe.Pointer
+	MemoryRequirements SparseImageMemoryRequirements
+}
+
+func (g *SparseImageMemoryRequirements2) toC(c *C.VkSparseImageMemoryRequirements2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.MemoryRequirements.toC(&c.memoryRequirements)
+}
+func (g *SparseImageMemoryRequirements2) fromC(c *C.VkSparseImageMemoryRequirements2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MemoryRequirements.fromC(&c.memoryRequirements)
+}
+func GetImageSparseMemoryRequirements2(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+	var c struct {
+		device                        C.VkDevice
+		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
+		pSparseMemoryRequirementCount *C.uint32_t
+		pSparseMemoryRequirements     *C.VkSparseImageMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkImageSparseMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkImageSparseMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pSparseMemoryRequirementCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pSparseMemoryRequirementCount = C.uint32_t(*sparseMemoryRequirementCount)
+	}
+	{
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
+		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
+		for i3, _ := range sparseMemoryRequirements {
+			sparseMemoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetImageSparseMemoryRequirements2(c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
+	*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
+}
+
+type PhysicalDeviceFeatures2 struct {
+	Type     StructureType
+	Next     unsafe.Pointer
+	Features PhysicalDeviceFeatures
+}
+
+func (g *PhysicalDeviceFeatures2) toC(c *C.VkPhysicalDeviceFeatures2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.Features.toC(&c.features)
+}
+func (g *PhysicalDeviceFeatures2) fromC(c *C.VkPhysicalDeviceFeatures2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Features.fromC(&c.features)
+}
+func GetPhysicalDeviceFeatures2(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pFeatures      *C.VkPhysicalDeviceFeatures2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2 * uint(len(features))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
+		for i3, _ := range features {
+			features[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceFeatures2(c.physicalDevice, c.pFeatures)
+}
+
+type PhysicalDeviceProperties2 struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Properties PhysicalDeviceProperties
+}
+
+func (g *PhysicalDeviceProperties2) toC(c *C.VkPhysicalDeviceProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.Properties.toC(&c.properties)
+}
+func (g *PhysicalDeviceProperties2) fromC(c *C.VkPhysicalDeviceProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Properties.fromC(&c.properties)
+}
+func GetPhysicalDeviceProperties2(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pProperties    *C.VkPhysicalDeviceProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2 * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceProperties2(c.physicalDevice, c.pProperties)
+}
+
+type FormatProperties2 struct {
+	Type             StructureType
+	Next             unsafe.Pointer
+	FormatProperties FormatProperties
+}
+
+func (g *FormatProperties2) toC(c *C.VkFormatProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.FormatProperties.toC(&c.formatProperties)
+}
+func (g *FormatProperties2) fromC(c *C.VkFormatProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.FormatProperties.fromC(&c.formatProperties)
+}
+func GetPhysicalDeviceFormatProperties2(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		format            C.VkFormat
+		pFormatProperties *C.VkFormatProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.format = C.VkFormat(format)
+	{
+		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2 * uint(len(formatProperties))))
+		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
+		for i3, _ := range formatProperties {
+			formatProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceFormatProperties2(c.physicalDevice, c.format, c.pFormatProperties)
+}
+
+type PhysicalDeviceImageFormatInfo2 struct {
+	Type   StructureType
+	Next   unsafe.Pointer
+	Format Format
+	Type   ImageType
+	Tiling ImageTiling
+	Usage  ImageUsageFlags
+	Flags  ImageCreateFlags
+}
+
+func (g *PhysicalDeviceImageFormatInfo2) toC(c *C.VkPhysicalDeviceImageFormatInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.format = C.VkFormat(g.Format)
+	c._type = C.VkImageType(g.Type)
+	c.tiling = C.VkImageTiling(g.Tiling)
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	{
+		var temp_in_VkImageCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
+	}
+}
+func (g *PhysicalDeviceImageFormatInfo2) fromC(c *C.VkPhysicalDeviceImageFormatInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Format = Format(c.format)
+	g.Type = ImageType(c._type)
+	g.Tiling = ImageTiling(c.tiling)
+	{
+		var temp_in_VkImageUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	{
+		var temp_in_VkImageCreateFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkImageCreateFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = ImageCreateFlags(temp_in_VkImageCreateFlags)
+	}
+}
+
+type ImageFormatProperties2 struct {
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	ImageFormatProperties ImageFormatProperties
+}
+
+func (g *ImageFormatProperties2) toC(c *C.VkImageFormatProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.ImageFormatProperties.toC(&c.imageFormatProperties)
+}
+func (g *ImageFormatProperties2) fromC(c *C.VkImageFormatProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ImageFormatProperties.fromC(&c.imageFormatProperties)
+}
+func GetPhysicalDeviceImageFormatProperties2(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+	var c struct {
+		physicalDevice         C.VkPhysicalDevice
+		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
+		pImageFormatProperties *C.VkImageFormatProperties2
+		_ret                   C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pImageFormatInfo = (*C.VkPhysicalDeviceImageFormatInfo2)(_sa.alloc(C.sizeof_VkPhysicalDeviceImageFormatInfo2))
+		imageFormatInfo.toC(c.pImageFormatInfo)
+	}
+	{
+		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2 * uint(len(imageFormatProperties))))
+		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
+		for i3, _ := range imageFormatProperties {
+			imageFormatProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceImageFormatProperties2(c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
+	_ret = Result(c._ret)
+	return
+}
+
+type QueueFamilyProperties2 struct {
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	QueueFamilyProperties QueueFamilyProperties
+}
+
+func (g *QueueFamilyProperties2) toC(c *C.VkQueueFamilyProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.QueueFamilyProperties.toC(&c.queueFamilyProperties)
+}
+func (g *QueueFamilyProperties2) fromC(c *C.VkQueueFamilyProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.QueueFamilyProperties.fromC(&c.queueFamilyProperties)
+}
+func GetPhysicalDeviceQueueFamilyProperties2(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+	var c struct {
+		physicalDevice            C.VkPhysicalDevice
+		pQueueFamilyPropertyCount *C.uint32_t
+		pQueueFamilyProperties    *C.VkQueueFamilyProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pQueueFamilyPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pQueueFamilyPropertyCount = C.uint32_t(*queueFamilyPropertyCount)
+	}
+	{
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
+		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
+		for i3, _ := range queueFamilyProperties {
+			queueFamilyProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceQueueFamilyProperties2(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
+	*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
+}
+
+type PhysicalDeviceMemoryProperties2 struct {
+	Type             StructureType
+	Next             unsafe.Pointer
+	MemoryProperties PhysicalDeviceMemoryProperties
+}
+
+func (g *PhysicalDeviceMemoryProperties2) toC(c *C.VkPhysicalDeviceMemoryProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.MemoryProperties.toC(&c.memoryProperties)
+}
+func (g *PhysicalDeviceMemoryProperties2) fromC(c *C.VkPhysicalDeviceMemoryProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MemoryProperties.fromC(&c.memoryProperties)
+}
+func GetPhysicalDeviceMemoryProperties2(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2 * uint(len(memoryProperties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
+		for i3, _ := range memoryProperties {
+			memoryProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceMemoryProperties2(c.physicalDevice, c.pMemoryProperties)
+}
+
+type PhysicalDeviceSparseImageFormatInfo2 struct {
+	Type    StructureType
+	Next    unsafe.Pointer
+	Format  Format
+	Type    ImageType
+	Samples SampleCountFlagBits
+	Usage   ImageUsageFlags
+	Tiling  ImageTiling
+}
+
+func (g *PhysicalDeviceSparseImageFormatInfo2) toC(c *C.VkPhysicalDeviceSparseImageFormatInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.format = C.VkFormat(g.Format)
+	c._type = C.VkImageType(g.Type)
+	c.samples = C.VkSampleCountFlagBits(g.Samples)
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	c.tiling = C.VkImageTiling(g.Tiling)
+}
+func (g *PhysicalDeviceSparseImageFormatInfo2) fromC(c *C.VkPhysicalDeviceSparseImageFormatInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Format = Format(c.format)
+	g.Type = ImageType(c._type)
+	g.Samples = SampleCountFlagBits(c.samples)
+	{
+		var temp_in_VkImageUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	g.Tiling = ImageTiling(c.tiling)
+}
+
+type SparseImageFormatProperties2 struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Properties SparseImageFormatProperties
+}
+
+func (g *SparseImageFormatProperties2) toC(c *C.VkSparseImageFormatProperties2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.Properties.toC(&c.properties)
+}
+func (g *SparseImageFormatProperties2) fromC(c *C.VkSparseImageFormatProperties2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Properties.fromC(&c.properties)
+}
+func GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkSparseImageFormatProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pFormatInfo = (*C.VkPhysicalDeviceSparseImageFormatInfo2)(_sa.alloc(C.sizeof_VkPhysicalDeviceSparseImageFormatInfo2))
+		formatInfo.toC(c.pFormatInfo)
+	}
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceSparseImageFormatProperties2(c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
+	*propertyCount = uint32(*c.pPropertyCount)
+}
+
+type CommandPoolTrimFlags Flags
+
+func TrimCommandPool(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
+	var c struct {
+		device      C.VkDevice
+		commandPool C.VkCommandPool
+		flags       C.VkCommandPoolTrimFlags
+	}
+	c.device = C.VkDevice(device)
+	c.commandPool = C.VkCommandPool(commandPool)
+	{
+		var temp_in_VkCommandPoolTrimFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkCommandPoolTrimFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
+	}
+	C.vkTrimCommandPool(c.device, c.commandPool, c.flags)
+}
+
+type DeviceQueueInfo2 struct {
+	Type             StructureType
+	Next             unsafe.Pointer
+	Flags            DeviceQueueCreateFlags
+	QueueFamilyIndex uint32
+	QueueIndex       uint32
+}
+
+func (g *DeviceQueueInfo2) toC(c *C.VkDeviceQueueInfo2) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDeviceQueueCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
+	}
+	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
+	c.queueIndex = C.uint32_t(g.QueueIndex)
+}
+func (g *DeviceQueueInfo2) fromC(c *C.VkDeviceQueueInfo2) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDeviceQueueCreateFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDeviceQueueCreateFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
+	}
+	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
+	g.QueueIndex = uint32(c.queueIndex)
+}
+func GetDeviceQueue2(device Device, queueInfo *DeviceQueueInfo2, queue *Queue) {
+	var c struct {
+		device     C.VkDevice
+		pQueueInfo *C.VkDeviceQueueInfo2
+		pQueue     *C.VkQueue
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pQueueInfo = (*C.VkDeviceQueueInfo2)(_sa.alloc(C.sizeof_VkDeviceQueueInfo2))
+		queueInfo.toC(c.pQueueInfo)
+	}
+	{
+		c.pQueue = (*C.VkQueue)(_sa.alloc(C.sizeof_VkQueue))
+		*c.pQueue = C.VkQueue(*queue)
+	}
+	C.vkGetDeviceQueue2(c.device, c.pQueueInfo, c.pQueue)
+	*queue = Queue(*c.pQueue)
+}
+
+type SamplerYcbcrModelConversion int
+
+const (
+	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY       SamplerYcbcrModelConversion = 0
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY     SamplerYcbcrModelConversion = 1
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709          SamplerYcbcrModelConversion = 2
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601          SamplerYcbcrModelConversion = 3
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020         SamplerYcbcrModelConversion = 4
+	SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY_KHR   SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY_KHR SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_709
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601_KHR      SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601
+	SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020_KHR     SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+	SAMPLER_YCBCR_MODEL_CONVERSION_BEGIN_RANGE        SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY
+	SAMPLER_YCBCR_MODEL_CONVERSION_END_RANGE          SamplerYcbcrModelConversion = SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020
+	SAMPLER_YCBCR_MODEL_CONVERSION_RANGE_SIZE         SamplerYcbcrModelConversion = (SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_2020 - SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY + 1)
+	SAMPLER_YCBCR_MODEL_CONVERSION_MAX_ENUM           SamplerYcbcrModelConversion = 2147483647
+)
+
+type SamplerYcbcrRange int
+
+const (
+	SAMPLER_YCBCR_RANGE_ITU_FULL       SamplerYcbcrRange = 0
+	SAMPLER_YCBCR_RANGE_ITU_NARROW     SamplerYcbcrRange = 1
+	SAMPLER_YCBCR_RANGE_ITU_FULL_KHR   SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
+	SAMPLER_YCBCR_RANGE_ITU_NARROW_KHR SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
+	SAMPLER_YCBCR_RANGE_BEGIN_RANGE    SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_FULL
+	SAMPLER_YCBCR_RANGE_END_RANGE      SamplerYcbcrRange = SAMPLER_YCBCR_RANGE_ITU_NARROW
+	SAMPLER_YCBCR_RANGE_RANGE_SIZE     SamplerYcbcrRange = (SAMPLER_YCBCR_RANGE_ITU_NARROW - SAMPLER_YCBCR_RANGE_ITU_FULL + 1)
+	SAMPLER_YCBCR_RANGE_MAX_ENUM       SamplerYcbcrRange = 2147483647
+)
+
+type ChromaLocation int
+
+const (
+	CHROMA_LOCATION_COSITED_EVEN     ChromaLocation = 0
+	CHROMA_LOCATION_MIDPOINT         ChromaLocation = 1
+	CHROMA_LOCATION_COSITED_EVEN_KHR ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
+	CHROMA_LOCATION_MIDPOINT_KHR     ChromaLocation = CHROMA_LOCATION_MIDPOINT
+	CHROMA_LOCATION_BEGIN_RANGE      ChromaLocation = CHROMA_LOCATION_COSITED_EVEN
+	CHROMA_LOCATION_END_RANGE        ChromaLocation = CHROMA_LOCATION_MIDPOINT
+	CHROMA_LOCATION_RANGE_SIZE       ChromaLocation = (CHROMA_LOCATION_MIDPOINT - CHROMA_LOCATION_COSITED_EVEN + 1)
+	CHROMA_LOCATION_MAX_ENUM         ChromaLocation = 2147483647
+)
+
+type SamplerYcbcrConversionCreateInfo struct {
+	Type                        StructureType
+	Next                        unsafe.Pointer
+	Format                      Format
+	YcbcrModel                  SamplerYcbcrModelConversion
+	YcbcrRange                  SamplerYcbcrRange
+	Components                  ComponentMapping
+	XChromaOffset               ChromaLocation
+	YChromaOffset               ChromaLocation
+	ChromaFilter                Filter
+	ForceExplicitReconstruction Bool32
+}
+
+func (g *SamplerYcbcrConversionCreateInfo) toC(c *C.VkSamplerYcbcrConversionCreateInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.format = C.VkFormat(g.Format)
+	c.ycbcrModel = C.VkSamplerYcbcrModelConversion(g.YcbcrModel)
+	c.ycbcrRange = C.VkSamplerYcbcrRange(g.YcbcrRange)
+	g.Components.toC(&c.components)
+	c.xChromaOffset = C.VkChromaLocation(g.XChromaOffset)
+	c.yChromaOffset = C.VkChromaLocation(g.YChromaOffset)
+	c.chromaFilter = C.VkFilter(g.ChromaFilter)
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ForceExplicitReconstruction))
+		c.forceExplicitReconstruction = C.VkBool32(temp_in_VkBool32)
+	}
+}
+func (g *SamplerYcbcrConversionCreateInfo) fromC(c *C.VkSamplerYcbcrConversionCreateInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Format = Format(c.format)
+	g.YcbcrModel = SamplerYcbcrModelConversion(c.ycbcrModel)
+	g.YcbcrRange = SamplerYcbcrRange(c.ycbcrRange)
+	g.Components.fromC(&c.components)
+	g.XChromaOffset = ChromaLocation(c.xChromaOffset)
+	g.YChromaOffset = ChromaLocation(c.yChromaOffset)
+	g.ChromaFilter = Filter(c.chromaFilter)
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.forceExplicitReconstruction))
+		g.ForceExplicitReconstruction = Bool32(temp_in_VkBool32)
+	}
+}
+
+type SamplerYcbcrConversion C.VkSamplerYcbcrConversion
+
+func CreateSamplerYcbcrConversion(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
+	var c struct {
+		device           C.VkDevice
+		pCreateInfo      *C.VkSamplerYcbcrConversionCreateInfo
+		pAllocator       *C.VkAllocationCallbacks
+		pYcbcrConversion *C.VkSamplerYcbcrConversion
+		_ret             C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkSamplerYcbcrConversionCreateInfo)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversionCreateInfo))
+		createInfo.toC(c.pCreateInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pYcbcrConversion = (*C.VkSamplerYcbcrConversion)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversion))
+		*c.pYcbcrConversion = C.VkSamplerYcbcrConversion(*ycbcrConversion)
+	}
+	c._ret = C.vkCreateSamplerYcbcrConversion(c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
+	_ret = Result(c._ret)
+	*ycbcrConversion = SamplerYcbcrConversion(*c.pYcbcrConversion)
+	return
+}
+func DestroySamplerYcbcrConversion(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
+	var c struct {
+		device          C.VkDevice
+		ycbcrConversion C.VkSamplerYcbcrConversion
+		pAllocator      *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.ycbcrConversion = C.VkSamplerYcbcrConversion(ycbcrConversion)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroySamplerYcbcrConversion(c.device, c.ycbcrConversion, c.pAllocator)
+}
+
+type DescriptorUpdateTemplateCreateFlags Flags
+type DescriptorUpdateTemplateEntry struct {
+	DstBinding      uint32
+	DstArrayElement uint32
+	DescriptorCount uint32
+	DescriptorType  DescriptorType
+	Offset          uint
+	Stride          uint
+}
+
+func (g *DescriptorUpdateTemplateEntry) toC(c *C.VkDescriptorUpdateTemplateEntry) {
+	c.dstBinding = C.uint32_t(g.DstBinding)
+	c.dstArrayElement = C.uint32_t(g.DstArrayElement)
+	c.descriptorCount = C.uint32_t(g.DescriptorCount)
+	c.descriptorType = C.VkDescriptorType(g.DescriptorType)
+	c.offset = C.size_t(g.Offset)
+	c.stride = C.size_t(g.Stride)
+}
+func (g *DescriptorUpdateTemplateEntry) fromC(c *C.VkDescriptorUpdateTemplateEntry) {
+	g.DstBinding = uint32(c.dstBinding)
+	g.DstArrayElement = uint32(c.dstArrayElement)
+	g.DescriptorCount = uint32(c.descriptorCount)
+	g.DescriptorType = DescriptorType(c.descriptorType)
+	g.Offset = uint(c.offset)
+	g.Stride = uint(c.stride)
+}
+
+type DescriptorUpdateTemplateType int
+
+const (
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET       DescriptorUpdateTemplateType = 0
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_PUSH_DESCRIPTORS_KHR DescriptorUpdateTemplateType = 1
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET_KHR   DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_BEGIN_RANGE          DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_END_RANGE            DescriptorUpdateTemplateType = DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_RANGE_SIZE           DescriptorUpdateTemplateType = (DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET - DESCRIPTOR_UPDATE_TEMPLATE_TYPE_DESCRIPTOR_SET + 1)
+	DESCRIPTOR_UPDATE_TEMPLATE_TYPE_MAX_ENUM             DescriptorUpdateTemplateType = 2147483647
+)
+
+type DescriptorUpdateTemplateCreateInfo struct {
+	Type                    StructureType
+	Next                    unsafe.Pointer
+	Flags                   DescriptorUpdateTemplateCreateFlags
+	DescriptorUpdateEntries []DescriptorUpdateTemplateEntry
+	TemplateType            DescriptorUpdateTemplateType
+	DescriptorSetLayout     DescriptorSetLayout
+	PipelineBindPoint       PipelineBindPoint
+	PipelineLayout          PipelineLayout
+	Set                     uint32
+}
+
+func (g *DescriptorUpdateTemplateCreateInfo) toC(c *C.VkDescriptorUpdateTemplateCreateInfo, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDescriptorUpdateTemplateCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDescriptorUpdateTemplateCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDescriptorUpdateTemplateCreateFlags(temp_in_VkDescriptorUpdateTemplateCreateFlags)
+	}
+	c.descriptorUpdateEntryCount = C.uint32_t(len(g.DescriptorUpdateEntries))
+	{
+		c.pDescriptorUpdateEntries = (*C.VkDescriptorUpdateTemplateEntry)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplateEntry * uint(len(g.DescriptorUpdateEntries))))
+		slice2 := (*[1 << 31]C.VkDescriptorUpdateTemplateEntry)(unsafe.Pointer(c.pDescriptorUpdateEntries))[:len(g.DescriptorUpdateEntries):len(g.DescriptorUpdateEntries)]
+		for i2, _ := range g.DescriptorUpdateEntries {
+			g.DescriptorUpdateEntries[i2].toC(&slice2[i2])
+		}
+	}
+	c.templateType = C.VkDescriptorUpdateTemplateType(g.TemplateType)
+	c.descriptorSetLayout = C.VkDescriptorSetLayout(g.DescriptorSetLayout)
+	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
+	c.pipelineLayout = C.VkPipelineLayout(g.PipelineLayout)
+	c.set = C.uint32_t(g.Set)
+}
+func (g *DescriptorUpdateTemplateCreateInfo) fromC(c *C.VkDescriptorUpdateTemplateCreateInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDescriptorUpdateTemplateCreateFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDescriptorUpdateTemplateCreateFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DescriptorUpdateTemplateCreateFlags(temp_in_VkDescriptorUpdateTemplateCreateFlags)
+	}
+	g.DescriptorUpdateEntries = make([]DescriptorUpdateTemplateEntry, int(c.descriptorUpdateEntryCount))
+	{
+		slice2 := (*[1 << 31]C.VkDescriptorUpdateTemplateEntry)(unsafe.Pointer(c.pDescriptorUpdateEntries))[:len(g.DescriptorUpdateEntries):len(g.DescriptorUpdateEntries)]
+		for i2, _ := range g.DescriptorUpdateEntries {
+			g.DescriptorUpdateEntries[i2].fromC(&slice2[i2])
+		}
+	}
+	g.TemplateType = DescriptorUpdateTemplateType(c.templateType)
+	g.DescriptorSetLayout = DescriptorSetLayout(c.descriptorSetLayout)
+	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
+	g.PipelineLayout = PipelineLayout(c.pipelineLayout)
+	g.Set = uint32(c.set)
+}
+
+type DescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+
+func CreateDescriptorUpdateTemplate(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
+	var c struct {
+		device                    C.VkDevice
+		pCreateInfo               *C.VkDescriptorUpdateTemplateCreateInfo
+		pAllocator                *C.VkAllocationCallbacks
+		pDescriptorUpdateTemplate *C.VkDescriptorUpdateTemplate
+		_ret                      C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkDescriptorUpdateTemplateCreateInfo)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplateCreateInfo))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pDescriptorUpdateTemplate = (*C.VkDescriptorUpdateTemplate)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplate))
+		*c.pDescriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(*descriptorUpdateTemplate)
+	}
+	c._ret = C.vkCreateDescriptorUpdateTemplate(c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
+	_ret = Result(c._ret)
+	*descriptorUpdateTemplate = DescriptorUpdateTemplate(*c.pDescriptorUpdateTemplate)
+	return
+}
+func DestroyDescriptorUpdateTemplate(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
+	var c struct {
+		device                   C.VkDevice
+		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+		pAllocator               *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyDescriptorUpdateTemplate(c.device, c.descriptorUpdateTemplate, c.pAllocator)
+}
+func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+	var c struct {
+		device                   C.VkDevice
+		descriptorSet            C.VkDescriptorSet
+		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+		pData                    unsafe.Pointer
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
+	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
+	{
+		c.pData = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
+		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
+		for i3, _ := range data {
+			slice3[i3] = data[i3]
+		}
+	}
+	C.vkUpdateDescriptorSetWithTemplate(c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
+}
+
+type ExternalMemoryHandleTypeFlagBits int
+
+const (
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT                       ExternalMemoryHandleTypeFlagBits = 1
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT                    ExternalMemoryHandleTypeFlagBits = 2
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT                ExternalMemoryHandleTypeFlagBits = 4
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT                   ExternalMemoryHandleTypeFlagBits = 8
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT               ExternalMemoryHandleTypeFlagBits = 16
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT                      ExternalMemoryHandleTypeFlagBits = 32
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT                  ExternalMemoryHandleTypeFlagBits = 64
+	EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT                     ExternalMemoryHandleTypeFlagBits = 512
+	EXTERNAL_MEMORY_HANDLE_TYPE_ANDROID_HARDWARE_BUFFER_BIT_ANDROID ExternalMemoryHandleTypeFlagBits = 1024
+	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_ALLOCATION_BIT_EXT             ExternalMemoryHandleTypeFlagBits = 128
+	EXTERNAL_MEMORY_HANDLE_TYPE_HOST_MAPPED_FOREIGN_MEMORY_BIT_EXT  ExternalMemoryHandleTypeFlagBits = 256
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT_KHR                   ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR                ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR            ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT_KHR               ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT_KHR           ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT_KHR                  ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT_KHR              ExternalMemoryHandleTypeFlagBits = EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT
+	EXTERNAL_MEMORY_HANDLE_TYPE_FLAG_BITS_MAX_ENUM                  ExternalMemoryHandleTypeFlagBits = 2147483647
+)
+
+type PhysicalDeviceExternalBufferInfo struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Flags      BufferCreateFlags
+	Usage      BufferUsageFlags
+	HandleType ExternalMemoryHandleTypeFlagBits
+}
+
+func (g *PhysicalDeviceExternalBufferInfo) toC(c *C.VkPhysicalDeviceExternalBufferInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkBufferCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkBufferCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkBufferCreateFlags(temp_in_VkBufferCreateFlags)
+	}
+	{
+		var temp_in_VkBufferUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
+			temp_in_VkBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.usage = C.VkBufferUsageFlags(temp_in_VkBufferUsageFlags)
+	}
+	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(g.HandleType)
+}
+func (g *PhysicalDeviceExternalBufferInfo) fromC(c *C.VkPhysicalDeviceExternalBufferInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkBufferCreateFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkBufferCreateFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = BufferCreateFlags(temp_in_VkBufferCreateFlags)
+	}
+	{
+		var temp_in_VkBufferUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+			temp_in_VkBufferUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.Usage = BufferUsageFlags(temp_in_VkBufferUsageFlags)
+	}
+	g.HandleType = ExternalMemoryHandleTypeFlagBits(c.handleType)
+}
+
+type ExternalMemoryFeatureFlags Flags
+type ExternalMemoryHandleTypeFlags Flags
+type ExternalMemoryProperties struct {
+	ExternalMemoryFeatures        ExternalMemoryFeatureFlags
+	ExportFromImportedHandleTypes ExternalMemoryHandleTypeFlags
+	CompatibleHandleTypes         ExternalMemoryHandleTypeFlags
+}
+
+func (g *ExternalMemoryProperties) toC(c *C.VkExternalMemoryProperties) {
+	{
+		var temp_in_VkExternalMemoryFeatureFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
+			temp_in_VkExternalMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.externalMemoryFeatures = C.VkExternalMemoryFeatureFlags(temp_in_VkExternalMemoryFeatureFlags)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.exportFromImportedHandleTypes = C.VkExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.compatibleHandleTypes = C.VkExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
+	}
+}
+func (g *ExternalMemoryProperties) fromC(c *C.VkExternalMemoryProperties) {
+	{
+		var temp_in_VkExternalMemoryFeatureFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
+			temp_in_VkExternalMemoryFeatureFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExternalMemoryFeatures = ExternalMemoryFeatureFlags(temp_in_VkExternalMemoryFeatureFlags)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExportFromImportedHandleTypes = ExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
+	}
+}
+
+type ExternalBufferProperties struct {
+	Type                     StructureType
+	Next                     unsafe.Pointer
+	ExternalMemoryProperties ExternalMemoryProperties
+}
+
+func (g *ExternalBufferProperties) toC(c *C.VkExternalBufferProperties) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.ExternalMemoryProperties.toC(&c.externalMemoryProperties)
+}
+func (g *ExternalBufferProperties) fromC(c *C.VkExternalBufferProperties) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ExternalMemoryProperties.fromC(&c.externalMemoryProperties)
+}
+func GetPhysicalDeviceExternalBufferProperties(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+	var c struct {
+		physicalDevice            C.VkPhysicalDevice
+		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
+		pExternalBufferProperties *C.VkExternalBufferProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalBufferInfo = (*C.VkPhysicalDeviceExternalBufferInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalBufferInfo))
+		externalBufferInfo.toC(c.pExternalBufferInfo)
+	}
+	{
+		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties * uint(len(externalBufferProperties))))
+		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
+		for i3, _ := range externalBufferProperties {
+			externalBufferProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalBufferProperties(c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
+}
+
+type ExternalFenceHandleTypeFlagBits int
+
+const (
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalFenceHandleTypeFlagBits = 1
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalFenceHandleTypeFlagBits = 2
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalFenceHandleTypeFlagBits = 4
+	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT              ExternalFenceHandleTypeFlagBits = 8
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalFenceHandleTypeFlagBits = EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT
+	EXTERNAL_FENCE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalFenceHandleTypeFlagBits = 2147483647
+)
+
+type PhysicalDeviceExternalFenceInfo struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	HandleType ExternalFenceHandleTypeFlagBits
+}
+
+func (g *PhysicalDeviceExternalFenceInfo) toC(c *C.VkPhysicalDeviceExternalFenceInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
+}
+func (g *PhysicalDeviceExternalFenceInfo) fromC(c *C.VkPhysicalDeviceExternalFenceInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
+}
+
+type ExternalFenceHandleTypeFlags Flags
+type ExternalFenceFeatureFlags Flags
+type ExternalFenceProperties struct {
+	Type                          StructureType
+	Next                          unsafe.Pointer
+	ExportFromImportedHandleTypes ExternalFenceHandleTypeFlags
+	CompatibleHandleTypes         ExternalFenceHandleTypeFlags
+	ExternalFenceFeatures         ExternalFenceFeatureFlags
+}
+
+func (g *ExternalFenceProperties) toC(c *C.VkExternalFenceProperties) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkExternalFenceHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+			temp_in_VkExternalFenceHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.exportFromImportedHandleTypes = C.VkExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalFenceHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+			temp_in_VkExternalFenceHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.compatibleHandleTypes = C.VkExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalFenceFeatureFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalFenceFeatures)))
+			temp_in_VkExternalFenceFeatureFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.externalFenceFeatures = C.VkExternalFenceFeatureFlags(temp_in_VkExternalFenceFeatureFlags)
+	}
+}
+func (g *ExternalFenceProperties) fromC(c *C.VkExternalFenceProperties) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkExternalFenceHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+			temp_in_VkExternalFenceHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExportFromImportedHandleTypes = ExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalFenceHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+			temp_in_VkExternalFenceHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.CompatibleHandleTypes = ExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalFenceFeatureFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalFenceFeatures)))
+			temp_in_VkExternalFenceFeatureFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExternalFenceFeatures = ExternalFenceFeatureFlags(temp_in_VkExternalFenceFeatureFlags)
+	}
+}
+func GetPhysicalDeviceExternalFenceProperties(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+	var c struct {
+		physicalDevice           C.VkPhysicalDevice
+		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
+		pExternalFenceProperties *C.VkExternalFenceProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalFenceInfo = (*C.VkPhysicalDeviceExternalFenceInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalFenceInfo))
+		externalFenceInfo.toC(c.pExternalFenceInfo)
+	}
+	{
+		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties * uint(len(externalFenceProperties))))
+		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
+		for i3, _ := range externalFenceProperties {
+			externalFenceProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalFenceProperties(c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
+}
+
+type ExternalSemaphoreHandleTypeFlagBits int
+
+const (
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT            ExternalSemaphoreHandleTypeFlagBits = 1
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT         ExternalSemaphoreHandleTypeFlagBits = 2
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT     ExternalSemaphoreHandleTypeFlagBits = 4
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT          ExternalSemaphoreHandleTypeFlagBits = 8
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT              ExternalSemaphoreHandleTypeFlagBits = 16
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT_KHR        ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_FD_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT_KHR     ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT_KHR ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT_KHR      ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_D3D12_FENCE_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT_KHR          ExternalSemaphoreHandleTypeFlagBits = EXTERNAL_SEMAPHORE_HANDLE_TYPE_SYNC_FD_BIT
+	EXTERNAL_SEMAPHORE_HANDLE_TYPE_FLAG_BITS_MAX_ENUM       ExternalSemaphoreHandleTypeFlagBits = 2147483647
+)
+
+type PhysicalDeviceExternalSemaphoreInfo struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	HandleType ExternalSemaphoreHandleTypeFlagBits
+}
+
+func (g *PhysicalDeviceExternalSemaphoreInfo) toC(c *C.VkPhysicalDeviceExternalSemaphoreInfo) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
+}
+func (g *PhysicalDeviceExternalSemaphoreInfo) fromC(c *C.VkPhysicalDeviceExternalSemaphoreInfo) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
+}
+
+type ExternalSemaphoreHandleTypeFlags Flags
+type ExternalSemaphoreFeatureFlags Flags
+type ExternalSemaphoreProperties struct {
+	Type                          StructureType
+	Next                          unsafe.Pointer
+	ExportFromImportedHandleTypes ExternalSemaphoreHandleTypeFlags
+	CompatibleHandleTypes         ExternalSemaphoreHandleTypeFlags
+	ExternalSemaphoreFeatures     ExternalSemaphoreFeatureFlags
+}
+
+func (g *ExternalSemaphoreProperties) toC(c *C.VkExternalSemaphoreProperties) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkExternalSemaphoreHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+			temp_in_VkExternalSemaphoreHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.exportFromImportedHandleTypes = C.VkExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalSemaphoreHandleTypeFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+			temp_in_VkExternalSemaphoreHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.compatibleHandleTypes = C.VkExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalSemaphoreFeatureFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalSemaphoreFeatures)))
+			temp_in_VkExternalSemaphoreFeatureFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.externalSemaphoreFeatures = C.VkExternalSemaphoreFeatureFlags(temp_in_VkExternalSemaphoreFeatureFlags)
+	}
+}
+func (g *ExternalSemaphoreProperties) fromC(c *C.VkExternalSemaphoreProperties) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkExternalSemaphoreHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+			temp_in_VkExternalSemaphoreHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExportFromImportedHandleTypes = ExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalSemaphoreHandleTypeFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+			temp_in_VkExternalSemaphoreHandleTypeFlags = Flags(temp_in_VkFlags)
+		}
+		g.CompatibleHandleTypes = ExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
+	}
+	{
+		var temp_in_VkExternalSemaphoreFeatureFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalSemaphoreFeatures)))
+			temp_in_VkExternalSemaphoreFeatureFlags = Flags(temp_in_VkFlags)
+		}
+		g.ExternalSemaphoreFeatures = ExternalSemaphoreFeatureFlags(temp_in_VkExternalSemaphoreFeatureFlags)
+	}
+}
+func GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+	var c struct {
+		physicalDevice               C.VkPhysicalDevice
+		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
+		pExternalSemaphoreProperties *C.VkExternalSemaphoreProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalSemaphoreInfo = (*C.VkPhysicalDeviceExternalSemaphoreInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalSemaphoreInfo))
+		externalSemaphoreInfo.toC(c.pExternalSemaphoreInfo)
+	}
+	{
+		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties * uint(len(externalSemaphoreProperties))))
+		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
+		for i3, _ := range externalSemaphoreProperties {
+			externalSemaphoreProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalSemaphoreProperties(c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
+}
+
+type DescriptorSetLayoutSupport struct {
+	Type      StructureType
+	Next      unsafe.Pointer
+	Supported Bool32
+}
+
+func (g *DescriptorSetLayoutSupport) toC(c *C.VkDescriptorSetLayoutSupport) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.Supported))
+		c.supported = C.VkBool32(temp_in_VkBool32)
+	}
+}
+func (g *DescriptorSetLayoutSupport) fromC(c *C.VkDescriptorSetLayoutSupport) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.supported))
+		g.Supported = Bool32(temp_in_VkBool32)
+	}
+}
+func GetDescriptorSetLayoutSupport(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
+	var c struct {
+		device      C.VkDevice
+		pCreateInfo *C.VkDescriptorSetLayoutCreateInfo
+		pSupport    *C.VkDescriptorSetLayoutSupport
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkDescriptorSetLayoutCreateInfo)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutCreateInfo))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pSupport = (*C.VkDescriptorSetLayoutSupport)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutSupport))
+		support.toC(c.pSupport)
+	}
+	C.vkGetDescriptorSetLayoutSupport(c.device, c.pCreateInfo, c.pSupport)
+	support.fromC(c.pSupport)
+}
+
+type SurfaceKHR C.VkSurfaceKHR
+
+func DestroySurfaceKHR(instance Instance, surface SurfaceKHR, allocator *AllocationCallbacks) {
+	var c struct {
+		instance   C.VkInstance
+		surface    C.VkSurfaceKHR
+		pAllocator *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroySurfaceKHR(c.instance, c.surface, c.pAllocator)
+}
+func GetPhysicalDeviceSurfaceSupportKHR(physicalDevice PhysicalDevice, queueFamilyIndex uint32, surface SurfaceKHR, supported *Bool32) (_ret Result) {
+	var c struct {
+		physicalDevice   C.VkPhysicalDevice
+		queueFamilyIndex C.uint32_t
+		surface          C.VkSurfaceKHR
+		pSupported       *C.VkBool32
+		_ret             C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.queueFamilyIndex = C.uint32_t(queueFamilyIndex)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pSupported = (*C.VkBool32)(_sa.alloc(C.sizeof_VkBool32))
+		{
+			var temp_in_VkBool32 C.uint32_t
+			temp_in_VkBool32 = C.uint32_t((uint32)(*supported))
+			*c.pSupported = C.VkBool32(temp_in_VkBool32)
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceSupportKHR(c.physicalDevice, c.queueFamilyIndex, c.surface, c.pSupported)
+	_ret = Result(c._ret)
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(*c.pSupported))
+		*supported = Bool32(temp_in_VkBool32)
+	}
+	return
+}
+
+type SurfaceTransformFlagsKHR Flags
+type SurfaceTransformFlagBitsKHR int
+
+const (
+	SURFACE_TRANSFORM_IDENTITY_BIT_KHR                     SurfaceTransformFlagBitsKHR = 1
+	SURFACE_TRANSFORM_ROTATE_90_BIT_KHR                    SurfaceTransformFlagBitsKHR = 2
+	SURFACE_TRANSFORM_ROTATE_180_BIT_KHR                   SurfaceTransformFlagBitsKHR = 4
+	SURFACE_TRANSFORM_ROTATE_270_BIT_KHR                   SurfaceTransformFlagBitsKHR = 8
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_BIT_KHR            SurfaceTransformFlagBitsKHR = 16
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_90_BIT_KHR  SurfaceTransformFlagBitsKHR = 32
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_180_BIT_KHR SurfaceTransformFlagBitsKHR = 64
+	SURFACE_TRANSFORM_HORIZONTAL_MIRROR_ROTATE_270_BIT_KHR SurfaceTransformFlagBitsKHR = 128
+	SURFACE_TRANSFORM_INHERIT_BIT_KHR                      SurfaceTransformFlagBitsKHR = 256
+	SURFACE_TRANSFORM_FLAG_BITS_MAX_ENUM_KHR               SurfaceTransformFlagBitsKHR = 2147483647
+)
+
+type CompositeAlphaFlagsKHR Flags
+type SurfaceCapabilitiesKHR struct {
+	MinImageCount           uint32
+	MaxImageCount           uint32
+	CurrentExtent           Extent2D
+	MinImageExtent          Extent2D
+	MaxImageExtent          Extent2D
+	MaxImageArrayLayers     uint32
+	SupportedTransforms     SurfaceTransformFlagsKHR
+	CurrentTransform        SurfaceTransformFlagBitsKHR
+	SupportedCompositeAlpha CompositeAlphaFlagsKHR
+	SupportedUsageFlags     ImageUsageFlags
+}
+
+func (g *SurfaceCapabilitiesKHR) toC(c *C.VkSurfaceCapabilitiesKHR) {
+	c.minImageCount = C.uint32_t(g.MinImageCount)
+	c.maxImageCount = C.uint32_t(g.MaxImageCount)
+	g.CurrentExtent.toC(&c.currentExtent)
+	g.MinImageExtent.toC(&c.minImageExtent)
+	g.MaxImageExtent.toC(&c.maxImageExtent)
+	c.maxImageArrayLayers = C.uint32_t(g.MaxImageArrayLayers)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	c.currentTransform = C.VkSurfaceTransformFlagBitsKHR(g.CurrentTransform)
+	{
+		var temp_in_VkCompositeAlphaFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
+			temp_in_VkCompositeAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedCompositeAlpha = C.VkCompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
+	}
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedUsageFlags = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+}
+func (g *SurfaceCapabilitiesKHR) fromC(c *C.VkSurfaceCapabilitiesKHR) {
+	g.MinImageCount = uint32(c.minImageCount)
+	g.MaxImageCount = uint32(c.maxImageCount)
+	g.CurrentExtent.fromC(&c.currentExtent)
+	g.MinImageExtent.fromC(&c.minImageExtent)
+	g.MaxImageExtent.fromC(&c.maxImageExtent)
+	g.MaxImageArrayLayers = uint32(c.maxImageArrayLayers)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	g.CurrentTransform = SurfaceTransformFlagBitsKHR(c.currentTransform)
+	{
+		var temp_in_VkCompositeAlphaFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
+			temp_in_VkCompositeAlphaFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedCompositeAlpha = CompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
+	}
+	{
+		var temp_in_VkImageUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+}
+func GetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilitiesKHR) (_ret Result) {
+	var c struct {
+		physicalDevice       C.VkPhysicalDevice
+		surface              C.VkSurfaceKHR
+		pSurfaceCapabilities *C.VkSurfaceCapabilitiesKHR
+		_ret                 C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilitiesKHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilitiesKHR * uint(len(surfaceCapabilities))))
+		slice3 := (*[1 << 31]C.VkSurfaceCapabilitiesKHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
+		for i3, _ := range surfaceCapabilities {
+			surfaceCapabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceCapabilitiesKHR(c.physicalDevice, c.surface, c.pSurfaceCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+
+type ColorSpaceKHR int
+
+const (
+	COLOR_SPACE_SRGB_NONLINEAR_KHR          ColorSpaceKHR = 0
+	COLOR_SPACE_DISPLAY_P3_NONLINEAR_EXT    ColorSpaceKHR = 1000104001
+	COLOR_SPACE_EXTENDED_SRGB_LINEAR_EXT    ColorSpaceKHR = 1000104002
+	COLOR_SPACE_DCI_P3_LINEAR_EXT           ColorSpaceKHR = 1000104003
+	COLOR_SPACE_DCI_P3_NONLINEAR_EXT        ColorSpaceKHR = 1000104004
+	COLOR_SPACE_BT709_LINEAR_EXT            ColorSpaceKHR = 1000104005
+	COLOR_SPACE_BT709_NONLINEAR_EXT         ColorSpaceKHR = 1000104006
+	COLOR_SPACE_BT2020_LINEAR_EXT           ColorSpaceKHR = 1000104007
+	COLOR_SPACE_HDR10_ST2084_EXT            ColorSpaceKHR = 1000104008
+	COLOR_SPACE_DOLBYVISION_EXT             ColorSpaceKHR = 1000104009
+	COLOR_SPACE_HDR10_HLG_EXT               ColorSpaceKHR = 1000104010
+	COLOR_SPACE_ADOBERGB_LINEAR_EXT         ColorSpaceKHR = 1000104011
+	COLOR_SPACE_ADOBERGB_NONLINEAR_EXT      ColorSpaceKHR = 1000104012
+	COLOR_SPACE_PASS_THROUGH_EXT            ColorSpaceKHR = 1000104013
+	COLOR_SPACE_EXTENDED_SRGB_NONLINEAR_EXT ColorSpaceKHR = 1000104014
+	COLOR_SPACE_BEGIN_RANGE_KHR             ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
+	COLOR_SPACE_END_RANGE_KHR               ColorSpaceKHR = COLOR_SPACE_SRGB_NONLINEAR_KHR
+	COLOR_SPACE_RANGE_SIZE_KHR              ColorSpaceKHR = (COLOR_SPACE_SRGB_NONLINEAR_KHR - COLOR_SPACE_SRGB_NONLINEAR_KHR + 1)
+	COLOR_SPACE_MAX_ENUM_KHR                ColorSpaceKHR = 2147483647
+)
+
+type SurfaceFormatKHR struct {
+	Format     Format
+	ColorSpace ColorSpaceKHR
+}
+
+func (g *SurfaceFormatKHR) toC(c *C.VkSurfaceFormatKHR) {
+	c.format = C.VkFormat(g.Format)
+	c.colorSpace = C.VkColorSpaceKHR(g.ColorSpace)
+}
+func (g *SurfaceFormatKHR) fromC(c *C.VkSurfaceFormatKHR) {
+	g.Format = Format(c.format)
+	g.ColorSpace = ColorSpaceKHR(c.colorSpace)
+}
+func GetPhysicalDeviceSurfaceFormatsKHR(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormatKHR) (_ret Result) {
+	var c struct {
+		physicalDevice      C.VkPhysicalDevice
+		surface             C.VkSurfaceKHR
+		pSurfaceFormatCount *C.uint32_t
+		pSurfaceFormats     *C.VkSurfaceFormatKHR
+		_ret                C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pSurfaceFormatCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pSurfaceFormatCount = C.uint32_t(*surfaceFormatCount)
+	}
+	{
+		c.pSurfaceFormats = (*C.VkSurfaceFormatKHR)(_sa.alloc(C.sizeof_VkSurfaceFormatKHR * uint(len(surfaceFormats))))
+		slice3 := (*[1 << 31]C.VkSurfaceFormatKHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
+		for i3, _ := range surfaceFormats {
+			surfaceFormats[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceFormatsKHR(c.physicalDevice, c.surface, c.pSurfaceFormatCount, c.pSurfaceFormats)
+	_ret = Result(c._ret)
+	*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
+	return
+}
+
+type PresentModeKHR int
+
+const (
+	PRESENT_MODE_IMMEDIATE_KHR                 PresentModeKHR = 0
+	PRESENT_MODE_MAILBOX_KHR                   PresentModeKHR = 1
+	PRESENT_MODE_FIFO_KHR                      PresentModeKHR = 2
+	PRESENT_MODE_FIFO_RELAXED_KHR              PresentModeKHR = 3
+	PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR     PresentModeKHR = 1000111000
+	PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR PresentModeKHR = 1000111001
+	PRESENT_MODE_BEGIN_RANGE_KHR               PresentModeKHR = PRESENT_MODE_IMMEDIATE_KHR
+	PRESENT_MODE_END_RANGE_KHR                 PresentModeKHR = PRESENT_MODE_FIFO_RELAXED_KHR
+	PRESENT_MODE_RANGE_SIZE_KHR                PresentModeKHR = (PRESENT_MODE_FIFO_RELAXED_KHR - PRESENT_MODE_IMMEDIATE_KHR + 1)
+	PRESENT_MODE_MAX_ENUM_KHR                  PresentModeKHR = 2147483647
+)
+
+func GetPhysicalDeviceSurfacePresentModesKHR(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes []PresentModeKHR) (_ret Result) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		surface           C.VkSurfaceKHR
+		pPresentModeCount *C.uint32_t
+		pPresentModes     *C.VkPresentModeKHR
+		_ret              C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pPresentModeCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPresentModeCount = C.uint32_t(*presentModeCount)
+	}
+	{
+		c.pPresentModes = (*C.VkPresentModeKHR)(_sa.alloc(C.sizeof_VkPresentModeKHR * uint(len(presentModes))))
+		slice3 := (*[1 << 31]C.VkPresentModeKHR)(unsafe.Pointer(c.pPresentModes))[:len(presentModes):len(presentModes)]
+		for i3, _ := range presentModes {
+			slice3[i3] = C.VkPresentModeKHR(presentModes[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfacePresentModesKHR(c.physicalDevice, c.surface, c.pPresentModeCount, c.pPresentModes)
+	_ret = Result(c._ret)
+	*presentModeCount = uint32(*c.pPresentModeCount)
+	return
+}
+
+type SwapchainCreateFlagsKHR Flags
+type CompositeAlphaFlagBitsKHR int
+
+const (
+	COMPOSITE_ALPHA_OPAQUE_BIT_KHR          CompositeAlphaFlagBitsKHR = 1
+	COMPOSITE_ALPHA_PRE_MULTIPLIED_BIT_KHR  CompositeAlphaFlagBitsKHR = 2
+	COMPOSITE_ALPHA_POST_MULTIPLIED_BIT_KHR CompositeAlphaFlagBitsKHR = 4
+	COMPOSITE_ALPHA_INHERIT_BIT_KHR         CompositeAlphaFlagBitsKHR = 8
+	COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR  CompositeAlphaFlagBitsKHR = 2147483647
+)
+
+type SwapchainKHR C.VkSwapchainKHR
+type SwapchainCreateInfoKHR struct {
+	Type               StructureType
+	Next               unsafe.Pointer
+	Flags              SwapchainCreateFlagsKHR
+	Surface            SurfaceKHR
+	MinImageCount      uint32
+	ImageFormat        Format
+	ImageColorSpace    ColorSpaceKHR
+	ImageExtent        Extent2D
+	ImageArrayLayers   uint32
+	ImageUsage         ImageUsageFlags
+	ImageSharingMode   SharingMode
+	QueueFamilyIndices []uint32
+	PreTransform       SurfaceTransformFlagBitsKHR
+	CompositeAlpha     CompositeAlphaFlagBitsKHR
+	PresentMode        PresentModeKHR
+	Clipped            Bool32
+	OldSwapchain       SwapchainKHR
+}
+
+func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkSwapchainCreateFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSwapchainCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkSwapchainCreateFlagsKHR(temp_in_VkSwapchainCreateFlagsKHR)
+	}
+	c.surface = C.VkSurfaceKHR(g.Surface)
+	c.minImageCount = C.uint32_t(g.MinImageCount)
+	c.imageFormat = C.VkFormat(g.ImageFormat)
+	c.imageColorSpace = C.VkColorSpaceKHR(g.ImageColorSpace)
+	g.ImageExtent.toC(&c.imageExtent)
+	c.imageArrayLayers = C.uint32_t(g.ImageArrayLayers)
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ImageUsage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.imageUsage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	c.imageSharingMode = C.VkSharingMode(g.ImageSharingMode)
+	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
+	{
+		c.pQueueFamilyIndices = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(g.QueueFamilyIndices))))
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pQueueFamilyIndices))[:len(g.QueueFamilyIndices):len(g.QueueFamilyIndices)]
+		for i2, _ := range g.QueueFamilyIndices {
+			slice2[i2] = C.uint32_t(g.QueueFamilyIndices[i2])
+		}
+	}
+	c.preTransform = C.VkSurfaceTransformFlagBitsKHR(g.PreTransform)
+	c.compositeAlpha = C.VkCompositeAlphaFlagBitsKHR(g.CompositeAlpha)
+	c.presentMode = C.VkPresentModeKHR(g.PresentMode)
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.Clipped))
+		c.clipped = C.VkBool32(temp_in_VkBool32)
+	}
+	c.oldSwapchain = C.VkSwapchainKHR(g.OldSwapchain)
+}
+func (g *SwapchainCreateInfoKHR) fromC(c *C.VkSwapchainCreateInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkSwapchainCreateFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSwapchainCreateFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.Flags = SwapchainCreateFlagsKHR(temp_in_VkSwapchainCreateFlagsKHR)
+	}
+	g.Surface = SurfaceKHR(c.surface)
+	g.MinImageCount = uint32(c.minImageCount)
+	g.ImageFormat = Format(c.imageFormat)
+	g.ImageColorSpace = ColorSpaceKHR(c.imageColorSpace)
+	g.ImageExtent.fromC(&c.imageExtent)
+	g.ImageArrayLayers = uint32(c.imageArrayLayers)
+	{
+		var temp_in_VkImageUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.imageUsage)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.ImageUsage = ImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	g.ImageSharingMode = SharingMode(c.imageSharingMode)
+	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
+	{
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pQueueFamilyIndices))[:len(g.QueueFamilyIndices):len(g.QueueFamilyIndices)]
+		for i2, _ := range g.QueueFamilyIndices {
+			g.QueueFamilyIndices[i2] = uint32(slice2[i2])
+		}
+	}
+	g.PreTransform = SurfaceTransformFlagBitsKHR(c.preTransform)
+	g.CompositeAlpha = CompositeAlphaFlagBitsKHR(c.compositeAlpha)
+	g.PresentMode = PresentModeKHR(c.presentMode)
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.clipped))
+		g.Clipped = Bool32(temp_in_VkBool32)
+	}
+	g.OldSwapchain = SwapchainKHR(c.oldSwapchain)
+}
+func CreateSwapchainKHR(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result) {
+	var c struct {
+		device      C.VkDevice
+		pCreateInfo *C.VkSwapchainCreateInfoKHR
+		pAllocator  *C.VkAllocationCallbacks
+		pSwapchain  *C.VkSwapchainKHR
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkSwapchainCreateInfoKHR)(_sa.alloc(C.sizeof_VkSwapchainCreateInfoKHR))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pSwapchain = (*C.VkSwapchainKHR)(_sa.alloc(C.sizeof_VkSwapchainKHR))
+		*c.pSwapchain = C.VkSwapchainKHR(*swapchain)
+	}
+	c._ret = C.vkCreateSwapchainKHR(c.device, c.pCreateInfo, c.pAllocator, c.pSwapchain)
+	_ret = Result(c._ret)
+	*swapchain = SwapchainKHR(*c.pSwapchain)
+	return
+}
+func DestroySwapchainKHR(device Device, swapchain SwapchainKHR, allocator *AllocationCallbacks) {
+	var c struct {
+		device     C.VkDevice
+		swapchain  C.VkSwapchainKHR
+		pAllocator *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroySwapchainKHR(c.device, c.swapchain, c.pAllocator)
+}
+func GetSwapchainImagesKHR(device Device, swapchain SwapchainKHR, swapchainImageCount *uint32, swapchainImages []Image) (_ret Result) {
+	var c struct {
+		device               C.VkDevice
+		swapchain            C.VkSwapchainKHR
+		pSwapchainImageCount *C.uint32_t
+		pSwapchainImages     *C.VkImage
+		_ret                 C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	{
+		c.pSwapchainImageCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pSwapchainImageCount = C.uint32_t(*swapchainImageCount)
+	}
+	{
+		c.pSwapchainImages = (*C.VkImage)(_sa.alloc(C.sizeof_VkImage * uint(len(swapchainImages))))
+		slice3 := (*[1 << 31]C.VkImage)(unsafe.Pointer(c.pSwapchainImages))[:len(swapchainImages):len(swapchainImages)]
+		for i3, _ := range swapchainImages {
+			slice3[i3] = C.VkImage(swapchainImages[i3])
+		}
+	}
+	c._ret = C.vkGetSwapchainImagesKHR(c.device, c.swapchain, c.pSwapchainImageCount, c.pSwapchainImages)
+	_ret = Result(c._ret)
+	*swapchainImageCount = uint32(*c.pSwapchainImageCount)
+	return
+}
+func AcquireNextImageKHR(device Device, swapchain SwapchainKHR, timeout uint64, semaphore Semaphore, fence Fence, imageIndex *uint32) (_ret Result) {
+	var c struct {
+		device      C.VkDevice
+		swapchain   C.VkSwapchainKHR
+		timeout     C.uint64_t
+		semaphore   C.VkSemaphore
+		fence       C.VkFence
+		pImageIndex *C.uint32_t
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	c.timeout = C.uint64_t(timeout)
+	c.semaphore = C.VkSemaphore(semaphore)
+	c.fence = C.VkFence(fence)
+	{
+		c.pImageIndex = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pImageIndex = C.uint32_t(*imageIndex)
+	}
+	c._ret = C.vkAcquireNextImageKHR(c.device, c.swapchain, c.timeout, c.semaphore, c.fence, c.pImageIndex)
+	_ret = Result(c._ret)
+	*imageIndex = uint32(*c.pImageIndex)
+	return
+}
+
+type PresentInfoKHR struct {
+	Type           StructureType
+	Next           unsafe.Pointer
+	WaitSemaphores []Semaphore
+	Swapchains     []SwapchainKHR
+	ImageIndices   []uint32
+	Results        []Result
+}
+
+func (g *PresentInfoKHR) toC(c *C.VkPresentInfoKHR, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
+	{
+		c.pWaitSemaphores = (*C.VkSemaphore)(_sa.alloc(C.sizeof_VkSemaphore * uint(len(g.WaitSemaphores))))
+		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
+		for i2, _ := range g.WaitSemaphores {
+			slice2[i2] = C.VkSemaphore(g.WaitSemaphores[i2])
+		}
+	}
+	c.swapchainCount = C.uint32_t(len(g.Swapchains))
+	{
+		c.pSwapchains = (*C.VkSwapchainKHR)(_sa.alloc(C.sizeof_VkSwapchainKHR * uint(len(g.Swapchains))))
+		slice2 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(g.Swapchains):len(g.Swapchains)]
+		for i2, _ := range g.Swapchains {
+			slice2[i2] = C.VkSwapchainKHR(g.Swapchains[i2])
+		}
+	}
+	{
+		c.pImageIndices = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(g.ImageIndices))))
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pImageIndices))[:len(g.ImageIndices):len(g.ImageIndices)]
+		for i2, _ := range g.ImageIndices {
+			slice2[i2] = C.uint32_t(g.ImageIndices[i2])
+		}
+	}
+	{
+		c.pResults = (*C.VkResult)(_sa.alloc(C.sizeof_VkResult * uint(len(g.Results))))
+		slice2 := (*[1 << 31]C.VkResult)(unsafe.Pointer(c.pResults))[:len(g.Results):len(g.Results)]
+		for i2, _ := range g.Results {
+			slice2[i2] = C.VkResult(g.Results[i2])
+		}
+	}
+}
+func (g *PresentInfoKHR) fromC(c *C.VkPresentInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.WaitSemaphores = make([]Semaphore, int(c.waitSemaphoreCount))
+	{
+		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
+		for i2, _ := range g.WaitSemaphores {
+			g.WaitSemaphores[i2] = Semaphore(slice2[i2])
+		}
+	}
+	g.Swapchains = make([]SwapchainKHR, int(c.swapchainCount))
+	{
+		slice2 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(g.Swapchains):len(g.Swapchains)]
+		for i2, _ := range g.Swapchains {
+			g.Swapchains[i2] = SwapchainKHR(slice2[i2])
+		}
+	}
+	{
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pImageIndices))[:len(g.ImageIndices):len(g.ImageIndices)]
+		for i2, _ := range g.ImageIndices {
+			g.ImageIndices[i2] = uint32(slice2[i2])
+		}
+	}
+	{
+		slice2 := (*[1 << 31]C.VkResult)(unsafe.Pointer(c.pResults))[:len(g.Results):len(g.Results)]
+		for i2, _ := range g.Results {
+			g.Results[i2] = Result(slice2[i2])
+		}
+	}
+}
+func QueuePresentKHR(queue Queue, presentInfo *PresentInfoKHR) (_ret Result) {
+	var c struct {
+		queue        C.VkQueue
+		pPresentInfo *C.VkPresentInfoKHR
+		_ret         C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.queue = C.VkQueue(queue)
+	{
+		c.pPresentInfo = (*C.VkPresentInfoKHR)(_sa.alloc(C.sizeof_VkPresentInfoKHR))
+		presentInfo.toC(c.pPresentInfo, _sa)
+	}
+	c._ret = C.vkQueuePresentKHR(c.queue, c.pPresentInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DeviceGroupPresentModeFlagsKHR Flags
+type DeviceGroupPresentCapabilitiesKHR struct {
+	Type        StructureType
+	Next        unsafe.Pointer
+	PresentMask [32]uint32
+	Modes       DeviceGroupPresentModeFlagsKHR
+}
+
+func (g *DeviceGroupPresentCapabilitiesKHR) toC(c *C.VkDeviceGroupPresentCapabilitiesKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	for i, _ := range g.PresentMask {
+		c.presentMask[i] = C.uint32_t(g.PresentMask[i])
+	}
+	{
+		var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Modes)))
+			temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.modes = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
+	}
+}
+func (g *DeviceGroupPresentCapabilitiesKHR) fromC(c *C.VkDeviceGroupPresentCapabilitiesKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	for i, _ := range g.PresentMask {
+		g.PresentMask[i] = uint32(c.presentMask[i])
+	}
+	{
+		var temp_in_VkDeviceGroupPresentModeFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.modes)))
+			temp_in_VkDeviceGroupPresentModeFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.Modes = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
+	}
+}
+func GetDeviceGroupPresentCapabilitiesKHR(device Device, deviceGroupPresentCapabilities []DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
+	var c struct {
+		device                          C.VkDevice
+		pDeviceGroupPresentCapabilities *C.VkDeviceGroupPresentCapabilitiesKHR
+		_ret                            C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pDeviceGroupPresentCapabilities = (*C.VkDeviceGroupPresentCapabilitiesKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentCapabilitiesKHR * uint(len(deviceGroupPresentCapabilities))))
+		slice3 := (*[1 << 31]C.VkDeviceGroupPresentCapabilitiesKHR)(unsafe.Pointer(c.pDeviceGroupPresentCapabilities))[:len(deviceGroupPresentCapabilities):len(deviceGroupPresentCapabilities)]
+		for i3, _ := range deviceGroupPresentCapabilities {
+			deviceGroupPresentCapabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetDeviceGroupPresentCapabilitiesKHR(c.device, c.pDeviceGroupPresentCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+func GetDeviceGroupSurfacePresentModesKHR(device Device, surface SurfaceKHR, modes []DeviceGroupPresentModeFlagsKHR) (_ret Result) {
+	var c struct {
+		device  C.VkDevice
+		surface C.VkSurfaceKHR
+		pModes  *C.VkDeviceGroupPresentModeFlagsKHR
+		_ret    C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pModes = (*C.VkDeviceGroupPresentModeFlagsKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentModeFlagsKHR * uint(len(modes))))
+		slice3 := (*[1 << 31]C.VkDeviceGroupPresentModeFlagsKHR)(unsafe.Pointer(c.pModes))[:len(modes):len(modes)]
+		for i3, _ := range modes {
+			{
+				var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
+				{
+					var temp_in_VkFlags C.uint32_t
+					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(modes[i3])))
+					temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
+				}
+				slice3[i3] = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
+			}
+		}
+	}
+	c._ret = C.vkGetDeviceGroupSurfacePresentModesKHR(c.device, c.surface, c.pModes)
+	_ret = Result(c._ret)
+	return
+}
+func GetPhysicalDevicePresentRectanglesKHR(physicalDevice PhysicalDevice, surface SurfaceKHR, rectCount *uint32, rects []Rect2D) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		surface        C.VkSurfaceKHR
+		pRectCount     *C.uint32_t
+		pRects         *C.VkRect2D
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pRectCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pRectCount = C.uint32_t(*rectCount)
+	}
+	{
+		c.pRects = (*C.VkRect2D)(_sa.alloc(C.sizeof_VkRect2D * uint(len(rects))))
+		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
+		for i3, _ := range rects {
+			rects[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDevicePresentRectanglesKHR(c.physicalDevice, c.surface, c.pRectCount, c.pRects)
+	_ret = Result(c._ret)
+	*rectCount = uint32(*c.pRectCount)
+	return
+}
+
+type AcquireNextImageInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Swapchain  SwapchainKHR
+	Timeout    uint64
+	Semaphore  Semaphore
+	Fence      Fence
+	DeviceMask uint32
+}
+
+func (g *AcquireNextImageInfoKHR) toC(c *C.VkAcquireNextImageInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.swapchain = C.VkSwapchainKHR(g.Swapchain)
+	c.timeout = C.uint64_t(g.Timeout)
+	c.semaphore = C.VkSemaphore(g.Semaphore)
+	c.fence = C.VkFence(g.Fence)
+	c.deviceMask = C.uint32_t(g.DeviceMask)
+}
+func (g *AcquireNextImageInfoKHR) fromC(c *C.VkAcquireNextImageInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Swapchain = SwapchainKHR(c.swapchain)
+	g.Timeout = uint64(c.timeout)
+	g.Semaphore = Semaphore(c.semaphore)
+	g.Fence = Fence(c.fence)
+	g.DeviceMask = uint32(c.deviceMask)
+}
+func AcquireNextImage2KHR(device Device, acquireInfo *AcquireNextImageInfoKHR, imageIndex *uint32) (_ret Result) {
+	var c struct {
+		device       C.VkDevice
+		pAcquireInfo *C.VkAcquireNextImageInfoKHR
+		pImageIndex  *C.uint32_t
+		_ret         C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pAcquireInfo = (*C.VkAcquireNextImageInfoKHR)(_sa.alloc(C.sizeof_VkAcquireNextImageInfoKHR))
+		acquireInfo.toC(c.pAcquireInfo)
+	}
+	{
+		c.pImageIndex = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pImageIndex = C.uint32_t(*imageIndex)
+	}
+	c._ret = C.vkAcquireNextImage2KHR(c.device, c.pAcquireInfo, c.pImageIndex)
+	_ret = Result(c._ret)
+	*imageIndex = uint32(*c.pImageIndex)
+	return
+}
+
+type DisplayKHR C.VkDisplayKHR
+type DisplayPropertiesKHR struct {
+	Display              DisplayKHR
+	DisplayName          string
+	PhysicalDimensions   Extent2D
+	PhysicalResolution   Extent2D
+	SupportedTransforms  SurfaceTransformFlagsKHR
+	PlaneReorderPossible Bool32
+	PersistentContent    Bool32
+}
+
+func (g *DisplayPropertiesKHR) toC(c *C.VkDisplayPropertiesKHR, _sa *stackAllocator) {
+	c.display = C.VkDisplayKHR(g.Display)
+	c.displayName = toCString(g.DisplayName, _sa)
+	g.PhysicalDimensions.toC(&c.physicalDimensions)
+	g.PhysicalResolution.toC(&c.physicalResolution)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.PlaneReorderPossible))
+		c.planeReorderPossible = C.VkBool32(temp_in_VkBool32)
+	}
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.PersistentContent))
+		c.persistentContent = C.VkBool32(temp_in_VkBool32)
+	}
+}
+func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
+	g.Display = DisplayKHR(c.display)
+	g.DisplayName = toGoString(c.displayName)
+	g.PhysicalDimensions.fromC(&c.physicalDimensions)
+	g.PhysicalResolution.fromC(&c.physicalResolution)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.planeReorderPossible))
+		g.PlaneReorderPossible = Bool32(temp_in_VkBool32)
+	}
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.persistentContent))
+		g.PersistentContent = Bool32(temp_in_VkBool32)
+	}
+}
+func GetPhysicalDeviceDisplayPropertiesKHR(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPropertiesKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayPropertiesKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayPropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPropertiesKHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayPropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3], _sa)
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceDisplayPropertiesKHR(c.physicalDevice, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+
+type DisplayPlanePropertiesKHR struct {
+	CurrentDisplay    DisplayKHR
+	CurrentStackIndex uint32
+}
+
+func (g *DisplayPlanePropertiesKHR) toC(c *C.VkDisplayPlanePropertiesKHR) {
+	c.currentDisplay = C.VkDisplayKHR(g.CurrentDisplay)
+	c.currentStackIndex = C.uint32_t(g.CurrentStackIndex)
+}
+func (g *DisplayPlanePropertiesKHR) fromC(c *C.VkDisplayPlanePropertiesKHR) {
+	g.CurrentDisplay = DisplayKHR(c.currentDisplay)
+	g.CurrentStackIndex = uint32(c.currentStackIndex)
+}
+func GetPhysicalDeviceDisplayPlanePropertiesKHR(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlanePropertiesKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayPlanePropertiesKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayPlanePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPlanePropertiesKHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayPlanePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceDisplayPlanePropertiesKHR(c.physicalDevice, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+func GetDisplayPlaneSupportedDisplaysKHR(physicalDevice PhysicalDevice, planeIndex uint32, displayCount *uint32, displays []DisplayKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		planeIndex     C.uint32_t
+		pDisplayCount  *C.uint32_t
+		pDisplays      *C.VkDisplayKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.planeIndex = C.uint32_t(planeIndex)
+	{
+		c.pDisplayCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pDisplayCount = C.uint32_t(*displayCount)
+	}
+	{
+		c.pDisplays = (*C.VkDisplayKHR)(_sa.alloc(C.sizeof_VkDisplayKHR * uint(len(displays))))
+		slice3 := (*[1 << 31]C.VkDisplayKHR)(unsafe.Pointer(c.pDisplays))[:len(displays):len(displays)]
+		for i3, _ := range displays {
+			slice3[i3] = C.VkDisplayKHR(displays[i3])
+		}
+	}
+	c._ret = C.vkGetDisplayPlaneSupportedDisplaysKHR(c.physicalDevice, c.planeIndex, c.pDisplayCount, c.pDisplays)
+	_ret = Result(c._ret)
+	*displayCount = uint32(*c.pDisplayCount)
+	return
+}
+
+type DisplayModeKHR C.VkDisplayModeKHR
+type DisplayModeParametersKHR struct {
+	VisibleRegion Extent2D
+	RefreshRate   uint32
+}
+
+func (g *DisplayModeParametersKHR) toC(c *C.VkDisplayModeParametersKHR) {
+	g.VisibleRegion.toC(&c.visibleRegion)
+	c.refreshRate = C.uint32_t(g.RefreshRate)
+}
+func (g *DisplayModeParametersKHR) fromC(c *C.VkDisplayModeParametersKHR) {
+	g.VisibleRegion.fromC(&c.visibleRegion)
+	g.RefreshRate = uint32(c.refreshRate)
+}
+
+type DisplayModePropertiesKHR struct {
+	DisplayMode DisplayModeKHR
+	Parameters  DisplayModeParametersKHR
+}
+
+func (g *DisplayModePropertiesKHR) toC(c *C.VkDisplayModePropertiesKHR) {
+	c.displayMode = C.VkDisplayModeKHR(g.DisplayMode)
+	g.Parameters.toC(&c.parameters)
+}
+func (g *DisplayModePropertiesKHR) fromC(c *C.VkDisplayModePropertiesKHR) {
+	g.DisplayMode = DisplayModeKHR(c.displayMode)
+	g.Parameters.fromC(&c.parameters)
+}
+func GetDisplayModePropertiesKHR(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModePropertiesKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		display        C.VkDisplayKHR
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayModePropertiesKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.display = C.VkDisplayKHR(display)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayModePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayModePropertiesKHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayModePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetDisplayModePropertiesKHR(c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+
+type DisplayModeCreateFlagsKHR Flags
+type DisplayModeCreateInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Flags      DisplayModeCreateFlagsKHR
+	Parameters DisplayModeParametersKHR
+}
+
+func (g *DisplayModeCreateInfoKHR) toC(c *C.VkDisplayModeCreateInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDisplayModeCreateFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDisplayModeCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDisplayModeCreateFlagsKHR(temp_in_VkDisplayModeCreateFlagsKHR)
+	}
+	g.Parameters.toC(&c.parameters)
+}
+func (g *DisplayModeCreateInfoKHR) fromC(c *C.VkDisplayModeCreateInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDisplayModeCreateFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDisplayModeCreateFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DisplayModeCreateFlagsKHR(temp_in_VkDisplayModeCreateFlagsKHR)
+	}
+	g.Parameters.fromC(&c.parameters)
+}
+func CreateDisplayModeKHR(physicalDevice PhysicalDevice, display DisplayKHR, createInfo *DisplayModeCreateInfoKHR, allocator *AllocationCallbacks, mode *DisplayModeKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		display        C.VkDisplayKHR
+		pCreateInfo    *C.VkDisplayModeCreateInfoKHR
+		pAllocator     *C.VkAllocationCallbacks
+		pMode          *C.VkDisplayModeKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.display = C.VkDisplayKHR(display)
+	{
+		c.pCreateInfo = (*C.VkDisplayModeCreateInfoKHR)(_sa.alloc(C.sizeof_VkDisplayModeCreateInfoKHR))
+		createInfo.toC(c.pCreateInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pMode = (*C.VkDisplayModeKHR)(_sa.alloc(C.sizeof_VkDisplayModeKHR))
+		*c.pMode = C.VkDisplayModeKHR(*mode)
+	}
+	c._ret = C.vkCreateDisplayModeKHR(c.physicalDevice, c.display, c.pCreateInfo, c.pAllocator, c.pMode)
+	_ret = Result(c._ret)
+	*mode = DisplayModeKHR(*c.pMode)
+	return
+}
+
+type DisplayPlaneAlphaFlagsKHR Flags
+type DisplayPlaneCapabilitiesKHR struct {
+	SupportedAlpha DisplayPlaneAlphaFlagsKHR
+	MinSrcPosition Offset2D
+	MaxSrcPosition Offset2D
+	MinSrcExtent   Extent2D
+	MaxSrcExtent   Extent2D
+	MinDstPosition Offset2D
+	MaxDstPosition Offset2D
+	MinDstExtent   Extent2D
+	MaxDstExtent   Extent2D
+}
+
+func (g *DisplayPlaneCapabilitiesKHR) toC(c *C.VkDisplayPlaneCapabilitiesKHR) {
+	{
+		var temp_in_VkDisplayPlaneAlphaFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedAlpha)))
+			temp_in_VkDisplayPlaneAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedAlpha = C.VkDisplayPlaneAlphaFlagsKHR(temp_in_VkDisplayPlaneAlphaFlagsKHR)
+	}
+	g.MinSrcPosition.toC(&c.minSrcPosition)
+	g.MaxSrcPosition.toC(&c.maxSrcPosition)
+	g.MinSrcExtent.toC(&c.minSrcExtent)
+	g.MaxSrcExtent.toC(&c.maxSrcExtent)
+	g.MinDstPosition.toC(&c.minDstPosition)
+	g.MaxDstPosition.toC(&c.maxDstPosition)
+	g.MinDstExtent.toC(&c.minDstExtent)
+	g.MaxDstExtent.toC(&c.maxDstExtent)
+}
+func (g *DisplayPlaneCapabilitiesKHR) fromC(c *C.VkDisplayPlaneCapabilitiesKHR) {
+	{
+		var temp_in_VkDisplayPlaneAlphaFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedAlpha)))
+			temp_in_VkDisplayPlaneAlphaFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedAlpha = DisplayPlaneAlphaFlagsKHR(temp_in_VkDisplayPlaneAlphaFlagsKHR)
+	}
+	g.MinSrcPosition.fromC(&c.minSrcPosition)
+	g.MaxSrcPosition.fromC(&c.maxSrcPosition)
+	g.MinSrcExtent.fromC(&c.minSrcExtent)
+	g.MaxSrcExtent.fromC(&c.maxSrcExtent)
+	g.MinDstPosition.fromC(&c.minDstPosition)
+	g.MaxDstPosition.fromC(&c.maxDstPosition)
+	g.MinDstExtent.fromC(&c.minDstExtent)
+	g.MaxDstExtent.fromC(&c.maxDstExtent)
+}
+func GetDisplayPlaneCapabilitiesKHR(physicalDevice PhysicalDevice, mode DisplayModeKHR, capabilities []DisplayPlaneCapabilitiesKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		mode           C.VkDisplayModeKHR
+		planeIndex     C.uint32_t
+		pCapabilities  *C.VkDisplayPlaneCapabilitiesKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.mode = C.VkDisplayModeKHR(mode)
+	c.planeIndex = C.uint32_t(len(capabilities))
+	{
+		c.pCapabilities = (*C.VkDisplayPlaneCapabilitiesKHR)(_sa.alloc(C.sizeof_VkDisplayPlaneCapabilitiesKHR * uint(len(capabilities))))
+		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilitiesKHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
+		for i3, _ := range capabilities {
+			capabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetDisplayPlaneCapabilitiesKHR(c.physicalDevice, c.mode, c.planeIndex, c.pCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+
+type DisplaySurfaceCreateFlagsKHR Flags
+type DisplayPlaneAlphaFlagBitsKHR int
+
+const (
+	DISPLAY_PLANE_ALPHA_OPAQUE_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 1
+	DISPLAY_PLANE_ALPHA_GLOBAL_BIT_KHR                  DisplayPlaneAlphaFlagBitsKHR = 2
+	DISPLAY_PLANE_ALPHA_PER_PIXEL_BIT_KHR               DisplayPlaneAlphaFlagBitsKHR = 4
+	DISPLAY_PLANE_ALPHA_PER_PIXEL_PREMULTIPLIED_BIT_KHR DisplayPlaneAlphaFlagBitsKHR = 8
+	DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR          DisplayPlaneAlphaFlagBitsKHR = 2147483647
+)
+
+type DisplaySurfaceCreateInfoKHR struct {
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           DisplaySurfaceCreateFlagsKHR
+	DisplayMode     DisplayModeKHR
+	PlaneIndex      uint32
+	PlaneStackIndex uint32
+	Transform       SurfaceTransformFlagBitsKHR
+	GlobalAlpha     float32
+	AlphaMode       DisplayPlaneAlphaFlagBitsKHR
+	ImageExtent     Extent2D
+}
+
+func (g *DisplaySurfaceCreateInfoKHR) toC(c *C.VkDisplaySurfaceCreateInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDisplaySurfaceCreateFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDisplaySurfaceCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDisplaySurfaceCreateFlagsKHR(temp_in_VkDisplaySurfaceCreateFlagsKHR)
+	}
+	c.displayMode = C.VkDisplayModeKHR(g.DisplayMode)
+	c.planeIndex = C.uint32_t(g.PlaneIndex)
+	c.planeStackIndex = C.uint32_t(g.PlaneStackIndex)
+	c.transform = C.VkSurfaceTransformFlagBitsKHR(g.Transform)
+	c.globalAlpha = C.float(g.GlobalAlpha)
+	c.alphaMode = C.VkDisplayPlaneAlphaFlagBitsKHR(g.AlphaMode)
+	g.ImageExtent.toC(&c.imageExtent)
+}
+func (g *DisplaySurfaceCreateInfoKHR) fromC(c *C.VkDisplaySurfaceCreateInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDisplaySurfaceCreateFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDisplaySurfaceCreateFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DisplaySurfaceCreateFlagsKHR(temp_in_VkDisplaySurfaceCreateFlagsKHR)
+	}
+	g.DisplayMode = DisplayModeKHR(c.displayMode)
+	g.PlaneIndex = uint32(c.planeIndex)
+	g.PlaneStackIndex = uint32(c.planeStackIndex)
+	g.Transform = SurfaceTransformFlagBitsKHR(c.transform)
+	g.GlobalAlpha = float32(c.globalAlpha)
+	g.AlphaMode = DisplayPlaneAlphaFlagBitsKHR(c.alphaMode)
+	g.ImageExtent.fromC(&c.imageExtent)
+}
+func CreateDisplayPlaneSurfaceKHR(instance Instance, createInfo *DisplaySurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
+	var c struct {
+		instance    C.VkInstance
+		pCreateInfo *C.VkDisplaySurfaceCreateInfoKHR
+		pAllocator  *C.VkAllocationCallbacks
+		pSurface    *C.VkSurfaceKHR
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		c.pCreateInfo = (*C.VkDisplaySurfaceCreateInfoKHR)(_sa.alloc(C.sizeof_VkDisplaySurfaceCreateInfoKHR))
+		createInfo.toC(c.pCreateInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pSurface = (*C.VkSurfaceKHR)(_sa.alloc(C.sizeof_VkSurfaceKHR))
+		*c.pSurface = C.VkSurfaceKHR(*surface)
+	}
+	c._ret = C.vkCreateDisplayPlaneSurfaceKHR(c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
+	_ret = Result(c._ret)
+	*surface = SurfaceKHR(*c.pSurface)
+	return
+}
+func CreateSharedSwapchainsKHR(device Device, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result) {
+	var c struct {
+		device         C.VkDevice
+		swapchainCount C.uint32_t
+		pCreateInfos   *C.VkSwapchainCreateInfoKHR
+		pAllocator     *C.VkAllocationCallbacks
+		pSwapchains    *C.VkSwapchainKHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchainCount = C.uint32_t(len(createInfos))
+	{
+		c.pCreateInfos = (*C.VkSwapchainCreateInfoKHR)(_sa.alloc(C.sizeof_VkSwapchainCreateInfoKHR * uint(len(createInfos))))
+		slice3 := (*[1 << 31]C.VkSwapchainCreateInfoKHR)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
+		for i3, _ := range createInfos {
+			createInfos[i3].toC(&slice3[i3], _sa)
+		}
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pSwapchains = (*C.VkSwapchainKHR)(_sa.alloc(C.sizeof_VkSwapchainKHR * uint(len(swapchains))))
+		slice3 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(swapchains):len(swapchains)]
+		for i3, _ := range swapchains {
+			slice3[i3] = C.VkSwapchainKHR(swapchains[i3])
+		}
+	}
+	c._ret = C.vkCreateSharedSwapchainsKHR(c.device, c.swapchainCount, c.pCreateInfos, c.pAllocator, c.pSwapchains)
+	_ret = Result(c._ret)
+	return
+}
+func GetPhysicalDeviceFeatures2KHR(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pFeatures      *C.VkPhysicalDeviceFeatures2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2 * uint(len(features))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
+		for i3, _ := range features {
+			features[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceFeatures2KHR(c.physicalDevice, c.pFeatures)
+}
+func GetPhysicalDeviceProperties2KHR(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pProperties    *C.VkPhysicalDeviceProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2 * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceProperties2KHR(c.physicalDevice, c.pProperties)
+}
+func GetPhysicalDeviceFormatProperties2KHR(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		format            C.VkFormat
+		pFormatProperties *C.VkFormatProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.format = C.VkFormat(format)
+	{
+		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2 * uint(len(formatProperties))))
+		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
+		for i3, _ := range formatProperties {
+			formatProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceFormatProperties2KHR(c.physicalDevice, c.format, c.pFormatProperties)
+}
+func GetPhysicalDeviceImageFormatProperties2KHR(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+	var c struct {
+		physicalDevice         C.VkPhysicalDevice
+		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
+		pImageFormatProperties *C.VkImageFormatProperties2
+		_ret                   C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pImageFormatInfo = (*C.VkPhysicalDeviceImageFormatInfo2)(_sa.alloc(C.sizeof_VkPhysicalDeviceImageFormatInfo2))
+		imageFormatInfo.toC(c.pImageFormatInfo)
+	}
+	{
+		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2 * uint(len(imageFormatProperties))))
+		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
+		for i3, _ := range imageFormatProperties {
+			imageFormatProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceImageFormatProperties2KHR(c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
+	_ret = Result(c._ret)
+	return
+}
+func GetPhysicalDeviceQueueFamilyProperties2KHR(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+	var c struct {
+		physicalDevice            C.VkPhysicalDevice
+		pQueueFamilyPropertyCount *C.uint32_t
+		pQueueFamilyProperties    *C.VkQueueFamilyProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pQueueFamilyPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pQueueFamilyPropertyCount = C.uint32_t(*queueFamilyPropertyCount)
+	}
+	{
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
+		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
+		for i3, _ := range queueFamilyProperties {
+			queueFamilyProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceQueueFamilyProperties2KHR(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
+	*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
+}
+func GetPhysicalDeviceMemoryProperties2KHR(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2 * uint(len(memoryProperties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
+		for i3, _ := range memoryProperties {
+			memoryProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceMemoryProperties2KHR(c.physicalDevice, c.pMemoryProperties)
+}
+func GetPhysicalDeviceSparseImageFormatProperties2KHR(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkSparseImageFormatProperties2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pFormatInfo = (*C.VkPhysicalDeviceSparseImageFormatInfo2)(_sa.alloc(C.sizeof_VkPhysicalDeviceSparseImageFormatInfo2))
+		formatInfo.toC(c.pFormatInfo)
+	}
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceSparseImageFormatProperties2KHR(c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
+	*propertyCount = uint32(*c.pPropertyCount)
+}
+func GetDeviceGroupPeerMemoryFeaturesKHR(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+	var c struct {
+		device              C.VkDevice
+		heapIndex           C.uint32_t
+		localDeviceIndex    C.uint32_t
+		remoteDeviceIndex   C.uint32_t
+		pPeerMemoryFeatures *C.VkPeerMemoryFeatureFlags
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.heapIndex = C.uint32_t(heapIndex)
+	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
+	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
+	{
+		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(_sa.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
+		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
+		for i3, _ := range peerMemoryFeatures {
+			{
+				var temp_in_VkPeerMemoryFeatureFlags C.VkFlags
+				{
+					var temp_in_VkFlags C.uint32_t
+					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i3])))
+					temp_in_VkPeerMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
+				}
+				slice3[i3] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
+			}
+		}
+	}
+	C.vkGetDeviceGroupPeerMemoryFeaturesKHR(c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
+}
+func CmdSetDeviceMaskKHR(commandBuffer CommandBuffer, deviceMask uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		deviceMask    C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.deviceMask = C.uint32_t(deviceMask)
+	C.vkCmdSetDeviceMaskKHR(c.commandBuffer, c.deviceMask)
+}
+func CmdDispatchBaseKHR(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		baseGroupX    C.uint32_t
+		baseGroupY    C.uint32_t
+		baseGroupZ    C.uint32_t
+		groupCountX   C.uint32_t
+		groupCountY   C.uint32_t
+		groupCountZ   C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.baseGroupX = C.uint32_t(baseGroupX)
+	c.baseGroupY = C.uint32_t(baseGroupY)
+	c.baseGroupZ = C.uint32_t(baseGroupZ)
+	c.groupCountX = C.uint32_t(groupCountX)
+	c.groupCountY = C.uint32_t(groupCountY)
+	c.groupCountZ = C.uint32_t(groupCountZ)
+	C.vkCmdDispatchBaseKHR(c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
+}
+func TrimCommandPoolKHR(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
+	var c struct {
+		device      C.VkDevice
+		commandPool C.VkCommandPool
+		flags       C.VkCommandPoolTrimFlags
+	}
+	c.device = C.VkDevice(device)
+	c.commandPool = C.VkCommandPool(commandPool)
+	{
+		var temp_in_VkCommandPoolTrimFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkCommandPoolTrimFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
+	}
+	C.vkTrimCommandPoolKHR(c.device, c.commandPool, c.flags)
+}
+func EnumeratePhysicalDeviceGroupsKHR(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+	var c struct {
+		instance                       C.VkInstance
+		pPhysicalDeviceGroupCount      *C.uint32_t
+		pPhysicalDeviceGroupProperties *C.VkPhysicalDeviceGroupProperties
+		_ret                           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		c.pPhysicalDeviceGroupCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPhysicalDeviceGroupCount = C.uint32_t(*physicalDeviceGroupCount)
+	}
+	{
+		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
+		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
+		for i3, _ := range physicalDeviceGroupProperties {
+			physicalDeviceGroupProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkEnumeratePhysicalDeviceGroupsKHR(c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
+	_ret = Result(c._ret)
+	*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
+	return
+}
+func GetPhysicalDeviceExternalBufferPropertiesKHR(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+	var c struct {
+		physicalDevice            C.VkPhysicalDevice
+		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
+		pExternalBufferProperties *C.VkExternalBufferProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalBufferInfo = (*C.VkPhysicalDeviceExternalBufferInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalBufferInfo))
+		externalBufferInfo.toC(c.pExternalBufferInfo)
+	}
+	{
+		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties * uint(len(externalBufferProperties))))
+		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
+		for i3, _ := range externalBufferProperties {
+			externalBufferProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalBufferPropertiesKHR(c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
+}
+
+type MemoryGetFdInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Memory     DeviceMemory
+	HandleType ExternalMemoryHandleTypeFlagBits
+}
+
+func (g *MemoryGetFdInfoKHR) toC(c *C.VkMemoryGetFdInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.memory = C.VkDeviceMemory(g.Memory)
+	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(g.HandleType)
+}
+func (g *MemoryGetFdInfoKHR) fromC(c *C.VkMemoryGetFdInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Memory = DeviceMemory(c.memory)
+	g.HandleType = ExternalMemoryHandleTypeFlagBits(c.handleType)
+}
+func GetMemoryFdKHR(device Device, getFdInfo *MemoryGetFdInfoKHR, fd *int32) (_ret Result) {
+	var c struct {
+		device     C.VkDevice
+		pGetFdInfo *C.VkMemoryGetFdInfoKHR
+		pFd        *C.int
+		_ret       C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pGetFdInfo = (*C.VkMemoryGetFdInfoKHR)(_sa.alloc(C.sizeof_VkMemoryGetFdInfoKHR))
+		getFdInfo.toC(c.pGetFdInfo)
+	}
+	{
+		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.pFd = C.int(*fd)
+	}
+	c._ret = C.vkGetMemoryFdKHR(c.device, c.pGetFdInfo, c.pFd)
+	_ret = Result(c._ret)
+	*fd = int32(*c.pFd)
+	return
+}
+
+type MemoryFdPropertiesKHR struct {
+	Type           StructureType
+	Next           unsafe.Pointer
+	MemoryTypeBits uint32
+}
+
+func (g *MemoryFdPropertiesKHR) toC(c *C.VkMemoryFdPropertiesKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
+}
+func (g *MemoryFdPropertiesKHR) fromC(c *C.VkMemoryFdPropertiesKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MemoryTypeBits = uint32(c.memoryTypeBits)
+}
+func GetMemoryFdPropertiesKHR(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties []MemoryFdPropertiesKHR) (_ret Result) {
+	var c struct {
+		device              C.VkDevice
+		handleType          C.VkExternalMemoryHandleTypeFlagBits
+		fd                  C.int
+		pMemoryFdProperties *C.VkMemoryFdPropertiesKHR
+		_ret                C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(handleType)
+	c.fd = C.int(fd)
+	{
+		c.pMemoryFdProperties = (*C.VkMemoryFdPropertiesKHR)(_sa.alloc(C.sizeof_VkMemoryFdPropertiesKHR * uint(len(memoryFdProperties))))
+		slice3 := (*[1 << 31]C.VkMemoryFdPropertiesKHR)(unsafe.Pointer(c.pMemoryFdProperties))[:len(memoryFdProperties):len(memoryFdProperties)]
+		for i3, _ := range memoryFdProperties {
+			memoryFdProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetMemoryFdPropertiesKHR(c.device, c.handleType, c.fd, c.pMemoryFdProperties)
+	_ret = Result(c._ret)
+	return
+}
+func GetPhysicalDeviceExternalSemaphorePropertiesKHR(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+	var c struct {
+		physicalDevice               C.VkPhysicalDevice
+		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
+		pExternalSemaphoreProperties *C.VkExternalSemaphoreProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalSemaphoreInfo = (*C.VkPhysicalDeviceExternalSemaphoreInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalSemaphoreInfo))
+		externalSemaphoreInfo.toC(c.pExternalSemaphoreInfo)
+	}
+	{
+		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties * uint(len(externalSemaphoreProperties))))
+		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
+		for i3, _ := range externalSemaphoreProperties {
+			externalSemaphoreProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
+}
+
+type SemaphoreImportFlags Flags
+type ImportSemaphoreFdInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Semaphore  Semaphore
+	Flags      SemaphoreImportFlags
+	HandleType ExternalSemaphoreHandleTypeFlagBits
+	Fd         int32
+}
+
+func (g *ImportSemaphoreFdInfoKHR) toC(c *C.VkImportSemaphoreFdInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.semaphore = C.VkSemaphore(g.Semaphore)
+	{
+		var temp_in_VkSemaphoreImportFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSemaphoreImportFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkSemaphoreImportFlags(temp_in_VkSemaphoreImportFlags)
+	}
+	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
+	c.fd = C.int(g.Fd)
+}
+func (g *ImportSemaphoreFdInfoKHR) fromC(c *C.VkImportSemaphoreFdInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Semaphore = Semaphore(c.semaphore)
+	{
+		var temp_in_VkSemaphoreImportFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSemaphoreImportFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = SemaphoreImportFlags(temp_in_VkSemaphoreImportFlags)
+	}
+	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
+	g.Fd = int32(c.fd)
+}
+func ImportSemaphoreFdKHR(device Device, importSemaphoreFdInfo *ImportSemaphoreFdInfoKHR) (_ret Result) {
+	var c struct {
+		device                 C.VkDevice
+		pImportSemaphoreFdInfo *C.VkImportSemaphoreFdInfoKHR
+		_ret                   C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pImportSemaphoreFdInfo = (*C.VkImportSemaphoreFdInfoKHR)(_sa.alloc(C.sizeof_VkImportSemaphoreFdInfoKHR))
+		importSemaphoreFdInfo.toC(c.pImportSemaphoreFdInfo)
+	}
+	c._ret = C.vkImportSemaphoreFdKHR(c.device, c.pImportSemaphoreFdInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type SemaphoreGetFdInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Semaphore  Semaphore
+	HandleType ExternalSemaphoreHandleTypeFlagBits
+}
+
+func (g *SemaphoreGetFdInfoKHR) toC(c *C.VkSemaphoreGetFdInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.semaphore = C.VkSemaphore(g.Semaphore)
+	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
+}
+func (g *SemaphoreGetFdInfoKHR) fromC(c *C.VkSemaphoreGetFdInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Semaphore = Semaphore(c.semaphore)
+	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
+}
+func GetSemaphoreFdKHR(device Device, getFdInfo *SemaphoreGetFdInfoKHR, fd *int32) (_ret Result) {
+	var c struct {
+		device     C.VkDevice
+		pGetFdInfo *C.VkSemaphoreGetFdInfoKHR
+		pFd        *C.int
+		_ret       C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pGetFdInfo = (*C.VkSemaphoreGetFdInfoKHR)(_sa.alloc(C.sizeof_VkSemaphoreGetFdInfoKHR))
+		getFdInfo.toC(c.pGetFdInfo)
+	}
+	{
+		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.pFd = C.int(*fd)
+	}
+	c._ret = C.vkGetSemaphoreFdKHR(c.device, c.pGetFdInfo, c.pFd)
+	_ret = Result(c._ret)
+	*fd = int32(*c.pFd)
+	return
+}
+func CmdPushDescriptorSetKHR(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, layout PipelineLayout, set uint32, descriptorWrites []WriteDescriptorSet) {
+	var c struct {
+		commandBuffer        C.VkCommandBuffer
+		pipelineBindPoint    C.VkPipelineBindPoint
+		layout               C.VkPipelineLayout
+		set                  C.uint32_t
+		descriptorWriteCount C.uint32_t
+		pDescriptorWrites    *C.VkWriteDescriptorSet
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.pipelineBindPoint = C.VkPipelineBindPoint(pipelineBindPoint)
+	c.layout = C.VkPipelineLayout(layout)
+	c.set = C.uint32_t(set)
+	c.descriptorWriteCount = C.uint32_t(len(descriptorWrites))
+	{
+		c.pDescriptorWrites = (*C.VkWriteDescriptorSet)(_sa.alloc(C.sizeof_VkWriteDescriptorSet * uint(len(descriptorWrites))))
+		slice3 := (*[1 << 31]C.VkWriteDescriptorSet)(unsafe.Pointer(c.pDescriptorWrites))[:len(descriptorWrites):len(descriptorWrites)]
+		for i3, _ := range descriptorWrites {
+			descriptorWrites[i3].toC(&slice3[i3], _sa)
+		}
+	}
+	C.vkCmdPushDescriptorSetKHR(c.commandBuffer, c.pipelineBindPoint, c.layout, c.set, c.descriptorWriteCount, c.pDescriptorWrites)
+}
+func CmdPushDescriptorSetWithTemplateKHR(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, data []byte) {
+	var c struct {
+		commandBuffer            C.VkCommandBuffer
+		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+		layout                   C.VkPipelineLayout
+		set                      C.uint32_t
+		pData                    unsafe.Pointer
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
+	c.layout = C.VkPipelineLayout(layout)
+	c.set = C.uint32_t(len(data))
+	{
+		c.pData = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
+		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
+		for i3, _ := range data {
+			slice3[i3] = data[i3]
+		}
+	}
+	C.vkCmdPushDescriptorSetWithTemplateKHR(c.commandBuffer, c.descriptorUpdateTemplate, c.layout, c.set, c.pData)
+}
+func CreateDescriptorUpdateTemplateKHR(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
+	var c struct {
+		device                    C.VkDevice
+		pCreateInfo               *C.VkDescriptorUpdateTemplateCreateInfo
+		pAllocator                *C.VkAllocationCallbacks
+		pDescriptorUpdateTemplate *C.VkDescriptorUpdateTemplate
+		_ret                      C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkDescriptorUpdateTemplateCreateInfo)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplateCreateInfo))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pDescriptorUpdateTemplate = (*C.VkDescriptorUpdateTemplate)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplate))
+		*c.pDescriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(*descriptorUpdateTemplate)
+	}
+	c._ret = C.vkCreateDescriptorUpdateTemplateKHR(c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
+	_ret = Result(c._ret)
+	*descriptorUpdateTemplate = DescriptorUpdateTemplate(*c.pDescriptorUpdateTemplate)
+	return
+}
+func DestroyDescriptorUpdateTemplateKHR(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
+	var c struct {
+		device                   C.VkDevice
+		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+		pAllocator               *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyDescriptorUpdateTemplateKHR(c.device, c.descriptorUpdateTemplate, c.pAllocator)
+}
+func UpdateDescriptorSetWithTemplateKHR(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+	var c struct {
+		device                   C.VkDevice
+		descriptorSet            C.VkDescriptorSet
+		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
+		pData                    unsafe.Pointer
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
+	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
+	{
+		c.pData = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
+		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
+		for i3, _ := range data {
+			slice3[i3] = data[i3]
+		}
+	}
+	C.vkUpdateDescriptorSetWithTemplateKHR(c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
+}
+
+type AttachmentDescription2KHR struct {
+	Type           StructureType
+	Next           unsafe.Pointer
+	Flags          AttachmentDescriptionFlags
+	Format         Format
+	Samples        SampleCountFlagBits
+	LoadOp         AttachmentLoadOp
+	StoreOp        AttachmentStoreOp
+	StencilLoadOp  AttachmentLoadOp
+	StencilStoreOp AttachmentStoreOp
+	InitialLayout  ImageLayout
+	FinalLayout    ImageLayout
+}
+
+func (g *AttachmentDescription2KHR) toC(c *C.VkAttachmentDescription2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkAttachmentDescriptionFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkAttachmentDescriptionFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkAttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
+	}
+	c.format = C.VkFormat(g.Format)
+	c.samples = C.VkSampleCountFlagBits(g.Samples)
+	c.loadOp = C.VkAttachmentLoadOp(g.LoadOp)
+	c.storeOp = C.VkAttachmentStoreOp(g.StoreOp)
+	c.stencilLoadOp = C.VkAttachmentLoadOp(g.StencilLoadOp)
+	c.stencilStoreOp = C.VkAttachmentStoreOp(g.StencilStoreOp)
+	c.initialLayout = C.VkImageLayout(g.InitialLayout)
+	c.finalLayout = C.VkImageLayout(g.FinalLayout)
+}
+func (g *AttachmentDescription2KHR) fromC(c *C.VkAttachmentDescription2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkAttachmentDescriptionFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkAttachmentDescriptionFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = AttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
+	}
+	g.Format = Format(c.format)
+	g.Samples = SampleCountFlagBits(c.samples)
+	g.LoadOp = AttachmentLoadOp(c.loadOp)
+	g.StoreOp = AttachmentStoreOp(c.storeOp)
+	g.StencilLoadOp = AttachmentLoadOp(c.stencilLoadOp)
+	g.StencilStoreOp = AttachmentStoreOp(c.stencilStoreOp)
+	g.InitialLayout = ImageLayout(c.initialLayout)
+	g.FinalLayout = ImageLayout(c.finalLayout)
+}
+
+type AttachmentReference2KHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Attachment uint32
+	Layout     ImageLayout
+	AspectMask ImageAspectFlags
+}
+
+func (g *AttachmentReference2KHR) toC(c *C.VkAttachmentReference2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.attachment = C.uint32_t(g.Attachment)
+	c.layout = C.VkImageLayout(g.Layout)
+	{
+		var temp_in_VkImageAspectFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
+			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
+	}
+}
+func (g *AttachmentReference2KHR) fromC(c *C.VkAttachmentReference2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Attachment = uint32(c.attachment)
+	g.Layout = ImageLayout(c.layout)
+	{
+		var temp_in_VkImageAspectFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
+			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
+		}
+		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
+	}
+}
+
+type SubpassDescription2KHR struct {
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	Flags                  SubpassDescriptionFlags
+	PipelineBindPoint      PipelineBindPoint
+	ViewMask               uint32
+	InputAttachments       []AttachmentReference2KHR
+	ColorAttachments       []AttachmentReference2KHR
+	ResolveAttachments     []AttachmentReference2KHR
+	DepthStencilAttachment *AttachmentReference2KHR
+	PreserveAttachments    []uint32
+}
+
+func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkSubpassDescriptionFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkSubpassDescriptionFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkSubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
+	}
+	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
+	c.viewMask = C.uint32_t(g.ViewMask)
+	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
+	{
+		c.pInputAttachments = (*C.VkAttachmentReference2KHR)(_sa.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.InputAttachments))))
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pInputAttachments))[:len(g.InputAttachments):len(g.InputAttachments)]
+		for i2, _ := range g.InputAttachments {
+			g.InputAttachments[i2].toC(&slice2[i2])
+		}
+	}
+	c.colorAttachmentCount = C.uint32_t(len(g.ColorAttachments))
+	{
+		c.pColorAttachments = (*C.VkAttachmentReference2KHR)(_sa.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.ColorAttachments))))
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pColorAttachments))[:len(g.ColorAttachments):len(g.ColorAttachments)]
+		for i2, _ := range g.ColorAttachments {
+			g.ColorAttachments[i2].toC(&slice2[i2])
+		}
+	}
+	{
+		c.pResolveAttachments = (*C.VkAttachmentReference2KHR)(_sa.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.ResolveAttachments))))
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pResolveAttachments))[:len(g.ResolveAttachments):len(g.ResolveAttachments)]
+		for i2, _ := range g.ResolveAttachments {
+			g.ResolveAttachments[i2].toC(&slice2[i2])
+		}
+	}
+	{
+		c.pDepthStencilAttachment = (*C.VkAttachmentReference2KHR)(_sa.alloc(C.sizeof_VkAttachmentReference2KHR))
+		g.DepthStencilAttachment.toC(c.pDepthStencilAttachment)
+	}
+	c.preserveAttachmentCount = C.uint32_t(len(g.PreserveAttachments))
+	{
+		c.pPreserveAttachments = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(g.PreserveAttachments))))
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pPreserveAttachments))[:len(g.PreserveAttachments):len(g.PreserveAttachments)]
+		for i2, _ := range g.PreserveAttachments {
+			slice2[i2] = C.uint32_t(g.PreserveAttachments[i2])
+		}
+	}
+}
+func (g *SubpassDescription2KHR) fromC(c *C.VkSubpassDescription2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkSubpassDescriptionFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkSubpassDescriptionFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = SubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
+	}
+	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
+	g.ViewMask = uint32(c.viewMask)
+	g.InputAttachments = make([]AttachmentReference2KHR, int(c.inputAttachmentCount))
+	{
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pInputAttachments))[:len(g.InputAttachments):len(g.InputAttachments)]
+		for i2, _ := range g.InputAttachments {
+			g.InputAttachments[i2].fromC(&slice2[i2])
+		}
+	}
+	g.ColorAttachments = make([]AttachmentReference2KHR, int(c.colorAttachmentCount))
+	{
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pColorAttachments))[:len(g.ColorAttachments):len(g.ColorAttachments)]
+		for i2, _ := range g.ColorAttachments {
+			g.ColorAttachments[i2].fromC(&slice2[i2])
+		}
+	}
+	{
+		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pResolveAttachments))[:len(g.ResolveAttachments):len(g.ResolveAttachments)]
+		for i2, _ := range g.ResolveAttachments {
+			g.ResolveAttachments[i2].fromC(&slice2[i2])
+		}
+	}
+	{
+		if g.DepthStencilAttachment == nil {
+			g.DepthStencilAttachment = new(AttachmentReference2KHR)
+		}
+		g.DepthStencilAttachment.fromC(c.pDepthStencilAttachment)
+	}
+	g.PreserveAttachments = make([]uint32, int(c.preserveAttachmentCount))
+	{
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pPreserveAttachments))[:len(g.PreserveAttachments):len(g.PreserveAttachments)]
+		for i2, _ := range g.PreserveAttachments {
+			g.PreserveAttachments[i2] = uint32(slice2[i2])
+		}
+	}
+}
+
+type SubpassDependency2KHR struct {
+	Type            StructureType
+	Next            unsafe.Pointer
+	SrcSubpass      uint32
+	DstSubpass      uint32
+	SrcStageMask    PipelineStageFlags
+	DstStageMask    PipelineStageFlags
+	SrcAccessMask   AccessFlags
+	DstAccessMask   AccessFlags
+	DependencyFlags DependencyFlags
+	ViewOffset      int32
+}
+
+func (g *SubpassDependency2KHR) toC(c *C.VkSubpassDependency2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.srcSubpass = C.uint32_t(g.SrcSubpass)
+	c.dstSubpass = C.uint32_t(g.DstSubpass)
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkPipelineStageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
+			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkDependencyFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
+			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
+	}
+	c.viewOffset = C.int32_t(g.ViewOffset)
+}
+func (g *SubpassDependency2KHR) fromC(c *C.VkSubpassDependency2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.SrcSubpass = uint32(c.srcSubpass)
+	g.DstSubpass = uint32(c.dstSubpass)
+	{
+		var temp_in_VkPipelineStageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
+			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
+		}
+		g.SrcStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkPipelineStageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
+			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
+		}
+		g.DstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
+	}
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkAccessFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
+		}
+		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
+	}
+	{
+		var temp_in_VkDependencyFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
+			temp_in_VkDependencyFlags = Flags(temp_in_VkFlags)
+		}
+		g.DependencyFlags = DependencyFlags(temp_in_VkDependencyFlags)
+	}
+	g.ViewOffset = int32(c.viewOffset)
+}
+
+type RenderPassCreateInfo2KHR struct {
+	Type                StructureType
+	Next                unsafe.Pointer
+	Flags               RenderPassCreateFlags
+	Attachments         []AttachmentDescription2KHR
+	Subpasses           []SubpassDescription2KHR
+	Dependencies        []SubpassDependency2KHR
+	CorrelatedViewMasks []uint32
+}
+
+func (g *RenderPassCreateInfo2KHR) toC(c *C.VkRenderPassCreateInfo2KHR, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkRenderPassCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkRenderPassCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
+	}
+	c.attachmentCount = C.uint32_t(len(g.Attachments))
+	{
+		c.pAttachments = (*C.VkAttachmentDescription2KHR)(_sa.alloc(C.sizeof_VkAttachmentDescription2KHR * uint(len(g.Attachments))))
+		slice2 := (*[1 << 31]C.VkAttachmentDescription2KHR)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
+		for i2, _ := range g.Attachments {
+			g.Attachments[i2].toC(&slice2[i2])
+		}
+	}
+	c.subpassCount = C.uint32_t(len(g.Subpasses))
+	{
+		c.pSubpasses = (*C.VkSubpassDescription2KHR)(_sa.alloc(C.sizeof_VkSubpassDescription2KHR * uint(len(g.Subpasses))))
+		slice2 := (*[1 << 31]C.VkSubpassDescription2KHR)(unsafe.Pointer(c.pSubpasses))[:len(g.Subpasses):len(g.Subpasses)]
+		for i2, _ := range g.Subpasses {
+			g.Subpasses[i2].toC(&slice2[i2], _sa)
+		}
+	}
+	c.dependencyCount = C.uint32_t(len(g.Dependencies))
+	{
+		c.pDependencies = (*C.VkSubpassDependency2KHR)(_sa.alloc(C.sizeof_VkSubpassDependency2KHR * uint(len(g.Dependencies))))
+		slice2 := (*[1 << 31]C.VkSubpassDependency2KHR)(unsafe.Pointer(c.pDependencies))[:len(g.Dependencies):len(g.Dependencies)]
+		for i2, _ := range g.Dependencies {
+			g.Dependencies[i2].toC(&slice2[i2])
+		}
+	}
+	c.correlatedViewMaskCount = C.uint32_t(len(g.CorrelatedViewMasks))
+	{
+		c.pCorrelatedViewMasks = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(g.CorrelatedViewMasks))))
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCorrelatedViewMasks))[:len(g.CorrelatedViewMasks):len(g.CorrelatedViewMasks)]
+		for i2, _ := range g.CorrelatedViewMasks {
+			slice2[i2] = C.uint32_t(g.CorrelatedViewMasks[i2])
+		}
+	}
+}
+func (g *RenderPassCreateInfo2KHR) fromC(c *C.VkRenderPassCreateInfo2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkRenderPassCreateFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkRenderPassCreateFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = RenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
+	}
+	g.Attachments = make([]AttachmentDescription2KHR, int(c.attachmentCount))
+	{
+		slice2 := (*[1 << 31]C.VkAttachmentDescription2KHR)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
+		for i2, _ := range g.Attachments {
+			g.Attachments[i2].fromC(&slice2[i2])
+		}
+	}
+	g.Subpasses = make([]SubpassDescription2KHR, int(c.subpassCount))
+	{
+		slice2 := (*[1 << 31]C.VkSubpassDescription2KHR)(unsafe.Pointer(c.pSubpasses))[:len(g.Subpasses):len(g.Subpasses)]
+		for i2, _ := range g.Subpasses {
+			g.Subpasses[i2].fromC(&slice2[i2])
+		}
+	}
+	g.Dependencies = make([]SubpassDependency2KHR, int(c.dependencyCount))
+	{
+		slice2 := (*[1 << 31]C.VkSubpassDependency2KHR)(unsafe.Pointer(c.pDependencies))[:len(g.Dependencies):len(g.Dependencies)]
+		for i2, _ := range g.Dependencies {
+			g.Dependencies[i2].fromC(&slice2[i2])
+		}
+	}
+	g.CorrelatedViewMasks = make([]uint32, int(c.correlatedViewMaskCount))
+	{
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCorrelatedViewMasks))[:len(g.CorrelatedViewMasks):len(g.CorrelatedViewMasks)]
+		for i2, _ := range g.CorrelatedViewMasks {
+			g.CorrelatedViewMasks[i2] = uint32(slice2[i2])
+		}
+	}
+}
+func CreateRenderPass2KHR(device Device, createInfo *RenderPassCreateInfo2KHR, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
+	var c struct {
+		device      C.VkDevice
+		pCreateInfo *C.VkRenderPassCreateInfo2KHR
+		pAllocator  *C.VkAllocationCallbacks
+		pRenderPass *C.VkRenderPass
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkRenderPassCreateInfo2KHR)(_sa.alloc(C.sizeof_VkRenderPassCreateInfo2KHR))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pRenderPass = (*C.VkRenderPass)(_sa.alloc(C.sizeof_VkRenderPass))
+		*c.pRenderPass = C.VkRenderPass(*renderPass)
+	}
+	c._ret = C.vkCreateRenderPass2KHR(c.device, c.pCreateInfo, c.pAllocator, c.pRenderPass)
+	_ret = Result(c._ret)
+	*renderPass = RenderPass(*c.pRenderPass)
+	return
+}
+
+type SubpassBeginInfoKHR struct {
+	Type     StructureType
+	Next     unsafe.Pointer
+	Contents SubpassContents
+}
+
+func (g *SubpassBeginInfoKHR) toC(c *C.VkSubpassBeginInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.contents = C.VkSubpassContents(g.Contents)
+}
+func (g *SubpassBeginInfoKHR) fromC(c *C.VkSubpassBeginInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Contents = SubpassContents(c.contents)
+}
+func CmdBeginRenderPass2KHR(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, subpassBeginInfo *SubpassBeginInfoKHR) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		pRenderPassBegin  *C.VkRenderPassBeginInfo
+		pSubpassBeginInfo *C.VkSubpassBeginInfoKHR
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pRenderPassBegin = (*C.VkRenderPassBeginInfo)(_sa.alloc(C.sizeof_VkRenderPassBeginInfo))
+		renderPassBegin.toC(c.pRenderPassBegin, _sa)
+	}
+	{
+		c.pSubpassBeginInfo = (*C.VkSubpassBeginInfoKHR)(_sa.alloc(C.sizeof_VkSubpassBeginInfoKHR))
+		subpassBeginInfo.toC(c.pSubpassBeginInfo)
+	}
+	C.vkCmdBeginRenderPass2KHR(c.commandBuffer, c.pRenderPassBegin, c.pSubpassBeginInfo)
+}
+
+type SubpassEndInfoKHR struct {
+	Type StructureType
+	Next unsafe.Pointer
+}
+
+func (g *SubpassEndInfoKHR) toC(c *C.VkSubpassEndInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+}
+func (g *SubpassEndInfoKHR) fromC(c *C.VkSubpassEndInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+}
+func CmdNextSubpass2KHR(commandBuffer CommandBuffer, subpassBeginInfo *SubpassBeginInfoKHR, subpassEndInfo *SubpassEndInfoKHR) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		pSubpassBeginInfo *C.VkSubpassBeginInfoKHR
+		pSubpassEndInfo   *C.VkSubpassEndInfoKHR
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pSubpassBeginInfo = (*C.VkSubpassBeginInfoKHR)(_sa.alloc(C.sizeof_VkSubpassBeginInfoKHR))
+		subpassBeginInfo.toC(c.pSubpassBeginInfo)
+	}
+	{
+		c.pSubpassEndInfo = (*C.VkSubpassEndInfoKHR)(_sa.alloc(C.sizeof_VkSubpassEndInfoKHR))
+		subpassEndInfo.toC(c.pSubpassEndInfo)
+	}
+	C.vkCmdNextSubpass2KHR(c.commandBuffer, c.pSubpassBeginInfo, c.pSubpassEndInfo)
+}
+func CmdEndRenderPass2KHR(commandBuffer CommandBuffer, subpassEndInfo *SubpassEndInfoKHR) {
+	var c struct {
+		commandBuffer   C.VkCommandBuffer
+		pSubpassEndInfo *C.VkSubpassEndInfoKHR
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pSubpassEndInfo = (*C.VkSubpassEndInfoKHR)(_sa.alloc(C.sizeof_VkSubpassEndInfoKHR))
+		subpassEndInfo.toC(c.pSubpassEndInfo)
+	}
+	C.vkCmdEndRenderPass2KHR(c.commandBuffer, c.pSubpassEndInfo)
+}
+func GetSwapchainStatusKHR(device Device, swapchain SwapchainKHR) (_ret Result) {
+	var c struct {
+		device    C.VkDevice
+		swapchain C.VkSwapchainKHR
+		_ret      C.VkResult
+	}
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	c._ret = C.vkGetSwapchainStatusKHR(c.device, c.swapchain)
+	_ret = Result(c._ret)
+	return
+}
+func GetPhysicalDeviceExternalFencePropertiesKHR(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+	var c struct {
+		physicalDevice           C.VkPhysicalDevice
+		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
+		pExternalFenceProperties *C.VkExternalFenceProperties
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pExternalFenceInfo = (*C.VkPhysicalDeviceExternalFenceInfo)(_sa.alloc(C.sizeof_VkPhysicalDeviceExternalFenceInfo))
+		externalFenceInfo.toC(c.pExternalFenceInfo)
+	}
+	{
+		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties * uint(len(externalFenceProperties))))
+		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
+		for i3, _ := range externalFenceProperties {
+			externalFenceProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceExternalFencePropertiesKHR(c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
+}
+
+type FenceImportFlags Flags
+type ImportFenceFdInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Fence      Fence
+	Flags      FenceImportFlags
+	HandleType ExternalFenceHandleTypeFlagBits
+	Fd         int32
+}
+
+func (g *ImportFenceFdInfoKHR) toC(c *C.VkImportFenceFdInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.fence = C.VkFence(g.Fence)
+	{
+		var temp_in_VkFenceImportFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkFenceImportFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkFenceImportFlags(temp_in_VkFenceImportFlags)
+	}
+	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
+	c.fd = C.int(g.Fd)
+}
+func (g *ImportFenceFdInfoKHR) fromC(c *C.VkImportFenceFdInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Fence = Fence(c.fence)
+	{
+		var temp_in_VkFenceImportFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkFenceImportFlags = Flags(temp_in_VkFlags)
+		}
+		g.Flags = FenceImportFlags(temp_in_VkFenceImportFlags)
+	}
+	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
+	g.Fd = int32(c.fd)
+}
+func ImportFenceFdKHR(device Device, importFenceFdInfo *ImportFenceFdInfoKHR) (_ret Result) {
+	var c struct {
+		device             C.VkDevice
+		pImportFenceFdInfo *C.VkImportFenceFdInfoKHR
+		_ret               C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pImportFenceFdInfo = (*C.VkImportFenceFdInfoKHR)(_sa.alloc(C.sizeof_VkImportFenceFdInfoKHR))
+		importFenceFdInfo.toC(c.pImportFenceFdInfo)
+	}
+	c._ret = C.vkImportFenceFdKHR(c.device, c.pImportFenceFdInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type FenceGetFdInfoKHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Fence      Fence
+	HandleType ExternalFenceHandleTypeFlagBits
+}
+
+func (g *FenceGetFdInfoKHR) toC(c *C.VkFenceGetFdInfoKHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.fence = C.VkFence(g.Fence)
+	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
+}
+func (g *FenceGetFdInfoKHR) fromC(c *C.VkFenceGetFdInfoKHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Fence = Fence(c.fence)
+	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
+}
+func GetFenceFdKHR(device Device, getFdInfo *FenceGetFdInfoKHR, fd *int32) (_ret Result) {
+	var c struct {
+		device     C.VkDevice
+		pGetFdInfo *C.VkFenceGetFdInfoKHR
+		pFd        *C.int
+		_ret       C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pGetFdInfo = (*C.VkFenceGetFdInfoKHR)(_sa.alloc(C.sizeof_VkFenceGetFdInfoKHR))
+		getFdInfo.toC(c.pGetFdInfo)
+	}
+	{
+		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
+		*c.pFd = C.int(*fd)
+	}
+	c._ret = C.vkGetFenceFdKHR(c.device, c.pGetFdInfo, c.pFd)
+	_ret = Result(c._ret)
+	*fd = int32(*c.pFd)
+	return
+}
+
+type PhysicalDeviceSurfaceInfo2KHR struct {
+	Type    StructureType
+	Next    unsafe.Pointer
+	Surface SurfaceKHR
+}
+
+func (g *PhysicalDeviceSurfaceInfo2KHR) toC(c *C.VkPhysicalDeviceSurfaceInfo2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.surface = C.VkSurfaceKHR(g.Surface)
+}
+func (g *PhysicalDeviceSurfaceInfo2KHR) fromC(c *C.VkPhysicalDeviceSurfaceInfo2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Surface = SurfaceKHR(c.surface)
+}
+
+type SurfaceCapabilities2KHR struct {
+	Type                StructureType
+	Next                unsafe.Pointer
+	SurfaceCapabilities SurfaceCapabilitiesKHR
+}
+
+func (g *SurfaceCapabilities2KHR) toC(c *C.VkSurfaceCapabilities2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.SurfaceCapabilities.toC(&c.surfaceCapabilities)
+}
+func (g *SurfaceCapabilities2KHR) fromC(c *C.VkSurfaceCapabilities2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.SurfaceCapabilities.fromC(&c.surfaceCapabilities)
+}
+func GetPhysicalDeviceSurfaceCapabilities2KHR(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities []SurfaceCapabilities2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice       C.VkPhysicalDevice
+		pSurfaceInfo         *C.VkPhysicalDeviceSurfaceInfo2KHR
+		pSurfaceCapabilities *C.VkSurfaceCapabilities2KHR
+		_ret                 C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pSurfaceInfo = (*C.VkPhysicalDeviceSurfaceInfo2KHR)(_sa.alloc(C.sizeof_VkPhysicalDeviceSurfaceInfo2KHR))
+		surfaceInfo.toC(c.pSurfaceInfo)
+	}
+	{
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2KHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2KHR * uint(len(surfaceCapabilities))))
+		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2KHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
+		for i3, _ := range surfaceCapabilities {
+			surfaceCapabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceCapabilities2KHR(c.physicalDevice, c.pSurfaceInfo, c.pSurfaceCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+
+type SurfaceFormat2KHR struct {
+	Type          StructureType
+	Next          unsafe.Pointer
+	SurfaceFormat SurfaceFormatKHR
+}
+
+func (g *SurfaceFormat2KHR) toC(c *C.VkSurfaceFormat2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.SurfaceFormat.toC(&c.surfaceFormat)
+}
+func (g *SurfaceFormat2KHR) fromC(c *C.VkSurfaceFormat2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.SurfaceFormat.fromC(&c.surfaceFormat)
+}
+func GetPhysicalDeviceSurfaceFormats2KHR(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice      C.VkPhysicalDevice
+		pSurfaceInfo        *C.VkPhysicalDeviceSurfaceInfo2KHR
+		pSurfaceFormatCount *C.uint32_t
+		pSurfaceFormats     *C.VkSurfaceFormat2KHR
+		_ret                C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pSurfaceInfo = (*C.VkPhysicalDeviceSurfaceInfo2KHR)(_sa.alloc(C.sizeof_VkPhysicalDeviceSurfaceInfo2KHR))
+		surfaceInfo.toC(c.pSurfaceInfo)
+	}
+	{
+		c.pSurfaceFormatCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pSurfaceFormatCount = C.uint32_t(*surfaceFormatCount)
+	}
+	{
+		c.pSurfaceFormats = (*C.VkSurfaceFormat2KHR)(_sa.alloc(C.sizeof_VkSurfaceFormat2KHR * uint(len(surfaceFormats))))
+		slice3 := (*[1 << 31]C.VkSurfaceFormat2KHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
+		for i3, _ := range surfaceFormats {
+			surfaceFormats[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceFormats2KHR(c.physicalDevice, c.pSurfaceInfo, c.pSurfaceFormatCount, c.pSurfaceFormats)
+	_ret = Result(c._ret)
+	*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
+	return
+}
+
+type DisplayProperties2KHR struct {
+	Type              StructureType
+	Next              unsafe.Pointer
+	DisplayProperties DisplayPropertiesKHR
+}
+
+func (g *DisplayProperties2KHR) toC(c *C.VkDisplayProperties2KHR, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.DisplayProperties.toC(&c.displayProperties, _sa)
+}
+func (g *DisplayProperties2KHR) fromC(c *C.VkDisplayProperties2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DisplayProperties.fromC(&c.displayProperties)
+}
+func GetPhysicalDeviceDisplayProperties2KHR(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayProperties2KHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayProperties2KHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3], _sa)
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceDisplayProperties2KHR(c.physicalDevice, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+
+type DisplayPlaneProperties2KHR struct {
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	DisplayPlaneProperties DisplayPlanePropertiesKHR
+}
+
+func (g *DisplayPlaneProperties2KHR) toC(c *C.VkDisplayPlaneProperties2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.DisplayPlaneProperties.toC(&c.displayPlaneProperties)
+}
+func (g *DisplayPlaneProperties2KHR) fromC(c *C.VkDisplayPlaneProperties2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DisplayPlaneProperties.fromC(&c.displayPlaneProperties)
+}
+func GetPhysicalDeviceDisplayPlaneProperties2KHR(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayPlaneProperties2KHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayPlaneProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneProperties2KHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayPlaneProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceDisplayPlaneProperties2KHR(c.physicalDevice, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+
+type DisplayModeProperties2KHR struct {
+	Type                  StructureType
+	Next                  unsafe.Pointer
+	DisplayModeProperties DisplayModePropertiesKHR
+}
+
+func (g *DisplayModeProperties2KHR) toC(c *C.VkDisplayModeProperties2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.DisplayModeProperties.toC(&c.displayModeProperties)
+}
+func (g *DisplayModeProperties2KHR) fromC(c *C.VkDisplayModeProperties2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DisplayModeProperties.fromC(&c.displayModeProperties)
+}
+func GetDisplayModeProperties2KHR(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		display        C.VkDisplayKHR
+		pPropertyCount *C.uint32_t
+		pProperties    *C.VkDisplayModeProperties2KHR
+		_ret           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.display = C.VkDisplayKHR(display)
+	{
+		c.pPropertyCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPropertyCount = C.uint32_t(*propertyCount)
+	}
+	{
+		c.pProperties = (*C.VkDisplayModeProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayModeProperties2KHR * uint(len(properties))))
+		slice3 := (*[1 << 31]C.VkDisplayModeProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
+		for i3, _ := range properties {
+			properties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetDisplayModeProperties2KHR(c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
+	_ret = Result(c._ret)
+	*propertyCount = uint32(*c.pPropertyCount)
+	return
+}
+
+type DisplayPlaneInfo2KHR struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	Mode       DisplayModeKHR
+	PlaneIndex uint32
+}
+
+func (g *DisplayPlaneInfo2KHR) toC(c *C.VkDisplayPlaneInfo2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.mode = C.VkDisplayModeKHR(g.Mode)
+	c.planeIndex = C.uint32_t(g.PlaneIndex)
+}
+func (g *DisplayPlaneInfo2KHR) fromC(c *C.VkDisplayPlaneInfo2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Mode = DisplayModeKHR(c.mode)
+	g.PlaneIndex = uint32(c.planeIndex)
+}
+
+type DisplayPlaneCapabilities2KHR struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	Capabilities DisplayPlaneCapabilitiesKHR
+}
+
+func (g *DisplayPlaneCapabilities2KHR) toC(c *C.VkDisplayPlaneCapabilities2KHR) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.Capabilities.toC(&c.capabilities)
+}
+func (g *DisplayPlaneCapabilities2KHR) fromC(c *C.VkDisplayPlaneCapabilities2KHR) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Capabilities.fromC(&c.capabilities)
+}
+func GetDisplayPlaneCapabilities2KHR(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities []DisplayPlaneCapabilities2KHR) (_ret Result) {
+	var c struct {
+		physicalDevice    C.VkPhysicalDevice
+		pDisplayPlaneInfo *C.VkDisplayPlaneInfo2KHR
+		pCapabilities     *C.VkDisplayPlaneCapabilities2KHR
+		_ret              C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pDisplayPlaneInfo = (*C.VkDisplayPlaneInfo2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneInfo2KHR))
+		displayPlaneInfo.toC(c.pDisplayPlaneInfo)
+	}
+	{
+		c.pCapabilities = (*C.VkDisplayPlaneCapabilities2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneCapabilities2KHR * uint(len(capabilities))))
+		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilities2KHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
+		for i3, _ := range capabilities {
+			capabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetDisplayPlaneCapabilities2KHR(c.physicalDevice, c.pDisplayPlaneInfo, c.pCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+func GetImageMemoryRequirements2KHR(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+	var c struct {
+		device              C.VkDevice
+		pInfo               *C.VkImageMemoryRequirementsInfo2
+		pMemoryRequirements *C.VkMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkImageMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkImageMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
+		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
+		for i3, _ := range memoryRequirements {
+			memoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetImageMemoryRequirements2KHR(c.device, c.pInfo, c.pMemoryRequirements)
+}
+func GetBufferMemoryRequirements2KHR(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+	var c struct {
+		device              C.VkDevice
+		pInfo               *C.VkBufferMemoryRequirementsInfo2
+		pMemoryRequirements *C.VkMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkBufferMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkBufferMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
+		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
+		for i3, _ := range memoryRequirements {
+			memoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetBufferMemoryRequirements2KHR(c.device, c.pInfo, c.pMemoryRequirements)
+}
+func GetImageSparseMemoryRequirements2KHR(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+	var c struct {
+		device                        C.VkDevice
+		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
+		pSparseMemoryRequirementCount *C.uint32_t
+		pSparseMemoryRequirements     *C.VkSparseImageMemoryRequirements2
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pInfo = (*C.VkImageSparseMemoryRequirementsInfo2)(_sa.alloc(C.sizeof_VkImageSparseMemoryRequirementsInfo2))
+		info.toC(c.pInfo)
+	}
+	{
+		c.pSparseMemoryRequirementCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pSparseMemoryRequirementCount = C.uint32_t(*sparseMemoryRequirementCount)
+	}
+	{
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
+		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
+		for i3, _ := range sparseMemoryRequirements {
+			sparseMemoryRequirements[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetImageSparseMemoryRequirements2KHR(c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
+	*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
+}
+func CreateSamplerYcbcrConversionKHR(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
+	var c struct {
+		device           C.VkDevice
+		pCreateInfo      *C.VkSamplerYcbcrConversionCreateInfo
+		pAllocator       *C.VkAllocationCallbacks
+		pYcbcrConversion *C.VkSamplerYcbcrConversion
+		_ret             C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkSamplerYcbcrConversionCreateInfo)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversionCreateInfo))
+		createInfo.toC(c.pCreateInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pYcbcrConversion = (*C.VkSamplerYcbcrConversion)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversion))
+		*c.pYcbcrConversion = C.VkSamplerYcbcrConversion(*ycbcrConversion)
+	}
+	c._ret = C.vkCreateSamplerYcbcrConversionKHR(c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
+	_ret = Result(c._ret)
+	*ycbcrConversion = SamplerYcbcrConversion(*c.pYcbcrConversion)
+	return
+}
+func DestroySamplerYcbcrConversionKHR(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
+	var c struct {
+		device          C.VkDevice
+		ycbcrConversion C.VkSamplerYcbcrConversion
+		pAllocator      *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.ycbcrConversion = C.VkSamplerYcbcrConversion(ycbcrConversion)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroySamplerYcbcrConversionKHR(c.device, c.ycbcrConversion, c.pAllocator)
+}
+func BindBufferMemory2KHR(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		bindInfoCount C.uint32_t
+		pBindInfos    *C.VkBindBufferMemoryInfo
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.bindInfoCount = C.uint32_t(len(bindInfos))
+	{
+		c.pBindInfos = (*C.VkBindBufferMemoryInfo)(_sa.alloc(C.sizeof_VkBindBufferMemoryInfo * uint(len(bindInfos))))
+		slice3 := (*[1 << 31]C.VkBindBufferMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
+		for i3, _ := range bindInfos {
+			bindInfos[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkBindBufferMemory2KHR(c.device, c.bindInfoCount, c.pBindInfos)
+	_ret = Result(c._ret)
+	return
+}
+func BindImageMemory2KHR(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		bindInfoCount C.uint32_t
+		pBindInfos    *C.VkBindImageMemoryInfo
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.bindInfoCount = C.uint32_t(len(bindInfos))
+	{
+		c.pBindInfos = (*C.VkBindImageMemoryInfo)(_sa.alloc(C.sizeof_VkBindImageMemoryInfo * uint(len(bindInfos))))
+		slice3 := (*[1 << 31]C.VkBindImageMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
+		for i3, _ := range bindInfos {
+			bindInfos[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkBindImageMemory2KHR(c.device, c.bindInfoCount, c.pBindInfos)
+	_ret = Result(c._ret)
+	return
+}
+func GetDescriptorSetLayoutSupportKHR(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
+	var c struct {
+		device      C.VkDevice
+		pCreateInfo *C.VkDescriptorSetLayoutCreateInfo
+		pSupport    *C.VkDescriptorSetLayoutSupport
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkDescriptorSetLayoutCreateInfo)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutCreateInfo))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pSupport = (*C.VkDescriptorSetLayoutSupport)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutSupport))
+		support.toC(c.pSupport)
+	}
+	C.vkGetDescriptorSetLayoutSupportKHR(c.device, c.pCreateInfo, c.pSupport)
+	support.fromC(c.pSupport)
+}
+func CmdDrawIndirectCountKHR(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		buffer            C.VkBuffer
+		offset            C.VkDeviceSize
+		countBuffer       C.VkBuffer
+		countBufferOffset C.VkDeviceSize
+		maxDrawCount      C.uint32_t
+		stride            C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.buffer = C.VkBuffer(buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.countBuffer = C.VkBuffer(countBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
+		c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.maxDrawCount = C.uint32_t(maxDrawCount)
+	c.stride = C.uint32_t(stride)
+	C.vkCmdDrawIndirectCountKHR(c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+}
+func CmdDrawIndexedIndirectCountKHR(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		buffer            C.VkBuffer
+		offset            C.VkDeviceSize
+		countBuffer       C.VkBuffer
+		countBufferOffset C.VkDeviceSize
+		maxDrawCount      C.uint32_t
+		stride            C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.buffer = C.VkBuffer(buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.countBuffer = C.VkBuffer(countBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
+		c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.maxDrawCount = C.uint32_t(maxDrawCount)
+	c.stride = C.uint32_t(stride)
+	C.vkCmdDrawIndexedIndirectCountKHR(c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+}
+
+type DebugReportFlagsEXT Flags
+type PFN_vkDebugReportCallbackEXT struct {
+	Raw C.PFN_vkDebugReportCallbackEXT
+}
+type DebugReportObjectTypeEXT int
+
+const (
+	DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT                        DebugReportObjectTypeEXT = 0
+	DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT                       DebugReportObjectTypeEXT = 1
+	DEBUG_REPORT_OBJECT_TYPE_PHYSICAL_DEVICE_EXT                DebugReportObjectTypeEXT = 2
+	DEBUG_REPORT_OBJECT_TYPE_DEVICE_EXT                         DebugReportObjectTypeEXT = 3
+	DEBUG_REPORT_OBJECT_TYPE_QUEUE_EXT                          DebugReportObjectTypeEXT = 4
+	DEBUG_REPORT_OBJECT_TYPE_SEMAPHORE_EXT                      DebugReportObjectTypeEXT = 5
+	DEBUG_REPORT_OBJECT_TYPE_COMMAND_BUFFER_EXT                 DebugReportObjectTypeEXT = 6
+	DEBUG_REPORT_OBJECT_TYPE_FENCE_EXT                          DebugReportObjectTypeEXT = 7
+	DEBUG_REPORT_OBJECT_TYPE_DEVICE_MEMORY_EXT                  DebugReportObjectTypeEXT = 8
+	DEBUG_REPORT_OBJECT_TYPE_BUFFER_EXT                         DebugReportObjectTypeEXT = 9
+	DEBUG_REPORT_OBJECT_TYPE_IMAGE_EXT                          DebugReportObjectTypeEXT = 10
+	DEBUG_REPORT_OBJECT_TYPE_EVENT_EXT                          DebugReportObjectTypeEXT = 11
+	DEBUG_REPORT_OBJECT_TYPE_QUERY_POOL_EXT                     DebugReportObjectTypeEXT = 12
+	DEBUG_REPORT_OBJECT_TYPE_BUFFER_VIEW_EXT                    DebugReportObjectTypeEXT = 13
+	DEBUG_REPORT_OBJECT_TYPE_IMAGE_VIEW_EXT                     DebugReportObjectTypeEXT = 14
+	DEBUG_REPORT_OBJECT_TYPE_SHADER_MODULE_EXT                  DebugReportObjectTypeEXT = 15
+	DEBUG_REPORT_OBJECT_TYPE_PIPELINE_CACHE_EXT                 DebugReportObjectTypeEXT = 16
+	DEBUG_REPORT_OBJECT_TYPE_PIPELINE_LAYOUT_EXT                DebugReportObjectTypeEXT = 17
+	DEBUG_REPORT_OBJECT_TYPE_RENDER_PASS_EXT                    DebugReportObjectTypeEXT = 18
+	DEBUG_REPORT_OBJECT_TYPE_PIPELINE_EXT                       DebugReportObjectTypeEXT = 19
+	DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT_EXT          DebugReportObjectTypeEXT = 20
+	DEBUG_REPORT_OBJECT_TYPE_SAMPLER_EXT                        DebugReportObjectTypeEXT = 21
+	DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_POOL_EXT                DebugReportObjectTypeEXT = 22
+	DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_SET_EXT                 DebugReportObjectTypeEXT = 23
+	DEBUG_REPORT_OBJECT_TYPE_FRAMEBUFFER_EXT                    DebugReportObjectTypeEXT = 24
+	DEBUG_REPORT_OBJECT_TYPE_COMMAND_POOL_EXT                   DebugReportObjectTypeEXT = 25
+	DEBUG_REPORT_OBJECT_TYPE_SURFACE_KHR_EXT                    DebugReportObjectTypeEXT = 26
+	DEBUG_REPORT_OBJECT_TYPE_SWAPCHAIN_KHR_EXT                  DebugReportObjectTypeEXT = 27
+	DEBUG_REPORT_OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT_EXT      DebugReportObjectTypeEXT = 28
+	DEBUG_REPORT_OBJECT_TYPE_DISPLAY_KHR_EXT                    DebugReportObjectTypeEXT = 29
+	DEBUG_REPORT_OBJECT_TYPE_DISPLAY_MODE_KHR_EXT               DebugReportObjectTypeEXT = 30
+	DEBUG_REPORT_OBJECT_TYPE_OBJECT_TABLE_NVX_EXT               DebugReportObjectTypeEXT = 31
+	DEBUG_REPORT_OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX_EXT   DebugReportObjectTypeEXT = 32
+	DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT           DebugReportObjectTypeEXT = 33
+	DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT       DebugReportObjectTypeEXT = 1000156000
+	DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT     DebugReportObjectTypeEXT = 1000085000
+	DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR_EXT DebugReportObjectTypeEXT = DEBUG_REPORT_OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_EXT
+	DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR_EXT   DebugReportObjectTypeEXT = DEBUG_REPORT_OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_EXT
+	DEBUG_REPORT_OBJECT_TYPE_BEGIN_RANGE_EXT                    DebugReportObjectTypeEXT = DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT
+	DEBUG_REPORT_OBJECT_TYPE_END_RANGE_EXT                      DebugReportObjectTypeEXT = DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT
+	DEBUG_REPORT_OBJECT_TYPE_RANGE_SIZE_EXT                     DebugReportObjectTypeEXT = (DEBUG_REPORT_OBJECT_TYPE_VALIDATION_CACHE_EXT_EXT - DEBUG_REPORT_OBJECT_TYPE_UNKNOWN_EXT + 1)
+	DEBUG_REPORT_OBJECT_TYPE_MAX_ENUM_EXT                       DebugReportObjectTypeEXT = 2147483647
+)
+
+func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret Bool32) {
+	var c struct {
+		arg0 C.VkDebugReportFlagsEXT
+		arg1 C.VkDebugReportObjectTypeEXT
+		arg2 C.uint64_t
+		arg3 C.size_t
+		arg4 C.int32_t
+		arg5 *C.char
+		arg6 *C.char
+		arg7 unsafe.Pointer
+		_ret C.VkBool32
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	{
+		var temp_in_VkDebugReportFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(arg0)))
+			temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.arg0 = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
+	}
+	c.arg1 = C.VkDebugReportObjectTypeEXT(arg1)
+	c.arg2 = C.uint64_t(arg2)
+	c.arg3 = C.size_t(arg3)
+	c.arg4 = C.int32_t(arg4)
+	c.arg5 = toCString(arg5, _sa)
+	c.arg6 = toCString(arg6, _sa)
+	c.arg7 = arg7
+	c._ret = C.callPFN_vkDebugReportCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4, c.arg5, c.arg6, c.arg7)
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c._ret))
+		_ret = Bool32(temp_in_VkBool32)
+	}
+	return
+}
+
+type DebugReportCallbackCreateInfoEXT struct {
+	Type     StructureType
+	Next     unsafe.Pointer
+	Flags    DebugReportFlagsEXT
+	Callback PFN_vkDebugReportCallbackEXT
+	UserData []byte
+}
+
+func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDebugReportFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
+	}
+	c.pfnCallback = g.Callback.Raw
+	{
+		c.pUserData = _sa.alloc(C.sizeof_void_pointer * uint(len(g.UserData)))
+		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
+		for i2, _ := range g.UserData {
+			slice2[i2] = g.UserData[i2]
+		}
+	}
+}
+func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreateInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDebugReportFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDebugReportFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
+	}
+	g.Callback.Raw = c.pfnCallback
+	{
+		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
+		for i2, _ := range g.UserData {
+			g.UserData[i2] = slice2[i2]
+		}
+	}
+}
+
+type DebugReportCallbackEXT C.VkDebugReportCallbackEXT
+
+func CreateDebugReportCallbackEXT(instance Instance, createInfo *DebugReportCallbackCreateInfoEXT, allocator *AllocationCallbacks, callback *DebugReportCallbackEXT) (_ret Result) {
+	var c struct {
+		instance    C.VkInstance
+		pCreateInfo *C.VkDebugReportCallbackCreateInfoEXT
+		pAllocator  *C.VkAllocationCallbacks
+		pCallback   *C.VkDebugReportCallbackEXT
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		c.pCreateInfo = (*C.VkDebugReportCallbackCreateInfoEXT)(_sa.alloc(C.sizeof_VkDebugReportCallbackCreateInfoEXT))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pCallback = (*C.VkDebugReportCallbackEXT)(_sa.alloc(C.sizeof_VkDebugReportCallbackEXT))
+		*c.pCallback = C.VkDebugReportCallbackEXT(*callback)
+	}
+	c._ret = C.vkCreateDebugReportCallbackEXT(c.instance, c.pCreateInfo, c.pAllocator, c.pCallback)
+	_ret = Result(c._ret)
+	*callback = DebugReportCallbackEXT(*c.pCallback)
+	return
+}
+func DestroyDebugReportCallbackEXT(instance Instance, callback DebugReportCallbackEXT, allocator *AllocationCallbacks) {
+	var c struct {
+		instance   C.VkInstance
+		callback   C.VkDebugReportCallbackEXT
+		pAllocator *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	c.callback = C.VkDebugReportCallbackEXT(callback)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyDebugReportCallbackEXT(c.instance, c.callback, c.pAllocator)
+}
+func DebugReportMessageEXT(instance Instance, flags DebugReportFlagsEXT, objectType DebugReportObjectTypeEXT, object uint64, location uint, messageCode int32, layerPrefix string, message string) {
+	var c struct {
+		instance     C.VkInstance
+		flags        C.VkDebugReportFlagsEXT
+		objectType   C.VkDebugReportObjectTypeEXT
+		object       C.uint64_t
+		location     C.size_t
+		messageCode  C.int32_t
+		pLayerPrefix *C.char
+		pMessage     *C.char
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		var temp_in_VkDebugReportFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
+	}
+	c.objectType = C.VkDebugReportObjectTypeEXT(objectType)
+	c.object = C.uint64_t(object)
+	c.location = C.size_t(location)
+	c.messageCode = C.int32_t(messageCode)
+	c.pLayerPrefix = toCString(layerPrefix, _sa)
+	c.pMessage = toCString(message, _sa)
+	C.vkDebugReportMessageEXT(c.instance, c.flags, c.objectType, c.object, c.location, c.messageCode, c.pLayerPrefix, c.pMessage)
+}
+
+type DebugMarkerObjectTagInfoEXT struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	ObjectType DebugReportObjectTypeEXT
+	Object     uint64
+	TagName    uint64
+	TagSize    uint
+	Tag        unsafe.Pointer
+}
+
+func (g *DebugMarkerObjectTagInfoEXT) toC(c *C.VkDebugMarkerObjectTagInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectType = C.VkDebugReportObjectTypeEXT(g.ObjectType)
+	c.object = C.uint64_t(g.Object)
+	c.tagName = C.uint64_t(g.TagName)
+	c.tagSize = C.size_t(g.TagSize)
+	c.pTag = g.Tag
+}
+func (g *DebugMarkerObjectTagInfoEXT) fromC(c *C.VkDebugMarkerObjectTagInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectType = DebugReportObjectTypeEXT(c.objectType)
+	g.Object = uint64(c.object)
+	g.TagName = uint64(c.tagName)
+	g.TagSize = uint(c.tagSize)
+	g.Tag = c.pTag
+}
+func DebugMarkerSetObjectTagEXT(device Device, tagInfo *DebugMarkerObjectTagInfoEXT) (_ret Result) {
+	var c struct {
+		device   C.VkDevice
+		pTagInfo *C.VkDebugMarkerObjectTagInfoEXT
+		_ret     C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pTagInfo = (*C.VkDebugMarkerObjectTagInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerObjectTagInfoEXT))
+		tagInfo.toC(c.pTagInfo)
+	}
+	c._ret = C.vkDebugMarkerSetObjectTagEXT(c.device, c.pTagInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DebugMarkerObjectNameInfoEXT struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	ObjectType DebugReportObjectTypeEXT
+	Object     uint64
+	ObjectName string
+}
+
+func (g *DebugMarkerObjectNameInfoEXT) toC(c *C.VkDebugMarkerObjectNameInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectType = C.VkDebugReportObjectTypeEXT(g.ObjectType)
+	c.object = C.uint64_t(g.Object)
+	c.pObjectName = toCString(g.ObjectName, _sa)
+}
+func (g *DebugMarkerObjectNameInfoEXT) fromC(c *C.VkDebugMarkerObjectNameInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectType = DebugReportObjectTypeEXT(c.objectType)
+	g.Object = uint64(c.object)
+	g.ObjectName = toGoString(c.pObjectName)
+}
+func DebugMarkerSetObjectNameEXT(device Device, nameInfo *DebugMarkerObjectNameInfoEXT) (_ret Result) {
+	var c struct {
+		device    C.VkDevice
+		pNameInfo *C.VkDebugMarkerObjectNameInfoEXT
+		_ret      C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pNameInfo = (*C.VkDebugMarkerObjectNameInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerObjectNameInfoEXT))
+		nameInfo.toC(c.pNameInfo, _sa)
+	}
+	c._ret = C.vkDebugMarkerSetObjectNameEXT(c.device, c.pNameInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DebugMarkerMarkerInfoEXT struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	MarkerName string
+	Color      [4]float32
+}
+
+func (g *DebugMarkerMarkerInfoEXT) toC(c *C.VkDebugMarkerMarkerInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.pMarkerName = toCString(g.MarkerName, _sa)
+	for i, _ := range g.Color {
+		c.color[i] = C.float(g.Color[i])
+	}
+}
+func (g *DebugMarkerMarkerInfoEXT) fromC(c *C.VkDebugMarkerMarkerInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MarkerName = toGoString(c.pMarkerName)
+	for i, _ := range g.Color {
+		g.Color[i] = float32(c.color[i])
+	}
+}
+func CmdDebugMarkerBeginEXT(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pMarkerInfo   *C.VkDebugMarkerMarkerInfoEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pMarkerInfo = (*C.VkDebugMarkerMarkerInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerMarkerInfoEXT))
+		markerInfo.toC(c.pMarkerInfo, _sa)
+	}
+	C.vkCmdDebugMarkerBeginEXT(c.commandBuffer, c.pMarkerInfo)
+}
+func CmdDebugMarkerEndEXT(commandBuffer CommandBuffer) {
+	var c struct{ commandBuffer C.VkCommandBuffer }
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	C.vkCmdDebugMarkerEndEXT(c.commandBuffer)
+}
+func CmdDebugMarkerInsertEXT(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pMarkerInfo   *C.VkDebugMarkerMarkerInfoEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pMarkerInfo = (*C.VkDebugMarkerMarkerInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerMarkerInfoEXT))
+		markerInfo.toC(c.pMarkerInfo, _sa)
+	}
+	C.vkCmdDebugMarkerInsertEXT(c.commandBuffer, c.pMarkerInfo)
+}
+func CmdDrawIndirectCountAMD(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		buffer            C.VkBuffer
+		offset            C.VkDeviceSize
+		countBuffer       C.VkBuffer
+		countBufferOffset C.VkDeviceSize
+		maxDrawCount      C.uint32_t
+		stride            C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.buffer = C.VkBuffer(buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.countBuffer = C.VkBuffer(countBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
+		c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.maxDrawCount = C.uint32_t(maxDrawCount)
+	c.stride = C.uint32_t(stride)
+	C.vkCmdDrawIndirectCountAMD(c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+}
+func CmdDrawIndexedIndirectCountAMD(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		buffer            C.VkBuffer
+		offset            C.VkDeviceSize
+		countBuffer       C.VkBuffer
+		countBufferOffset C.VkDeviceSize
+		maxDrawCount      C.uint32_t
+		stride            C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.buffer = C.VkBuffer(buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.countBuffer = C.VkBuffer(countBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
+		c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.maxDrawCount = C.uint32_t(maxDrawCount)
+	c.stride = C.uint32_t(stride)
+	C.vkCmdDrawIndexedIndirectCountAMD(c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+}
+
+type ShaderInfoTypeAMD int
+
+const (
+	SHADER_INFO_TYPE_STATISTICS_AMD  ShaderInfoTypeAMD = 0
+	SHADER_INFO_TYPE_BINARY_AMD      ShaderInfoTypeAMD = 1
+	SHADER_INFO_TYPE_DISASSEMBLY_AMD ShaderInfoTypeAMD = 2
+	SHADER_INFO_TYPE_BEGIN_RANGE_AMD ShaderInfoTypeAMD = SHADER_INFO_TYPE_STATISTICS_AMD
+	SHADER_INFO_TYPE_END_RANGE_AMD   ShaderInfoTypeAMD = SHADER_INFO_TYPE_DISASSEMBLY_AMD
+	SHADER_INFO_TYPE_RANGE_SIZE_AMD  ShaderInfoTypeAMD = (SHADER_INFO_TYPE_DISASSEMBLY_AMD - SHADER_INFO_TYPE_STATISTICS_AMD + 1)
+	SHADER_INFO_TYPE_MAX_ENUM_AMD    ShaderInfoTypeAMD = 2147483647
+)
+
+func GetShaderInfoAMD(device Device, pipeline Pipeline, shaderStage ShaderStageFlagBits, infoType ShaderInfoTypeAMD, infoSize *uint, info unsafe.Pointer) (_ret Result) {
+	var c struct {
+		device      C.VkDevice
+		pipeline    C.VkPipeline
+		shaderStage C.VkShaderStageFlagBits
+		infoType    C.VkShaderInfoTypeAMD
+		pInfoSize   *C.size_t
+		pInfo       unsafe.Pointer
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.pipeline = C.VkPipeline(pipeline)
+	c.shaderStage = C.VkShaderStageFlagBits(shaderStage)
+	c.infoType = C.VkShaderInfoTypeAMD(infoType)
+	{
+		c.pInfoSize = (*C.size_t)(_sa.alloc(C.sizeof_size_t))
+		*c.pInfoSize = C.size_t(*infoSize)
+	}
+	c.pInfo = info
+	c._ret = C.vkGetShaderInfoAMD(c.device, c.pipeline, c.shaderStage, c.infoType, c.pInfoSize, c.pInfo)
+	_ret = Result(c._ret)
+	*infoSize = uint(*c.pInfoSize)
+	return
+}
+
+type ExternalMemoryHandleTypeFlagsNV Flags
+type ExternalMemoryFeatureFlagsNV Flags
+type ExternalImageFormatPropertiesNV struct {
+	ImageFormatProperties         ImageFormatProperties
+	ExternalMemoryFeatures        ExternalMemoryFeatureFlagsNV
+	ExportFromImportedHandleTypes ExternalMemoryHandleTypeFlagsNV
+	CompatibleHandleTypes         ExternalMemoryHandleTypeFlagsNV
+}
+
+func (g *ExternalImageFormatPropertiesNV) toC(c *C.VkExternalImageFormatPropertiesNV) {
+	g.ImageFormatProperties.toC(&c.imageFormatProperties)
+	{
+		var temp_in_VkExternalMemoryFeatureFlagsNV C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
+			temp_in_VkExternalMemoryFeatureFlagsNV = C.VkFlags(temp_in_VkFlags)
+		}
+		c.externalMemoryFeatures = C.VkExternalMemoryFeatureFlagsNV(temp_in_VkExternalMemoryFeatureFlagsNV)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
+		}
+		c.exportFromImportedHandleTypes = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
+		}
+		c.compatibleHandleTypes = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
+	}
+}
+func (g *ExternalImageFormatPropertiesNV) fromC(c *C.VkExternalImageFormatPropertiesNV) {
+	g.ImageFormatProperties.fromC(&c.imageFormatProperties)
+	{
+		var temp_in_VkExternalMemoryFeatureFlagsNV Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
+			temp_in_VkExternalMemoryFeatureFlagsNV = Flags(temp_in_VkFlags)
+		}
+		g.ExternalMemoryFeatures = ExternalMemoryFeatureFlagsNV(temp_in_VkExternalMemoryFeatureFlagsNV)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlagsNV Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlagsNV = Flags(temp_in_VkFlags)
+		}
+		g.ExportFromImportedHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlagsNV Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+			temp_in_VkExternalMemoryHandleTypeFlagsNV = Flags(temp_in_VkFlags)
+		}
+		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
+	}
+}
+func GetPhysicalDeviceExternalImageFormatPropertiesNV(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties []ExternalImageFormatPropertiesNV) (_ret Result) {
+	var c struct {
+		physicalDevice                 C.VkPhysicalDevice
+		format                         C.VkFormat
+		_type                          C.VkImageType
+		tiling                         C.VkImageTiling
+		usage                          C.VkImageUsageFlags
+		flags                          C.VkImageCreateFlags
+		externalHandleType             C.VkExternalMemoryHandleTypeFlagsNV
+		pExternalImageFormatProperties *C.VkExternalImageFormatPropertiesNV
+		_ret                           C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.format = C.VkFormat(format)
+	c._type = C.VkImageType(_type)
+	c.tiling = C.VkImageTiling(tiling)
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	{
+		var temp_in_VkImageCreateFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
+			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
+	}
+	{
+		var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(externalHandleType)))
+			temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
+		}
+		c.externalHandleType = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
+	}
+	{
+		c.pExternalImageFormatProperties = (*C.VkExternalImageFormatPropertiesNV)(_sa.alloc(C.sizeof_VkExternalImageFormatPropertiesNV * uint(len(externalImageFormatProperties))))
+		slice3 := (*[1 << 31]C.VkExternalImageFormatPropertiesNV)(unsafe.Pointer(c.pExternalImageFormatProperties))[:len(externalImageFormatProperties):len(externalImageFormatProperties)]
+		for i3, _ := range externalImageFormatProperties {
+			externalImageFormatProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceExternalImageFormatPropertiesNV(c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.externalHandleType, c.pExternalImageFormatProperties)
+	_ret = Result(c._ret)
+	return
+}
+
+type ConditionalRenderingFlagsEXT Flags
+type ConditionalRenderingBeginInfoEXT struct {
+	Type   StructureType
+	Next   unsafe.Pointer
+	Buffer Buffer
+	Offset DeviceSize
+	Flags  ConditionalRenderingFlagsEXT
+}
+
+func (g *ConditionalRenderingBeginInfoEXT) toC(c *C.VkConditionalRenderingBeginInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.buffer = C.VkBuffer(g.Buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkConditionalRenderingFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkConditionalRenderingFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkConditionalRenderingFlagsEXT(temp_in_VkConditionalRenderingFlagsEXT)
+	}
+}
+func (g *ConditionalRenderingBeginInfoEXT) fromC(c *C.VkConditionalRenderingBeginInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Buffer = Buffer(c.buffer)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
+	}
+	{
+		var temp_in_VkConditionalRenderingFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkConditionalRenderingFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.Flags = ConditionalRenderingFlagsEXT(temp_in_VkConditionalRenderingFlagsEXT)
+	}
+}
+func CmdBeginConditionalRenderingEXT(commandBuffer CommandBuffer, conditionalRenderingBegin *ConditionalRenderingBeginInfoEXT) {
+	var c struct {
+		commandBuffer              C.VkCommandBuffer
+		pConditionalRenderingBegin *C.VkConditionalRenderingBeginInfoEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pConditionalRenderingBegin = (*C.VkConditionalRenderingBeginInfoEXT)(_sa.alloc(C.sizeof_VkConditionalRenderingBeginInfoEXT))
+		conditionalRenderingBegin.toC(c.pConditionalRenderingBegin)
+	}
+	C.vkCmdBeginConditionalRenderingEXT(c.commandBuffer, c.pConditionalRenderingBegin)
+}
+func CmdEndConditionalRenderingEXT(commandBuffer CommandBuffer) {
+	var c struct{ commandBuffer C.VkCommandBuffer }
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	C.vkCmdEndConditionalRenderingEXT(c.commandBuffer)
+}
+
+type ObjectTableNVX C.VkObjectTableNVX
+type IndirectCommandsLayoutNVX C.VkIndirectCommandsLayoutNVX
+type IndirectCommandsTokenTypeNVX int
+
+const (
+	INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX       IndirectCommandsTokenTypeNVX = 0
+	INDIRECT_COMMANDS_TOKEN_TYPE_DESCRIPTOR_SET_NVX IndirectCommandsTokenTypeNVX = 1
+	INDIRECT_COMMANDS_TOKEN_TYPE_INDEX_BUFFER_NVX   IndirectCommandsTokenTypeNVX = 2
+	INDIRECT_COMMANDS_TOKEN_TYPE_VERTEX_BUFFER_NVX  IndirectCommandsTokenTypeNVX = 3
+	INDIRECT_COMMANDS_TOKEN_TYPE_PUSH_CONSTANT_NVX  IndirectCommandsTokenTypeNVX = 4
+	INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_INDEXED_NVX   IndirectCommandsTokenTypeNVX = 5
+	INDIRECT_COMMANDS_TOKEN_TYPE_DRAW_NVX           IndirectCommandsTokenTypeNVX = 6
+	INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX       IndirectCommandsTokenTypeNVX = 7
+	INDIRECT_COMMANDS_TOKEN_TYPE_BEGIN_RANGE_NVX    IndirectCommandsTokenTypeNVX = INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX
+	INDIRECT_COMMANDS_TOKEN_TYPE_END_RANGE_NVX      IndirectCommandsTokenTypeNVX = INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX
+	INDIRECT_COMMANDS_TOKEN_TYPE_RANGE_SIZE_NVX     IndirectCommandsTokenTypeNVX = (INDIRECT_COMMANDS_TOKEN_TYPE_DISPATCH_NVX - INDIRECT_COMMANDS_TOKEN_TYPE_PIPELINE_NVX + 1)
+	INDIRECT_COMMANDS_TOKEN_TYPE_MAX_ENUM_NVX       IndirectCommandsTokenTypeNVX = 2147483647
+)
+
+type IndirectCommandsTokenNVX struct {
+	TokenType IndirectCommandsTokenTypeNVX
+	Buffer    Buffer
+	Offset    DeviceSize
+}
+
+func (g *IndirectCommandsTokenNVX) toC(c *C.VkIndirectCommandsTokenNVX) {
+	c.tokenType = C.VkIndirectCommandsTokenTypeNVX(g.TokenType)
+	c.buffer = C.VkBuffer(g.Buffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
+		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func (g *IndirectCommandsTokenNVX) fromC(c *C.VkIndirectCommandsTokenNVX) {
+	g.TokenType = IndirectCommandsTokenTypeNVX(c.tokenType)
+	g.Buffer = Buffer(c.buffer)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
+		g.Offset = DeviceSize(temp_in_VkDeviceSize)
+	}
+}
+
+type CmdProcessCommandsInfoNVX struct {
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	ObjectTable            ObjectTableNVX
+	IndirectCommandsLayout IndirectCommandsLayoutNVX
+	IndirectCommandsTokens []IndirectCommandsTokenNVX
+	MaxSequencesCount      uint32
+	TargetCommandBuffer    CommandBuffer
+	SequencesCountBuffer   Buffer
+	SequencesCountOffset   DeviceSize
+	SequencesIndexBuffer   Buffer
+	SequencesIndexOffset   DeviceSize
+}
+
+func (g *CmdProcessCommandsInfoNVX) toC(c *C.VkCmdProcessCommandsInfoNVX, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectTable = C.VkObjectTableNVX(g.ObjectTable)
+	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(g.IndirectCommandsLayout)
+	c.indirectCommandsTokenCount = C.uint32_t(len(g.IndirectCommandsTokens))
+	{
+		c.pIndirectCommandsTokens = (*C.VkIndirectCommandsTokenNVX)(_sa.alloc(C.sizeof_VkIndirectCommandsTokenNVX * uint(len(g.IndirectCommandsTokens))))
+		slice2 := (*[1 << 31]C.VkIndirectCommandsTokenNVX)(unsafe.Pointer(c.pIndirectCommandsTokens))[:len(g.IndirectCommandsTokens):len(g.IndirectCommandsTokens)]
+		for i2, _ := range g.IndirectCommandsTokens {
+			g.IndirectCommandsTokens[i2].toC(&slice2[i2])
+		}
+	}
+	c.maxSequencesCount = C.uint32_t(g.MaxSequencesCount)
+	c.targetCommandBuffer = C.VkCommandBuffer(g.TargetCommandBuffer)
+	c.sequencesCountBuffer = C.VkBuffer(g.SequencesCountBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SequencesCountOffset))
+		c.sequencesCountOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.sequencesIndexBuffer = C.VkBuffer(g.SequencesIndexBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SequencesIndexOffset))
+		c.sequencesIndexOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func (g *CmdProcessCommandsInfoNVX) fromC(c *C.VkCmdProcessCommandsInfoNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectTable = ObjectTableNVX(c.objectTable)
+	g.IndirectCommandsLayout = IndirectCommandsLayoutNVX(c.indirectCommandsLayout)
+	g.IndirectCommandsTokens = make([]IndirectCommandsTokenNVX, int(c.indirectCommandsTokenCount))
+	{
+		slice2 := (*[1 << 31]C.VkIndirectCommandsTokenNVX)(unsafe.Pointer(c.pIndirectCommandsTokens))[:len(g.IndirectCommandsTokens):len(g.IndirectCommandsTokens)]
+		for i2, _ := range g.IndirectCommandsTokens {
+			g.IndirectCommandsTokens[i2].fromC(&slice2[i2])
+		}
+	}
+	g.MaxSequencesCount = uint32(c.maxSequencesCount)
+	g.TargetCommandBuffer = CommandBuffer(c.targetCommandBuffer)
+	g.SequencesCountBuffer = Buffer(c.sequencesCountBuffer)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sequencesCountOffset))
+		g.SequencesCountOffset = DeviceSize(temp_in_VkDeviceSize)
+	}
+	g.SequencesIndexBuffer = Buffer(c.sequencesIndexBuffer)
+	{
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sequencesIndexOffset))
+		g.SequencesIndexOffset = DeviceSize(temp_in_VkDeviceSize)
+	}
+}
+func CmdProcessCommandsNVX(commandBuffer CommandBuffer, processCommandsInfo *CmdProcessCommandsInfoNVX) {
+	var c struct {
+		commandBuffer        C.VkCommandBuffer
+		pProcessCommandsInfo *C.VkCmdProcessCommandsInfoNVX
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pProcessCommandsInfo = (*C.VkCmdProcessCommandsInfoNVX)(_sa.alloc(C.sizeof_VkCmdProcessCommandsInfoNVX))
+		processCommandsInfo.toC(c.pProcessCommandsInfo, _sa)
+	}
+	C.vkCmdProcessCommandsNVX(c.commandBuffer, c.pProcessCommandsInfo)
+}
+
+type CmdReserveSpaceForCommandsInfoNVX struct {
+	Type                   StructureType
+	Next                   unsafe.Pointer
+	ObjectTable            ObjectTableNVX
+	IndirectCommandsLayout IndirectCommandsLayoutNVX
+	MaxSequencesCount      uint32
+}
+
+func (g *CmdReserveSpaceForCommandsInfoNVX) toC(c *C.VkCmdReserveSpaceForCommandsInfoNVX) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectTable = C.VkObjectTableNVX(g.ObjectTable)
+	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(g.IndirectCommandsLayout)
+	c.maxSequencesCount = C.uint32_t(g.MaxSequencesCount)
+}
+func (g *CmdReserveSpaceForCommandsInfoNVX) fromC(c *C.VkCmdReserveSpaceForCommandsInfoNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectTable = ObjectTableNVX(c.objectTable)
+	g.IndirectCommandsLayout = IndirectCommandsLayoutNVX(c.indirectCommandsLayout)
+	g.MaxSequencesCount = uint32(c.maxSequencesCount)
+}
+func CmdReserveSpaceForCommandsNVX(commandBuffer CommandBuffer, reserveSpaceInfo *CmdReserveSpaceForCommandsInfoNVX) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		pReserveSpaceInfo *C.VkCmdReserveSpaceForCommandsInfoNVX
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pReserveSpaceInfo = (*C.VkCmdReserveSpaceForCommandsInfoNVX)(_sa.alloc(C.sizeof_VkCmdReserveSpaceForCommandsInfoNVX))
+		reserveSpaceInfo.toC(c.pReserveSpaceInfo)
+	}
+	C.vkCmdReserveSpaceForCommandsNVX(c.commandBuffer, c.pReserveSpaceInfo)
+}
+
+type IndirectCommandsLayoutUsageFlagsNVX Flags
+type IndirectCommandsLayoutTokenNVX struct {
+	TokenType    IndirectCommandsTokenTypeNVX
+	BindingUnit  uint32
+	DynamicCount uint32
+	Divisor      uint32
+}
+
+func (g *IndirectCommandsLayoutTokenNVX) toC(c *C.VkIndirectCommandsLayoutTokenNVX) {
+	c.tokenType = C.VkIndirectCommandsTokenTypeNVX(g.TokenType)
+	c.bindingUnit = C.uint32_t(g.BindingUnit)
+	c.dynamicCount = C.uint32_t(g.DynamicCount)
+	c.divisor = C.uint32_t(g.Divisor)
+}
+func (g *IndirectCommandsLayoutTokenNVX) fromC(c *C.VkIndirectCommandsLayoutTokenNVX) {
+	g.TokenType = IndirectCommandsTokenTypeNVX(c.tokenType)
+	g.BindingUnit = uint32(c.bindingUnit)
+	g.DynamicCount = uint32(c.dynamicCount)
+	g.Divisor = uint32(c.divisor)
+}
+
+type IndirectCommandsLayoutCreateInfoNVX struct {
+	Type              StructureType
+	Next              unsafe.Pointer
+	PipelineBindPoint PipelineBindPoint
+	Flags             IndirectCommandsLayoutUsageFlagsNVX
+	Tokens            []IndirectCommandsLayoutTokenNVX
+}
+
+func (g *IndirectCommandsLayoutCreateInfoNVX) toC(c *C.VkIndirectCommandsLayoutCreateInfoNVX, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
+	{
+		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkIndirectCommandsLayoutUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkIndirectCommandsLayoutUsageFlagsNVX(temp_in_VkIndirectCommandsLayoutUsageFlagsNVX)
+	}
+	c.tokenCount = C.uint32_t(len(g.Tokens))
+	{
+		c.pTokens = (*C.VkIndirectCommandsLayoutTokenNVX)(_sa.alloc(C.sizeof_VkIndirectCommandsLayoutTokenNVX * uint(len(g.Tokens))))
+		slice2 := (*[1 << 31]C.VkIndirectCommandsLayoutTokenNVX)(unsafe.Pointer(c.pTokens))[:len(g.Tokens):len(g.Tokens)]
+		for i2, _ := range g.Tokens {
+			g.Tokens[i2].toC(&slice2[i2])
+		}
+	}
+}
+func (g *IndirectCommandsLayoutCreateInfoNVX) fromC(c *C.VkIndirectCommandsLayoutCreateInfoNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
+	{
+		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkIndirectCommandsLayoutUsageFlagsNVX = Flags(temp_in_VkFlags)
+		}
+		g.Flags = IndirectCommandsLayoutUsageFlagsNVX(temp_in_VkIndirectCommandsLayoutUsageFlagsNVX)
+	}
+	g.Tokens = make([]IndirectCommandsLayoutTokenNVX, int(c.tokenCount))
+	{
+		slice2 := (*[1 << 31]C.VkIndirectCommandsLayoutTokenNVX)(unsafe.Pointer(c.pTokens))[:len(g.Tokens):len(g.Tokens)]
+		for i2, _ := range g.Tokens {
+			g.Tokens[i2].fromC(&slice2[i2])
+		}
+	}
+}
+func CreateIndirectCommandsLayoutNVX(device Device, createInfo *IndirectCommandsLayoutCreateInfoNVX, allocator *AllocationCallbacks, indirectCommandsLayout *IndirectCommandsLayoutNVX) (_ret Result) {
+	var c struct {
+		device                  C.VkDevice
+		pCreateInfo             *C.VkIndirectCommandsLayoutCreateInfoNVX
+		pAllocator              *C.VkAllocationCallbacks
+		pIndirectCommandsLayout *C.VkIndirectCommandsLayoutNVX
+		_ret                    C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkIndirectCommandsLayoutCreateInfoNVX)(_sa.alloc(C.sizeof_VkIndirectCommandsLayoutCreateInfoNVX))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pIndirectCommandsLayout = (*C.VkIndirectCommandsLayoutNVX)(_sa.alloc(C.sizeof_VkIndirectCommandsLayoutNVX))
+		*c.pIndirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(*indirectCommandsLayout)
+	}
+	c._ret = C.vkCreateIndirectCommandsLayoutNVX(c.device, c.pCreateInfo, c.pAllocator, c.pIndirectCommandsLayout)
+	_ret = Result(c._ret)
+	*indirectCommandsLayout = IndirectCommandsLayoutNVX(*c.pIndirectCommandsLayout)
+	return
+}
+func DestroyIndirectCommandsLayoutNVX(device Device, indirectCommandsLayout IndirectCommandsLayoutNVX, allocator *AllocationCallbacks) {
+	var c struct {
+		device                 C.VkDevice
+		indirectCommandsLayout C.VkIndirectCommandsLayoutNVX
+		pAllocator             *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(indirectCommandsLayout)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyIndirectCommandsLayoutNVX(c.device, c.indirectCommandsLayout, c.pAllocator)
+}
+
+type ObjectEntryTypeNVX int
+
+const (
+	OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX ObjectEntryTypeNVX = 0
+	OBJECT_ENTRY_TYPE_PIPELINE_NVX       ObjectEntryTypeNVX = 1
+	OBJECT_ENTRY_TYPE_INDEX_BUFFER_NVX   ObjectEntryTypeNVX = 2
+	OBJECT_ENTRY_TYPE_VERTEX_BUFFER_NVX  ObjectEntryTypeNVX = 3
+	OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX  ObjectEntryTypeNVX = 4
+	OBJECT_ENTRY_TYPE_BEGIN_RANGE_NVX    ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX
+	OBJECT_ENTRY_TYPE_END_RANGE_NVX      ObjectEntryTypeNVX = OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX
+	OBJECT_ENTRY_TYPE_RANGE_SIZE_NVX     ObjectEntryTypeNVX = (OBJECT_ENTRY_TYPE_PUSH_CONSTANT_NVX - OBJECT_ENTRY_TYPE_DESCRIPTOR_SET_NVX + 1)
+	OBJECT_ENTRY_TYPE_MAX_ENUM_NVX       ObjectEntryTypeNVX = 2147483647
+)
+
+type ObjectEntryUsageFlagsNVX Flags
+type ObjectTableCreateInfoNVX struct {
+	Type                           StructureType
+	Next                           unsafe.Pointer
+	ObjectEntryTypes               []ObjectEntryTypeNVX
+	ObjectEntryCounts              []uint32
+	ObjectEntryUsageFlags          []ObjectEntryUsageFlagsNVX
+	MaxUniformBuffersPerDescriptor uint32
+	MaxStorageBuffersPerDescriptor uint32
+	MaxStorageImagesPerDescriptor  uint32
+	MaxSampledImagesPerDescriptor  uint32
+	MaxPipelineLayouts             uint32
+}
+
+func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectCount = C.uint32_t(len(g.ObjectEntryTypes))
+	{
+		c.pObjectEntryTypes = (*C.VkObjectEntryTypeNVX)(_sa.alloc(C.sizeof_VkObjectEntryTypeNVX * uint(len(g.ObjectEntryTypes))))
+		slice2 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(g.ObjectEntryTypes):len(g.ObjectEntryTypes)]
+		for i2, _ := range g.ObjectEntryTypes {
+			slice2[i2] = C.VkObjectEntryTypeNVX(g.ObjectEntryTypes[i2])
+		}
+	}
+	{
+		c.pObjectEntryCounts = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(g.ObjectEntryCounts))))
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectEntryCounts))[:len(g.ObjectEntryCounts):len(g.ObjectEntryCounts)]
+		for i2, _ := range g.ObjectEntryCounts {
+			slice2[i2] = C.uint32_t(g.ObjectEntryCounts[i2])
+		}
+	}
+	{
+		c.pObjectEntryUsageFlags = (*C.VkObjectEntryUsageFlagsNVX)(_sa.alloc(C.sizeof_VkObjectEntryUsageFlagsNVX * uint(len(g.ObjectEntryUsageFlags))))
+		slice2 := (*[1 << 31]C.VkObjectEntryUsageFlagsNVX)(unsafe.Pointer(c.pObjectEntryUsageFlags))[:len(g.ObjectEntryUsageFlags):len(g.ObjectEntryUsageFlags)]
+		for i2, _ := range g.ObjectEntryUsageFlags {
+			{
+				var temp_in_VkObjectEntryUsageFlagsNVX C.VkFlags
+				{
+					var temp_in_VkFlags C.uint32_t
+					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ObjectEntryUsageFlags[i2])))
+					temp_in_VkObjectEntryUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
+				}
+				slice2[i2] = C.VkObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
+			}
+		}
+	}
+	c.maxUniformBuffersPerDescriptor = C.uint32_t(g.MaxUniformBuffersPerDescriptor)
+	c.maxStorageBuffersPerDescriptor = C.uint32_t(g.MaxStorageBuffersPerDescriptor)
+	c.maxStorageImagesPerDescriptor = C.uint32_t(g.MaxStorageImagesPerDescriptor)
+	c.maxSampledImagesPerDescriptor = C.uint32_t(g.MaxSampledImagesPerDescriptor)
+	c.maxPipelineLayouts = C.uint32_t(g.MaxPipelineLayouts)
+}
+func (g *ObjectTableCreateInfoNVX) fromC(c *C.VkObjectTableCreateInfoNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectEntryTypes = make([]ObjectEntryTypeNVX, int(c.objectCount))
+	{
+		slice2 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(g.ObjectEntryTypes):len(g.ObjectEntryTypes)]
+		for i2, _ := range g.ObjectEntryTypes {
+			g.ObjectEntryTypes[i2] = ObjectEntryTypeNVX(slice2[i2])
+		}
+	}
+	{
+		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectEntryCounts))[:len(g.ObjectEntryCounts):len(g.ObjectEntryCounts)]
+		for i2, _ := range g.ObjectEntryCounts {
+			g.ObjectEntryCounts[i2] = uint32(slice2[i2])
+		}
+	}
+	{
+		slice2 := (*[1 << 31]C.VkObjectEntryUsageFlagsNVX)(unsafe.Pointer(c.pObjectEntryUsageFlags))[:len(g.ObjectEntryUsageFlags):len(g.ObjectEntryUsageFlags)]
+		for i2, _ := range g.ObjectEntryUsageFlags {
+			{
+				var temp_in_VkObjectEntryUsageFlagsNVX Flags
+				{
+					var temp_in_VkFlags uint32
+					temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice2[i2])))
+					temp_in_VkObjectEntryUsageFlagsNVX = Flags(temp_in_VkFlags)
+				}
+				g.ObjectEntryUsageFlags[i2] = ObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
+			}
+		}
+	}
+	g.MaxUniformBuffersPerDescriptor = uint32(c.maxUniformBuffersPerDescriptor)
+	g.MaxStorageBuffersPerDescriptor = uint32(c.maxStorageBuffersPerDescriptor)
+	g.MaxStorageImagesPerDescriptor = uint32(c.maxStorageImagesPerDescriptor)
+	g.MaxSampledImagesPerDescriptor = uint32(c.maxSampledImagesPerDescriptor)
+	g.MaxPipelineLayouts = uint32(c.maxPipelineLayouts)
+}
+func CreateObjectTableNVX(device Device, createInfo *ObjectTableCreateInfoNVX, allocator *AllocationCallbacks, objectTable *ObjectTableNVX) (_ret Result) {
+	var c struct {
+		device       C.VkDevice
+		pCreateInfo  *C.VkObjectTableCreateInfoNVX
+		pAllocator   *C.VkAllocationCallbacks
+		pObjectTable *C.VkObjectTableNVX
+		_ret         C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkObjectTableCreateInfoNVX)(_sa.alloc(C.sizeof_VkObjectTableCreateInfoNVX))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pObjectTable = (*C.VkObjectTableNVX)(_sa.alloc(C.sizeof_VkObjectTableNVX))
+		*c.pObjectTable = C.VkObjectTableNVX(*objectTable)
+	}
+	c._ret = C.vkCreateObjectTableNVX(c.device, c.pCreateInfo, c.pAllocator, c.pObjectTable)
+	_ret = Result(c._ret)
+	*objectTable = ObjectTableNVX(*c.pObjectTable)
+	return
+}
+func DestroyObjectTableNVX(device Device, objectTable ObjectTableNVX, allocator *AllocationCallbacks) {
+	var c struct {
+		device      C.VkDevice
+		objectTable C.VkObjectTableNVX
+		pAllocator  *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.objectTable = C.VkObjectTableNVX(objectTable)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyObjectTableNVX(c.device, c.objectTable, c.pAllocator)
+}
+
+type ObjectTableEntryNVX struct {
+	Type  ObjectEntryTypeNVX
+	Flags ObjectEntryUsageFlagsNVX
+}
+
+func (g *ObjectTableEntryNVX) toC(c *C.VkObjectTableEntryNVX) {
+	c._type = C.VkObjectEntryTypeNVX(g.Type)
+	{
+		var temp_in_VkObjectEntryUsageFlagsNVX C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkObjectEntryUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
+	}
+}
+func (g *ObjectTableEntryNVX) fromC(c *C.VkObjectTableEntryNVX) {
+	g.Type = ObjectEntryTypeNVX(c._type)
+	{
+		var temp_in_VkObjectEntryUsageFlagsNVX Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkObjectEntryUsageFlagsNVX = Flags(temp_in_VkFlags)
+		}
+		g.Flags = ObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
+	}
+}
+func RegisterObjectsNVX(device Device, objectTable ObjectTableNVX, objectTableEntries []*ObjectTableEntryNVX, objectIndices []uint32) (_ret Result) {
+	var c struct {
+		device               C.VkDevice
+		objectTable          C.VkObjectTableNVX
+		objectCount          C.uint32_t
+		ppObjectTableEntries **C.VkObjectTableEntryNVX
+		pObjectIndices       *C.uint32_t
+		_ret                 C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.objectTable = C.VkObjectTableNVX(objectTable)
+	c.objectCount = C.uint32_t(len(objectTableEntries))
+	{
+		c.ppObjectTableEntries = (**C.VkObjectTableEntryNVX)(_sa.alloc(unsafe.Sizeof(*C.VkObjectTableEntryNVX) * uint(len(objectTableEntries))))
+		slice3 := (*[1 << 31]*C.VkObjectTableEntryNVX)(unsafe.Pointer(c.ppObjectTableEntries))[:len(objectTableEntries):len(objectTableEntries)]
+		for i3, _ := range objectTableEntries {
+			{
+				slice3[i3] = (*C.VkObjectTableEntryNVX)(_sa.alloc(C.sizeof_VkObjectTableEntryNVX))
+				objectTableEntries[i3].toC(slice3[i3])
+			}
+		}
+	}
+	{
+		c.pObjectIndices = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
+		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
+		for i3, _ := range objectIndices {
+			slice3[i3] = C.uint32_t(objectIndices[i3])
+		}
+	}
+	c._ret = C.vkRegisterObjectsNVX(c.device, c.objectTable, c.objectCount, c.ppObjectTableEntries, c.pObjectIndices)
+	_ret = Result(c._ret)
+	return
+}
+func UnregisterObjectsNVX(device Device, objectTable ObjectTableNVX, objectEntryTypes []ObjectEntryTypeNVX, objectIndices []uint32) (_ret Result) {
+	var c struct {
+		device            C.VkDevice
+		objectTable       C.VkObjectTableNVX
+		objectCount       C.uint32_t
+		pObjectEntryTypes *C.VkObjectEntryTypeNVX
+		pObjectIndices    *C.uint32_t
+		_ret              C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.objectTable = C.VkObjectTableNVX(objectTable)
+	c.objectCount = C.uint32_t(len(objectEntryTypes))
+	{
+		c.pObjectEntryTypes = (*C.VkObjectEntryTypeNVX)(_sa.alloc(C.sizeof_VkObjectEntryTypeNVX * uint(len(objectEntryTypes))))
+		slice3 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(objectEntryTypes):len(objectEntryTypes)]
+		for i3, _ := range objectEntryTypes {
+			slice3[i3] = C.VkObjectEntryTypeNVX(objectEntryTypes[i3])
+		}
+	}
+	{
+		c.pObjectIndices = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
+		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
+		for i3, _ := range objectIndices {
+			slice3[i3] = C.uint32_t(objectIndices[i3])
+		}
+	}
+	c._ret = C.vkUnregisterObjectsNVX(c.device, c.objectTable, c.objectCount, c.pObjectEntryTypes, c.pObjectIndices)
+	_ret = Result(c._ret)
+	return
+}
+
+type DeviceGeneratedCommandsFeaturesNVX struct {
+	Type                       StructureType
+	Next                       unsafe.Pointer
+	ComputeBindingPointSupport Bool32
+}
+
+func (g *DeviceGeneratedCommandsFeaturesNVX) toC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkBool32 C.uint32_t
+		temp_in_VkBool32 = C.uint32_t((uint32)(g.ComputeBindingPointSupport))
+		c.computeBindingPointSupport = C.VkBool32(temp_in_VkBool32)
+	}
+}
+func (g *DeviceGeneratedCommandsFeaturesNVX) fromC(c *C.VkDeviceGeneratedCommandsFeaturesNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c.computeBindingPointSupport))
+		g.ComputeBindingPointSupport = Bool32(temp_in_VkBool32)
+	}
+}
+
+type DeviceGeneratedCommandsLimitsNVX struct {
+	Type                                  StructureType
+	Next                                  unsafe.Pointer
+	MaxIndirectCommandsLayoutTokenCount   uint32
+	MaxObjectEntryCounts                  uint32
+	MinSequenceCountBufferOffsetAlignment uint32
+	MinSequenceIndexBufferOffsetAlignment uint32
+	MinCommandsTokenBufferOffsetAlignment uint32
+}
+
+func (g *DeviceGeneratedCommandsLimitsNVX) toC(c *C.VkDeviceGeneratedCommandsLimitsNVX) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.maxIndirectCommandsLayoutTokenCount = C.uint32_t(g.MaxIndirectCommandsLayoutTokenCount)
+	c.maxObjectEntryCounts = C.uint32_t(g.MaxObjectEntryCounts)
+	c.minSequenceCountBufferOffsetAlignment = C.uint32_t(g.MinSequenceCountBufferOffsetAlignment)
+	c.minSequenceIndexBufferOffsetAlignment = C.uint32_t(g.MinSequenceIndexBufferOffsetAlignment)
+	c.minCommandsTokenBufferOffsetAlignment = C.uint32_t(g.MinCommandsTokenBufferOffsetAlignment)
+}
+func (g *DeviceGeneratedCommandsLimitsNVX) fromC(c *C.VkDeviceGeneratedCommandsLimitsNVX) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MaxIndirectCommandsLayoutTokenCount = uint32(c.maxIndirectCommandsLayoutTokenCount)
+	g.MaxObjectEntryCounts = uint32(c.maxObjectEntryCounts)
+	g.MinSequenceCountBufferOffsetAlignment = uint32(c.minSequenceCountBufferOffsetAlignment)
+	g.MinSequenceIndexBufferOffsetAlignment = uint32(c.minSequenceIndexBufferOffsetAlignment)
+	g.MinCommandsTokenBufferOffsetAlignment = uint32(c.minCommandsTokenBufferOffsetAlignment)
+}
+func GetPhysicalDeviceGeneratedCommandsPropertiesNVX(physicalDevice PhysicalDevice, features []DeviceGeneratedCommandsFeaturesNVX, limits []DeviceGeneratedCommandsLimitsNVX) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		pFeatures      *C.VkDeviceGeneratedCommandsFeaturesNVX
+		pLimits        *C.VkDeviceGeneratedCommandsLimitsNVX
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	{
+		c.pFeatures = (*C.VkDeviceGeneratedCommandsFeaturesNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsFeaturesNVX * uint(len(features))))
+		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsFeaturesNVX)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
+		for i3, _ := range features {
+			features[i3].toC(&slice3[i3])
+		}
+	}
+	{
+		c.pLimits = (*C.VkDeviceGeneratedCommandsLimitsNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsLimitsNVX * uint(len(limits))))
+		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsLimitsNVX)(unsafe.Pointer(c.pLimits))[:len(limits):len(limits)]
+		for i3, _ := range limits {
+			limits[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(c.physicalDevice, c.pFeatures, c.pLimits)
+}
+
+type ViewportWScalingNV struct {
+	Xcoeff float32
+	Ycoeff float32
+}
+
+func (g *ViewportWScalingNV) toC(c *C.VkViewportWScalingNV) {
+	c.xcoeff = C.float(g.Xcoeff)
+	c.ycoeff = C.float(g.Ycoeff)
+}
+func (g *ViewportWScalingNV) fromC(c *C.VkViewportWScalingNV) {
+	g.Xcoeff = float32(c.xcoeff)
+	g.Ycoeff = float32(c.ycoeff)
+}
+func CmdSetViewportWScalingNV(commandBuffer CommandBuffer, firstViewport uint32, viewportWScalings []ViewportWScalingNV) {
+	var c struct {
+		commandBuffer      C.VkCommandBuffer
+		firstViewport      C.uint32_t
+		viewportCount      C.uint32_t
+		pViewportWScalings *C.VkViewportWScalingNV
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.firstViewport = C.uint32_t(firstViewport)
+	c.viewportCount = C.uint32_t(len(viewportWScalings))
+	{
+		c.pViewportWScalings = (*C.VkViewportWScalingNV)(_sa.alloc(C.sizeof_VkViewportWScalingNV * uint(len(viewportWScalings))))
+		slice3 := (*[1 << 31]C.VkViewportWScalingNV)(unsafe.Pointer(c.pViewportWScalings))[:len(viewportWScalings):len(viewportWScalings)]
+		for i3, _ := range viewportWScalings {
+			viewportWScalings[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdSetViewportWScalingNV(c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewportWScalings)
+}
+func ReleaseDisplayEXT(physicalDevice PhysicalDevice, display DisplayKHR) (_ret Result) {
+	var c struct {
+		physicalDevice C.VkPhysicalDevice
+		display        C.VkDisplayKHR
+		_ret           C.VkResult
+	}
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.display = C.VkDisplayKHR(display)
+	c._ret = C.vkReleaseDisplayEXT(c.physicalDevice, c.display)
+	_ret = Result(c._ret)
+	return
+}
+
+type SurfaceCounterFlagsEXT Flags
+type SurfaceCapabilities2EXT struct {
+	Type                     StructureType
+	Next                     unsafe.Pointer
+	MinImageCount            uint32
+	MaxImageCount            uint32
+	CurrentExtent            Extent2D
+	MinImageExtent           Extent2D
+	MaxImageExtent           Extent2D
+	MaxImageArrayLayers      uint32
+	SupportedTransforms      SurfaceTransformFlagsKHR
+	CurrentTransform         SurfaceTransformFlagBitsKHR
+	SupportedCompositeAlpha  CompositeAlphaFlagsKHR
+	SupportedUsageFlags      ImageUsageFlags
+	SupportedSurfaceCounters SurfaceCounterFlagsEXT
+}
+
+func (g *SurfaceCapabilities2EXT) toC(c *C.VkSurfaceCapabilities2EXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.minImageCount = C.uint32_t(g.MinImageCount)
+	c.maxImageCount = C.uint32_t(g.MaxImageCount)
+	g.CurrentExtent.toC(&c.currentExtent)
+	g.MinImageExtent.toC(&c.minImageExtent)
+	g.MaxImageExtent.toC(&c.maxImageExtent)
+	c.maxImageArrayLayers = C.uint32_t(g.MaxImageArrayLayers)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	c.currentTransform = C.VkSurfaceTransformFlagBitsKHR(g.CurrentTransform)
+	{
+		var temp_in_VkCompositeAlphaFlagsKHR C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
+			temp_in_VkCompositeAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedCompositeAlpha = C.VkCompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
+	}
+	{
+		var temp_in_VkImageUsageFlags C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
+			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedUsageFlags = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	{
+		var temp_in_VkSurfaceCounterFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedSurfaceCounters)))
+			temp_in_VkSurfaceCounterFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.supportedSurfaceCounters = C.VkSurfaceCounterFlagsEXT(temp_in_VkSurfaceCounterFlagsEXT)
+	}
+}
+func (g *SurfaceCapabilities2EXT) fromC(c *C.VkSurfaceCapabilities2EXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MinImageCount = uint32(c.minImageCount)
+	g.MaxImageCount = uint32(c.maxImageCount)
+	g.CurrentExtent.fromC(&c.currentExtent)
+	g.MinImageExtent.fromC(&c.minImageExtent)
+	g.MaxImageExtent.fromC(&c.maxImageExtent)
+	g.MaxImageArrayLayers = uint32(c.maxImageArrayLayers)
+	{
+		var temp_in_VkSurfaceTransformFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
+			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
+	}
+	g.CurrentTransform = SurfaceTransformFlagBitsKHR(c.currentTransform)
+	{
+		var temp_in_VkCompositeAlphaFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
+			temp_in_VkCompositeAlphaFlagsKHR = Flags(temp_in_VkFlags)
+		}
+		g.SupportedCompositeAlpha = CompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
+	}
+	{
+		var temp_in_VkImageUsageFlags Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
+			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
+		}
+		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
+	}
+	{
+		var temp_in_VkSurfaceCounterFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedSurfaceCounters)))
+			temp_in_VkSurfaceCounterFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.SupportedSurfaceCounters = SurfaceCounterFlagsEXT(temp_in_VkSurfaceCounterFlagsEXT)
+	}
+}
+func GetPhysicalDeviceSurfaceCapabilities2EXT(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilities2EXT) (_ret Result) {
+	var c struct {
+		physicalDevice       C.VkPhysicalDevice
+		surface              C.VkSurfaceKHR
+		pSurfaceCapabilities *C.VkSurfaceCapabilities2EXT
+		_ret                 C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.surface = C.VkSurfaceKHR(surface)
+	{
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2EXT)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2EXT * uint(len(surfaceCapabilities))))
+		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2EXT)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
+		for i3, _ := range surfaceCapabilities {
+			surfaceCapabilities[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPhysicalDeviceSurfaceCapabilities2EXT(c.physicalDevice, c.surface, c.pSurfaceCapabilities)
+	_ret = Result(c._ret)
+	return
+}
+
+type DisplayPowerStateEXT int
+
+const (
+	DISPLAY_POWER_STATE_OFF_EXT         DisplayPowerStateEXT = 0
+	DISPLAY_POWER_STATE_SUSPEND_EXT     DisplayPowerStateEXT = 1
+	DISPLAY_POWER_STATE_ON_EXT          DisplayPowerStateEXT = 2
+	DISPLAY_POWER_STATE_BEGIN_RANGE_EXT DisplayPowerStateEXT = DISPLAY_POWER_STATE_OFF_EXT
+	DISPLAY_POWER_STATE_END_RANGE_EXT   DisplayPowerStateEXT = DISPLAY_POWER_STATE_ON_EXT
+	DISPLAY_POWER_STATE_RANGE_SIZE_EXT  DisplayPowerStateEXT = (DISPLAY_POWER_STATE_ON_EXT - DISPLAY_POWER_STATE_OFF_EXT + 1)
+	DISPLAY_POWER_STATE_MAX_ENUM_EXT    DisplayPowerStateEXT = 2147483647
+)
+
+type DisplayPowerInfoEXT struct {
+	Type       StructureType
+	Next       unsafe.Pointer
+	PowerState DisplayPowerStateEXT
+}
+
+func (g *DisplayPowerInfoEXT) toC(c *C.VkDisplayPowerInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.powerState = C.VkDisplayPowerStateEXT(g.PowerState)
+}
+func (g *DisplayPowerInfoEXT) fromC(c *C.VkDisplayPowerInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.PowerState = DisplayPowerStateEXT(c.powerState)
+}
+func DisplayPowerControlEXT(device Device, display DisplayKHR, displayPowerInfo *DisplayPowerInfoEXT) (_ret Result) {
+	var c struct {
+		device            C.VkDevice
+		display           C.VkDisplayKHR
+		pDisplayPowerInfo *C.VkDisplayPowerInfoEXT
+		_ret              C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.display = C.VkDisplayKHR(display)
+	{
+		c.pDisplayPowerInfo = (*C.VkDisplayPowerInfoEXT)(_sa.alloc(C.sizeof_VkDisplayPowerInfoEXT))
+		displayPowerInfo.toC(c.pDisplayPowerInfo)
+	}
+	c._ret = C.vkDisplayPowerControlEXT(c.device, c.display, c.pDisplayPowerInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DeviceEventTypeEXT int
+
+const (
+	DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT DeviceEventTypeEXT = 0
+	DEVICE_EVENT_TYPE_BEGIN_RANGE_EXT     DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
+	DEVICE_EVENT_TYPE_END_RANGE_EXT       DeviceEventTypeEXT = DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT
+	DEVICE_EVENT_TYPE_RANGE_SIZE_EXT      DeviceEventTypeEXT = (DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT - DEVICE_EVENT_TYPE_DISPLAY_HOTPLUG_EXT + 1)
+	DEVICE_EVENT_TYPE_MAX_ENUM_EXT        DeviceEventTypeEXT = 2147483647
+)
+
+type DeviceEventInfoEXT struct {
+	Type        StructureType
+	Next        unsafe.Pointer
+	DeviceEvent DeviceEventTypeEXT
+}
+
+func (g *DeviceEventInfoEXT) toC(c *C.VkDeviceEventInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.deviceEvent = C.VkDeviceEventTypeEXT(g.DeviceEvent)
+}
+func (g *DeviceEventInfoEXT) fromC(c *C.VkDeviceEventInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DeviceEvent = DeviceEventTypeEXT(c.deviceEvent)
+}
+func RegisterDeviceEventEXT(device Device, deviceEventInfo *DeviceEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
+	var c struct {
+		device           C.VkDevice
+		pDeviceEventInfo *C.VkDeviceEventInfoEXT
+		pAllocator       *C.VkAllocationCallbacks
+		pFence           *C.VkFence
+		_ret             C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pDeviceEventInfo = (*C.VkDeviceEventInfoEXT)(_sa.alloc(C.sizeof_VkDeviceEventInfoEXT))
+		deviceEventInfo.toC(c.pDeviceEventInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pFence = (*C.VkFence)(_sa.alloc(C.sizeof_VkFence))
+		*c.pFence = C.VkFence(*fence)
+	}
+	c._ret = C.vkRegisterDeviceEventEXT(c.device, c.pDeviceEventInfo, c.pAllocator, c.pFence)
+	_ret = Result(c._ret)
+	*fence = Fence(*c.pFence)
+	return
+}
+
+type DisplayEventTypeEXT int
+
+const (
+	DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT DisplayEventTypeEXT = 0
+	DISPLAY_EVENT_TYPE_BEGIN_RANGE_EXT     DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
+	DISPLAY_EVENT_TYPE_END_RANGE_EXT       DisplayEventTypeEXT = DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT
+	DISPLAY_EVENT_TYPE_RANGE_SIZE_EXT      DisplayEventTypeEXT = (DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT - DISPLAY_EVENT_TYPE_FIRST_PIXEL_OUT_EXT + 1)
+	DISPLAY_EVENT_TYPE_MAX_ENUM_EXT        DisplayEventTypeEXT = 2147483647
+)
+
+type DisplayEventInfoEXT struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	DisplayEvent DisplayEventTypeEXT
+}
+
+func (g *DisplayEventInfoEXT) toC(c *C.VkDisplayEventInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.displayEvent = C.VkDisplayEventTypeEXT(g.DisplayEvent)
+}
+func (g *DisplayEventInfoEXT) fromC(c *C.VkDisplayEventInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DisplayEvent = DisplayEventTypeEXT(c.displayEvent)
+}
+func RegisterDisplayEventEXT(device Device, display DisplayKHR, displayEventInfo *DisplayEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
+	var c struct {
+		device            C.VkDevice
+		display           C.VkDisplayKHR
+		pDisplayEventInfo *C.VkDisplayEventInfoEXT
+		pAllocator        *C.VkAllocationCallbacks
+		pFence            *C.VkFence
+		_ret              C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.display = C.VkDisplayKHR(display)
+	{
+		c.pDisplayEventInfo = (*C.VkDisplayEventInfoEXT)(_sa.alloc(C.sizeof_VkDisplayEventInfoEXT))
+		displayEventInfo.toC(c.pDisplayEventInfo)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pFence = (*C.VkFence)(_sa.alloc(C.sizeof_VkFence))
+		*c.pFence = C.VkFence(*fence)
+	}
+	c._ret = C.vkRegisterDisplayEventEXT(c.device, c.display, c.pDisplayEventInfo, c.pAllocator, c.pFence)
+	_ret = Result(c._ret)
+	*fence = Fence(*c.pFence)
+	return
+}
+
+type SurfaceCounterFlagBitsEXT int
+
+const (
+	SURFACE_COUNTER_VBLANK_EXT             SurfaceCounterFlagBitsEXT = 1
+	SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT SurfaceCounterFlagBitsEXT = 2147483647
+)
+
+func GetSwapchainCounterEXT(device Device, swapchain SwapchainKHR, counter SurfaceCounterFlagBitsEXT, counterValue *uint64) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		swapchain     C.VkSwapchainKHR
+		counter       C.VkSurfaceCounterFlagBitsEXT
+		pCounterValue *C.uint64_t
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	c.counter = C.VkSurfaceCounterFlagBitsEXT(counter)
+	{
+		c.pCounterValue = (*C.uint64_t)(_sa.alloc(C.sizeof_uint64_t))
+		*c.pCounterValue = C.uint64_t(*counterValue)
+	}
+	c._ret = C.vkGetSwapchainCounterEXT(c.device, c.swapchain, c.counter, c.pCounterValue)
+	_ret = Result(c._ret)
+	*counterValue = uint64(*c.pCounterValue)
+	return
+}
+
+type RefreshCycleDurationGOOGLE struct{ RefreshDuration uint64 }
+
+func (g *RefreshCycleDurationGOOGLE) toC(c *C.VkRefreshCycleDurationGOOGLE) {
+	c.refreshDuration = C.uint64_t(g.RefreshDuration)
+}
+func (g *RefreshCycleDurationGOOGLE) fromC(c *C.VkRefreshCycleDurationGOOGLE) {
+	g.RefreshDuration = uint64(c.refreshDuration)
+}
+func GetRefreshCycleDurationGOOGLE(device Device, swapchain SwapchainKHR, displayTimingProperties []RefreshCycleDurationGOOGLE) (_ret Result) {
+	var c struct {
+		device                   C.VkDevice
+		swapchain                C.VkSwapchainKHR
+		pDisplayTimingProperties *C.VkRefreshCycleDurationGOOGLE
+		_ret                     C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	{
+		c.pDisplayTimingProperties = (*C.VkRefreshCycleDurationGOOGLE)(_sa.alloc(C.sizeof_VkRefreshCycleDurationGOOGLE * uint(len(displayTimingProperties))))
+		slice3 := (*[1 << 31]C.VkRefreshCycleDurationGOOGLE)(unsafe.Pointer(c.pDisplayTimingProperties))[:len(displayTimingProperties):len(displayTimingProperties)]
+		for i3, _ := range displayTimingProperties {
+			displayTimingProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetRefreshCycleDurationGOOGLE(c.device, c.swapchain, c.pDisplayTimingProperties)
+	_ret = Result(c._ret)
+	return
+}
+
+type PastPresentationTimingGOOGLE struct {
+	PresentID           uint32
+	DesiredPresentTime  uint64
+	ActualPresentTime   uint64
+	EarliestPresentTime uint64
+	PresentMargin       uint64
+}
+
+func (g *PastPresentationTimingGOOGLE) toC(c *C.VkPastPresentationTimingGOOGLE) {
+	c.presentID = C.uint32_t(g.PresentID)
+	c.desiredPresentTime = C.uint64_t(g.DesiredPresentTime)
+	c.actualPresentTime = C.uint64_t(g.ActualPresentTime)
+	c.earliestPresentTime = C.uint64_t(g.EarliestPresentTime)
+	c.presentMargin = C.uint64_t(g.PresentMargin)
+}
+func (g *PastPresentationTimingGOOGLE) fromC(c *C.VkPastPresentationTimingGOOGLE) {
+	g.PresentID = uint32(c.presentID)
+	g.DesiredPresentTime = uint64(c.desiredPresentTime)
+	g.ActualPresentTime = uint64(c.actualPresentTime)
+	g.EarliestPresentTime = uint64(c.earliestPresentTime)
+	g.PresentMargin = uint64(c.presentMargin)
+}
+func GetPastPresentationTimingGOOGLE(device Device, swapchain SwapchainKHR, presentationTimingCount *uint32, presentationTimings []PastPresentationTimingGOOGLE) (_ret Result) {
+	var c struct {
+		device                   C.VkDevice
+		swapchain                C.VkSwapchainKHR
+		pPresentationTimingCount *C.uint32_t
+		pPresentationTimings     *C.VkPastPresentationTimingGOOGLE
+		_ret                     C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchain = C.VkSwapchainKHR(swapchain)
+	{
+		c.pPresentationTimingCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pPresentationTimingCount = C.uint32_t(*presentationTimingCount)
+	}
+	{
+		c.pPresentationTimings = (*C.VkPastPresentationTimingGOOGLE)(_sa.alloc(C.sizeof_VkPastPresentationTimingGOOGLE * uint(len(presentationTimings))))
+		slice3 := (*[1 << 31]C.VkPastPresentationTimingGOOGLE)(unsafe.Pointer(c.pPresentationTimings))[:len(presentationTimings):len(presentationTimings)]
+		for i3, _ := range presentationTimings {
+			presentationTimings[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetPastPresentationTimingGOOGLE(c.device, c.swapchain, c.pPresentationTimingCount, c.pPresentationTimings)
+	_ret = Result(c._ret)
+	*presentationTimingCount = uint32(*c.pPresentationTimingCount)
+	return
+}
+func CmdSetDiscardRectangleEXT(commandBuffer CommandBuffer, firstDiscardRectangle uint32, discardRectangles []Rect2D) {
+	var c struct {
+		commandBuffer         C.VkCommandBuffer
+		firstDiscardRectangle C.uint32_t
+		discardRectangleCount C.uint32_t
+		pDiscardRectangles    *C.VkRect2D
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.firstDiscardRectangle = C.uint32_t(firstDiscardRectangle)
+	c.discardRectangleCount = C.uint32_t(len(discardRectangles))
+	{
+		c.pDiscardRectangles = (*C.VkRect2D)(_sa.alloc(C.sizeof_VkRect2D * uint(len(discardRectangles))))
+		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pDiscardRectangles))[:len(discardRectangles):len(discardRectangles)]
+		for i3, _ := range discardRectangles {
+			discardRectangles[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkCmdSetDiscardRectangleEXT(c.commandBuffer, c.firstDiscardRectangle, c.discardRectangleCount, c.pDiscardRectangles)
+}
+
+type XYColorEXT struct {
+	X float32
+	Y float32
+}
+
+func (g *XYColorEXT) toC(c *C.VkXYColorEXT) {
+	c.x = C.float(g.X)
+	c.y = C.float(g.Y)
+}
+func (g *XYColorEXT) fromC(c *C.VkXYColorEXT) {
+	g.X = float32(c.x)
+	g.Y = float32(c.y)
+}
+
+type HdrMetadataEXT struct {
+	Type                      StructureType
+	Next                      unsafe.Pointer
+	DisplayPrimaryRed         XYColorEXT
+	DisplayPrimaryGreen       XYColorEXT
+	DisplayPrimaryBlue        XYColorEXT
+	WhitePoint                XYColorEXT
+	MaxLuminance              float32
+	MinLuminance              float32
+	MaxContentLightLevel      float32
+	MaxFrameAverageLightLevel float32
+}
+
+func (g *HdrMetadataEXT) toC(c *C.VkHdrMetadataEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.DisplayPrimaryRed.toC(&c.displayPrimaryRed)
+	g.DisplayPrimaryGreen.toC(&c.displayPrimaryGreen)
+	g.DisplayPrimaryBlue.toC(&c.displayPrimaryBlue)
+	g.WhitePoint.toC(&c.whitePoint)
+	c.maxLuminance = C.float(g.MaxLuminance)
+	c.minLuminance = C.float(g.MinLuminance)
+	c.maxContentLightLevel = C.float(g.MaxContentLightLevel)
+	c.maxFrameAverageLightLevel = C.float(g.MaxFrameAverageLightLevel)
+}
+func (g *HdrMetadataEXT) fromC(c *C.VkHdrMetadataEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.DisplayPrimaryRed.fromC(&c.displayPrimaryRed)
+	g.DisplayPrimaryGreen.fromC(&c.displayPrimaryGreen)
+	g.DisplayPrimaryBlue.fromC(&c.displayPrimaryBlue)
+	g.WhitePoint.fromC(&c.whitePoint)
+	g.MaxLuminance = float32(c.maxLuminance)
+	g.MinLuminance = float32(c.minLuminance)
+	g.MaxContentLightLevel = float32(c.maxContentLightLevel)
+	g.MaxFrameAverageLightLevel = float32(c.maxFrameAverageLightLevel)
+}
+func SetHdrMetadataEXT(device Device, swapchains []SwapchainKHR, metadata []HdrMetadataEXT) {
+	var c struct {
+		device         C.VkDevice
+		swapchainCount C.uint32_t
+		pSwapchains    *C.VkSwapchainKHR
+		pMetadata      *C.VkHdrMetadataEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.swapchainCount = C.uint32_t(len(swapchains))
+	{
+		c.pSwapchains = (*C.VkSwapchainKHR)(_sa.alloc(C.sizeof_VkSwapchainKHR * uint(len(swapchains))))
+		slice3 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(swapchains):len(swapchains)]
+		for i3, _ := range swapchains {
+			slice3[i3] = C.VkSwapchainKHR(swapchains[i3])
+		}
+	}
+	{
+		c.pMetadata = (*C.VkHdrMetadataEXT)(_sa.alloc(C.sizeof_VkHdrMetadataEXT * uint(len(metadata))))
+		slice3 := (*[1 << 31]C.VkHdrMetadataEXT)(unsafe.Pointer(c.pMetadata))[:len(metadata):len(metadata)]
+		for i3, _ := range metadata {
+			metadata[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkSetHdrMetadataEXT(c.device, c.swapchainCount, c.pSwapchains, c.pMetadata)
+}
+
+type ObjectType int
+
+const (
+	OBJECT_TYPE_UNKNOWN                        ObjectType = 0
+	OBJECT_TYPE_INSTANCE                       ObjectType = 1
+	OBJECT_TYPE_PHYSICAL_DEVICE                ObjectType = 2
+	OBJECT_TYPE_DEVICE                         ObjectType = 3
+	OBJECT_TYPE_QUEUE                          ObjectType = 4
+	OBJECT_TYPE_SEMAPHORE                      ObjectType = 5
+	OBJECT_TYPE_COMMAND_BUFFER                 ObjectType = 6
+	OBJECT_TYPE_FENCE                          ObjectType = 7
+	OBJECT_TYPE_DEVICE_MEMORY                  ObjectType = 8
+	OBJECT_TYPE_BUFFER                         ObjectType = 9
+	OBJECT_TYPE_IMAGE                          ObjectType = 10
+	OBJECT_TYPE_EVENT                          ObjectType = 11
+	OBJECT_TYPE_QUERY_POOL                     ObjectType = 12
+	OBJECT_TYPE_BUFFER_VIEW                    ObjectType = 13
+	OBJECT_TYPE_IMAGE_VIEW                     ObjectType = 14
+	OBJECT_TYPE_SHADER_MODULE                  ObjectType = 15
+	OBJECT_TYPE_PIPELINE_CACHE                 ObjectType = 16
+	OBJECT_TYPE_PIPELINE_LAYOUT                ObjectType = 17
+	OBJECT_TYPE_RENDER_PASS                    ObjectType = 18
+	OBJECT_TYPE_PIPELINE                       ObjectType = 19
+	OBJECT_TYPE_DESCRIPTOR_SET_LAYOUT          ObjectType = 20
+	OBJECT_TYPE_SAMPLER                        ObjectType = 21
+	OBJECT_TYPE_DESCRIPTOR_POOL                ObjectType = 22
+	OBJECT_TYPE_DESCRIPTOR_SET                 ObjectType = 23
+	OBJECT_TYPE_FRAMEBUFFER                    ObjectType = 24
+	OBJECT_TYPE_COMMAND_POOL                   ObjectType = 25
+	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION       ObjectType = 1000156000
+	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE     ObjectType = 1000085000
+	OBJECT_TYPE_SURFACE_KHR                    ObjectType = 1000000000
+	OBJECT_TYPE_SWAPCHAIN_KHR                  ObjectType = 1000001000
+	OBJECT_TYPE_DISPLAY_KHR                    ObjectType = 1000002000
+	OBJECT_TYPE_DISPLAY_MODE_KHR               ObjectType = 1000002001
+	OBJECT_TYPE_DEBUG_REPORT_CALLBACK_EXT      ObjectType = 1000011000
+	OBJECT_TYPE_OBJECT_TABLE_NVX               ObjectType = 1000086000
+	OBJECT_TYPE_INDIRECT_COMMANDS_LAYOUT_NVX   ObjectType = 1000086001
+	OBJECT_TYPE_DEBUG_UTILS_MESSENGER_EXT      ObjectType = 1000128000
+	OBJECT_TYPE_VALIDATION_CACHE_EXT           ObjectType = 1000160000
+	OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE_KHR ObjectType = OBJECT_TYPE_DESCRIPTOR_UPDATE_TEMPLATE
+	OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION_KHR   ObjectType = OBJECT_TYPE_SAMPLER_YCBCR_CONVERSION
+	OBJECT_TYPE_BEGIN_RANGE                    ObjectType = OBJECT_TYPE_UNKNOWN
+	OBJECT_TYPE_END_RANGE                      ObjectType = OBJECT_TYPE_COMMAND_POOL
+	OBJECT_TYPE_RANGE_SIZE                     ObjectType = (OBJECT_TYPE_COMMAND_POOL - OBJECT_TYPE_UNKNOWN + 1)
+	OBJECT_TYPE_MAX_ENUM                       ObjectType = 2147483647
+)
+
+type DebugUtilsObjectNameInfoEXT struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	ObjectType   ObjectType
+	ObjectHandle uint64
+	ObjectName   string
+}
+
+func (g *DebugUtilsObjectNameInfoEXT) toC(c *C.VkDebugUtilsObjectNameInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectType = C.VkObjectType(g.ObjectType)
+	c.objectHandle = C.uint64_t(g.ObjectHandle)
+	c.pObjectName = toCString(g.ObjectName, _sa)
+}
+func (g *DebugUtilsObjectNameInfoEXT) fromC(c *C.VkDebugUtilsObjectNameInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectType = ObjectType(c.objectType)
+	g.ObjectHandle = uint64(c.objectHandle)
+	g.ObjectName = toGoString(c.pObjectName)
+}
+func SetDebugUtilsObjectNameEXT(device Device, nameInfo *DebugUtilsObjectNameInfoEXT) (_ret Result) {
+	var c struct {
+		device    C.VkDevice
+		pNameInfo *C.VkDebugUtilsObjectNameInfoEXT
+		_ret      C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pNameInfo = (*C.VkDebugUtilsObjectNameInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsObjectNameInfoEXT))
+		nameInfo.toC(c.pNameInfo, _sa)
+	}
+	c._ret = C.vkSetDebugUtilsObjectNameEXT(c.device, c.pNameInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DebugUtilsObjectTagInfoEXT struct {
+	Type         StructureType
+	Next         unsafe.Pointer
+	ObjectType   ObjectType
+	ObjectHandle uint64
+	TagName      uint64
+	TagSize      uint
+	Tag          unsafe.Pointer
+}
+
+func (g *DebugUtilsObjectTagInfoEXT) toC(c *C.VkDebugUtilsObjectTagInfoEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.objectType = C.VkObjectType(g.ObjectType)
+	c.objectHandle = C.uint64_t(g.ObjectHandle)
+	c.tagName = C.uint64_t(g.TagName)
+	c.tagSize = C.size_t(g.TagSize)
+	c.pTag = g.Tag
+}
+func (g *DebugUtilsObjectTagInfoEXT) fromC(c *C.VkDebugUtilsObjectTagInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.ObjectType = ObjectType(c.objectType)
+	g.ObjectHandle = uint64(c.objectHandle)
+	g.TagName = uint64(c.tagName)
+	g.TagSize = uint(c.tagSize)
+	g.Tag = c.pTag
+}
+func SetDebugUtilsObjectTagEXT(device Device, tagInfo *DebugUtilsObjectTagInfoEXT) (_ret Result) {
+	var c struct {
+		device   C.VkDevice
+		pTagInfo *C.VkDebugUtilsObjectTagInfoEXT
+		_ret     C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pTagInfo = (*C.VkDebugUtilsObjectTagInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsObjectTagInfoEXT))
+		tagInfo.toC(c.pTagInfo)
+	}
+	c._ret = C.vkSetDebugUtilsObjectTagEXT(c.device, c.pTagInfo)
+	_ret = Result(c._ret)
+	return
+}
+
+type DebugUtilsLabelEXT struct {
+	Type      StructureType
+	Next      unsafe.Pointer
+	LabelName string
+	Color     [4]float32
+}
+
+func (g *DebugUtilsLabelEXT) toC(c *C.VkDebugUtilsLabelEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.pLabelName = toCString(g.LabelName, _sa)
+	for i, _ := range g.Color {
+		c.color[i] = C.float(g.Color[i])
+	}
+}
+func (g *DebugUtilsLabelEXT) fromC(c *C.VkDebugUtilsLabelEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.LabelName = toGoString(c.pLabelName)
+	for i, _ := range g.Color {
+		g.Color[i] = float32(c.color[i])
+	}
+}
+func QueueBeginDebugUtilsLabelEXT(queue Queue, labelInfo *DebugUtilsLabelEXT) {
+	var c struct {
+		queue      C.VkQueue
+		pLabelInfo *C.VkDebugUtilsLabelEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.queue = C.VkQueue(queue)
+	{
+		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
+		labelInfo.toC(c.pLabelInfo, _sa)
+	}
+	C.vkQueueBeginDebugUtilsLabelEXT(c.queue, c.pLabelInfo)
+}
+func QueueEndDebugUtilsLabelEXT(queue Queue) {
+	var c struct{ queue C.VkQueue }
+	c.queue = C.VkQueue(queue)
+	C.vkQueueEndDebugUtilsLabelEXT(c.queue)
+}
+func QueueInsertDebugUtilsLabelEXT(queue Queue, labelInfo *DebugUtilsLabelEXT) {
+	var c struct {
+		queue      C.VkQueue
+		pLabelInfo *C.VkDebugUtilsLabelEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.queue = C.VkQueue(queue)
+	{
+		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
+		labelInfo.toC(c.pLabelInfo, _sa)
+	}
+	C.vkQueueInsertDebugUtilsLabelEXT(c.queue, c.pLabelInfo)
+}
+func CmdBeginDebugUtilsLabelEXT(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pLabelInfo    *C.VkDebugUtilsLabelEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
+		labelInfo.toC(c.pLabelInfo, _sa)
+	}
+	C.vkCmdBeginDebugUtilsLabelEXT(c.commandBuffer, c.pLabelInfo)
+}
+func CmdEndDebugUtilsLabelEXT(commandBuffer CommandBuffer) {
+	var c struct{ commandBuffer C.VkCommandBuffer }
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	C.vkCmdEndDebugUtilsLabelEXT(c.commandBuffer)
+}
+func CmdInsertDebugUtilsLabelEXT(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pLabelInfo    *C.VkDebugUtilsLabelEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
+		labelInfo.toC(c.pLabelInfo, _sa)
+	}
+	C.vkCmdInsertDebugUtilsLabelEXT(c.commandBuffer, c.pLabelInfo)
+}
+
+type DebugUtilsMessengerCreateFlagsEXT Flags
+type DebugUtilsMessageSeverityFlagsEXT Flags
+type DebugUtilsMessageTypeFlagsEXT Flags
+type PFN_vkDebugUtilsMessengerCallbackEXT struct {
+	Raw C.PFN_vkDebugUtilsMessengerCallbackEXT
+}
+type DebugUtilsMessageSeverityFlagBitsEXT int
+
+const (
+	DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT        DebugUtilsMessageSeverityFlagBitsEXT = 1
+	DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT           DebugUtilsMessageSeverityFlagBitsEXT = 16
+	DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT        DebugUtilsMessageSeverityFlagBitsEXT = 256
+	DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT          DebugUtilsMessageSeverityFlagBitsEXT = 4096
+	DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT DebugUtilsMessageSeverityFlagBitsEXT = 2147483647
+)
+
+type DebugUtilsMessengerCallbackDataFlagsEXT Flags
+type DebugUtilsMessengerCallbackDataEXT struct {
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           DebugUtilsMessengerCallbackDataFlagsEXT
+	MessageIdName   string
+	MessageIdNumber int32
+	Message         string
+	QueueLabels     []DebugUtilsLabelEXT
+	CmdBufLabels    []DebugUtilsLabelEXT
+	Objects         []DebugUtilsObjectNameInfoEXT
+}
+
+func (g *DebugUtilsMessengerCallbackDataEXT) toC(c *C.VkDebugUtilsMessengerCallbackDataEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDebugUtilsMessengerCallbackDataFlagsEXT(temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT)
+	}
+	c.pMessageIdName = toCString(g.MessageIdName, _sa)
+	c.messageIdNumber = C.int32_t(g.MessageIdNumber)
+	c.pMessage = toCString(g.Message, _sa)
+	c.queueLabelCount = C.uint32_t(len(g.QueueLabels))
+	{
+		c.pQueueLabels = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT * uint(len(g.QueueLabels))))
+		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pQueueLabels))[:len(g.QueueLabels):len(g.QueueLabels)]
+		for i2, _ := range g.QueueLabels {
+			g.QueueLabels[i2].toC(&slice2[i2], _sa)
+		}
+	}
+	c.cmdBufLabelCount = C.uint32_t(len(g.CmdBufLabels))
+	{
+		c.pCmdBufLabels = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT * uint(len(g.CmdBufLabels))))
+		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pCmdBufLabels))[:len(g.CmdBufLabels):len(g.CmdBufLabels)]
+		for i2, _ := range g.CmdBufLabels {
+			g.CmdBufLabels[i2].toC(&slice2[i2], _sa)
+		}
+	}
+	c.objectCount = C.uint32_t(len(g.Objects))
+	{
+		c.pObjects = (*C.VkDebugUtilsObjectNameInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsObjectNameInfoEXT * uint(len(g.Objects))))
+		slice2 := (*[1 << 31]C.VkDebugUtilsObjectNameInfoEXT)(unsafe.Pointer(c.pObjects))[:len(g.Objects):len(g.Objects)]
+		for i2, _ := range g.Objects {
+			g.Objects[i2].toC(&slice2[i2], _sa)
+		}
+	}
+}
+func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCallbackDataEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DebugUtilsMessengerCallbackDataFlagsEXT(temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT)
+	}
+	g.MessageIdName = toGoString(c.pMessageIdName)
+	g.MessageIdNumber = int32(c.messageIdNumber)
+	g.Message = toGoString(c.pMessage)
+	g.QueueLabels = make([]DebugUtilsLabelEXT, int(c.queueLabelCount))
+	{
+		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pQueueLabels))[:len(g.QueueLabels):len(g.QueueLabels)]
+		for i2, _ := range g.QueueLabels {
+			g.QueueLabels[i2].fromC(&slice2[i2])
+		}
+	}
+	g.CmdBufLabels = make([]DebugUtilsLabelEXT, int(c.cmdBufLabelCount))
+	{
+		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pCmdBufLabels))[:len(g.CmdBufLabels):len(g.CmdBufLabels)]
+		for i2, _ := range g.CmdBufLabels {
+			g.CmdBufLabels[i2].fromC(&slice2[i2])
+		}
+	}
+	g.Objects = make([]DebugUtilsObjectNameInfoEXT, int(c.objectCount))
+	{
+		slice2 := (*[1 << 31]C.VkDebugUtilsObjectNameInfoEXT)(unsafe.Pointer(c.pObjects))[:len(g.Objects):len(g.Objects)]
+		for i2, _ := range g.Objects {
+			g.Objects[i2].fromC(&slice2[i2])
+		}
+	}
+}
+func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret Bool32) {
+	var c struct {
+		arg0 C.VkDebugUtilsMessageSeverityFlagBitsEXT
+		arg1 C.VkDebugUtilsMessageTypeFlagsEXT
+		arg2 *C.VkDebugUtilsMessengerCallbackDataEXT
+		arg3 unsafe.Pointer
+		_ret C.VkBool32
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.arg0 = C.VkDebugUtilsMessageSeverityFlagBitsEXT(arg0)
+	{
+		var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(arg1)))
+			temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.arg1 = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
+	}
+	{
+		c.arg2 = (*C.VkDebugUtilsMessengerCallbackDataEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT))
+		arg2.toC(c.arg2, _sa)
+	}
+	c.arg3 = arg3
+	c._ret = C.callPFN_vkDebugUtilsMessengerCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	{
+		var temp_in_VkBool32 uint32
+		temp_in_VkBool32 = uint32((C.uint32_t)(c._ret))
+		_ret = Bool32(temp_in_VkBool32)
+	}
+	return
+}
+
+type DebugUtilsMessengerCreateInfoEXT struct {
+	Type            StructureType
+	Next            unsafe.Pointer
+	Flags           DebugUtilsMessengerCreateFlagsEXT
+	MessageSeverity DebugUtilsMessageSeverityFlagsEXT
+	MessageType     DebugUtilsMessageTypeFlagsEXT
+	UserCallback    PFN_vkDebugUtilsMessengerCallbackEXT
+	UserData        []byte
+}
+
+func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkDebugUtilsMessengerCreateFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkDebugUtilsMessengerCreateFlagsEXT(temp_in_VkDebugUtilsMessengerCreateFlagsEXT)
+	}
+	{
+		var temp_in_VkDebugUtilsMessageSeverityFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.MessageSeverity)))
+			temp_in_VkDebugUtilsMessageSeverityFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.messageSeverity = C.VkDebugUtilsMessageSeverityFlagsEXT(temp_in_VkDebugUtilsMessageSeverityFlagsEXT)
+	}
+	{
+		var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.MessageType)))
+			temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.messageType = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
+	}
+	c.pfnUserCallback = g.UserCallback.Raw
+	{
+		c.pUserData = _sa.alloc(C.sizeof_void_pointer * uint(len(g.UserData)))
+		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
+		for i2, _ := range g.UserData {
+			slice2[i2] = g.UserData[i2]
+		}
+	}
+}
+func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreateInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkDebugUtilsMessengerCreateFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.Flags = DebugUtilsMessengerCreateFlagsEXT(temp_in_VkDebugUtilsMessengerCreateFlagsEXT)
+	}
+	{
+		var temp_in_VkDebugUtilsMessageSeverityFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.messageSeverity)))
+			temp_in_VkDebugUtilsMessageSeverityFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.MessageSeverity = DebugUtilsMessageSeverityFlagsEXT(temp_in_VkDebugUtilsMessageSeverityFlagsEXT)
+	}
+	{
+		var temp_in_VkDebugUtilsMessageTypeFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.messageType)))
+			temp_in_VkDebugUtilsMessageTypeFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.MessageType = DebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
+	}
+	g.UserCallback.Raw = c.pfnUserCallback
+	{
+		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
+		for i2, _ := range g.UserData {
+			g.UserData[i2] = slice2[i2]
+		}
+	}
+}
+
+type DebugUtilsMessengerEXT C.VkDebugUtilsMessengerEXT
+
+func CreateDebugUtilsMessengerEXT(instance Instance, createInfo *DebugUtilsMessengerCreateInfoEXT, allocator *AllocationCallbacks, messenger *DebugUtilsMessengerEXT) (_ret Result) {
+	var c struct {
+		instance    C.VkInstance
+		pCreateInfo *C.VkDebugUtilsMessengerCreateInfoEXT
+		pAllocator  *C.VkAllocationCallbacks
+		pMessenger  *C.VkDebugUtilsMessengerEXT
+		_ret        C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	{
+		c.pCreateInfo = (*C.VkDebugUtilsMessengerCreateInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerCreateInfoEXT))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pMessenger = (*C.VkDebugUtilsMessengerEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerEXT))
+		*c.pMessenger = C.VkDebugUtilsMessengerEXT(*messenger)
+	}
+	c._ret = C.vkCreateDebugUtilsMessengerEXT(c.instance, c.pCreateInfo, c.pAllocator, c.pMessenger)
+	_ret = Result(c._ret)
+	*messenger = DebugUtilsMessengerEXT(*c.pMessenger)
+	return
+}
+func DestroyDebugUtilsMessengerEXT(instance Instance, messenger DebugUtilsMessengerEXT, allocator *AllocationCallbacks) {
+	var c struct {
+		instance   C.VkInstance
+		messenger  C.VkDebugUtilsMessengerEXT
+		pAllocator *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	c.messenger = C.VkDebugUtilsMessengerEXT(messenger)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyDebugUtilsMessengerEXT(c.instance, c.messenger, c.pAllocator)
+}
+func SubmitDebugUtilsMessageEXT(instance Instance, messageSeverity DebugUtilsMessageSeverityFlagBitsEXT, messageTypes DebugUtilsMessageTypeFlagsEXT, callbackData []DebugUtilsMessengerCallbackDataEXT) {
+	var c struct {
+		instance        C.VkInstance
+		messageSeverity C.VkDebugUtilsMessageSeverityFlagBitsEXT
+		messageTypes    C.VkDebugUtilsMessageTypeFlagsEXT
+		pCallbackData   *C.VkDebugUtilsMessengerCallbackDataEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.instance = C.VkInstance(instance)
+	c.messageSeverity = C.VkDebugUtilsMessageSeverityFlagBitsEXT(messageSeverity)
+	{
+		var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(messageTypes)))
+			temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.messageTypes = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
+	}
+	{
+		c.pCallbackData = (*C.VkDebugUtilsMessengerCallbackDataEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT * uint(len(callbackData))))
+		slice3 := (*[1 << 31]C.VkDebugUtilsMessengerCallbackDataEXT)(unsafe.Pointer(c.pCallbackData))[:len(callbackData):len(callbackData)]
+		for i3, _ := range callbackData {
+			callbackData[i3].toC(&slice3[i3], _sa)
+		}
+	}
+	C.vkSubmitDebugUtilsMessageEXT(c.instance, c.messageSeverity, c.messageTypes, c.pCallbackData)
+}
+
+type SampleLocationEXT struct {
+	X float32
+	Y float32
+}
+
+func (g *SampleLocationEXT) toC(c *C.VkSampleLocationEXT) {
+	c.x = C.float(g.X)
+	c.y = C.float(g.Y)
+}
+func (g *SampleLocationEXT) fromC(c *C.VkSampleLocationEXT) {
+	g.X = float32(c.x)
+	g.Y = float32(c.y)
+}
+
+type SampleLocationsInfoEXT struct {
+	Type                    StructureType
+	Next                    unsafe.Pointer
+	SampleLocationsPerPixel SampleCountFlagBits
+	SampleLocationGridSize  Extent2D
+	SampleLocations         []SampleLocationEXT
+}
+
+func (g *SampleLocationsInfoEXT) toC(c *C.VkSampleLocationsInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.sampleLocationsPerPixel = C.VkSampleCountFlagBits(g.SampleLocationsPerPixel)
+	g.SampleLocationGridSize.toC(&c.sampleLocationGridSize)
+	c.sampleLocationsCount = C.uint32_t(len(g.SampleLocations))
+	{
+		c.pSampleLocations = (*C.VkSampleLocationEXT)(_sa.alloc(C.sizeof_VkSampleLocationEXT * uint(len(g.SampleLocations))))
+		slice2 := (*[1 << 31]C.VkSampleLocationEXT)(unsafe.Pointer(c.pSampleLocations))[:len(g.SampleLocations):len(g.SampleLocations)]
+		for i2, _ := range g.SampleLocations {
+			g.SampleLocations[i2].toC(&slice2[i2])
+		}
+	}
+}
+func (g *SampleLocationsInfoEXT) fromC(c *C.VkSampleLocationsInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.SampleLocationsPerPixel = SampleCountFlagBits(c.sampleLocationsPerPixel)
+	g.SampleLocationGridSize.fromC(&c.sampleLocationGridSize)
+	g.SampleLocations = make([]SampleLocationEXT, int(c.sampleLocationsCount))
+	{
+		slice2 := (*[1 << 31]C.VkSampleLocationEXT)(unsafe.Pointer(c.pSampleLocations))[:len(g.SampleLocations):len(g.SampleLocations)]
+		for i2, _ := range g.SampleLocations {
+			g.SampleLocations[i2].fromC(&slice2[i2])
+		}
+	}
+}
+func CmdSetSampleLocationsEXT(commandBuffer CommandBuffer, sampleLocationsInfo *SampleLocationsInfoEXT) {
+	var c struct {
+		commandBuffer        C.VkCommandBuffer
+		pSampleLocationsInfo *C.VkSampleLocationsInfoEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	{
+		c.pSampleLocationsInfo = (*C.VkSampleLocationsInfoEXT)(_sa.alloc(C.sizeof_VkSampleLocationsInfoEXT))
+		sampleLocationsInfo.toC(c.pSampleLocationsInfo, _sa)
+	}
+	C.vkCmdSetSampleLocationsEXT(c.commandBuffer, c.pSampleLocationsInfo)
+}
+
+type MultisamplePropertiesEXT struct {
+	Type                      StructureType
+	Next                      unsafe.Pointer
+	MaxSampleLocationGridSize Extent2D
+}
+
+func (g *MultisamplePropertiesEXT) toC(c *C.VkMultisamplePropertiesEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	g.MaxSampleLocationGridSize.toC(&c.maxSampleLocationGridSize)
+}
+func (g *MultisamplePropertiesEXT) fromC(c *C.VkMultisamplePropertiesEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MaxSampleLocationGridSize.fromC(&c.maxSampleLocationGridSize)
+}
+func GetPhysicalDeviceMultisamplePropertiesEXT(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties []MultisamplePropertiesEXT) {
+	var c struct {
+		physicalDevice         C.VkPhysicalDevice
+		samples                C.VkSampleCountFlagBits
+		pMultisampleProperties *C.VkMultisamplePropertiesEXT
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+	c.samples = C.VkSampleCountFlagBits(samples)
+	{
+		c.pMultisampleProperties = (*C.VkMultisamplePropertiesEXT)(_sa.alloc(C.sizeof_VkMultisamplePropertiesEXT * uint(len(multisampleProperties))))
+		slice3 := (*[1 << 31]C.VkMultisamplePropertiesEXT)(unsafe.Pointer(c.pMultisampleProperties))[:len(multisampleProperties):len(multisampleProperties)]
+		for i3, _ := range multisampleProperties {
+			multisampleProperties[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetPhysicalDeviceMultisamplePropertiesEXT(c.physicalDevice, c.samples, c.pMultisampleProperties)
+}
+
+type ValidationCacheCreateFlagsEXT Flags
+type ValidationCacheCreateInfoEXT struct {
+	Type        StructureType
+	Next        unsafe.Pointer
+	Flags       ValidationCacheCreateFlagsEXT
+	InitialData []byte
+}
+
+func (g *ValidationCacheCreateInfoEXT) toC(c *C.VkValidationCacheCreateInfoEXT, _sa *stackAllocator) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	{
+		var temp_in_VkValidationCacheCreateFlagsEXT C.VkFlags
+		{
+			var temp_in_VkFlags C.uint32_t
+			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
+			temp_in_VkValidationCacheCreateFlagsEXT = C.VkFlags(temp_in_VkFlags)
+		}
+		c.flags = C.VkValidationCacheCreateFlagsEXT(temp_in_VkValidationCacheCreateFlagsEXT)
+	}
+	c.initialDataSize = C.size_t(len(g.InitialData))
+	{
+		c.pInitialData = _sa.alloc(C.sizeof_void_pointer * uint(len(g.InitialData)))
+		slice2 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
+		for i2, _ := range g.InitialData {
+			slice2[i2] = g.InitialData[i2]
+		}
+	}
+}
+func (g *ValidationCacheCreateInfoEXT) fromC(c *C.VkValidationCacheCreateInfoEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	{
+		var temp_in_VkValidationCacheCreateFlagsEXT Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+			temp_in_VkValidationCacheCreateFlagsEXT = Flags(temp_in_VkFlags)
+		}
+		g.Flags = ValidationCacheCreateFlagsEXT(temp_in_VkValidationCacheCreateFlagsEXT)
+	}
+	g.InitialData = make([]byte, int(c.initialDataSize))
+	{
+		slice2 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
+		for i2, _ := range g.InitialData {
+			g.InitialData[i2] = slice2[i2]
+		}
+	}
+}
+
+type ValidationCacheEXT C.VkValidationCacheEXT
+
+func CreateValidationCacheEXT(device Device, createInfo *ValidationCacheCreateInfoEXT, allocator *AllocationCallbacks, validationCache *ValidationCacheEXT) (_ret Result) {
+	var c struct {
+		device           C.VkDevice
+		pCreateInfo      *C.VkValidationCacheCreateInfoEXT
+		pAllocator       *C.VkAllocationCallbacks
+		pValidationCache *C.VkValidationCacheEXT
+		_ret             C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	{
+		c.pCreateInfo = (*C.VkValidationCacheCreateInfoEXT)(_sa.alloc(C.sizeof_VkValidationCacheCreateInfoEXT))
+		createInfo.toC(c.pCreateInfo, _sa)
+	}
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	{
+		c.pValidationCache = (*C.VkValidationCacheEXT)(_sa.alloc(C.sizeof_VkValidationCacheEXT))
+		*c.pValidationCache = C.VkValidationCacheEXT(*validationCache)
+	}
+	c._ret = C.vkCreateValidationCacheEXT(c.device, c.pCreateInfo, c.pAllocator, c.pValidationCache)
+	_ret = Result(c._ret)
+	*validationCache = ValidationCacheEXT(*c.pValidationCache)
+	return
+}
+func DestroyValidationCacheEXT(device Device, validationCache ValidationCacheEXT, allocator *AllocationCallbacks) {
+	var c struct {
+		device          C.VkDevice
+		validationCache C.VkValidationCacheEXT
+		pAllocator      *C.VkAllocationCallbacks
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.validationCache = C.VkValidationCacheEXT(validationCache)
+	{
+		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
+		allocator.toC(c.pAllocator, _sa)
+	}
+	C.vkDestroyValidationCacheEXT(c.device, c.validationCache, c.pAllocator)
+}
+func MergeValidationCachesEXT(device Device, dstCache ValidationCacheEXT, srcCaches []ValidationCacheEXT) (_ret Result) {
+	var c struct {
+		device        C.VkDevice
+		dstCache      C.VkValidationCacheEXT
+		srcCacheCount C.uint32_t
+		pSrcCaches    *C.VkValidationCacheEXT
+		_ret          C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.dstCache = C.VkValidationCacheEXT(dstCache)
+	c.srcCacheCount = C.uint32_t(len(srcCaches))
+	{
+		c.pSrcCaches = (*C.VkValidationCacheEXT)(_sa.alloc(C.sizeof_VkValidationCacheEXT * uint(len(srcCaches))))
+		slice3 := (*[1 << 31]C.VkValidationCacheEXT)(unsafe.Pointer(c.pSrcCaches))[:len(srcCaches):len(srcCaches)]
+		for i3, _ := range srcCaches {
+			slice3[i3] = C.VkValidationCacheEXT(srcCaches[i3])
+		}
+	}
+	c._ret = C.vkMergeValidationCachesEXT(c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
+	_ret = Result(c._ret)
+	return
+}
+func GetValidationCacheDataEXT(device Device, validationCache ValidationCacheEXT, dataSize *uint, data []byte) (_ret Result) {
+	var c struct {
+		device          C.VkDevice
+		validationCache C.VkValidationCacheEXT
+		pDataSize       *C.size_t
+		pData           unsafe.Pointer
+		_ret            C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.validationCache = C.VkValidationCacheEXT(validationCache)
+	{
+		c.pDataSize = (*C.size_t)(_sa.alloc(C.sizeof_size_t))
+		*c.pDataSize = C.size_t(*dataSize)
+	}
+	{
+		c.pData = _sa.alloc(C.sizeof_void_pointer * uint(len(data)))
+		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
+		for i3, _ := range data {
+			slice3[i3] = data[i3]
+		}
+	}
+	c._ret = C.vkGetValidationCacheDataEXT(c.device, c.validationCache, c.pDataSize, c.pData)
+	_ret = Result(c._ret)
+	*dataSize = uint(*c.pDataSize)
+	return
+}
+
+type MemoryHostPointerPropertiesEXT struct {
+	Type           StructureType
+	Next           unsafe.Pointer
+	MemoryTypeBits uint32
+}
+
+func (g *MemoryHostPointerPropertiesEXT) toC(c *C.VkMemoryHostPointerPropertiesEXT) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
+}
+func (g *MemoryHostPointerPropertiesEXT) fromC(c *C.VkMemoryHostPointerPropertiesEXT) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.MemoryTypeBits = uint32(c.memoryTypeBits)
+}
+func GetMemoryHostPointerPropertiesEXT(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties []MemoryHostPointerPropertiesEXT) (_ret Result) {
+	var c struct {
+		device                       C.VkDevice
+		handleType                   C.VkExternalMemoryHandleTypeFlagBits
+		pHostPointer                 unsafe.Pointer
+		pMemoryHostPointerProperties *C.VkMemoryHostPointerPropertiesEXT
+		_ret                         C.VkResult
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.device = C.VkDevice(device)
+	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(handleType)
+	c.pHostPointer = hostPointer
+	{
+		c.pMemoryHostPointerProperties = (*C.VkMemoryHostPointerPropertiesEXT)(_sa.alloc(C.sizeof_VkMemoryHostPointerPropertiesEXT * uint(len(memoryHostPointerProperties))))
+		slice3 := (*[1 << 31]C.VkMemoryHostPointerPropertiesEXT)(unsafe.Pointer(c.pMemoryHostPointerProperties))[:len(memoryHostPointerProperties):len(memoryHostPointerProperties)]
+		for i3, _ := range memoryHostPointerProperties {
+			memoryHostPointerProperties[i3].toC(&slice3[i3])
+		}
+	}
+	c._ret = C.vkGetMemoryHostPointerPropertiesEXT(c.device, c.handleType, c.pHostPointer, c.pMemoryHostPointerProperties)
+	_ret = Result(c._ret)
+	return
+}
+func CmdWriteBufferMarkerAMD(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, dstBuffer Buffer, dstOffset DeviceSize, marker uint32) {
+	var c struct {
+		commandBuffer C.VkCommandBuffer
+		pipelineStage C.VkPipelineStageFlagBits
+		dstBuffer     C.VkBuffer
+		dstOffset     C.VkDeviceSize
+		marker        C.uint32_t
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.pipelineStage = C.VkPipelineStageFlagBits(pipelineStage)
+	c.dstBuffer = C.VkBuffer(dstBuffer)
+	{
+		var temp_in_VkDeviceSize C.uint64_t
+		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
+		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
+	}
+	c.marker = C.uint32_t(marker)
+	C.vkCmdWriteBufferMarkerAMD(c.commandBuffer, c.pipelineStage, c.dstBuffer, c.dstOffset, c.marker)
+}
+func CmdSetCheckpointNV(commandBuffer CommandBuffer, checkpointMarker unsafe.Pointer) {
+	var c struct {
+		commandBuffer     C.VkCommandBuffer
+		pCheckpointMarker unsafe.Pointer
+	}
+	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
+	c.pCheckpointMarker = checkpointMarker
+	C.vkCmdSetCheckpointNV(c.commandBuffer, c.pCheckpointMarker)
+}
+
+type CheckpointDataNV struct {
+	Type             StructureType
+	Next             unsafe.Pointer
+	Stage            PipelineStageFlagBits
+	CheckpointMarker unsafe.Pointer
+}
+
+func (g *CheckpointDataNV) toC(c *C.VkCheckpointDataNV) {
+	c.sType = C.VkStructureType(g.Type)
+	c.pNext = g.Next
+	c.stage = C.VkPipelineStageFlagBits(g.Stage)
+	c.pCheckpointMarker = g.CheckpointMarker
+}
+func (g *CheckpointDataNV) fromC(c *C.VkCheckpointDataNV) {
+	g.Type = StructureType(c.sType)
+	g.Next = c.pNext
+	g.Stage = PipelineStageFlagBits(c.stage)
+	g.CheckpointMarker = c.pCheckpointMarker
+}
+func GetQueueCheckpointDataNV(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV) {
+	var c struct {
+		queue                C.VkQueue
+		pCheckpointDataCount *C.uint32_t
+		pCheckpointData      *C.VkCheckpointDataNV
+	}
+	_sa := pool.take()
+	defer pool.give(_sa)
+	c.queue = C.VkQueue(queue)
+	{
+		c.pCheckpointDataCount = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
+		*c.pCheckpointDataCount = C.uint32_t(*checkpointDataCount)
+	}
+	{
+		c.pCheckpointData = (*C.VkCheckpointDataNV)(_sa.alloc(C.sizeof_VkCheckpointDataNV * uint(len(checkpointData))))
+		slice3 := (*[1 << 31]C.VkCheckpointDataNV)(unsafe.Pointer(c.pCheckpointData))[:len(checkpointData):len(checkpointData)]
+		for i3, _ := range checkpointData {
+			checkpointData[i3].toC(&slice3[i3])
+		}
+	}
+	C.vkGetQueueCheckpointDataNV(c.queue, c.pCheckpointDataCount, c.pCheckpointData)
+	*checkpointDataCount = uint32(*c.pCheckpointDataCount)
+}
