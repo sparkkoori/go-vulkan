@@ -539,7 +539,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		info := &typeInfo{
 			ctype:  typ,
 			gotype: typ,
-			csize:  callExpr(ident("unsafe.Sizeof"), typ),
+			csize:  ident("C.sizeof_void_pointer"),
 			c2go: func(govar, cvar goast.Expr) goast.Stmt {
 				return assignStmt1n1(govar, cvar)
 			},
