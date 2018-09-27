@@ -509,7 +509,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
 				i := ident("i" + level)
-				size := mulExpr(info.csize, uintLen(govar))
+				size := mulExpr(ident("C.sizeof_char"), uintLen(govar))
 				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
 				stmt1 := assignStmt1n1(cvar, saalloc(nil, size))
 				stmt2 := assignStmt1n1D(slice, toslice)
@@ -535,7 +535,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
 				i := ident("i" + level)
-				size := mulExpr(info.csize, uintLen(govar))
+				size := mulExpr(oinfo.csize, uintLen(govar))
 				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
 				stmt1 := assignStmt1n1(cvar, saalloc(oinfo.ctype, size))
 				stmt2 := assignStmt1n1D(slice, toslice)
