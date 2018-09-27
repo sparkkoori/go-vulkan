@@ -4,9 +4,6 @@ import (
 	"github.com/sparkkoori/go-vulkan/v1.1/vk"
 )
 
-type ccc uintptr
-type bbb uintptr
-
 func main() {
 	appInfo := &vk.ApplicationInfo{
 		ApplicationName:    "AppName",
@@ -25,7 +22,7 @@ func main() {
 
 	var ins vk.Instance
 
-	//Directly call
+	//Directly Call
 	rs := vk.CreateInstance(createInfo, nil, &ins)
 	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
 		panic("cannot find a compatible Vulkan ICD")
@@ -34,7 +31,7 @@ func main() {
 	}
 	vk.DestroyInstance(ins, nil)
 
-	//GetInstanceProcAddr
+	//Indirectly Call
 	pfn := vk.GetInstanceProcAddr(nil, "vkCreateInstance")
 	rs = vk.PFNCreateInstance(pfn).Call(createInfo, nil, &ins)
 	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
