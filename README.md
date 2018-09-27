@@ -109,7 +109,7 @@ The warping rules used in this package.
 
 #### Call Rules
 
-- Because cgo do not support calling function pointer, so for every `PFN*`, a bridge method `Call()` is created.
+- Because cgo does not support calling function pointer, so for every `PFN*`, a bridge method `Call()` was created.
 
 #### Name Rules
 
