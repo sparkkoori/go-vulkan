@@ -10957,17 +10957,17 @@ func (p PFNCmdFillBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, ds
 }
 
 type PFNCmdClearColorImage uintptr
-type ClearColorValue struct{ Raw C.VkClearColorValue }
+type ClearColorValue C.VkClearColorValue
 
 func (g *ClearColorValue) AssginFloat32(v [4]float32) {
 	var cv [4]C.float
 	for i, _ := range v {
 		cv[i] = C.float(v[i])
 	}
-	*(*[4]C.float)(unsafe.Pointer(&g.Raw)) = cv
+	*(*[4]C.float)(unsafe.Pointer(g)) = cv
 }
 func (g *ClearColorValue) Float32() (v [4]float32) {
-	cv := *(*[4]C.float)(unsafe.Pointer(&g.Raw))
+	cv := *(*[4]C.float)(unsafe.Pointer(g))
 	for i, _ := range v {
 		v[i] = float32(cv[i])
 	}
@@ -10978,10 +10978,10 @@ func (g *ClearColorValue) AssginInt32(v [4]int32) {
 	for i, _ := range v {
 		cv[i] = C.int32_t(v[i])
 	}
-	*(*[4]C.int32_t)(unsafe.Pointer(&g.Raw)) = cv
+	*(*[4]C.int32_t)(unsafe.Pointer(g)) = cv
 }
 func (g *ClearColorValue) Int32() (v [4]int32) {
-	cv := *(*[4]C.int32_t)(unsafe.Pointer(&g.Raw))
+	cv := *(*[4]C.int32_t)(unsafe.Pointer(g))
 	for i, _ := range v {
 		v[i] = int32(cv[i])
 	}
@@ -10992,10 +10992,10 @@ func (g *ClearColorValue) AssginUint32(v [4]uint32) {
 	for i, _ := range v {
 		cv[i] = C.uint32_t(v[i])
 	}
-	*(*[4]C.uint32_t)(unsafe.Pointer(&g.Raw)) = cv
+	*(*[4]C.uint32_t)(unsafe.Pointer(g)) = cv
 }
 func (g *ClearColorValue) Uint32() (v [4]uint32) {
-	cv := *(*[4]C.uint32_t)(unsafe.Pointer(&g.Raw))
+	cv := *(*[4]C.uint32_t)(unsafe.Pointer(g))
 	for i, _ := range v {
 		v[i] = uint32(cv[i])
 	}
@@ -11017,7 +11017,7 @@ func (p PFNCmdClearColorImage) Call(commandBuffer CommandBuffer, image Image, im
 	c.imageLayout = C.VkImageLayout(imageLayout)
 	{
 		c.pColor = (*C.VkClearColorValue)(_sa.alloc(C.sizeof_VkClearColorValue))
-		*c.pColor = (*color).Raw
+		*c.pColor = C.VkClearColorValue(*color)
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
 	{
@@ -11074,25 +11074,25 @@ func (p PFNCmdClearDepthStencilImage) Call(commandBuffer CommandBuffer, image Im
 }
 
 type PFNCmdClearAttachments uintptr
-type ClearValue struct{ Raw C.VkClearValue }
+type ClearValue C.VkClearValue
 
 func (g *ClearValue) AssginColor(v ClearColorValue) {
 	var cv C.VkClearColorValue
-	cv = v.Raw
-	*(*C.VkClearColorValue)(unsafe.Pointer(&g.Raw)) = cv
+	cv = C.VkClearColorValue(v)
+	*(*C.VkClearColorValue)(unsafe.Pointer(g)) = cv
 }
 func (g *ClearValue) Color() (v ClearColorValue) {
-	cv := *(*C.VkClearColorValue)(unsafe.Pointer(&g.Raw))
-	v.Raw = cv
+	cv := *(*C.VkClearColorValue)(unsafe.Pointer(g))
+	v = ClearColorValue(cv)
 	return
 }
 func (g *ClearValue) AssginDepthStencil(v ClearDepthStencilValue) {
 	var cv C.VkClearDepthStencilValue
 	v.toC(&cv)
-	*(*C.VkClearDepthStencilValue)(unsafe.Pointer(&g.Raw)) = cv
+	*(*C.VkClearDepthStencilValue)(unsafe.Pointer(g)) = cv
 }
 func (g *ClearValue) DepthStencil() (v ClearDepthStencilValue) {
-	cv := *(*C.VkClearDepthStencilValue)(unsafe.Pointer(&g.Raw))
+	cv := *(*C.VkClearDepthStencilValue)(unsafe.Pointer(g))
 	v.fromC(&cv)
 	return
 }
@@ -11114,7 +11114,7 @@ func (g *ClearAttachment) toC(c *C.VkClearAttachment) {
 		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	c.colorAttachment = C.uint32_t(g.ColorAttachment)
-	c.clearValue = g.ClearValue.Raw
+	c.clearValue = C.VkClearValue(g.ClearValue)
 }
 func (g *ClearAttachment) fromC(c *C.VkClearAttachment) {
 	{
@@ -11127,7 +11127,7 @@ func (g *ClearAttachment) fromC(c *C.VkClearAttachment) {
 		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
 	}
 	g.ColorAttachment = uint32(c.colorAttachment)
-	g.ClearValue.Raw = c.clearValue
+	g.ClearValue = ClearValue(c.clearValue)
 }
 
 type ClearRect struct {
@@ -11850,7 +11850,7 @@ func (g *RenderPassBeginInfo) toC(c *C.VkRenderPassBeginInfo, _sa *stackAllocato
 		c.pClearValues = (*C.VkClearValue)(_sa.alloc(C.sizeof_void_pointer * uint(len(g.ClearValues))))
 		slice2 := (*[1 << 31]C.VkClearValue)(unsafe.Pointer(c.pClearValues))[:len(g.ClearValues):len(g.ClearValues)]
 		for i2, _ := range g.ClearValues {
-			slice2[i2] = g.ClearValues[i2].Raw
+			slice2[i2] = C.VkClearValue(g.ClearValues[i2])
 		}
 	}
 }
@@ -11863,7 +11863,7 @@ func (g *RenderPassBeginInfo) fromC(c *C.VkRenderPassBeginInfo) {
 	{
 		slice2 := (*[1 << 31]C.VkClearValue)(unsafe.Pointer(c.pClearValues))[:len(g.ClearValues):len(g.ClearValues)]
 		for i2, _ := range g.ClearValues {
-			g.ClearValues[i2].Raw = slice2[i2]
+			g.ClearValues[i2] = ClearValue(slice2[i2])
 		}
 	}
 }
@@ -14692,7 +14692,7 @@ func CmdClearColorImage(commandBuffer CommandBuffer, image Image, imageLayout Im
 	c.imageLayout = C.VkImageLayout(imageLayout)
 	{
 		c.pColor = (*C.VkClearColorValue)(_sa.alloc(C.sizeof_VkClearColorValue))
-		*c.pColor = (*color).Raw
+		*c.pColor = C.VkClearColorValue(*color)
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
 	{

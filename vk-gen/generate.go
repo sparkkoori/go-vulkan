@@ -158,14 +158,7 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 		info.csize = ident("C.sizeof_union_" + decl.Name)
 	}
 
-	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
-		Struct: token.Pos(1),
-		Fields: &goast.FieldList{
-			Opening: token.Pos(1),
-			List:    []*goast.Field{field(info.ctype, ident("Raw"))},
-			Closing: token.Pos(1),
-		},
-	}))
+	g.target.addGo(typeDecl(info.gotype.(*goast.Ident), info.ctype))
 
 	recv := field(starExpr(info.gotype), ident("g"))
 	for _, fieldDecl := range decl.ChildNodes {
@@ -182,7 +175,7 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 		{
 			stmts0 = append(stmts0, varDeclStmt(finfo.ctype, ident("cv")))
 			stmts0 = append(stmts0, finfo.go2c(ident("v"), ident("cv")))
-			lhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("&g.Raw"))))
+			lhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("g"))))
 			stmts0 = append(stmts0, assignStmt1n1(lhs, ident("cv")))
 		}
 		g.target.addGo(funcDecl(ident("Assgin"+upFirst(gostr)), recv, funcType0, stmts0...))
@@ -193,7 +186,7 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 		})
 		stmts1 := []goast.Stmt{}
 		{
-			rhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("&g.Raw"))))
+			rhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("g"))))
 			stmts1 = append(stmts1, assignStmt1n1D(ident("cv"), rhs))
 			stmts1 = append(stmts1, finfo.c2go(ident("v"), ident("cv")))
 			stmts1 = append(stmts1, &goast.ReturnStmt{})
@@ -203,10 +196,11 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 
 	info.go2cAlloc = false
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-		return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
+		//no alloc
+		return assignStmt1n1(cvar, callExpr(info.ctype, govar))
 	}
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-		return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
+		return assignStmt1n1(govar, callExpr(info.gotype, cvar))
 	}
 	info.refc2go = nil
 
