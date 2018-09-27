@@ -337,29 +337,19 @@ func (g *generator) genStructureMethods(name string, info *typeInfo) {
 		}, []*goast.Field{
 			field(ident("unsafe.Pointer")),
 		})
-		ifstmt := &goast.IfStmt{
-			If:   token.Pos(1),
-			Cond: binExpr(ident("s"), ident("nil"), token.EQL),
-			Body: blockStmt(returnStmt(ident("nil"))),
-		}
 		alloc := assignStmt1n1D(ident("c"), saalloc(info.ctype, info.csize))
 		conv := info.go2c(starExpr(ident("s")), starExpr(ident("c")))
 		ret := returnStmt(callExpr(ident("unsafe.Pointer"), ident("c")))
-		fn := funcDecl(ident("toCStructure"), field(starExpr(info.gotype), ident("s")), fnT, ifstmt, alloc, conv, ret)
+		fn := funcDecl(ident("toCStructure"), field(starExpr(info.gotype), ident("s")), fnT, alloc, conv, ret)
 		g.target.addGo(fn)
 	}
 
 	//fromCStructure()
 	{
-		ifstmt := &goast.IfStmt{
-			If:   token.Pos(1),
-			Cond: binExpr(ident("s"), ident("nil"), token.EQL),
-			Body: blockStmt(returnStmt()),
-		}
 		fnT := funcType([]*goast.Field{field(ident("unsafe.Pointer"), ident("p"))}, nil)
 		cast := assignStmt1n1D(ident("c"), callExpr(starExpr(info.ctype), ident("p")))
 		conv := info.c2go(starExpr(ident("s")), starExpr(ident("c")))
-		fn := funcDecl(ident("fromCStructure"), field(starExpr(info.gotype), ident("s")), fnT, ifstmt, cast, conv)
+		fn := funcDecl(ident("fromCStructure"), field(starExpr(info.gotype), ident("s")), fnT, cast, conv)
 		g.target.addGo(fn)
 	}
 
@@ -642,26 +632,26 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				alloc := assignStmt1n1(cvar, saalloc(oinfo.ctype, oinfo.csize))
 				conv := oinfo.go2c(starExpr(govar), starExpr(cvar))
-				return blockStmt(alloc, conv)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: blockStmt(alloc, conv),
+					Else: assignStmt1n1(cvar, ident("nil")),
+				}
 			}
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				// alloc := assignStmt1n1(govar, callExpr(ident("new"), oinfo.gotype))
-				// ifstmt := &goast.IfStmt{
-				// 	If: token.Pos(1),
-				// 	Cond: &goast.BinaryExpr{
-				// 		X:  govar,
-				// 		Op: token.EQL,
-				// 		Y:  ident("nil"),
-				// 	},
-				// 	Body: blockStmt(alloc),
-				// }
-				// conv := oinfo.c2go(starExpr(govar), starExpr(cvar))
-				// return blockStmt(ifstmt, conv)
-				return oinfo.c2go(starExpr(govar), starExpr(cvar))
+				stmt := oinfo.c2go(starExpr(govar), starExpr(cvar))
+				block, ok := stmt.(*goast.BlockStmt)
+				if !ok {
+					block = blockStmt(stmt)
+				}
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: block,
+				}
 			}
-			info.refc2go = func(govar, cvar goast.Expr) goast.Stmt {
-				return oinfo.c2go(starExpr(govar), starExpr(cvar))
-			}
+			info.refc2go = info.c2go
 		} else {
 			//No size
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
@@ -1211,12 +1201,20 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 			go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
 				fn := selectorExpr(selectorExpr(goscope, goname), ident("toCStructure"))
 				call := callExpr(fn, ident("_sa"))
-				return assignStmt1n1(selectorExpr(cscope, cname), call)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(selectorExpr(goscope, goname), ident("nil"), token.NEQ),
+					Body: blockStmt(assignStmt1n1(selectorExpr(cscope, cname), call)),
+				}
 			})
 			c2go := func(goscope, cscope goast.Expr) goast.Stmt {
 				fn := selectorExpr(selectorExpr(goscope, goname), ident("fromCStructure"))
 				call := callExpr(fn, selectorExpr(cscope, cname))
-				return exprStmt(call)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(selectorExpr(goscope, goname), ident("nil"), token.NEQ),
+					Body: blockStmt(exprStmt(call)),
+				}
 			}
 			c2goFns = append(c2goFns, c2go)
 			if !isPointerToConst {
