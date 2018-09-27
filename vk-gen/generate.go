@@ -624,7 +624,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		info := &typeInfo{
 			ctype:  starExpr(oinfo.ctype),
 			gotype: starExpr(oinfo.gotype),
-			csize:  callExpr(ident("unsafe.Sizeof"), starExpr(oinfo.ctype)),
+			csize:  ident("C.sizeof_void_pointer"),
 		}
 		if oinfo.csize != nil {
 			//Size is not 0
