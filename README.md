@@ -92,7 +92,9 @@ The warping rules used in this package.
 
 - Map `PFN*` to `uintptr`.
 
-	- This allow conversion between `PFN*`
+	- This allow conversion between `PFN*`.
+
+- Map `union` to `struct`, keep it's memory layout.
 
 
 #### Memory Rules
