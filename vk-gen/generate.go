@@ -234,7 +234,7 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 		info.ctype = ident("C." + decl.Name)
 		info.csize = ident("C.sizeof_" + decl.Name)
 	} else {
-		info.ctype = ident("C.struct" + decl.Name)
+		info.ctype = ident("C.struct_" + decl.Name)
 		info.csize = ident("C.sizeof_struct_" + decl.Name)
 	}
 
@@ -433,7 +433,7 @@ func (g *generator) genEnumType(decl *cast.EnumDecl) *typeInfo {
 		info.ctype = ident("C." + decl.Name)
 		info.csize = ident("C.sizeof_" + decl.Name)
 	} else {
-		info.ctype = ident("C.enum" + decl.Name)
+		info.ctype = ident("C.enum_" + decl.Name)
 		info.csize = ident("C.sizeof_enum_" + decl.Name)
 	}
 
