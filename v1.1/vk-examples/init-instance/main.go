@@ -1,10 +1,11 @@
 package main
 
 import (
-	"log"
-
 	"github.com/sparkkoori/go-vulkan/v1.1/vk"
 )
+
+type ccc uintptr
+type bbb uintptr
 
 func main() {
 	appInfo := &vk.ApplicationInfo{
@@ -23,12 +24,24 @@ func main() {
 	}
 
 	var ins vk.Instance
+
+	//Directly call
 	rs := vk.CreateInstance(createInfo, nil, &ins)
 	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
-		log.Fatalln("cannot find a compatible Vulkan ICD")
+		panic("cannot find a compatible Vulkan ICD")
 	} else if rs != vk.SUCCESS {
-		log.Fatalln("unknown error")
+		panic("unknown error")
 	}
-
 	vk.DestroyInstance(ins, nil)
+
+	//GetInstanceProcAddr
+	pfn := vk.GetInstanceProcAddr(nil, "vkCreateInstance")
+	rs = vk.PFNCreateInstance(pfn).Call(createInfo, nil, &ins)
+	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
+		panic("cannot find a compatible Vulkan ICD")
+	} else if rs != vk.SUCCESS {
+		panic("unknown error")
+	}
+	pfn = vk.GetInstanceProcAddr(ins, "vkDestroyInstance")
+	vk.PFNDestroyInstance(pfn).Call(ins, nil)
 }

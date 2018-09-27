@@ -1617,11 +1617,9 @@ const (
 	STENCIL_FACE_FLAG_BITS_MAX_ENUM StencilFaceFlagBits = 2147483647
 )
 
-type PFN_vkAllocationFunction struct {
-	Raw C.PFN_vkAllocationFunction
-}
+type PFNAllocationFunction uintptr
 
-func (p PFN_vkAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 SystemAllocationScope) (_ret unsafe.Pointer) {
+func (p PFNAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint, arg3 SystemAllocationScope) (_ret unsafe.Pointer) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 C.size_t
@@ -1633,16 +1631,14 @@ func (p PFN_vkAllocationFunction) Call(arg0 unsafe.Pointer, arg1 uint, arg2 uint
 	c.arg1 = C.size_t(arg1)
 	c.arg2 = C.size_t(arg2)
 	c.arg3 = C.VkSystemAllocationScope(arg3)
-	c._ret = C.callPFN_vkAllocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	c._ret = C.callPFN_vkAllocationFunction(C.PFN_vkAllocationFunction(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3)
 	_ret = c._ret
 	return
 }
 
-type PFN_vkReallocationFunction struct {
-	Raw C.PFN_vkReallocationFunction
-}
+type PFNReallocationFunction uintptr
 
-func (p PFN_vkReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 SystemAllocationScope) (_ret unsafe.Pointer) {
+func (p PFNReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer, arg2 uint, arg3 uint, arg4 SystemAllocationScope) (_ret unsafe.Pointer) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 unsafe.Pointer
@@ -1656,30 +1652,26 @@ func (p PFN_vkReallocationFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointe
 	c.arg2 = C.size_t(arg2)
 	c.arg3 = C.size_t(arg3)
 	c.arg4 = C.VkSystemAllocationScope(arg4)
-	c._ret = C.callPFN_vkReallocationFunction(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4)
+	c._ret = C.callPFN_vkReallocationFunction(C.PFN_vkReallocationFunction(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3, c.arg4)
 	_ret = c._ret
 	return
 }
 
-type PFN_vkFreeFunction struct {
-	Raw C.PFN_vkFreeFunction
-}
+type PFNFreeFunction uintptr
 
-func (p PFN_vkFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
+func (p PFNFreeFunction) Call(arg0 unsafe.Pointer, arg1 unsafe.Pointer) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 unsafe.Pointer
 	}
 	c.arg0 = arg0
 	c.arg1 = arg1
-	C.callPFN_vkFreeFunction(p.Raw, c.arg0, c.arg1)
+	C.callPFN_vkFreeFunction(C.PFN_vkFreeFunction(unsafe.Pointer(p)), c.arg0, c.arg1)
 }
 
-type PFN_vkInternalAllocationNotification struct {
-	Raw C.PFN_vkInternalAllocationNotification
-}
+type PFNInternalAllocationNotification uintptr
 
-func (p PFN_vkInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+func (p PFNInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 C.size_t
@@ -1690,14 +1682,12 @@ func (p PFN_vkInternalAllocationNotification) Call(arg0 unsafe.Pointer, arg1 uin
 	c.arg1 = C.size_t(arg1)
 	c.arg2 = C.VkInternalAllocationType(arg2)
 	c.arg3 = C.VkSystemAllocationScope(arg3)
-	C.callPFN_vkInternalAllocationNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	C.callPFN_vkInternalAllocationNotification(C.PFN_vkInternalAllocationNotification(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3)
 }
 
-type PFN_vkInternalFreeNotification struct {
-	Raw C.PFN_vkInternalFreeNotification
-}
+type PFNInternalFreeNotification uintptr
 
-func (p PFN_vkInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
+func (p PFNInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg2 InternalAllocationType, arg3 SystemAllocationScope) {
 	var c struct {
 		arg0 unsafe.Pointer
 		arg1 C.size_t
@@ -1708,20 +1698,16 @@ func (p PFN_vkInternalFreeNotification) Call(arg0 unsafe.Pointer, arg1 uint, arg
 	c.arg1 = C.size_t(arg1)
 	c.arg2 = C.VkInternalAllocationType(arg2)
 	c.arg3 = C.VkSystemAllocationScope(arg3)
-	C.callPFN_vkInternalFreeNotification(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	C.callPFN_vkInternalFreeNotification(C.PFN_vkInternalFreeNotification(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3)
 }
 
-type PFN_vkVoidFunction struct {
-	Raw C.PFN_vkVoidFunction
+type PFNVoidFunction uintptr
+
+func (p PFNVoidFunction) Call() {
+	C.callPFN_vkVoidFunction(C.PFN_vkVoidFunction(unsafe.Pointer(p)))
 }
 
-func (p PFN_vkVoidFunction) Call() {
-	C.callPFN_vkVoidFunction(p.Raw)
-}
-
-type PFN_vkCreateInstance struct {
-	Raw C.PFN_vkCreateInstance
-}
+type PFNCreateInstance uintptr
 type Flags uint32
 type InstanceCreateFlags Flags
 type ApplicationInfo struct {
@@ -1870,11 +1856,11 @@ func (s *InstanceCreateInfo) SetNext(n Structure) {
 
 type AllocationCallbacks struct {
 	UserData           []byte
-	Allocation         PFN_vkAllocationFunction
-	Reallocation       PFN_vkReallocationFunction
-	Free               PFN_vkFreeFunction
-	InternalAllocation PFN_vkInternalAllocationNotification
-	InternalFree       PFN_vkInternalFreeNotification
+	Allocation         PFNAllocationFunction
+	Reallocation       PFNReallocationFunction
+	Free               PFNFreeFunction
+	InternalAllocation PFNInternalAllocationNotification
+	InternalFree       PFNInternalFreeNotification
 }
 
 func (g *AllocationCallbacks) toC(c *C.VkAllocationCallbacks, _sa *stackAllocator) {
@@ -1885,11 +1871,11 @@ func (g *AllocationCallbacks) toC(c *C.VkAllocationCallbacks, _sa *stackAllocato
 			slice2[i2] = g.UserData[i2]
 		}
 	}
-	c.pfnAllocation = g.Allocation.Raw
-	c.pfnReallocation = g.Reallocation.Raw
-	c.pfnFree = g.Free.Raw
-	c.pfnInternalAllocation = g.InternalAllocation.Raw
-	c.pfnInternalFree = g.InternalFree.Raw
+	c.pfnAllocation = C.PFN_vkAllocationFunction(unsafe.Pointer(g.Allocation))
+	c.pfnReallocation = C.PFN_vkReallocationFunction(unsafe.Pointer(g.Reallocation))
+	c.pfnFree = C.PFN_vkFreeFunction(unsafe.Pointer(g.Free))
+	c.pfnInternalAllocation = C.PFN_vkInternalAllocationNotification(unsafe.Pointer(g.InternalAllocation))
+	c.pfnInternalFree = C.PFN_vkInternalFreeNotification(unsafe.Pointer(g.InternalFree))
 }
 func (g *AllocationCallbacks) fromC(c *C.VkAllocationCallbacks) {
 	{
@@ -1898,16 +1884,16 @@ func (g *AllocationCallbacks) fromC(c *C.VkAllocationCallbacks) {
 			g.UserData[i2] = slice2[i2]
 		}
 	}
-	g.Allocation.Raw = c.pfnAllocation
-	g.Reallocation.Raw = c.pfnReallocation
-	g.Free.Raw = c.pfnFree
-	g.InternalAllocation.Raw = c.pfnInternalAllocation
-	g.InternalFree.Raw = c.pfnInternalFree
+	g.Allocation = PFNAllocationFunction(unsafe.Pointer(c.pfnAllocation))
+	g.Reallocation = PFNReallocationFunction(unsafe.Pointer(c.pfnReallocation))
+	g.Free = PFNFreeFunction(unsafe.Pointer(c.pfnFree))
+	g.InternalAllocation = PFNInternalAllocationNotification(unsafe.Pointer(c.pfnInternalAllocation))
+	g.InternalFree = PFNInternalFreeNotification(unsafe.Pointer(c.pfnInternalFree))
 }
 
 type Instance C.VkInstance
 
-func (p PFN_vkCreateInstance) Call(createInfo *InstanceCreateInfo, allocator *AllocationCallbacks, instance *Instance) (_ret Result) {
+func (p PFNCreateInstance) Call(createInfo *InstanceCreateInfo, allocator *AllocationCallbacks, instance *Instance) (_ret Result) {
 	var c struct {
 		pCreateInfo *C.VkInstanceCreateInfo
 		pAllocator  *C.VkAllocationCallbacks
@@ -1928,17 +1914,15 @@ func (p PFN_vkCreateInstance) Call(createInfo *InstanceCreateInfo, allocator *Al
 		c.pInstance = (*C.VkInstance)(_sa.alloc(C.sizeof_VkInstance))
 		*c.pInstance = C.VkInstance(*instance)
 	}
-	c._ret = C.callPFN_vkCreateInstance(p.Raw, c.pCreateInfo, c.pAllocator, c.pInstance)
+	c._ret = C.callPFN_vkCreateInstance(C.PFN_vkCreateInstance(unsafe.Pointer(p)), c.pCreateInfo, c.pAllocator, c.pInstance)
 	_ret = Result(c._ret)
 	*instance = Instance(*c.pInstance)
 	return
 }
 
-type PFN_vkDestroyInstance struct {
-	Raw C.PFN_vkDestroyInstance
-}
+type PFNDestroyInstance uintptr
 
-func (p PFN_vkDestroyInstance) Call(instance Instance, allocator *AllocationCallbacks) {
+func (p PFNDestroyInstance) Call(instance Instance, allocator *AllocationCallbacks) {
 	var c struct {
 		instance   C.VkInstance
 		pAllocator *C.VkAllocationCallbacks
@@ -1950,15 +1934,13 @@ func (p PFN_vkDestroyInstance) Call(instance Instance, allocator *AllocationCall
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyInstance(p.Raw, c.instance, c.pAllocator)
+	C.callPFN_vkDestroyInstance(C.PFN_vkDestroyInstance(unsafe.Pointer(p)), c.instance, c.pAllocator)
 }
 
-type PFN_vkEnumeratePhysicalDevices struct {
-	Raw C.PFN_vkEnumeratePhysicalDevices
-}
+type PFNEnumeratePhysicalDevices uintptr
 type PhysicalDevice C.VkPhysicalDevice
 
-func (p PFN_vkEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount *uint32, physicalDevices []PhysicalDevice) (_ret Result) {
+func (p PFNEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount *uint32, physicalDevices []PhysicalDevice) (_ret Result) {
 	var c struct {
 		instance             C.VkInstance
 		pPhysicalDeviceCount *C.uint32_t
@@ -1979,7 +1961,7 @@ func (p PFN_vkEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCo
 			slice3[i3] = C.VkPhysicalDevice(physicalDevices[i3])
 		}
 	}
-	c._ret = C.callPFN_vkEnumeratePhysicalDevices(p.Raw, c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
+	c._ret = C.callPFN_vkEnumeratePhysicalDevices(C.PFN_vkEnumeratePhysicalDevices(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
 	_ret = Result(c._ret)
 	*physicalDeviceCount = uint32(*c.pPhysicalDeviceCount)
 	{
@@ -1991,9 +1973,7 @@ func (p PFN_vkEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCo
 	return
 }
 
-type PFN_vkGetPhysicalDeviceFeatures struct {
-	Raw C.PFN_vkGetPhysicalDeviceFeatures
-}
+type PFNGetPhysicalDeviceFeatures uintptr
 type PhysicalDeviceFeatures struct {
 	RobustBufferAccess                      bool
 	FullDrawIndexUint32                     bool
@@ -2386,7 +2366,7 @@ func (g *PhysicalDeviceFeatures) fromC(c *C.VkPhysicalDeviceFeatures) {
 	g.VariableMultisampleRate = c.variableMultisampleRate != 0
 	g.InheritedQueries = c.inheritedQueries != 0
 }
-func (p PFN_vkGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
+func (p PFNGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures
@@ -2401,7 +2381,7 @@ func (p PFN_vkGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, fea
 			features[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFeatures(p.Raw, c.physicalDevice, c.pFeatures)
+	C.callPFN_vkGetPhysicalDeviceFeatures(C.PFN_vkGetPhysicalDeviceFeatures(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
 		for i3, _ := range features {
@@ -2410,9 +2390,7 @@ func (p PFN_vkGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, fea
 	}
 }
 
-type PFN_vkGetPhysicalDeviceFormatProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceFormatProperties
-}
+type PFNGetPhysicalDeviceFormatProperties uintptr
 type FormatFeatureFlags Flags
 type FormatProperties struct {
 	LinearTilingFeatures  FormatFeatureFlags
@@ -2478,7 +2456,7 @@ func (g *FormatProperties) fromC(c *C.VkFormatProperties) {
 		g.BufferFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 }
-func (p PFN_vkGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties) {
+func (p PFNGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -2495,7 +2473,7 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDev
 			formatProperties[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFormatProperties(p.Raw, c.physicalDevice, c.format, c.pFormatProperties)
+	C.callPFN_vkGetPhysicalDeviceFormatProperties(C.PFN_vkGetPhysicalDeviceFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
 	{
 		slice3 := (*[1 << 31]C.VkFormatProperties)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
 		for i3, _ := range formatProperties {
@@ -2504,9 +2482,7 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDev
 	}
 }
 
-type PFN_vkGetPhysicalDeviceImageFormatProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceImageFormatProperties
-}
+type PFNGetPhysicalDeviceImageFormatProperties uintptr
 type ImageUsageFlags Flags
 type ImageCreateFlags Flags
 type Extent3D struct {
@@ -2574,7 +2550,7 @@ func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
 		g.MaxResourceSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFN_vkGetPhysicalDeviceImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		format                 C.VkFormat
@@ -2616,7 +2592,7 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties) Call(physicalDevice Physic
 			imageFormatProperties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties(p.Raw, c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties(C.PFN_vkGetPhysicalDeviceImageFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkImageFormatProperties)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
@@ -2627,9 +2603,7 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties) Call(physicalDevice Physic
 	return
 }
 
-type PFN_vkGetPhysicalDeviceProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceProperties
-}
+type PFNGetPhysicalDeviceProperties uintptr
 type PhysicalDeviceLimits struct {
 	MaxImageDimension1D                             uint32
 	MaxImageDimension2D                             uint32
@@ -3285,7 +3259,7 @@ func (g *PhysicalDeviceProperties) fromC(c *C.VkPhysicalDeviceProperties) {
 	g.Limits.fromC(&c.limits)
 	g.SparseProperties.fromC(&c.sparseProperties)
 }
-func (p PFN_vkGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties) {
+func (p PFNGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties
@@ -3300,7 +3274,7 @@ func (p PFN_vkGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, p
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceProperties(p.Raw, c.physicalDevice, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceProperties(C.PFN_vkGetPhysicalDeviceProperties(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
@@ -3309,9 +3283,7 @@ func (p PFN_vkGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, p
 	}
 }
 
-type PFN_vkGetPhysicalDeviceQueueFamilyProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceQueueFamilyProperties
-}
+type PFNGetPhysicalDeviceQueueFamilyProperties uintptr
 type QueueFlags Flags
 type QueueFamilyProperties struct {
 	QueueFlags                  QueueFlags
@@ -3348,7 +3320,7 @@ func (g *QueueFamilyProperties) fromC(c *C.VkQueueFamilyProperties) {
 	g.TimestampValidBits = uint32(c.timestampValidBits)
 	g.MinImageTransferGranularity.fromC(&c.minImageTransferGranularity)
 }
-func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -3368,7 +3340,7 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice Physic
 			queueFamilyProperties[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties(p.Raw, c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
+	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
@@ -3378,9 +3350,7 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice Physic
 	}
 }
 
-type PFN_vkGetPhysicalDeviceMemoryProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceMemoryProperties
-}
+type PFNGetPhysicalDeviceMemoryProperties uintptr
 type MemoryPropertyFlags Flags
 type MemoryType struct {
 	PropertyFlags MemoryPropertyFlags
@@ -3478,7 +3448,7 @@ func (g *PhysicalDeviceMemoryProperties) fromC(c *C.VkPhysicalDeviceMemoryProper
 		g.MemoryHeaps[i].fromC(&c.memoryHeaps[i])
 	}
 }
-func (p PFN_vkGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties) {
+func (p PFNGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties
@@ -3493,7 +3463,7 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDev
 			memoryProperties[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceMemoryProperties(p.Raw, c.physicalDevice, c.pMemoryProperties)
+	C.callPFN_vkGetPhysicalDeviceMemoryProperties(C.PFN_vkGetPhysicalDeviceMemoryProperties(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
 		for i3, _ := range memoryProperties {
@@ -3502,11 +3472,9 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDev
 	}
 }
 
-type PFN_vkGetInstanceProcAddr struct {
-	Raw C.PFN_vkGetInstanceProcAddr
-}
+type PFNGetInstanceProcAddr uintptr
 
-func (p PFN_vkGetInstanceProcAddr) Call(instance Instance, name string) (_ret PFN_vkVoidFunction) {
+func (p PFNGetInstanceProcAddr) Call(instance Instance, name string) (_ret PFNVoidFunction) {
 	var c struct {
 		instance C.VkInstance
 		pName    *C.char
@@ -3516,17 +3484,15 @@ func (p PFN_vkGetInstanceProcAddr) Call(instance Instance, name string) (_ret PF
 	defer pool.give(_sa)
 	c.instance = C.VkInstance(instance)
 	c.pName = toCString(name, _sa)
-	c._ret = C.callPFN_vkGetInstanceProcAddr(p.Raw, c.instance, c.pName)
-	_ret.Raw = c._ret
+	c._ret = C.callPFN_vkGetInstanceProcAddr(C.PFN_vkGetInstanceProcAddr(unsafe.Pointer(p)), c.instance, c.pName)
+	_ret = PFNVoidFunction(unsafe.Pointer(c._ret))
 	return
 }
 
-type PFN_vkGetDeviceProcAddr struct {
-	Raw C.PFN_vkGetDeviceProcAddr
-}
+type PFNGetDeviceProcAddr uintptr
 type Device C.VkDevice
 
-func (p PFN_vkGetDeviceProcAddr) Call(device Device, name string) (_ret PFN_vkVoidFunction) {
+func (p PFNGetDeviceProcAddr) Call(device Device, name string) (_ret PFNVoidFunction) {
 	var c struct {
 		device C.VkDevice
 		pName  *C.char
@@ -3536,14 +3502,12 @@ func (p PFN_vkGetDeviceProcAddr) Call(device Device, name string) (_ret PFN_vkVo
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.pName = toCString(name, _sa)
-	c._ret = C.callPFN_vkGetDeviceProcAddr(p.Raw, c.device, c.pName)
-	_ret.Raw = c._ret
+	c._ret = C.callPFN_vkGetDeviceProcAddr(C.PFN_vkGetDeviceProcAddr(unsafe.Pointer(p)), c.device, c.pName)
+	_ret = PFNVoidFunction(unsafe.Pointer(c._ret))
 	return
 }
 
-type PFN_vkCreateDevice struct {
-	Raw C.PFN_vkCreateDevice
-}
+type PFNCreateDevice uintptr
 type DeviceCreateFlags Flags
 type DeviceQueueCreateFlags Flags
 type DeviceQueueCreateInfo struct {
@@ -3736,7 +3700,7 @@ func (s *DeviceCreateInfo) GetNext() Structure {
 func (s *DeviceCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateDevice) Call(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, allocator *AllocationCallbacks, device *Device) (_ret Result) {
+func (p PFNCreateDevice) Call(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, allocator *AllocationCallbacks, device *Device) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pCreateInfo    *C.VkDeviceCreateInfo
@@ -3759,17 +3723,15 @@ func (p PFN_vkCreateDevice) Call(physicalDevice PhysicalDevice, createInfo *Devi
 		c.pDevice = (*C.VkDevice)(_sa.alloc(C.sizeof_VkDevice))
 		*c.pDevice = C.VkDevice(*device)
 	}
-	c._ret = C.callPFN_vkCreateDevice(p.Raw, c.physicalDevice, c.pCreateInfo, c.pAllocator, c.pDevice)
+	c._ret = C.callPFN_vkCreateDevice(C.PFN_vkCreateDevice(unsafe.Pointer(p)), c.physicalDevice, c.pCreateInfo, c.pAllocator, c.pDevice)
 	_ret = Result(c._ret)
 	*device = Device(*c.pDevice)
 	return
 }
 
-type PFN_vkDestroyDevice struct {
-	Raw C.PFN_vkDestroyDevice
-}
+type PFNDestroyDevice uintptr
 
-func (p PFN_vkDestroyDevice) Call(device Device, allocator *AllocationCallbacks) {
+func (p PFNDestroyDevice) Call(device Device, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		pAllocator *C.VkAllocationCallbacks
@@ -3781,12 +3743,10 @@ func (p PFN_vkDestroyDevice) Call(device Device, allocator *AllocationCallbacks)
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDevice(p.Raw, c.device, c.pAllocator)
+	C.callPFN_vkDestroyDevice(C.PFN_vkDestroyDevice(unsafe.Pointer(p)), c.device, c.pAllocator)
 }
 
-type PFN_vkEnumerateInstanceExtensionProperties struct {
-	Raw C.PFN_vkEnumerateInstanceExtensionProperties
-}
+type PFNEnumerateInstanceExtensionProperties uintptr
 type ExtensionProperties struct {
 	ExtensionName [256]byte
 	SpecVersion   uint32
@@ -3804,7 +3764,7 @@ func (g *ExtensionProperties) fromC(c *C.VkExtensionProperties) {
 	}
 	g.SpecVersion = uint32(c.specVersion)
 }
-func (p PFN_vkEnumerateInstanceExtensionProperties) Call(layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func (p PFNEnumerateInstanceExtensionProperties) Call(layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
 	var c struct {
 		pLayerName     *C.char
 		pPropertyCount *C.uint32_t
@@ -3825,7 +3785,7 @@ func (p PFN_vkEnumerateInstanceExtensionProperties) Call(layerName string, prope
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkEnumerateInstanceExtensionProperties(p.Raw, c.pLayerName, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkEnumerateInstanceExtensionProperties(C.PFN_vkEnumerateInstanceExtensionProperties(unsafe.Pointer(p)), c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -3837,11 +3797,9 @@ func (p PFN_vkEnumerateInstanceExtensionProperties) Call(layerName string, prope
 	return
 }
 
-type PFN_vkEnumerateDeviceExtensionProperties struct {
-	Raw C.PFN_vkEnumerateDeviceExtensionProperties
-}
+type PFNEnumerateDeviceExtensionProperties uintptr
 
-func (p PFN_vkEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func (p PFNEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pLayerName     *C.char
@@ -3864,7 +3822,7 @@ func (p PFN_vkEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDe
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkEnumerateDeviceExtensionProperties(p.Raw, c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkEnumerateDeviceExtensionProperties(C.PFN_vkEnumerateDeviceExtensionProperties(unsafe.Pointer(p)), c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -3876,9 +3834,7 @@ func (p PFN_vkEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDe
 	return
 }
 
-type PFN_vkEnumerateInstanceLayerProperties struct {
-	Raw C.PFN_vkEnumerateInstanceLayerProperties
-}
+type PFNEnumerateInstanceLayerProperties uintptr
 type LayerProperties struct {
 	LayerName             [256]byte
 	SpecVersion           uint32
@@ -3906,7 +3862,7 @@ func (g *LayerProperties) fromC(c *C.VkLayerProperties) {
 		g.Description[i] = byte(c.description[i])
 	}
 }
-func (p PFN_vkEnumerateInstanceLayerProperties) Call(propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func (p PFNEnumerateInstanceLayerProperties) Call(propertyCount *uint32, properties []LayerProperties) (_ret Result) {
 	var c struct {
 		pPropertyCount *C.uint32_t
 		pProperties    *C.VkLayerProperties
@@ -3925,7 +3881,7 @@ func (p PFN_vkEnumerateInstanceLayerProperties) Call(propertyCount *uint32, prop
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkEnumerateInstanceLayerProperties(p.Raw, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkEnumerateInstanceLayerProperties(C.PFN_vkEnumerateInstanceLayerProperties(unsafe.Pointer(p)), c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -3937,11 +3893,9 @@ func (p PFN_vkEnumerateInstanceLayerProperties) Call(propertyCount *uint32, prop
 	return
 }
 
-type PFN_vkEnumerateDeviceLayerProperties struct {
-	Raw C.PFN_vkEnumerateDeviceLayerProperties
-}
+type PFNEnumerateDeviceLayerProperties uintptr
 
-func (p PFN_vkEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func (p PFNEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []LayerProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -3962,7 +3916,7 @@ func (p PFN_vkEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkEnumerateDeviceLayerProperties(p.Raw, c.physicalDevice, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkEnumerateDeviceLayerProperties(C.PFN_vkEnumerateDeviceLayerProperties(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -3974,12 +3928,10 @@ func (p PFN_vkEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice
 	return
 }
 
-type PFN_vkGetDeviceQueue struct {
-	Raw C.PFN_vkGetDeviceQueue
-}
+type PFNGetDeviceQueue uintptr
 type Queue C.VkQueue
 
-func (p PFN_vkGetDeviceQueue) Call(device Device, queueFamilyIndex uint32, queueIndex uint32, queue *Queue) {
+func (p PFNGetDeviceQueue) Call(device Device, queueFamilyIndex uint32, queueIndex uint32, queue *Queue) {
 	var c struct {
 		device           C.VkDevice
 		queueFamilyIndex C.uint32_t
@@ -3995,13 +3947,11 @@ func (p PFN_vkGetDeviceQueue) Call(device Device, queueFamilyIndex uint32, queue
 		c.pQueue = (*C.VkQueue)(_sa.alloc(C.sizeof_VkQueue))
 		*c.pQueue = C.VkQueue(*queue)
 	}
-	C.callPFN_vkGetDeviceQueue(p.Raw, c.device, c.queueFamilyIndex, c.queueIndex, c.pQueue)
+	C.callPFN_vkGetDeviceQueue(C.PFN_vkGetDeviceQueue(unsafe.Pointer(p)), c.device, c.queueFamilyIndex, c.queueIndex, c.pQueue)
 	*queue = Queue(*c.pQueue)
 }
 
-type PFN_vkQueueSubmit struct {
-	Raw C.PFN_vkQueueSubmit
-}
+type PFNQueueSubmit uintptr
 type Semaphore C.VkSemaphore
 type PipelineStageFlags Flags
 type CommandBuffer C.VkCommandBuffer
@@ -4113,7 +4063,7 @@ func (s *SubmitInfo) SetNext(n Structure) {
 
 type Fence C.VkFence
 
-func (p PFN_vkQueueSubmit) Call(queue Queue, submits []SubmitInfo, fence Fence) (_ret Result) {
+func (p PFNQueueSubmit) Call(queue Queue, submits []SubmitInfo, fence Fence) (_ret Result) {
 	var c struct {
 		queue       C.VkQueue
 		submitCount C.uint32_t
@@ -4133,44 +4083,38 @@ func (p PFN_vkQueueSubmit) Call(queue Queue, submits []SubmitInfo, fence Fence) 
 		}
 	}
 	c.fence = C.VkFence(fence)
-	c._ret = C.callPFN_vkQueueSubmit(p.Raw, c.queue, c.submitCount, c.pSubmits, c.fence)
+	c._ret = C.callPFN_vkQueueSubmit(C.PFN_vkQueueSubmit(unsafe.Pointer(p)), c.queue, c.submitCount, c.pSubmits, c.fence)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkQueueWaitIdle struct {
-	Raw C.PFN_vkQueueWaitIdle
-}
+type PFNQueueWaitIdle uintptr
 
-func (p PFN_vkQueueWaitIdle) Call(queue Queue) (_ret Result) {
+func (p PFNQueueWaitIdle) Call(queue Queue) (_ret Result) {
 	var c struct {
 		queue C.VkQueue
 		_ret  C.VkResult
 	}
 	c.queue = C.VkQueue(queue)
-	c._ret = C.callPFN_vkQueueWaitIdle(p.Raw, c.queue)
+	c._ret = C.callPFN_vkQueueWaitIdle(C.PFN_vkQueueWaitIdle(unsafe.Pointer(p)), c.queue)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkDeviceWaitIdle struct {
-	Raw C.PFN_vkDeviceWaitIdle
-}
+type PFNDeviceWaitIdle uintptr
 
-func (p PFN_vkDeviceWaitIdle) Call(device Device) (_ret Result) {
+func (p PFNDeviceWaitIdle) Call(device Device) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		_ret   C.VkResult
 	}
 	c.device = C.VkDevice(device)
-	c._ret = C.callPFN_vkDeviceWaitIdle(p.Raw, c.device)
+	c._ret = C.callPFN_vkDeviceWaitIdle(C.PFN_vkDeviceWaitIdle(unsafe.Pointer(p)), c.device)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkAllocateMemory struct {
-	Raw C.PFN_vkAllocateMemory
-}
+type PFNAllocateMemory uintptr
 type MemoryAllocateInfo struct {
 	Next            Structure
 	AllocationSize  DeviceSize
@@ -4223,7 +4167,7 @@ func (s *MemoryAllocateInfo) SetNext(n Structure) {
 
 type DeviceMemory C.VkDeviceMemory
 
-func (p PFN_vkAllocateMemory) Call(device Device, allocateInfo *MemoryAllocateInfo, allocator *AllocationCallbacks, memory *DeviceMemory) (_ret Result) {
+func (p PFNAllocateMemory) Call(device Device, allocateInfo *MemoryAllocateInfo, allocator *AllocationCallbacks, memory *DeviceMemory) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		pAllocateInfo *C.VkMemoryAllocateInfo
@@ -4246,17 +4190,15 @@ func (p PFN_vkAllocateMemory) Call(device Device, allocateInfo *MemoryAllocateIn
 		c.pMemory = (*C.VkDeviceMemory)(_sa.alloc(C.sizeof_VkDeviceMemory))
 		*c.pMemory = C.VkDeviceMemory(*memory)
 	}
-	c._ret = C.callPFN_vkAllocateMemory(p.Raw, c.device, c.pAllocateInfo, c.pAllocator, c.pMemory)
+	c._ret = C.callPFN_vkAllocateMemory(C.PFN_vkAllocateMemory(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pAllocator, c.pMemory)
 	_ret = Result(c._ret)
 	*memory = DeviceMemory(*c.pMemory)
 	return
 }
 
-type PFN_vkFreeMemory struct {
-	Raw C.PFN_vkFreeMemory
-}
+type PFNFreeMemory uintptr
 
-func (p PFN_vkFreeMemory) Call(device Device, memory DeviceMemory, allocator *AllocationCallbacks) {
+func (p PFNFreeMemory) Call(device Device, memory DeviceMemory, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		memory     C.VkDeviceMemory
@@ -4270,15 +4212,13 @@ func (p PFN_vkFreeMemory) Call(device Device, memory DeviceMemory, allocator *Al
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkFreeMemory(p.Raw, c.device, c.memory, c.pAllocator)
+	C.callPFN_vkFreeMemory(C.PFN_vkFreeMemory(unsafe.Pointer(p)), c.device, c.memory, c.pAllocator)
 }
 
-type PFN_vkMapMemory struct {
-	Raw C.PFN_vkMapMemory
-}
+type PFNMapMemory uintptr
 type MemoryMapFlags Flags
 
-func (p PFN_vkMapMemory) Call(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data []unsafe.Pointer) (_ret Result) {
+func (p PFNMapMemory) Call(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data []unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		memory C.VkDeviceMemory
@@ -4318,7 +4258,7 @@ func (p PFN_vkMapMemory) Call(device Device, memory DeviceMemory, offset DeviceS
 			slice3[i3] = data[i3]
 		}
 	}
-	c._ret = C.callPFN_vkMapMemory(p.Raw, c.device, c.memory, c.offset, c.size, c.flags, c.ppData)
+	c._ret = C.callPFN_vkMapMemory(C.PFN_vkMapMemory(unsafe.Pointer(p)), c.device, c.memory, c.offset, c.size, c.flags, c.ppData)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]unsafe.Pointer)(unsafe.Pointer(c.ppData))[:len(data):len(data)]
@@ -4329,23 +4269,19 @@ func (p PFN_vkMapMemory) Call(device Device, memory DeviceMemory, offset DeviceS
 	return
 }
 
-type PFN_vkUnmapMemory struct {
-	Raw C.PFN_vkUnmapMemory
-}
+type PFNUnmapMemory uintptr
 
-func (p PFN_vkUnmapMemory) Call(device Device, memory DeviceMemory) {
+func (p PFNUnmapMemory) Call(device Device, memory DeviceMemory) {
 	var c struct {
 		device C.VkDevice
 		memory C.VkDeviceMemory
 	}
 	c.device = C.VkDevice(device)
 	c.memory = C.VkDeviceMemory(memory)
-	C.callPFN_vkUnmapMemory(p.Raw, c.device, c.memory)
+	C.callPFN_vkUnmapMemory(C.PFN_vkUnmapMemory(unsafe.Pointer(p)), c.device, c.memory)
 }
 
-type PFN_vkFlushMappedMemoryRanges struct {
-	Raw C.PFN_vkFlushMappedMemoryRanges
-}
+type PFNFlushMappedMemoryRanges uintptr
 type MappedMemoryRange struct {
 	Next   Structure
 	Memory DeviceMemory
@@ -4406,7 +4342,7 @@ func (s *MappedMemoryRange) GetNext() Structure {
 func (s *MappedMemoryRange) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkFlushMappedMemoryRanges) Call(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
+func (p PFNFlushMappedMemoryRanges) Call(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		memoryRangeCount C.uint32_t
@@ -4424,16 +4360,14 @@ func (p PFN_vkFlushMappedMemoryRanges) Call(device Device, memoryRanges []Mapped
 			memoryRanges[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkFlushMappedMemoryRanges(p.Raw, c.device, c.memoryRangeCount, c.pMemoryRanges)
+	c._ret = C.callPFN_vkFlushMappedMemoryRanges(C.PFN_vkFlushMappedMemoryRanges(unsafe.Pointer(p)), c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkInvalidateMappedMemoryRanges struct {
-	Raw C.PFN_vkInvalidateMappedMemoryRanges
-}
+type PFNInvalidateMappedMemoryRanges uintptr
 
-func (p PFN_vkInvalidateMappedMemoryRanges) Call(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
+func (p PFNInvalidateMappedMemoryRanges) Call(device Device, memoryRanges []MappedMemoryRange) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		memoryRangeCount C.uint32_t
@@ -4451,16 +4385,14 @@ func (p PFN_vkInvalidateMappedMemoryRanges) Call(device Device, memoryRanges []M
 			memoryRanges[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkInvalidateMappedMemoryRanges(p.Raw, c.device, c.memoryRangeCount, c.pMemoryRanges)
+	c._ret = C.callPFN_vkInvalidateMappedMemoryRanges(C.PFN_vkInvalidateMappedMemoryRanges(unsafe.Pointer(p)), c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetDeviceMemoryCommitment struct {
-	Raw C.PFN_vkGetDeviceMemoryCommitment
-}
+type PFNGetDeviceMemoryCommitment uintptr
 
-func (p PFN_vkGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory, committedMemoryInBytes []DeviceSize) {
+func (p PFNGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory, committedMemoryInBytes []DeviceSize) {
 	var c struct {
 		device                  C.VkDevice
 		memory                  C.VkDeviceMemory
@@ -4481,7 +4413,7 @@ func (p PFN_vkGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory
 			}
 		}
 	}
-	C.callPFN_vkGetDeviceMemoryCommitment(p.Raw, c.device, c.memory, c.pCommittedMemoryInBytes)
+	C.callPFN_vkGetDeviceMemoryCommitment(C.PFN_vkGetDeviceMemoryCommitment(unsafe.Pointer(p)), c.device, c.memory, c.pCommittedMemoryInBytes)
 	{
 		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
 		for i3, _ := range committedMemoryInBytes {
@@ -4494,12 +4426,10 @@ func (p PFN_vkGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory
 	}
 }
 
-type PFN_vkBindBufferMemory struct {
-	Raw C.PFN_vkBindBufferMemory
-}
+type PFNBindBufferMemory uintptr
 type Buffer C.VkBuffer
 
-func (p PFN_vkBindBufferMemory) Call(device Device, buffer Buffer, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
+func (p PFNBindBufferMemory) Call(device Device, buffer Buffer, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		buffer       C.VkBuffer
@@ -4515,17 +4445,15 @@ func (p PFN_vkBindBufferMemory) Call(device Device, buffer Buffer, memory Device
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
 		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
-	c._ret = C.callPFN_vkBindBufferMemory(p.Raw, c.device, c.buffer, c.memory, c.memoryOffset)
+	c._ret = C.callPFN_vkBindBufferMemory(C.PFN_vkBindBufferMemory(unsafe.Pointer(p)), c.device, c.buffer, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkBindImageMemory struct {
-	Raw C.PFN_vkBindImageMemory
-}
+type PFNBindImageMemory uintptr
 type Image C.VkImage
 
-func (p PFN_vkBindImageMemory) Call(device Device, image Image, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
+func (p PFNBindImageMemory) Call(device Device, image Image, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		image        C.VkImage
@@ -4541,14 +4469,12 @@ func (p PFN_vkBindImageMemory) Call(device Device, image Image, memory DeviceMem
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
 		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
-	c._ret = C.callPFN_vkBindImageMemory(p.Raw, c.device, c.image, c.memory, c.memoryOffset)
+	c._ret = C.callPFN_vkBindImageMemory(C.PFN_vkBindImageMemory(unsafe.Pointer(p)), c.device, c.image, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetBufferMemoryRequirements struct {
-	Raw C.PFN_vkGetBufferMemoryRequirements
-}
+type PFNGetBufferMemoryRequirements uintptr
 type MemoryRequirements struct {
 	Size           DeviceSize
 	Alignment      DeviceSize
@@ -4581,7 +4507,7 @@ func (g *MemoryRequirements) fromC(c *C.VkMemoryRequirements) {
 	}
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
 }
-func (p PFN_vkGetBufferMemoryRequirements) Call(device Device, buffer Buffer, memoryRequirements []MemoryRequirements) {
+func (p PFNGetBufferMemoryRequirements) Call(device Device, buffer Buffer, memoryRequirements []MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		buffer              C.VkBuffer
@@ -4598,7 +4524,7 @@ func (p PFN_vkGetBufferMemoryRequirements) Call(device Device, buffer Buffer, me
 			memoryRequirements[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetBufferMemoryRequirements(p.Raw, c.device, c.buffer, c.pMemoryRequirements)
+	C.callPFN_vkGetBufferMemoryRequirements(C.PFN_vkGetBufferMemoryRequirements(unsafe.Pointer(p)), c.device, c.buffer, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -4607,11 +4533,9 @@ func (p PFN_vkGetBufferMemoryRequirements) Call(device Device, buffer Buffer, me
 	}
 }
 
-type PFN_vkGetImageMemoryRequirements struct {
-	Raw C.PFN_vkGetImageMemoryRequirements
-}
+type PFNGetImageMemoryRequirements uintptr
 
-func (p PFN_vkGetImageMemoryRequirements) Call(device Device, image Image, memoryRequirements []MemoryRequirements) {
+func (p PFNGetImageMemoryRequirements) Call(device Device, image Image, memoryRequirements []MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		image               C.VkImage
@@ -4628,7 +4552,7 @@ func (p PFN_vkGetImageMemoryRequirements) Call(device Device, image Image, memor
 			memoryRequirements[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetImageMemoryRequirements(p.Raw, c.device, c.image, c.pMemoryRequirements)
+	C.callPFN_vkGetImageMemoryRequirements(C.PFN_vkGetImageMemoryRequirements(unsafe.Pointer(p)), c.device, c.image, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -4637,9 +4561,7 @@ func (p PFN_vkGetImageMemoryRequirements) Call(device Device, image Image, memor
 	}
 }
 
-type PFN_vkGetImageSparseMemoryRequirements struct {
-	Raw C.PFN_vkGetImageSparseMemoryRequirements
-}
+type PFNGetImageSparseMemoryRequirements uintptr
 type ImageAspectFlags Flags
 type SparseImageFormatFlags Flags
 type SparseImageFormatProperties struct {
@@ -4737,7 +4659,7 @@ func (g *SparseImageMemoryRequirements) fromC(c *C.VkSparseImageMemoryRequiremen
 		g.ImageMipTailStride = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFN_vkGetImageSparseMemoryRequirements) Call(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements) {
+func (p PFNGetImageSparseMemoryRequirements) Call(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements) {
 	var c struct {
 		device                        C.VkDevice
 		image                         C.VkImage
@@ -4759,7 +4681,7 @@ func (p PFN_vkGetImageSparseMemoryRequirements) Call(device Device, image Image,
 			sparseMemoryRequirements[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetImageSparseMemoryRequirements(p.Raw, c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
+	C.callPFN_vkGetImageSparseMemoryRequirements(C.PFN_vkGetImageSparseMemoryRequirements(unsafe.Pointer(p)), c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
@@ -4769,11 +4691,9 @@ func (p PFN_vkGetImageSparseMemoryRequirements) Call(device Device, image Image,
 	}
 }
 
-type PFN_vkGetPhysicalDeviceSparseImageFormatProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties
-}
+type PFNGetPhysicalDeviceSparseImageFormatProperties uintptr
 
-func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		format         C.VkFormat
@@ -4811,7 +4731,7 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice 
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties(p.Raw, c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
@@ -4821,9 +4741,7 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice 
 	}
 }
 
-type PFN_vkQueueBindSparse struct {
-	Raw C.PFN_vkQueueBindSparse
-}
+type PFNQueueBindSparse uintptr
 type SparseMemoryBindFlags Flags
 type SparseMemoryBind struct {
 	ResourceOffset DeviceSize
@@ -5184,7 +5102,7 @@ func (s *BindSparseInfo) GetNext() Structure {
 func (s *BindSparseInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkQueueBindSparse) Call(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo, fence Fence) (_ret Result) {
+func (p PFNQueueBindSparse) Call(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo, fence Fence) (_ret Result) {
 	var c struct {
 		queue         C.VkQueue
 		bindInfoCount C.uint32_t
@@ -5201,14 +5119,12 @@ func (p PFN_vkQueueBindSparse) Call(queue Queue, bindInfoCount uint32, bindInfo 
 		bindInfo.toC(c.pBindInfo, _sa)
 	}
 	c.fence = C.VkFence(fence)
-	c._ret = C.callPFN_vkQueueBindSparse(p.Raw, c.queue, c.bindInfoCount, c.pBindInfo, c.fence)
+	c._ret = C.callPFN_vkQueueBindSparse(C.PFN_vkQueueBindSparse(unsafe.Pointer(p)), c.queue, c.bindInfoCount, c.pBindInfo, c.fence)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCreateFence struct {
-	Raw C.PFN_vkCreateFence
-}
+type PFNCreateFence uintptr
 type FenceCreateFlags Flags
 type FenceCreateInfo struct {
 	Next  Structure
@@ -5264,7 +5180,7 @@ func (s *FenceCreateInfo) GetNext() Structure {
 func (s *FenceCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateFence) Call(device Device, createInfo *FenceCreateInfo, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
+func (p PFNCreateFence) Call(device Device, createInfo *FenceCreateInfo, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkFenceCreateInfo
@@ -5287,17 +5203,15 @@ func (p PFN_vkCreateFence) Call(device Device, createInfo *FenceCreateInfo, allo
 		c.pFence = (*C.VkFence)(_sa.alloc(C.sizeof_VkFence))
 		*c.pFence = C.VkFence(*fence)
 	}
-	c._ret = C.callPFN_vkCreateFence(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pFence)
+	c._ret = C.callPFN_vkCreateFence(C.PFN_vkCreateFence(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pFence)
 	_ret = Result(c._ret)
 	*fence = Fence(*c.pFence)
 	return
 }
 
-type PFN_vkDestroyFence struct {
-	Raw C.PFN_vkDestroyFence
-}
+type PFNDestroyFence uintptr
 
-func (p PFN_vkDestroyFence) Call(device Device, fence Fence, allocator *AllocationCallbacks) {
+func (p PFNDestroyFence) Call(device Device, fence Fence, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		fence      C.VkFence
@@ -5311,14 +5225,12 @@ func (p PFN_vkDestroyFence) Call(device Device, fence Fence, allocator *Allocati
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyFence(p.Raw, c.device, c.fence, c.pAllocator)
+	C.callPFN_vkDestroyFence(C.PFN_vkDestroyFence(unsafe.Pointer(p)), c.device, c.fence, c.pAllocator)
 }
 
-type PFN_vkResetFences struct {
-	Raw C.PFN_vkResetFences
-}
+type PFNResetFences uintptr
 
-func (p PFN_vkResetFences) Call(device Device, fences []Fence) (_ret Result) {
+func (p PFNResetFences) Call(device Device, fences []Fence) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		fenceCount C.uint32_t
@@ -5336,16 +5248,14 @@ func (p PFN_vkResetFences) Call(device Device, fences []Fence) (_ret Result) {
 			slice3[i3] = C.VkFence(fences[i3])
 		}
 	}
-	c._ret = C.callPFN_vkResetFences(p.Raw, c.device, c.fenceCount, c.pFences)
+	c._ret = C.callPFN_vkResetFences(C.PFN_vkResetFences(unsafe.Pointer(p)), c.device, c.fenceCount, c.pFences)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetFenceStatus struct {
-	Raw C.PFN_vkGetFenceStatus
-}
+type PFNGetFenceStatus uintptr
 
-func (p PFN_vkGetFenceStatus) Call(device Device, fence Fence) (_ret Result) {
+func (p PFNGetFenceStatus) Call(device Device, fence Fence) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		fence  C.VkFence
@@ -5353,16 +5263,14 @@ func (p PFN_vkGetFenceStatus) Call(device Device, fence Fence) (_ret Result) {
 	}
 	c.device = C.VkDevice(device)
 	c.fence = C.VkFence(fence)
-	c._ret = C.callPFN_vkGetFenceStatus(p.Raw, c.device, c.fence)
+	c._ret = C.callPFN_vkGetFenceStatus(C.PFN_vkGetFenceStatus(unsafe.Pointer(p)), c.device, c.fence)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkWaitForFences struct {
-	Raw C.PFN_vkWaitForFences
-}
+type PFNWaitForFences uintptr
 
-func (p PFN_vkWaitForFences) Call(device Device, fences []Fence, waitAll bool, timeout uint64) (_ret Result) {
+func (p PFNWaitForFences) Call(device Device, fences []Fence, waitAll bool, timeout uint64) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		fenceCount C.uint32_t
@@ -5388,14 +5296,12 @@ func (p PFN_vkWaitForFences) Call(device Device, fences []Fence, waitAll bool, t
 		c.waitAll = 0
 	}
 	c.timeout = C.uint64_t(timeout)
-	c._ret = C.callPFN_vkWaitForFences(p.Raw, c.device, c.fenceCount, c.pFences, c.waitAll, c.timeout)
+	c._ret = C.callPFN_vkWaitForFences(C.PFN_vkWaitForFences(unsafe.Pointer(p)), c.device, c.fenceCount, c.pFences, c.waitAll, c.timeout)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCreateSemaphore struct {
-	Raw C.PFN_vkCreateSemaphore
-}
+type PFNCreateSemaphore uintptr
 type SemaphoreCreateFlags Flags
 type SemaphoreCreateInfo struct {
 	Next  Structure
@@ -5451,7 +5357,7 @@ func (s *SemaphoreCreateInfo) GetNext() Structure {
 func (s *SemaphoreCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateSemaphore) Call(device Device, createInfo *SemaphoreCreateInfo, allocator *AllocationCallbacks, semaphore *Semaphore) (_ret Result) {
+func (p PFNCreateSemaphore) Call(device Device, createInfo *SemaphoreCreateInfo, allocator *AllocationCallbacks, semaphore *Semaphore) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkSemaphoreCreateInfo
@@ -5474,17 +5380,15 @@ func (p PFN_vkCreateSemaphore) Call(device Device, createInfo *SemaphoreCreateIn
 		c.pSemaphore = (*C.VkSemaphore)(_sa.alloc(C.sizeof_VkSemaphore))
 		*c.pSemaphore = C.VkSemaphore(*semaphore)
 	}
-	c._ret = C.callPFN_vkCreateSemaphore(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pSemaphore)
+	c._ret = C.callPFN_vkCreateSemaphore(C.PFN_vkCreateSemaphore(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pSemaphore)
 	_ret = Result(c._ret)
 	*semaphore = Semaphore(*c.pSemaphore)
 	return
 }
 
-type PFN_vkDestroySemaphore struct {
-	Raw C.PFN_vkDestroySemaphore
-}
+type PFNDestroySemaphore uintptr
 
-func (p PFN_vkDestroySemaphore) Call(device Device, semaphore Semaphore, allocator *AllocationCallbacks) {
+func (p PFNDestroySemaphore) Call(device Device, semaphore Semaphore, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		semaphore  C.VkSemaphore
@@ -5498,12 +5402,10 @@ func (p PFN_vkDestroySemaphore) Call(device Device, semaphore Semaphore, allocat
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySemaphore(p.Raw, c.device, c.semaphore, c.pAllocator)
+	C.callPFN_vkDestroySemaphore(C.PFN_vkDestroySemaphore(unsafe.Pointer(p)), c.device, c.semaphore, c.pAllocator)
 }
 
-type PFN_vkCreateEvent struct {
-	Raw C.PFN_vkCreateEvent
-}
+type PFNCreateEvent uintptr
 type EventCreateFlags Flags
 type EventCreateInfo struct {
 	Next  Structure
@@ -5562,7 +5464,7 @@ func (s *EventCreateInfo) SetNext(n Structure) {
 
 type Event C.VkEvent
 
-func (p PFN_vkCreateEvent) Call(device Device, createInfo *EventCreateInfo, allocator *AllocationCallbacks, event *Event) (_ret Result) {
+func (p PFNCreateEvent) Call(device Device, createInfo *EventCreateInfo, allocator *AllocationCallbacks, event *Event) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkEventCreateInfo
@@ -5585,17 +5487,15 @@ func (p PFN_vkCreateEvent) Call(device Device, createInfo *EventCreateInfo, allo
 		c.pEvent = (*C.VkEvent)(_sa.alloc(C.sizeof_VkEvent))
 		*c.pEvent = C.VkEvent(*event)
 	}
-	c._ret = C.callPFN_vkCreateEvent(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pEvent)
+	c._ret = C.callPFN_vkCreateEvent(C.PFN_vkCreateEvent(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pEvent)
 	_ret = Result(c._ret)
 	*event = Event(*c.pEvent)
 	return
 }
 
-type PFN_vkDestroyEvent struct {
-	Raw C.PFN_vkDestroyEvent
-}
+type PFNDestroyEvent uintptr
 
-func (p PFN_vkDestroyEvent) Call(device Device, event Event, allocator *AllocationCallbacks) {
+func (p PFNDestroyEvent) Call(device Device, event Event, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		event      C.VkEvent
@@ -5609,14 +5509,12 @@ func (p PFN_vkDestroyEvent) Call(device Device, event Event, allocator *Allocati
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyEvent(p.Raw, c.device, c.event, c.pAllocator)
+	C.callPFN_vkDestroyEvent(C.PFN_vkDestroyEvent(unsafe.Pointer(p)), c.device, c.event, c.pAllocator)
 }
 
-type PFN_vkGetEventStatus struct {
-	Raw C.PFN_vkGetEventStatus
-}
+type PFNGetEventStatus uintptr
 
-func (p PFN_vkGetEventStatus) Call(device Device, event Event) (_ret Result) {
+func (p PFNGetEventStatus) Call(device Device, event Event) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		event  C.VkEvent
@@ -5624,16 +5522,14 @@ func (p PFN_vkGetEventStatus) Call(device Device, event Event) (_ret Result) {
 	}
 	c.device = C.VkDevice(device)
 	c.event = C.VkEvent(event)
-	c._ret = C.callPFN_vkGetEventStatus(p.Raw, c.device, c.event)
+	c._ret = C.callPFN_vkGetEventStatus(C.PFN_vkGetEventStatus(unsafe.Pointer(p)), c.device, c.event)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkSetEvent struct {
-	Raw C.PFN_vkSetEvent
-}
+type PFNSetEvent uintptr
 
-func (p PFN_vkSetEvent) Call(device Device, event Event) (_ret Result) {
+func (p PFNSetEvent) Call(device Device, event Event) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		event  C.VkEvent
@@ -5641,16 +5537,14 @@ func (p PFN_vkSetEvent) Call(device Device, event Event) (_ret Result) {
 	}
 	c.device = C.VkDevice(device)
 	c.event = C.VkEvent(event)
-	c._ret = C.callPFN_vkSetEvent(p.Raw, c.device, c.event)
+	c._ret = C.callPFN_vkSetEvent(C.PFN_vkSetEvent(unsafe.Pointer(p)), c.device, c.event)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkResetEvent struct {
-	Raw C.PFN_vkResetEvent
-}
+type PFNResetEvent uintptr
 
-func (p PFN_vkResetEvent) Call(device Device, event Event) (_ret Result) {
+func (p PFNResetEvent) Call(device Device, event Event) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		event  C.VkEvent
@@ -5658,14 +5552,12 @@ func (p PFN_vkResetEvent) Call(device Device, event Event) (_ret Result) {
 	}
 	c.device = C.VkDevice(device)
 	c.event = C.VkEvent(event)
-	c._ret = C.callPFN_vkResetEvent(p.Raw, c.device, c.event)
+	c._ret = C.callPFN_vkResetEvent(C.PFN_vkResetEvent(unsafe.Pointer(p)), c.device, c.event)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCreateQueryPool struct {
-	Raw C.PFN_vkCreateQueryPool
-}
+type PFNCreateQueryPool uintptr
 type QueryPoolCreateFlags Flags
 type QueryPipelineStatisticFlags Flags
 type QueryPoolCreateInfo struct {
@@ -5750,7 +5642,7 @@ func (s *QueryPoolCreateInfo) SetNext(n Structure) {
 
 type QueryPool C.VkQueryPool
 
-func (p PFN_vkCreateQueryPool) Call(device Device, createInfo *QueryPoolCreateInfo, allocator *AllocationCallbacks, queryPool *QueryPool) (_ret Result) {
+func (p PFNCreateQueryPool) Call(device Device, createInfo *QueryPoolCreateInfo, allocator *AllocationCallbacks, queryPool *QueryPool) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkQueryPoolCreateInfo
@@ -5773,17 +5665,15 @@ func (p PFN_vkCreateQueryPool) Call(device Device, createInfo *QueryPoolCreateIn
 		c.pQueryPool = (*C.VkQueryPool)(_sa.alloc(C.sizeof_VkQueryPool))
 		*c.pQueryPool = C.VkQueryPool(*queryPool)
 	}
-	c._ret = C.callPFN_vkCreateQueryPool(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pQueryPool)
+	c._ret = C.callPFN_vkCreateQueryPool(C.PFN_vkCreateQueryPool(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pQueryPool)
 	_ret = Result(c._ret)
 	*queryPool = QueryPool(*c.pQueryPool)
 	return
 }
 
-type PFN_vkDestroyQueryPool struct {
-	Raw C.PFN_vkDestroyQueryPool
-}
+type PFNDestroyQueryPool uintptr
 
-func (p PFN_vkDestroyQueryPool) Call(device Device, queryPool QueryPool, allocator *AllocationCallbacks) {
+func (p PFNDestroyQueryPool) Call(device Device, queryPool QueryPool, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		queryPool  C.VkQueryPool
@@ -5797,15 +5687,13 @@ func (p PFN_vkDestroyQueryPool) Call(device Device, queryPool QueryPool, allocat
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyQueryPool(p.Raw, c.device, c.queryPool, c.pAllocator)
+	C.callPFN_vkDestroyQueryPool(C.PFN_vkDestroyQueryPool(unsafe.Pointer(p)), c.device, c.queryPool, c.pAllocator)
 }
 
-type PFN_vkGetQueryPoolResults struct {
-	Raw C.PFN_vkGetQueryPoolResults
-}
+type PFNGetQueryPoolResults uintptr
 type QueryResultFlags Flags
 
-func (p PFN_vkGetQueryPoolResults) Call(device Device, queryPool QueryPool, firstQuery uint32, queryCount uint32, data []byte, stride DeviceSize, flags QueryResultFlags) (_ret Result) {
+func (p PFNGetQueryPoolResults) Call(device Device, queryPool QueryPool, firstQuery uint32, queryCount uint32, data []byte, stride DeviceSize, flags QueryResultFlags) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		queryPool  C.VkQueryPool
@@ -5845,7 +5733,7 @@ func (p PFN_vkGetQueryPoolResults) Call(device Device, queryPool QueryPool, firs
 		}
 		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
 	}
-	c._ret = C.callPFN_vkGetQueryPoolResults(p.Raw, c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
+	c._ret = C.callPFN_vkGetQueryPoolResults(C.PFN_vkGetQueryPoolResults(unsafe.Pointer(p)), c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
@@ -5856,9 +5744,7 @@ func (p PFN_vkGetQueryPoolResults) Call(device Device, queryPool QueryPool, firs
 	return
 }
 
-type PFN_vkCreateBuffer struct {
-	Raw C.PFN_vkCreateBuffer
-}
+type PFNCreateBuffer uintptr
 type BufferCreateFlags Flags
 type BufferUsageFlags Flags
 type BufferCreateInfo struct {
@@ -5964,7 +5850,7 @@ func (s *BufferCreateInfo) GetNext() Structure {
 func (s *BufferCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateBuffer) Call(device Device, createInfo *BufferCreateInfo, allocator *AllocationCallbacks, buffer *Buffer) (_ret Result) {
+func (p PFNCreateBuffer) Call(device Device, createInfo *BufferCreateInfo, allocator *AllocationCallbacks, buffer *Buffer) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkBufferCreateInfo
@@ -5987,17 +5873,15 @@ func (p PFN_vkCreateBuffer) Call(device Device, createInfo *BufferCreateInfo, al
 		c.pBuffer = (*C.VkBuffer)(_sa.alloc(C.sizeof_VkBuffer))
 		*c.pBuffer = C.VkBuffer(*buffer)
 	}
-	c._ret = C.callPFN_vkCreateBuffer(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pBuffer)
+	c._ret = C.callPFN_vkCreateBuffer(C.PFN_vkCreateBuffer(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pBuffer)
 	_ret = Result(c._ret)
 	*buffer = Buffer(*c.pBuffer)
 	return
 }
 
-type PFN_vkDestroyBuffer struct {
-	Raw C.PFN_vkDestroyBuffer
-}
+type PFNDestroyBuffer uintptr
 
-func (p PFN_vkDestroyBuffer) Call(device Device, buffer Buffer, allocator *AllocationCallbacks) {
+func (p PFNDestroyBuffer) Call(device Device, buffer Buffer, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		buffer     C.VkBuffer
@@ -6011,12 +5895,10 @@ func (p PFN_vkDestroyBuffer) Call(device Device, buffer Buffer, allocator *Alloc
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyBuffer(p.Raw, c.device, c.buffer, c.pAllocator)
+	C.callPFN_vkDestroyBuffer(C.PFN_vkDestroyBuffer(unsafe.Pointer(p)), c.device, c.buffer, c.pAllocator)
 }
 
-type PFN_vkCreateBufferView struct {
-	Raw C.PFN_vkCreateBufferView
-}
+type PFNCreateBufferView uintptr
 type BufferViewCreateFlags Flags
 type BufferViewCreateInfo struct {
 	Next   Structure
@@ -6103,7 +5985,7 @@ func (s *BufferViewCreateInfo) SetNext(n Structure) {
 
 type BufferView C.VkBufferView
 
-func (p PFN_vkCreateBufferView) Call(device Device, createInfo *BufferViewCreateInfo, allocator *AllocationCallbacks, view *BufferView) (_ret Result) {
+func (p PFNCreateBufferView) Call(device Device, createInfo *BufferViewCreateInfo, allocator *AllocationCallbacks, view *BufferView) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkBufferViewCreateInfo
@@ -6126,17 +6008,15 @@ func (p PFN_vkCreateBufferView) Call(device Device, createInfo *BufferViewCreate
 		c.pView = (*C.VkBufferView)(_sa.alloc(C.sizeof_VkBufferView))
 		*c.pView = C.VkBufferView(*view)
 	}
-	c._ret = C.callPFN_vkCreateBufferView(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pView)
+	c._ret = C.callPFN_vkCreateBufferView(C.PFN_vkCreateBufferView(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pView)
 	_ret = Result(c._ret)
 	*view = BufferView(*c.pView)
 	return
 }
 
-type PFN_vkDestroyBufferView struct {
-	Raw C.PFN_vkDestroyBufferView
-}
+type PFNDestroyBufferView uintptr
 
-func (p PFN_vkDestroyBufferView) Call(device Device, bufferView BufferView, allocator *AllocationCallbacks) {
+func (p PFNDestroyBufferView) Call(device Device, bufferView BufferView, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		bufferView C.VkBufferView
@@ -6150,12 +6030,10 @@ func (p PFN_vkDestroyBufferView) Call(device Device, bufferView BufferView, allo
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyBufferView(p.Raw, c.device, c.bufferView, c.pAllocator)
+	C.callPFN_vkDestroyBufferView(C.PFN_vkDestroyBufferView(unsafe.Pointer(p)), c.device, c.bufferView, c.pAllocator)
 }
 
-type PFN_vkCreateImage struct {
-	Raw C.PFN_vkCreateImage
-}
+type PFNCreateImage uintptr
 type ImageCreateInfo struct {
 	Next               Structure
 	Flags              ImageCreateFlags
@@ -6272,7 +6150,7 @@ func (s *ImageCreateInfo) GetNext() Structure {
 func (s *ImageCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateImage) Call(device Device, createInfo *ImageCreateInfo, allocator *AllocationCallbacks, image *Image) (_ret Result) {
+func (p PFNCreateImage) Call(device Device, createInfo *ImageCreateInfo, allocator *AllocationCallbacks, image *Image) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkImageCreateInfo
@@ -6295,17 +6173,15 @@ func (p PFN_vkCreateImage) Call(device Device, createInfo *ImageCreateInfo, allo
 		c.pImage = (*C.VkImage)(_sa.alloc(C.sizeof_VkImage))
 		*c.pImage = C.VkImage(*image)
 	}
-	c._ret = C.callPFN_vkCreateImage(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pImage)
+	c._ret = C.callPFN_vkCreateImage(C.PFN_vkCreateImage(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pImage)
 	_ret = Result(c._ret)
 	*image = Image(*c.pImage)
 	return
 }
 
-type PFN_vkDestroyImage struct {
-	Raw C.PFN_vkDestroyImage
-}
+type PFNDestroyImage uintptr
 
-func (p PFN_vkDestroyImage) Call(device Device, image Image, allocator *AllocationCallbacks) {
+func (p PFNDestroyImage) Call(device Device, image Image, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		image      C.VkImage
@@ -6319,12 +6195,10 @@ func (p PFN_vkDestroyImage) Call(device Device, image Image, allocator *Allocati
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyImage(p.Raw, c.device, c.image, c.pAllocator)
+	C.callPFN_vkDestroyImage(C.PFN_vkDestroyImage(unsafe.Pointer(p)), c.device, c.image, c.pAllocator)
 }
 
-type PFN_vkGetImageSubresourceLayout struct {
-	Raw C.PFN_vkGetImageSubresourceLayout
-}
+type PFNGetImageSubresourceLayout uintptr
 type SubresourceLayout struct {
 	Offset     DeviceSize
 	Size       DeviceSize
@@ -6387,7 +6261,7 @@ func (g *SubresourceLayout) fromC(c *C.VkSubresourceLayout) {
 		g.DepthPitch = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFN_vkGetImageSubresourceLayout) Call(device Device, image Image, subresource *ImageSubresource, layout *SubresourceLayout) {
+func (p PFNGetImageSubresourceLayout) Call(device Device, image Image, subresource *ImageSubresource, layout *SubresourceLayout) {
 	var c struct {
 		device       C.VkDevice
 		image        C.VkImage
@@ -6406,13 +6280,11 @@ func (p PFN_vkGetImageSubresourceLayout) Call(device Device, image Image, subres
 		c.pLayout = (*C.VkSubresourceLayout)(_sa.alloc(C.sizeof_VkSubresourceLayout))
 		layout.toC(c.pLayout)
 	}
-	C.callPFN_vkGetImageSubresourceLayout(p.Raw, c.device, c.image, c.pSubresource, c.pLayout)
+	C.callPFN_vkGetImageSubresourceLayout(C.PFN_vkGetImageSubresourceLayout(unsafe.Pointer(p)), c.device, c.image, c.pSubresource, c.pLayout)
 	layout.fromC(c.pLayout)
 }
 
-type PFN_vkCreateImageView struct {
-	Raw C.PFN_vkCreateImageView
-}
+type PFNCreateImageView uintptr
 type ImageViewCreateFlags Flags
 type ComponentMapping struct {
 	R ComponentSwizzle
@@ -6545,7 +6417,7 @@ func (s *ImageViewCreateInfo) SetNext(n Structure) {
 
 type ImageView C.VkImageView
 
-func (p PFN_vkCreateImageView) Call(device Device, createInfo *ImageViewCreateInfo, allocator *AllocationCallbacks, view *ImageView) (_ret Result) {
+func (p PFNCreateImageView) Call(device Device, createInfo *ImageViewCreateInfo, allocator *AllocationCallbacks, view *ImageView) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkImageViewCreateInfo
@@ -6568,17 +6440,15 @@ func (p PFN_vkCreateImageView) Call(device Device, createInfo *ImageViewCreateIn
 		c.pView = (*C.VkImageView)(_sa.alloc(C.sizeof_VkImageView))
 		*c.pView = C.VkImageView(*view)
 	}
-	c._ret = C.callPFN_vkCreateImageView(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pView)
+	c._ret = C.callPFN_vkCreateImageView(C.PFN_vkCreateImageView(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pView)
 	_ret = Result(c._ret)
 	*view = ImageView(*c.pView)
 	return
 }
 
-type PFN_vkDestroyImageView struct {
-	Raw C.PFN_vkDestroyImageView
-}
+type PFNDestroyImageView uintptr
 
-func (p PFN_vkDestroyImageView) Call(device Device, imageView ImageView, allocator *AllocationCallbacks) {
+func (p PFNDestroyImageView) Call(device Device, imageView ImageView, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		imageView  C.VkImageView
@@ -6592,12 +6462,10 @@ func (p PFN_vkDestroyImageView) Call(device Device, imageView ImageView, allocat
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyImageView(p.Raw, c.device, c.imageView, c.pAllocator)
+	C.callPFN_vkDestroyImageView(C.PFN_vkDestroyImageView(unsafe.Pointer(p)), c.device, c.imageView, c.pAllocator)
 }
 
-type PFN_vkCreateShaderModule struct {
-	Raw C.PFN_vkCreateShaderModule
-}
+type PFNCreateShaderModule uintptr
 type ShaderModuleCreateFlags Flags
 type ShaderModuleCreateInfo struct {
 	Next     Structure
@@ -6665,7 +6533,7 @@ func (s *ShaderModuleCreateInfo) SetNext(n Structure) {
 
 type ShaderModule C.VkShaderModule
 
-func (p PFN_vkCreateShaderModule) Call(device Device, createInfo *ShaderModuleCreateInfo, allocator *AllocationCallbacks, shaderModule *ShaderModule) (_ret Result) {
+func (p PFNCreateShaderModule) Call(device Device, createInfo *ShaderModuleCreateInfo, allocator *AllocationCallbacks, shaderModule *ShaderModule) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		pCreateInfo   *C.VkShaderModuleCreateInfo
@@ -6688,17 +6556,15 @@ func (p PFN_vkCreateShaderModule) Call(device Device, createInfo *ShaderModuleCr
 		c.pShaderModule = (*C.VkShaderModule)(_sa.alloc(C.sizeof_VkShaderModule))
 		*c.pShaderModule = C.VkShaderModule(*shaderModule)
 	}
-	c._ret = C.callPFN_vkCreateShaderModule(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pShaderModule)
+	c._ret = C.callPFN_vkCreateShaderModule(C.PFN_vkCreateShaderModule(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pShaderModule)
 	_ret = Result(c._ret)
 	*shaderModule = ShaderModule(*c.pShaderModule)
 	return
 }
 
-type PFN_vkDestroyShaderModule struct {
-	Raw C.PFN_vkDestroyShaderModule
-}
+type PFNDestroyShaderModule uintptr
 
-func (p PFN_vkDestroyShaderModule) Call(device Device, shaderModule ShaderModule, allocator *AllocationCallbacks) {
+func (p PFNDestroyShaderModule) Call(device Device, shaderModule ShaderModule, allocator *AllocationCallbacks) {
 	var c struct {
 		device       C.VkDevice
 		shaderModule C.VkShaderModule
@@ -6712,12 +6578,10 @@ func (p PFN_vkDestroyShaderModule) Call(device Device, shaderModule ShaderModule
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyShaderModule(p.Raw, c.device, c.shaderModule, c.pAllocator)
+	C.callPFN_vkDestroyShaderModule(C.PFN_vkDestroyShaderModule(unsafe.Pointer(p)), c.device, c.shaderModule, c.pAllocator)
 }
 
-type PFN_vkCreatePipelineCache struct {
-	Raw C.PFN_vkCreatePipelineCache
-}
+type PFNCreatePipelineCache uintptr
 type PipelineCacheCreateFlags Flags
 type PipelineCacheCreateInfo struct {
 	Next        Structure
@@ -6792,7 +6656,7 @@ func (s *PipelineCacheCreateInfo) SetNext(n Structure) {
 
 type PipelineCache C.VkPipelineCache
 
-func (p PFN_vkCreatePipelineCache) Call(device Device, createInfo *PipelineCacheCreateInfo, allocator *AllocationCallbacks, pipelineCache *PipelineCache) (_ret Result) {
+func (p PFNCreatePipelineCache) Call(device Device, createInfo *PipelineCacheCreateInfo, allocator *AllocationCallbacks, pipelineCache *PipelineCache) (_ret Result) {
 	var c struct {
 		device         C.VkDevice
 		pCreateInfo    *C.VkPipelineCacheCreateInfo
@@ -6815,17 +6679,15 @@ func (p PFN_vkCreatePipelineCache) Call(device Device, createInfo *PipelineCache
 		c.pPipelineCache = (*C.VkPipelineCache)(_sa.alloc(C.sizeof_VkPipelineCache))
 		*c.pPipelineCache = C.VkPipelineCache(*pipelineCache)
 	}
-	c._ret = C.callPFN_vkCreatePipelineCache(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pPipelineCache)
+	c._ret = C.callPFN_vkCreatePipelineCache(C.PFN_vkCreatePipelineCache(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pPipelineCache)
 	_ret = Result(c._ret)
 	*pipelineCache = PipelineCache(*c.pPipelineCache)
 	return
 }
 
-type PFN_vkDestroyPipelineCache struct {
-	Raw C.PFN_vkDestroyPipelineCache
-}
+type PFNDestroyPipelineCache uintptr
 
-func (p PFN_vkDestroyPipelineCache) Call(device Device, pipelineCache PipelineCache, allocator *AllocationCallbacks) {
+func (p PFNDestroyPipelineCache) Call(device Device, pipelineCache PipelineCache, allocator *AllocationCallbacks) {
 	var c struct {
 		device        C.VkDevice
 		pipelineCache C.VkPipelineCache
@@ -6839,14 +6701,12 @@ func (p PFN_vkDestroyPipelineCache) Call(device Device, pipelineCache PipelineCa
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyPipelineCache(p.Raw, c.device, c.pipelineCache, c.pAllocator)
+	C.callPFN_vkDestroyPipelineCache(C.PFN_vkDestroyPipelineCache(unsafe.Pointer(p)), c.device, c.pipelineCache, c.pAllocator)
 }
 
-type PFN_vkGetPipelineCacheData struct {
-	Raw C.PFN_vkGetPipelineCacheData
-}
+type PFNGetPipelineCacheData uintptr
 
-func (p PFN_vkGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache, dataSize *uint, data []byte) (_ret Result) {
+func (p PFNGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache, dataSize *uint, data []byte) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		pipelineCache C.VkPipelineCache
@@ -6869,7 +6729,7 @@ func (p PFN_vkGetPipelineCacheData) Call(device Device, pipelineCache PipelineCa
 			slice3[i3] = data[i3]
 		}
 	}
-	c._ret = C.callPFN_vkGetPipelineCacheData(p.Raw, c.device, c.pipelineCache, c.pDataSize, c.pData)
+	c._ret = C.callPFN_vkGetPipelineCacheData(C.PFN_vkGetPipelineCacheData(unsafe.Pointer(p)), c.device, c.pipelineCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
 	*dataSize = uint(*c.pDataSize)
 	{
@@ -6881,11 +6741,9 @@ func (p PFN_vkGetPipelineCacheData) Call(device Device, pipelineCache PipelineCa
 	return
 }
 
-type PFN_vkMergePipelineCaches struct {
-	Raw C.PFN_vkMergePipelineCaches
-}
+type PFNMergePipelineCaches uintptr
 
-func (p PFN_vkMergePipelineCaches) Call(device Device, dstCache PipelineCache, srcCaches []PipelineCache) (_ret Result) {
+func (p PFNMergePipelineCaches) Call(device Device, dstCache PipelineCache, srcCaches []PipelineCache) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		dstCache      C.VkPipelineCache
@@ -6905,14 +6763,12 @@ func (p PFN_vkMergePipelineCaches) Call(device Device, dstCache PipelineCache, s
 			slice3[i3] = C.VkPipelineCache(srcCaches[i3])
 		}
 	}
-	c._ret = C.callPFN_vkMergePipelineCaches(p.Raw, c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
+	c._ret = C.callPFN_vkMergePipelineCaches(C.PFN_vkMergePipelineCaches(unsafe.Pointer(p)), c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCreateGraphicsPipelines struct {
-	Raw C.PFN_vkCreateGraphicsPipelines
-}
+type PFNCreateGraphicsPipelines uintptr
 type PipelineCreateFlags Flags
 type PipelineShaderStageCreateFlags Flags
 type SpecializationMapEntry struct {
@@ -8145,7 +8001,7 @@ func (s *GraphicsPipelineCreateInfo) GetNext() Structure {
 func (s *GraphicsPipelineCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCache, createInfos []GraphicsPipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
+func (p PFNCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCache, createInfos []GraphicsPipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pipelineCache   C.VkPipelineCache
@@ -8178,7 +8034,7 @@ func (p PFN_vkCreateGraphicsPipelines) Call(device Device, pipelineCache Pipelin
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
 	}
-	c._ret = C.callPFN_vkCreateGraphicsPipelines(p.Raw, c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
+	c._ret = C.callPFN_vkCreateGraphicsPipelines(C.PFN_vkCreateGraphicsPipelines(unsafe.Pointer(p)), c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
@@ -8189,9 +8045,7 @@ func (p PFN_vkCreateGraphicsPipelines) Call(device Device, pipelineCache Pipelin
 	return
 }
 
-type PFN_vkCreateComputePipelines struct {
-	Raw C.PFN_vkCreateComputePipelines
-}
+type PFNCreateComputePipelines uintptr
 type ComputePipelineCreateInfo struct {
 	Next               Structure
 	Flags              PipelineCreateFlags
@@ -8258,7 +8112,7 @@ func (s *ComputePipelineCreateInfo) GetNext() Structure {
 func (s *ComputePipelineCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateComputePipelines) Call(device Device, pipelineCache PipelineCache, createInfos []ComputePipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
+func (p PFNCreateComputePipelines) Call(device Device, pipelineCache PipelineCache, createInfos []ComputePipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pipelineCache   C.VkPipelineCache
@@ -8291,7 +8145,7 @@ func (p PFN_vkCreateComputePipelines) Call(device Device, pipelineCache Pipeline
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
 	}
-	c._ret = C.callPFN_vkCreateComputePipelines(p.Raw, c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
+	c._ret = C.callPFN_vkCreateComputePipelines(C.PFN_vkCreateComputePipelines(unsafe.Pointer(p)), c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
@@ -8302,11 +8156,9 @@ func (p PFN_vkCreateComputePipelines) Call(device Device, pipelineCache Pipeline
 	return
 }
 
-type PFN_vkDestroyPipeline struct {
-	Raw C.PFN_vkDestroyPipeline
-}
+type PFNDestroyPipeline uintptr
 
-func (p PFN_vkDestroyPipeline) Call(device Device, pipeline Pipeline, allocator *AllocationCallbacks) {
+func (p PFNDestroyPipeline) Call(device Device, pipeline Pipeline, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		pipeline   C.VkPipeline
@@ -8320,12 +8172,10 @@ func (p PFN_vkDestroyPipeline) Call(device Device, pipeline Pipeline, allocator 
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyPipeline(p.Raw, c.device, c.pipeline, c.pAllocator)
+	C.callPFN_vkDestroyPipeline(C.PFN_vkDestroyPipeline(unsafe.Pointer(p)), c.device, c.pipeline, c.pAllocator)
 }
 
-type PFN_vkCreatePipelineLayout struct {
-	Raw C.PFN_vkCreatePipelineLayout
-}
+type PFNCreatePipelineLayout uintptr
 type PipelineLayoutCreateFlags Flags
 type DescriptorSetLayout C.VkDescriptorSetLayout
 type ShaderStageFlags Flags
@@ -8448,7 +8298,7 @@ func (s *PipelineLayoutCreateInfo) GetNext() Structure {
 func (s *PipelineLayoutCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreatePipelineLayout) Call(device Device, createInfo *PipelineLayoutCreateInfo, allocator *AllocationCallbacks, pipelineLayout *PipelineLayout) (_ret Result) {
+func (p PFNCreatePipelineLayout) Call(device Device, createInfo *PipelineLayoutCreateInfo, allocator *AllocationCallbacks, pipelineLayout *PipelineLayout) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pCreateInfo     *C.VkPipelineLayoutCreateInfo
@@ -8471,17 +8321,15 @@ func (p PFN_vkCreatePipelineLayout) Call(device Device, createInfo *PipelineLayo
 		c.pPipelineLayout = (*C.VkPipelineLayout)(_sa.alloc(C.sizeof_VkPipelineLayout))
 		*c.pPipelineLayout = C.VkPipelineLayout(*pipelineLayout)
 	}
-	c._ret = C.callPFN_vkCreatePipelineLayout(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pPipelineLayout)
+	c._ret = C.callPFN_vkCreatePipelineLayout(C.PFN_vkCreatePipelineLayout(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pPipelineLayout)
 	_ret = Result(c._ret)
 	*pipelineLayout = PipelineLayout(*c.pPipelineLayout)
 	return
 }
 
-type PFN_vkDestroyPipelineLayout struct {
-	Raw C.PFN_vkDestroyPipelineLayout
-}
+type PFNDestroyPipelineLayout uintptr
 
-func (p PFN_vkDestroyPipelineLayout) Call(device Device, pipelineLayout PipelineLayout, allocator *AllocationCallbacks) {
+func (p PFNDestroyPipelineLayout) Call(device Device, pipelineLayout PipelineLayout, allocator *AllocationCallbacks) {
 	var c struct {
 		device         C.VkDevice
 		pipelineLayout C.VkPipelineLayout
@@ -8495,12 +8343,10 @@ func (p PFN_vkDestroyPipelineLayout) Call(device Device, pipelineLayout Pipeline
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyPipelineLayout(p.Raw, c.device, c.pipelineLayout, c.pAllocator)
+	C.callPFN_vkDestroyPipelineLayout(C.PFN_vkDestroyPipelineLayout(unsafe.Pointer(p)), c.device, c.pipelineLayout, c.pAllocator)
 }
 
-type PFN_vkCreateSampler struct {
-	Raw C.PFN_vkCreateSampler
-}
+type PFNCreateSampler uintptr
 type SamplerCreateFlags Flags
 type SamplerCreateInfo struct {
 	Next                    Structure
@@ -8616,7 +8462,7 @@ func (s *SamplerCreateInfo) SetNext(n Structure) {
 
 type Sampler C.VkSampler
 
-func (p PFN_vkCreateSampler) Call(device Device, createInfo *SamplerCreateInfo, allocator *AllocationCallbacks, sampler *Sampler) (_ret Result) {
+func (p PFNCreateSampler) Call(device Device, createInfo *SamplerCreateInfo, allocator *AllocationCallbacks, sampler *Sampler) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkSamplerCreateInfo
@@ -8639,17 +8485,15 @@ func (p PFN_vkCreateSampler) Call(device Device, createInfo *SamplerCreateInfo, 
 		c.pSampler = (*C.VkSampler)(_sa.alloc(C.sizeof_VkSampler))
 		*c.pSampler = C.VkSampler(*sampler)
 	}
-	c._ret = C.callPFN_vkCreateSampler(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pSampler)
+	c._ret = C.callPFN_vkCreateSampler(C.PFN_vkCreateSampler(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pSampler)
 	_ret = Result(c._ret)
 	*sampler = Sampler(*c.pSampler)
 	return
 }
 
-type PFN_vkDestroySampler struct {
-	Raw C.PFN_vkDestroySampler
-}
+type PFNDestroySampler uintptr
 
-func (p PFN_vkDestroySampler) Call(device Device, sampler Sampler, allocator *AllocationCallbacks) {
+func (p PFNDestroySampler) Call(device Device, sampler Sampler, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		sampler    C.VkSampler
@@ -8663,12 +8507,10 @@ func (p PFN_vkDestroySampler) Call(device Device, sampler Sampler, allocator *Al
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySampler(p.Raw, c.device, c.sampler, c.pAllocator)
+	C.callPFN_vkDestroySampler(C.PFN_vkDestroySampler(unsafe.Pointer(p)), c.device, c.sampler, c.pAllocator)
 }
 
-type PFN_vkCreateDescriptorSetLayout struct {
-	Raw C.PFN_vkCreateDescriptorSetLayout
-}
+type PFNCreateDescriptorSetLayout uintptr
 type DescriptorSetLayoutCreateFlags Flags
 type DescriptorSetLayoutBinding struct {
 	Binding           uint32
@@ -8790,7 +8632,7 @@ func (s *DescriptorSetLayoutCreateInfo) GetNext() Structure {
 func (s *DescriptorSetLayoutCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateDescriptorSetLayout) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, allocator *AllocationCallbacks, setLayout *DescriptorSetLayout) (_ret Result) {
+func (p PFNCreateDescriptorSetLayout) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, allocator *AllocationCallbacks, setLayout *DescriptorSetLayout) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkDescriptorSetLayoutCreateInfo
@@ -8813,17 +8655,15 @@ func (p PFN_vkCreateDescriptorSetLayout) Call(device Device, createInfo *Descrip
 		c.pSetLayout = (*C.VkDescriptorSetLayout)(_sa.alloc(C.sizeof_VkDescriptorSetLayout))
 		*c.pSetLayout = C.VkDescriptorSetLayout(*setLayout)
 	}
-	c._ret = C.callPFN_vkCreateDescriptorSetLayout(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pSetLayout)
+	c._ret = C.callPFN_vkCreateDescriptorSetLayout(C.PFN_vkCreateDescriptorSetLayout(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pSetLayout)
 	_ret = Result(c._ret)
 	*setLayout = DescriptorSetLayout(*c.pSetLayout)
 	return
 }
 
-type PFN_vkDestroyDescriptorSetLayout struct {
-	Raw C.PFN_vkDestroyDescriptorSetLayout
-}
+type PFNDestroyDescriptorSetLayout uintptr
 
-func (p PFN_vkDestroyDescriptorSetLayout) Call(device Device, descriptorSetLayout DescriptorSetLayout, allocator *AllocationCallbacks) {
+func (p PFNDestroyDescriptorSetLayout) Call(device Device, descriptorSetLayout DescriptorSetLayout, allocator *AllocationCallbacks) {
 	var c struct {
 		device              C.VkDevice
 		descriptorSetLayout C.VkDescriptorSetLayout
@@ -8837,12 +8677,10 @@ func (p PFN_vkDestroyDescriptorSetLayout) Call(device Device, descriptorSetLayou
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDescriptorSetLayout(p.Raw, c.device, c.descriptorSetLayout, c.pAllocator)
+	C.callPFN_vkDestroyDescriptorSetLayout(C.PFN_vkDestroyDescriptorSetLayout(unsafe.Pointer(p)), c.device, c.descriptorSetLayout, c.pAllocator)
 }
 
-type PFN_vkCreateDescriptorPool struct {
-	Raw C.PFN_vkCreateDescriptorPool
-}
+type PFNCreateDescriptorPool uintptr
 type DescriptorPoolCreateFlags Flags
 type DescriptorPoolSize struct {
 	Type            DescriptorType
@@ -8934,7 +8772,7 @@ func (s *DescriptorPoolCreateInfo) SetNext(n Structure) {
 
 type DescriptorPool C.VkDescriptorPool
 
-func (p PFN_vkCreateDescriptorPool) Call(device Device, createInfo *DescriptorPoolCreateInfo, allocator *AllocationCallbacks, descriptorPool *DescriptorPool) (_ret Result) {
+func (p PFNCreateDescriptorPool) Call(device Device, createInfo *DescriptorPoolCreateInfo, allocator *AllocationCallbacks, descriptorPool *DescriptorPool) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pCreateInfo     *C.VkDescriptorPoolCreateInfo
@@ -8957,17 +8795,15 @@ func (p PFN_vkCreateDescriptorPool) Call(device Device, createInfo *DescriptorPo
 		c.pDescriptorPool = (*C.VkDescriptorPool)(_sa.alloc(C.sizeof_VkDescriptorPool))
 		*c.pDescriptorPool = C.VkDescriptorPool(*descriptorPool)
 	}
-	c._ret = C.callPFN_vkCreateDescriptorPool(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorPool)
+	c._ret = C.callPFN_vkCreateDescriptorPool(C.PFN_vkCreateDescriptorPool(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorPool)
 	_ret = Result(c._ret)
 	*descriptorPool = DescriptorPool(*c.pDescriptorPool)
 	return
 }
 
-type PFN_vkDestroyDescriptorPool struct {
-	Raw C.PFN_vkDestroyDescriptorPool
-}
+type PFNDestroyDescriptorPool uintptr
 
-func (p PFN_vkDestroyDescriptorPool) Call(device Device, descriptorPool DescriptorPool, allocator *AllocationCallbacks) {
+func (p PFNDestroyDescriptorPool) Call(device Device, descriptorPool DescriptorPool, allocator *AllocationCallbacks) {
 	var c struct {
 		device         C.VkDevice
 		descriptorPool C.VkDescriptorPool
@@ -8981,15 +8817,13 @@ func (p PFN_vkDestroyDescriptorPool) Call(device Device, descriptorPool Descript
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDescriptorPool(p.Raw, c.device, c.descriptorPool, c.pAllocator)
+	C.callPFN_vkDestroyDescriptorPool(C.PFN_vkDestroyDescriptorPool(unsafe.Pointer(p)), c.device, c.descriptorPool, c.pAllocator)
 }
 
-type PFN_vkResetDescriptorPool struct {
-	Raw C.PFN_vkResetDescriptorPool
-}
+type PFNResetDescriptorPool uintptr
 type DescriptorPoolResetFlags Flags
 
-func (p PFN_vkResetDescriptorPool) Call(device Device, descriptorPool DescriptorPool, flags DescriptorPoolResetFlags) (_ret Result) {
+func (p PFNResetDescriptorPool) Call(device Device, descriptorPool DescriptorPool, flags DescriptorPoolResetFlags) (_ret Result) {
 	var c struct {
 		device         C.VkDevice
 		descriptorPool C.VkDescriptorPool
@@ -9007,14 +8841,12 @@ func (p PFN_vkResetDescriptorPool) Call(device Device, descriptorPool Descriptor
 		}
 		c.flags = C.VkDescriptorPoolResetFlags(temp_in_VkDescriptorPoolResetFlags)
 	}
-	c._ret = C.callPFN_vkResetDescriptorPool(p.Raw, c.device, c.descriptorPool, c.flags)
+	c._ret = C.callPFN_vkResetDescriptorPool(C.PFN_vkResetDescriptorPool(unsafe.Pointer(p)), c.device, c.descriptorPool, c.flags)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkAllocateDescriptorSets struct {
-	Raw C.PFN_vkAllocateDescriptorSets
-}
+type PFNAllocateDescriptorSets uintptr
 type DescriptorSetAllocateInfo struct {
 	Next           Structure
 	DescriptorPool DescriptorPool
@@ -9072,7 +8904,7 @@ func (s *DescriptorSetAllocateInfo) SetNext(n Structure) {
 
 type DescriptorSet C.VkDescriptorSet
 
-func (p PFN_vkAllocateDescriptorSets) Call(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
+func (p PFNAllocateDescriptorSets) Call(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkDescriptorSetAllocateInfo
@@ -9093,7 +8925,7 @@ func (p PFN_vkAllocateDescriptorSets) Call(device Device, allocateInfo *Descript
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
 	}
-	c._ret = C.callPFN_vkAllocateDescriptorSets(p.Raw, c.device, c.pAllocateInfo, c.pDescriptorSets)
+	c._ret = C.callPFN_vkAllocateDescriptorSets(C.PFN_vkAllocateDescriptorSets(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pDescriptorSets)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
@@ -9104,11 +8936,9 @@ func (p PFN_vkAllocateDescriptorSets) Call(device Device, allocateInfo *Descript
 	return
 }
 
-type PFN_vkFreeDescriptorSets struct {
-	Raw C.PFN_vkFreeDescriptorSets
-}
+type PFNFreeDescriptorSets uintptr
 
-func (p PFN_vkFreeDescriptorSets) Call(device Device, descriptorPool DescriptorPool, descriptorSets []DescriptorSet) (_ret Result) {
+func (p PFNFreeDescriptorSets) Call(device Device, descriptorPool DescriptorPool, descriptorSets []DescriptorSet) (_ret Result) {
 	var c struct {
 		device             C.VkDevice
 		descriptorPool     C.VkDescriptorPool
@@ -9128,14 +8958,12 @@ func (p PFN_vkFreeDescriptorSets) Call(device Device, descriptorPool DescriptorP
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
 	}
-	c._ret = C.callPFN_vkFreeDescriptorSets(p.Raw, c.device, c.descriptorPool, c.descriptorSetCount, c.pDescriptorSets)
+	c._ret = C.callPFN_vkFreeDescriptorSets(C.PFN_vkFreeDescriptorSets(unsafe.Pointer(p)), c.device, c.descriptorPool, c.descriptorSetCount, c.pDescriptorSets)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkUpdateDescriptorSets struct {
-	Raw C.PFN_vkUpdateDescriptorSets
-}
+type PFNUpdateDescriptorSets uintptr
 type DescriptorImageInfo struct {
 	Sampler     Sampler
 	ImageView   ImageView
@@ -9311,7 +9139,7 @@ func (s *CopyDescriptorSet) GetNext() Structure {
 func (s *CopyDescriptorSet) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkUpdateDescriptorSets) Call(device Device, descriptorWrites []WriteDescriptorSet, descriptorCopies []CopyDescriptorSet) {
+func (p PFNUpdateDescriptorSets) Call(device Device, descriptorWrites []WriteDescriptorSet, descriptorCopies []CopyDescriptorSet) {
 	var c struct {
 		device               C.VkDevice
 		descriptorWriteCount C.uint32_t
@@ -9338,12 +9166,10 @@ func (p PFN_vkUpdateDescriptorSets) Call(device Device, descriptorWrites []Write
 			descriptorCopies[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkUpdateDescriptorSets(p.Raw, c.device, c.descriptorWriteCount, c.pDescriptorWrites, c.descriptorCopyCount, c.pDescriptorCopies)
+	C.callPFN_vkUpdateDescriptorSets(C.PFN_vkUpdateDescriptorSets(unsafe.Pointer(p)), c.device, c.descriptorWriteCount, c.pDescriptorWrites, c.descriptorCopyCount, c.pDescriptorCopies)
 }
 
-type PFN_vkCreateFramebuffer struct {
-	Raw C.PFN_vkCreateFramebuffer
-}
+type PFNCreateFramebuffer uintptr
 type FramebufferCreateFlags Flags
 type FramebufferCreateInfo struct {
 	Next        Structure
@@ -9430,7 +9256,7 @@ func (s *FramebufferCreateInfo) SetNext(n Structure) {
 
 type Framebuffer C.VkFramebuffer
 
-func (p PFN_vkCreateFramebuffer) Call(device Device, createInfo *FramebufferCreateInfo, allocator *AllocationCallbacks, framebuffer *Framebuffer) (_ret Result) {
+func (p PFNCreateFramebuffer) Call(device Device, createInfo *FramebufferCreateInfo, allocator *AllocationCallbacks, framebuffer *Framebuffer) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		pCreateInfo  *C.VkFramebufferCreateInfo
@@ -9453,17 +9279,15 @@ func (p PFN_vkCreateFramebuffer) Call(device Device, createInfo *FramebufferCrea
 		c.pFramebuffer = (*C.VkFramebuffer)(_sa.alloc(C.sizeof_VkFramebuffer))
 		*c.pFramebuffer = C.VkFramebuffer(*framebuffer)
 	}
-	c._ret = C.callPFN_vkCreateFramebuffer(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pFramebuffer)
+	c._ret = C.callPFN_vkCreateFramebuffer(C.PFN_vkCreateFramebuffer(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pFramebuffer)
 	_ret = Result(c._ret)
 	*framebuffer = Framebuffer(*c.pFramebuffer)
 	return
 }
 
-type PFN_vkDestroyFramebuffer struct {
-	Raw C.PFN_vkDestroyFramebuffer
-}
+type PFNDestroyFramebuffer uintptr
 
-func (p PFN_vkDestroyFramebuffer) Call(device Device, framebuffer Framebuffer, allocator *AllocationCallbacks) {
+func (p PFNDestroyFramebuffer) Call(device Device, framebuffer Framebuffer, allocator *AllocationCallbacks) {
 	var c struct {
 		device      C.VkDevice
 		framebuffer C.VkFramebuffer
@@ -9477,12 +9301,10 @@ func (p PFN_vkDestroyFramebuffer) Call(device Device, framebuffer Framebuffer, a
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyFramebuffer(p.Raw, c.device, c.framebuffer, c.pAllocator)
+	C.callPFN_vkDestroyFramebuffer(C.PFN_vkDestroyFramebuffer(unsafe.Pointer(p)), c.device, c.framebuffer, c.pAllocator)
 }
 
-type PFN_vkCreateRenderPass struct {
-	Raw C.PFN_vkCreateRenderPass
-}
+type PFNCreateRenderPass uintptr
 type RenderPassCreateFlags Flags
 type AttachmentDescriptionFlags Flags
 type AttachmentDescription struct {
@@ -9862,7 +9684,7 @@ func (s *RenderPassCreateInfo) GetNext() Structure {
 func (s *RenderPassCreateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateRenderPass) Call(device Device, createInfo *RenderPassCreateInfo, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
+func (p PFNCreateRenderPass) Call(device Device, createInfo *RenderPassCreateInfo, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkRenderPassCreateInfo
@@ -9885,17 +9707,15 @@ func (p PFN_vkCreateRenderPass) Call(device Device, createInfo *RenderPassCreate
 		c.pRenderPass = (*C.VkRenderPass)(_sa.alloc(C.sizeof_VkRenderPass))
 		*c.pRenderPass = C.VkRenderPass(*renderPass)
 	}
-	c._ret = C.callPFN_vkCreateRenderPass(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pRenderPass)
+	c._ret = C.callPFN_vkCreateRenderPass(C.PFN_vkCreateRenderPass(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pRenderPass)
 	_ret = Result(c._ret)
 	*renderPass = RenderPass(*c.pRenderPass)
 	return
 }
 
-type PFN_vkDestroyRenderPass struct {
-	Raw C.PFN_vkDestroyRenderPass
-}
+type PFNDestroyRenderPass uintptr
 
-func (p PFN_vkDestroyRenderPass) Call(device Device, renderPass RenderPass, allocator *AllocationCallbacks) {
+func (p PFNDestroyRenderPass) Call(device Device, renderPass RenderPass, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		renderPass C.VkRenderPass
@@ -9909,14 +9729,12 @@ func (p PFN_vkDestroyRenderPass) Call(device Device, renderPass RenderPass, allo
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyRenderPass(p.Raw, c.device, c.renderPass, c.pAllocator)
+	C.callPFN_vkDestroyRenderPass(C.PFN_vkDestroyRenderPass(unsafe.Pointer(p)), c.device, c.renderPass, c.pAllocator)
 }
 
-type PFN_vkGetRenderAreaGranularity struct {
-	Raw C.PFN_vkGetRenderAreaGranularity
-}
+type PFNGetRenderAreaGranularity uintptr
 
-func (p PFN_vkGetRenderAreaGranularity) Call(device Device, renderPass RenderPass, granularity *Extent2D) {
+func (p PFNGetRenderAreaGranularity) Call(device Device, renderPass RenderPass, granularity *Extent2D) {
 	var c struct {
 		device       C.VkDevice
 		renderPass   C.VkRenderPass
@@ -9930,13 +9748,11 @@ func (p PFN_vkGetRenderAreaGranularity) Call(device Device, renderPass RenderPas
 		c.pGranularity = (*C.VkExtent2D)(_sa.alloc(C.sizeof_VkExtent2D))
 		granularity.toC(c.pGranularity)
 	}
-	C.callPFN_vkGetRenderAreaGranularity(p.Raw, c.device, c.renderPass, c.pGranularity)
+	C.callPFN_vkGetRenderAreaGranularity(C.PFN_vkGetRenderAreaGranularity(unsafe.Pointer(p)), c.device, c.renderPass, c.pGranularity)
 	granularity.fromC(c.pGranularity)
 }
 
-type PFN_vkCreateCommandPool struct {
-	Raw C.PFN_vkCreateCommandPool
-}
+type PFNCreateCommandPool uintptr
 type CommandPoolCreateFlags Flags
 type CommandPoolCreateInfo struct {
 	Next             Structure
@@ -9998,7 +9814,7 @@ func (s *CommandPoolCreateInfo) SetNext(n Structure) {
 
 type CommandPool C.VkCommandPool
 
-func (p PFN_vkCreateCommandPool) Call(device Device, createInfo *CommandPoolCreateInfo, allocator *AllocationCallbacks, commandPool *CommandPool) (_ret Result) {
+func (p PFNCreateCommandPool) Call(device Device, createInfo *CommandPoolCreateInfo, allocator *AllocationCallbacks, commandPool *CommandPool) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		pCreateInfo  *C.VkCommandPoolCreateInfo
@@ -10021,17 +9837,15 @@ func (p PFN_vkCreateCommandPool) Call(device Device, createInfo *CommandPoolCrea
 		c.pCommandPool = (*C.VkCommandPool)(_sa.alloc(C.sizeof_VkCommandPool))
 		*c.pCommandPool = C.VkCommandPool(*commandPool)
 	}
-	c._ret = C.callPFN_vkCreateCommandPool(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pCommandPool)
+	c._ret = C.callPFN_vkCreateCommandPool(C.PFN_vkCreateCommandPool(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pCommandPool)
 	_ret = Result(c._ret)
 	*commandPool = CommandPool(*c.pCommandPool)
 	return
 }
 
-type PFN_vkDestroyCommandPool struct {
-	Raw C.PFN_vkDestroyCommandPool
-}
+type PFNDestroyCommandPool uintptr
 
-func (p PFN_vkDestroyCommandPool) Call(device Device, commandPool CommandPool, allocator *AllocationCallbacks) {
+func (p PFNDestroyCommandPool) Call(device Device, commandPool CommandPool, allocator *AllocationCallbacks) {
 	var c struct {
 		device      C.VkDevice
 		commandPool C.VkCommandPool
@@ -10045,15 +9859,13 @@ func (p PFN_vkDestroyCommandPool) Call(device Device, commandPool CommandPool, a
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyCommandPool(p.Raw, c.device, c.commandPool, c.pAllocator)
+	C.callPFN_vkDestroyCommandPool(C.PFN_vkDestroyCommandPool(unsafe.Pointer(p)), c.device, c.commandPool, c.pAllocator)
 }
 
-type PFN_vkResetCommandPool struct {
-	Raw C.PFN_vkResetCommandPool
-}
+type PFNResetCommandPool uintptr
 type CommandPoolResetFlags Flags
 
-func (p PFN_vkResetCommandPool) Call(device Device, commandPool CommandPool, flags CommandPoolResetFlags) (_ret Result) {
+func (p PFNResetCommandPool) Call(device Device, commandPool CommandPool, flags CommandPoolResetFlags) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		commandPool C.VkCommandPool
@@ -10071,14 +9883,12 @@ func (p PFN_vkResetCommandPool) Call(device Device, commandPool CommandPool, fla
 		}
 		c.flags = C.VkCommandPoolResetFlags(temp_in_VkCommandPoolResetFlags)
 	}
-	c._ret = C.callPFN_vkResetCommandPool(p.Raw, c.device, c.commandPool, c.flags)
+	c._ret = C.callPFN_vkResetCommandPool(C.PFN_vkResetCommandPool(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkAllocateCommandBuffers struct {
-	Raw C.PFN_vkAllocateCommandBuffers
-}
+type PFNAllocateCommandBuffers uintptr
 type CommandBufferAllocateInfo struct {
 	Next               Structure
 	CommandPool        CommandPool
@@ -10123,7 +9933,7 @@ func (s *CommandBufferAllocateInfo) GetNext() Structure {
 func (s *CommandBufferAllocateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
+func (p PFNAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkCommandBufferAllocateInfo
@@ -10144,7 +9954,7 @@ func (p PFN_vkAllocateCommandBuffers) Call(device Device, allocateInfo *CommandB
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
 	}
-	c._ret = C.callPFN_vkAllocateCommandBuffers(p.Raw, c.device, c.pAllocateInfo, c.pCommandBuffers)
+	c._ret = C.callPFN_vkAllocateCommandBuffers(C.PFN_vkAllocateCommandBuffers(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pCommandBuffers)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
@@ -10155,11 +9965,9 @@ func (p PFN_vkAllocateCommandBuffers) Call(device Device, allocateInfo *CommandB
 	return
 }
 
-type PFN_vkFreeCommandBuffers struct {
-	Raw C.PFN_vkFreeCommandBuffers
-}
+type PFNFreeCommandBuffers uintptr
 
-func (p PFN_vkFreeCommandBuffers) Call(device Device, commandPool CommandPool, commandBuffers []CommandBuffer) {
+func (p PFNFreeCommandBuffers) Call(device Device, commandPool CommandPool, commandBuffers []CommandBuffer) {
 	var c struct {
 		device             C.VkDevice
 		commandPool        C.VkCommandPool
@@ -10178,12 +9986,10 @@ func (p PFN_vkFreeCommandBuffers) Call(device Device, commandPool CommandPool, c
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
 	}
-	C.callPFN_vkFreeCommandBuffers(p.Raw, c.device, c.commandPool, c.commandBufferCount, c.pCommandBuffers)
+	C.callPFN_vkFreeCommandBuffers(C.PFN_vkFreeCommandBuffers(unsafe.Pointer(p)), c.device, c.commandPool, c.commandBufferCount, c.pCommandBuffers)
 }
 
-type PFN_vkBeginCommandBuffer struct {
-	Raw C.PFN_vkBeginCommandBuffer
-}
+type PFNBeginCommandBuffer uintptr
 type CommandBufferUsageFlags Flags
 type QueryControlFlags Flags
 type CommandBufferInheritanceInfo struct {
@@ -10336,7 +10142,7 @@ func (s *CommandBufferBeginInfo) GetNext() Structure {
 func (s *CommandBufferBeginInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkBeginCommandBuffer) Call(commandBuffer CommandBuffer, beginInfo *CommandBufferBeginInfo) (_ret Result) {
+func (p PFNBeginCommandBuffer) Call(commandBuffer CommandBuffer, beginInfo *CommandBufferBeginInfo) (_ret Result) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pBeginInfo    *C.VkCommandBufferBeginInfo
@@ -10349,32 +10155,28 @@ func (p PFN_vkBeginCommandBuffer) Call(commandBuffer CommandBuffer, beginInfo *C
 		c.pBeginInfo = (*C.VkCommandBufferBeginInfo)(_sa.alloc(C.sizeof_VkCommandBufferBeginInfo))
 		beginInfo.toC(c.pBeginInfo, _sa)
 	}
-	c._ret = C.callPFN_vkBeginCommandBuffer(p.Raw, c.commandBuffer, c.pBeginInfo)
+	c._ret = C.callPFN_vkBeginCommandBuffer(C.PFN_vkBeginCommandBuffer(unsafe.Pointer(p)), c.commandBuffer, c.pBeginInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkEndCommandBuffer struct {
-	Raw C.PFN_vkEndCommandBuffer
-}
+type PFNEndCommandBuffer uintptr
 
-func (p PFN_vkEndCommandBuffer) Call(commandBuffer CommandBuffer) (_ret Result) {
+func (p PFNEndCommandBuffer) Call(commandBuffer CommandBuffer) (_ret Result) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		_ret          C.VkResult
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	c._ret = C.callPFN_vkEndCommandBuffer(p.Raw, c.commandBuffer)
+	c._ret = C.callPFN_vkEndCommandBuffer(C.PFN_vkEndCommandBuffer(unsafe.Pointer(p)), c.commandBuffer)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkResetCommandBuffer struct {
-	Raw C.PFN_vkResetCommandBuffer
-}
+type PFNResetCommandBuffer uintptr
 type CommandBufferResetFlags Flags
 
-func (p PFN_vkResetCommandBuffer) Call(commandBuffer CommandBuffer, flags CommandBufferResetFlags) (_ret Result) {
+func (p PFNResetCommandBuffer) Call(commandBuffer CommandBuffer, flags CommandBufferResetFlags) (_ret Result) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		flags         C.VkCommandBufferResetFlags
@@ -10390,16 +10192,14 @@ func (p PFN_vkResetCommandBuffer) Call(commandBuffer CommandBuffer, flags Comman
 		}
 		c.flags = C.VkCommandBufferResetFlags(temp_in_VkCommandBufferResetFlags)
 	}
-	c._ret = C.callPFN_vkResetCommandBuffer(p.Raw, c.commandBuffer, c.flags)
+	c._ret = C.callPFN_vkResetCommandBuffer(C.PFN_vkResetCommandBuffer(unsafe.Pointer(p)), c.commandBuffer, c.flags)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCmdBindPipeline struct {
-	Raw C.PFN_vkCmdBindPipeline
-}
+type PFNCmdBindPipeline uintptr
 
-func (p PFN_vkCmdBindPipeline) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, pipeline Pipeline) {
+func (p PFNCmdBindPipeline) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, pipeline Pipeline) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		pipelineBindPoint C.VkPipelineBindPoint
@@ -10408,14 +10208,12 @@ func (p PFN_vkCmdBindPipeline) Call(commandBuffer CommandBuffer, pipelineBindPoi
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.pipelineBindPoint = C.VkPipelineBindPoint(pipelineBindPoint)
 	c.pipeline = C.VkPipeline(pipeline)
-	C.callPFN_vkCmdBindPipeline(p.Raw, c.commandBuffer, c.pipelineBindPoint, c.pipeline)
+	C.callPFN_vkCmdBindPipeline(C.PFN_vkCmdBindPipeline(unsafe.Pointer(p)), c.commandBuffer, c.pipelineBindPoint, c.pipeline)
 }
 
-type PFN_vkCmdSetViewport struct {
-	Raw C.PFN_vkCmdSetViewport
-}
+type PFNCmdSetViewport uintptr
 
-func (p PFN_vkCmdSetViewport) Call(commandBuffer CommandBuffer, firstViewport uint32, viewports []Viewport) {
+func (p PFNCmdSetViewport) Call(commandBuffer CommandBuffer, firstViewport uint32, viewports []Viewport) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		firstViewport C.uint32_t
@@ -10434,14 +10232,12 @@ func (p PFN_vkCmdSetViewport) Call(commandBuffer CommandBuffer, firstViewport ui
 			viewports[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdSetViewport(p.Raw, c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewports)
+	C.callPFN_vkCmdSetViewport(C.PFN_vkCmdSetViewport(unsafe.Pointer(p)), c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewports)
 }
 
-type PFN_vkCmdSetScissor struct {
-	Raw C.PFN_vkCmdSetScissor
-}
+type PFNCmdSetScissor uintptr
 
-func (p PFN_vkCmdSetScissor) Call(commandBuffer CommandBuffer, firstScissor uint32, scissors []Rect2D) {
+func (p PFNCmdSetScissor) Call(commandBuffer CommandBuffer, firstScissor uint32, scissors []Rect2D) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		firstScissor  C.uint32_t
@@ -10460,28 +10256,24 @@ func (p PFN_vkCmdSetScissor) Call(commandBuffer CommandBuffer, firstScissor uint
 			scissors[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdSetScissor(p.Raw, c.commandBuffer, c.firstScissor, c.scissorCount, c.pScissors)
+	C.callPFN_vkCmdSetScissor(C.PFN_vkCmdSetScissor(unsafe.Pointer(p)), c.commandBuffer, c.firstScissor, c.scissorCount, c.pScissors)
 }
 
-type PFN_vkCmdSetLineWidth struct {
-	Raw C.PFN_vkCmdSetLineWidth
-}
+type PFNCmdSetLineWidth uintptr
 
-func (p PFN_vkCmdSetLineWidth) Call(commandBuffer CommandBuffer, lineWidth float32) {
+func (p PFNCmdSetLineWidth) Call(commandBuffer CommandBuffer, lineWidth float32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		lineWidth     C.float
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.lineWidth = C.float(lineWidth)
-	C.callPFN_vkCmdSetLineWidth(p.Raw, c.commandBuffer, c.lineWidth)
+	C.callPFN_vkCmdSetLineWidth(C.PFN_vkCmdSetLineWidth(unsafe.Pointer(p)), c.commandBuffer, c.lineWidth)
 }
 
-type PFN_vkCmdSetDepthBias struct {
-	Raw C.PFN_vkCmdSetDepthBias
-}
+type PFNCmdSetDepthBias uintptr
 
-func (p PFN_vkCmdSetDepthBias) Call(commandBuffer CommandBuffer, depthBiasConstantFactor float32, depthBiasClamp float32, depthBiasSlopeFactor float32) {
+func (p PFNCmdSetDepthBias) Call(commandBuffer CommandBuffer, depthBiasConstantFactor float32, depthBiasClamp float32, depthBiasSlopeFactor float32) {
 	var c struct {
 		commandBuffer           C.VkCommandBuffer
 		depthBiasConstantFactor C.float
@@ -10492,14 +10284,12 @@ func (p PFN_vkCmdSetDepthBias) Call(commandBuffer CommandBuffer, depthBiasConsta
 	c.depthBiasConstantFactor = C.float(depthBiasConstantFactor)
 	c.depthBiasClamp = C.float(depthBiasClamp)
 	c.depthBiasSlopeFactor = C.float(depthBiasSlopeFactor)
-	C.callPFN_vkCmdSetDepthBias(p.Raw, c.commandBuffer, c.depthBiasConstantFactor, c.depthBiasClamp, c.depthBiasSlopeFactor)
+	C.callPFN_vkCmdSetDepthBias(C.PFN_vkCmdSetDepthBias(unsafe.Pointer(p)), c.commandBuffer, c.depthBiasConstantFactor, c.depthBiasClamp, c.depthBiasSlopeFactor)
 }
 
-type PFN_vkCmdSetBlendConstants struct {
-	Raw C.PFN_vkCmdSetBlendConstants
-}
+type PFNCmdSetBlendConstants uintptr
 
-func (p PFN_vkCmdSetBlendConstants) Call(commandBuffer CommandBuffer, blendConstants [4]float32) {
+func (p PFNCmdSetBlendConstants) Call(commandBuffer CommandBuffer, blendConstants [4]float32) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		blendConstants *C.float
@@ -10514,14 +10304,12 @@ func (p PFN_vkCmdSetBlendConstants) Call(commandBuffer CommandBuffer, blendConst
 			slice3[i3] = C.float(blendConstants[i3])
 		}
 	}
-	C.callPFN_vkCmdSetBlendConstants(p.Raw, c.commandBuffer, c.blendConstants)
+	C.callPFN_vkCmdSetBlendConstants(C.PFN_vkCmdSetBlendConstants(unsafe.Pointer(p)), c.commandBuffer, c.blendConstants)
 }
 
-type PFN_vkCmdSetDepthBounds struct {
-	Raw C.PFN_vkCmdSetDepthBounds
-}
+type PFNCmdSetDepthBounds uintptr
 
-func (p PFN_vkCmdSetDepthBounds) Call(commandBuffer CommandBuffer, minDepthBounds float32, maxDepthBounds float32) {
+func (p PFNCmdSetDepthBounds) Call(commandBuffer CommandBuffer, minDepthBounds float32, maxDepthBounds float32) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		minDepthBounds C.float
@@ -10530,15 +10318,13 @@ func (p PFN_vkCmdSetDepthBounds) Call(commandBuffer CommandBuffer, minDepthBound
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.minDepthBounds = C.float(minDepthBounds)
 	c.maxDepthBounds = C.float(maxDepthBounds)
-	C.callPFN_vkCmdSetDepthBounds(p.Raw, c.commandBuffer, c.minDepthBounds, c.maxDepthBounds)
+	C.callPFN_vkCmdSetDepthBounds(C.PFN_vkCmdSetDepthBounds(unsafe.Pointer(p)), c.commandBuffer, c.minDepthBounds, c.maxDepthBounds)
 }
 
-type PFN_vkCmdSetStencilCompareMask struct {
-	Raw C.PFN_vkCmdSetStencilCompareMask
-}
+type PFNCmdSetStencilCompareMask uintptr
 type StencilFaceFlags Flags
 
-func (p PFN_vkCmdSetStencilCompareMask) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, compareMask uint32) {
+func (p PFNCmdSetStencilCompareMask) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, compareMask uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		faceMask      C.VkStencilFaceFlags
@@ -10555,14 +10341,12 @@ func (p PFN_vkCmdSetStencilCompareMask) Call(commandBuffer CommandBuffer, faceMa
 		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.compareMask = C.uint32_t(compareMask)
-	C.callPFN_vkCmdSetStencilCompareMask(p.Raw, c.commandBuffer, c.faceMask, c.compareMask)
+	C.callPFN_vkCmdSetStencilCompareMask(C.PFN_vkCmdSetStencilCompareMask(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.compareMask)
 }
 
-type PFN_vkCmdSetStencilWriteMask struct {
-	Raw C.PFN_vkCmdSetStencilWriteMask
-}
+type PFNCmdSetStencilWriteMask uintptr
 
-func (p PFN_vkCmdSetStencilWriteMask) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, writeMask uint32) {
+func (p PFNCmdSetStencilWriteMask) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, writeMask uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		faceMask      C.VkStencilFaceFlags
@@ -10579,14 +10363,12 @@ func (p PFN_vkCmdSetStencilWriteMask) Call(commandBuffer CommandBuffer, faceMask
 		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.writeMask = C.uint32_t(writeMask)
-	C.callPFN_vkCmdSetStencilWriteMask(p.Raw, c.commandBuffer, c.faceMask, c.writeMask)
+	C.callPFN_vkCmdSetStencilWriteMask(C.PFN_vkCmdSetStencilWriteMask(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.writeMask)
 }
 
-type PFN_vkCmdSetStencilReference struct {
-	Raw C.PFN_vkCmdSetStencilReference
-}
+type PFNCmdSetStencilReference uintptr
 
-func (p PFN_vkCmdSetStencilReference) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, reference uint32) {
+func (p PFNCmdSetStencilReference) Call(commandBuffer CommandBuffer, faceMask StencilFaceFlags, reference uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		faceMask      C.VkStencilFaceFlags
@@ -10603,14 +10385,12 @@ func (p PFN_vkCmdSetStencilReference) Call(commandBuffer CommandBuffer, faceMask
 		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
 	}
 	c.reference = C.uint32_t(reference)
-	C.callPFN_vkCmdSetStencilReference(p.Raw, c.commandBuffer, c.faceMask, c.reference)
+	C.callPFN_vkCmdSetStencilReference(C.PFN_vkCmdSetStencilReference(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.reference)
 }
 
-type PFN_vkCmdBindDescriptorSets struct {
-	Raw C.PFN_vkCmdBindDescriptorSets
-}
+type PFNCmdBindDescriptorSets uintptr
 
-func (p PFN_vkCmdBindDescriptorSets) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, layout PipelineLayout, firstSet uint32, descriptorSets []DescriptorSet, dynamicOffsets []uint32) {
+func (p PFNCmdBindDescriptorSets) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, layout PipelineLayout, firstSet uint32, descriptorSets []DescriptorSet, dynamicOffsets []uint32) {
 	var c struct {
 		commandBuffer      C.VkCommandBuffer
 		pipelineBindPoint  C.VkPipelineBindPoint
@@ -10643,14 +10423,12 @@ func (p PFN_vkCmdBindDescriptorSets) Call(commandBuffer CommandBuffer, pipelineB
 			slice3[i3] = C.uint32_t(dynamicOffsets[i3])
 		}
 	}
-	C.callPFN_vkCmdBindDescriptorSets(p.Raw, c.commandBuffer, c.pipelineBindPoint, c.layout, c.firstSet, c.descriptorSetCount, c.pDescriptorSets, c.dynamicOffsetCount, c.pDynamicOffsets)
+	C.callPFN_vkCmdBindDescriptorSets(C.PFN_vkCmdBindDescriptorSets(unsafe.Pointer(p)), c.commandBuffer, c.pipelineBindPoint, c.layout, c.firstSet, c.descriptorSetCount, c.pDescriptorSets, c.dynamicOffsetCount, c.pDynamicOffsets)
 }
 
-type PFN_vkCmdBindIndexBuffer struct {
-	Raw C.PFN_vkCmdBindIndexBuffer
-}
+type PFNCmdBindIndexBuffer uintptr
 
-func (p PFN_vkCmdBindIndexBuffer) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, indexType IndexType) {
+func (p PFNCmdBindIndexBuffer) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, indexType IndexType) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		buffer        C.VkBuffer
@@ -10665,14 +10443,12 @@ func (p PFN_vkCmdBindIndexBuffer) Call(commandBuffer CommandBuffer, buffer Buffe
 		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.indexType = C.VkIndexType(indexType)
-	C.callPFN_vkCmdBindIndexBuffer(p.Raw, c.commandBuffer, c.buffer, c.offset, c.indexType)
+	C.callPFN_vkCmdBindIndexBuffer(C.PFN_vkCmdBindIndexBuffer(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.indexType)
 }
 
-type PFN_vkCmdBindVertexBuffers struct {
-	Raw C.PFN_vkCmdBindVertexBuffers
-}
+type PFNCmdBindVertexBuffers uintptr
 
-func (p PFN_vkCmdBindVertexBuffers) Call(commandBuffer CommandBuffer, firstBinding uint32, buffers []Buffer, offsets []DeviceSize) {
+func (p PFNCmdBindVertexBuffers) Call(commandBuffer CommandBuffer, firstBinding uint32, buffers []Buffer, offsets []DeviceSize) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		firstBinding  C.uint32_t
@@ -10703,14 +10479,12 @@ func (p PFN_vkCmdBindVertexBuffers) Call(commandBuffer CommandBuffer, firstBindi
 			}
 		}
 	}
-	C.callPFN_vkCmdBindVertexBuffers(p.Raw, c.commandBuffer, c.firstBinding, c.bindingCount, c.pBuffers, c.pOffsets)
+	C.callPFN_vkCmdBindVertexBuffers(C.PFN_vkCmdBindVertexBuffers(unsafe.Pointer(p)), c.commandBuffer, c.firstBinding, c.bindingCount, c.pBuffers, c.pOffsets)
 }
 
-type PFN_vkCmdDraw struct {
-	Raw C.PFN_vkCmdDraw
-}
+type PFNCmdDraw uintptr
 
-func (p PFN_vkCmdDraw) Call(commandBuffer CommandBuffer, vertexCount uint32, instanceCount uint32, firstVertex uint32, firstInstance uint32) {
+func (p PFNCmdDraw) Call(commandBuffer CommandBuffer, vertexCount uint32, instanceCount uint32, firstVertex uint32, firstInstance uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		vertexCount   C.uint32_t
@@ -10723,14 +10497,12 @@ func (p PFN_vkCmdDraw) Call(commandBuffer CommandBuffer, vertexCount uint32, ins
 	c.instanceCount = C.uint32_t(instanceCount)
 	c.firstVertex = C.uint32_t(firstVertex)
 	c.firstInstance = C.uint32_t(firstInstance)
-	C.callPFN_vkCmdDraw(p.Raw, c.commandBuffer, c.vertexCount, c.instanceCount, c.firstVertex, c.firstInstance)
+	C.callPFN_vkCmdDraw(C.PFN_vkCmdDraw(unsafe.Pointer(p)), c.commandBuffer, c.vertexCount, c.instanceCount, c.firstVertex, c.firstInstance)
 }
 
-type PFN_vkCmdDrawIndexed struct {
-	Raw C.PFN_vkCmdDrawIndexed
-}
+type PFNCmdDrawIndexed uintptr
 
-func (p PFN_vkCmdDrawIndexed) Call(commandBuffer CommandBuffer, indexCount uint32, instanceCount uint32, firstIndex uint32, vertexOffset int32, firstInstance uint32) {
+func (p PFNCmdDrawIndexed) Call(commandBuffer CommandBuffer, indexCount uint32, instanceCount uint32, firstIndex uint32, vertexOffset int32, firstInstance uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		indexCount    C.uint32_t
@@ -10745,14 +10517,12 @@ func (p PFN_vkCmdDrawIndexed) Call(commandBuffer CommandBuffer, indexCount uint3
 	c.firstIndex = C.uint32_t(firstIndex)
 	c.vertexOffset = C.int32_t(vertexOffset)
 	c.firstInstance = C.uint32_t(firstInstance)
-	C.callPFN_vkCmdDrawIndexed(p.Raw, c.commandBuffer, c.indexCount, c.instanceCount, c.firstIndex, c.vertexOffset, c.firstInstance)
+	C.callPFN_vkCmdDrawIndexed(C.PFN_vkCmdDrawIndexed(unsafe.Pointer(p)), c.commandBuffer, c.indexCount, c.instanceCount, c.firstIndex, c.vertexOffset, c.firstInstance)
 }
 
-type PFN_vkCmdDrawIndirect struct {
-	Raw C.PFN_vkCmdDrawIndirect
-}
+type PFNCmdDrawIndirect uintptr
 
-func (p PFN_vkCmdDrawIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, drawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, drawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		buffer        C.VkBuffer
@@ -10769,14 +10539,12 @@ func (p PFN_vkCmdDrawIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, 
 	}
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndirect(p.Raw, c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
+	C.callPFN_vkCmdDrawIndirect(C.PFN_vkCmdDrawIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
 }
 
-type PFN_vkCmdDrawIndexedIndirect struct {
-	Raw C.PFN_vkCmdDrawIndexedIndirect
-}
+type PFNCmdDrawIndexedIndirect uintptr
 
-func (p PFN_vkCmdDrawIndexedIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, drawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndexedIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, drawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		buffer        C.VkBuffer
@@ -10793,14 +10561,12 @@ func (p PFN_vkCmdDrawIndexedIndirect) Call(commandBuffer CommandBuffer, buffer B
 	}
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndexedIndirect(p.Raw, c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
+	C.callPFN_vkCmdDrawIndexedIndirect(C.PFN_vkCmdDrawIndexedIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
 }
 
-type PFN_vkCmdDispatch struct {
-	Raw C.PFN_vkCmdDispatch
-}
+type PFNCmdDispatch uintptr
 
-func (p PFN_vkCmdDispatch) Call(commandBuffer CommandBuffer, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
+func (p PFNCmdDispatch) Call(commandBuffer CommandBuffer, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		groupCountX   C.uint32_t
@@ -10811,14 +10577,12 @@ func (p PFN_vkCmdDispatch) Call(commandBuffer CommandBuffer, groupCountX uint32,
 	c.groupCountX = C.uint32_t(groupCountX)
 	c.groupCountY = C.uint32_t(groupCountY)
 	c.groupCountZ = C.uint32_t(groupCountZ)
-	C.callPFN_vkCmdDispatch(p.Raw, c.commandBuffer, c.groupCountX, c.groupCountY, c.groupCountZ)
+	C.callPFN_vkCmdDispatch(C.PFN_vkCmdDispatch(unsafe.Pointer(p)), c.commandBuffer, c.groupCountX, c.groupCountY, c.groupCountZ)
 }
 
-type PFN_vkCmdDispatchIndirect struct {
-	Raw C.PFN_vkCmdDispatchIndirect
-}
+type PFNCmdDispatchIndirect uintptr
 
-func (p PFN_vkCmdDispatchIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize) {
+func (p PFNCmdDispatchIndirect) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		buffer        C.VkBuffer
@@ -10831,12 +10595,10 @@ func (p PFN_vkCmdDispatchIndirect) Call(commandBuffer CommandBuffer, buffer Buff
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
 		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
-	C.callPFN_vkCmdDispatchIndirect(p.Raw, c.commandBuffer, c.buffer, c.offset)
+	C.callPFN_vkCmdDispatchIndirect(C.PFN_vkCmdDispatchIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset)
 }
 
-type PFN_vkCmdCopyBuffer struct {
-	Raw C.PFN_vkCmdCopyBuffer
-}
+type PFNCmdCopyBuffer uintptr
 type BufferCopy struct {
 	SrcOffset DeviceSize
 	DstOffset DeviceSize
@@ -10877,7 +10639,7 @@ func (g *BufferCopy) fromC(c *C.VkBufferCopy) {
 		g.Size = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFN_vkCmdCopyBuffer) Call(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buffer, regions []BufferCopy) {
+func (p PFNCmdCopyBuffer) Call(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buffer, regions []BufferCopy) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		srcBuffer     C.VkBuffer
@@ -10898,12 +10660,10 @@ func (p PFN_vkCmdCopyBuffer) Call(commandBuffer CommandBuffer, srcBuffer Buffer,
 			regions[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdCopyBuffer(p.Raw, c.commandBuffer, c.srcBuffer, c.dstBuffer, c.regionCount, c.pRegions)
+	C.callPFN_vkCmdCopyBuffer(C.PFN_vkCmdCopyBuffer(unsafe.Pointer(p)), c.commandBuffer, c.srcBuffer, c.dstBuffer, c.regionCount, c.pRegions)
 }
 
-type PFN_vkCmdCopyImage struct {
-	Raw C.PFN_vkCmdCopyImage
-}
+type PFNCmdCopyImage uintptr
 type ImageSubresourceLayers struct {
 	AspectMask     ImageAspectFlags
 	MipLevel       uint32
@@ -10962,7 +10722,7 @@ func (g *ImageCopy) fromC(c *C.VkImageCopy) {
 	g.DstOffset.fromC(&c.dstOffset)
 	g.Extent.fromC(&c.extent)
 }
-func (p PFN_vkCmdCopyImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) {
+func (p PFNCmdCopyImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageCopy) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		srcImage       C.VkImage
@@ -10987,12 +10747,10 @@ func (p PFN_vkCmdCopyImage) Call(commandBuffer CommandBuffer, srcImage Image, sr
 			regions[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdCopyImage(p.Raw, c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
+	C.callPFN_vkCmdCopyImage(C.PFN_vkCmdCopyImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
 
-type PFN_vkCmdBlitImage struct {
-	Raw C.PFN_vkCmdBlitImage
-}
+type PFNCmdBlitImage uintptr
 type ImageBlit struct {
 	SrcSubresource ImageSubresourceLayers
 	SrcOffsets     [2]Offset3D
@@ -11020,7 +10778,7 @@ func (g *ImageBlit) fromC(c *C.VkImageBlit) {
 		g.DstOffsets[i].fromC(&c.dstOffsets[i])
 	}
 }
-func (p PFN_vkCmdBlitImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageBlit, filter Filter) {
+func (p PFNCmdBlitImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageBlit, filter Filter) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		srcImage       C.VkImage
@@ -11047,12 +10805,10 @@ func (p PFN_vkCmdBlitImage) Call(commandBuffer CommandBuffer, srcImage Image, sr
 		}
 	}
 	c.filter = C.VkFilter(filter)
-	C.callPFN_vkCmdBlitImage(p.Raw, c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions, c.filter)
+	C.callPFN_vkCmdBlitImage(C.PFN_vkCmdBlitImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions, c.filter)
 }
 
-type PFN_vkCmdCopyBufferToImage struct {
-	Raw C.PFN_vkCmdCopyBufferToImage
-}
+type PFNCmdCopyBufferToImage uintptr
 type BufferImageCopy struct {
 	BufferOffset      DeviceSize
 	BufferRowLength   uint32
@@ -11086,7 +10842,7 @@ func (g *BufferImageCopy) fromC(c *C.VkBufferImageCopy) {
 	g.ImageOffset.fromC(&c.imageOffset)
 	g.ImageExtent.fromC(&c.imageExtent)
 }
-func (p PFN_vkCmdCopyBufferToImage) Call(commandBuffer CommandBuffer, srcBuffer Buffer, dstImage Image, dstImageLayout ImageLayout, regions []BufferImageCopy) {
+func (p PFNCmdCopyBufferToImage) Call(commandBuffer CommandBuffer, srcBuffer Buffer, dstImage Image, dstImageLayout ImageLayout, regions []BufferImageCopy) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		srcBuffer      C.VkBuffer
@@ -11109,14 +10865,12 @@ func (p PFN_vkCmdCopyBufferToImage) Call(commandBuffer CommandBuffer, srcBuffer 
 			regions[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdCopyBufferToImage(p.Raw, c.commandBuffer, c.srcBuffer, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
+	C.callPFN_vkCmdCopyBufferToImage(C.PFN_vkCmdCopyBufferToImage(unsafe.Pointer(p)), c.commandBuffer, c.srcBuffer, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
 
-type PFN_vkCmdCopyImageToBuffer struct {
-	Raw C.PFN_vkCmdCopyImageToBuffer
-}
+type PFNCmdCopyImageToBuffer uintptr
 
-func (p PFN_vkCmdCopyImageToBuffer) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) {
+func (p PFNCmdCopyImageToBuffer) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstBuffer Buffer, regions []BufferImageCopy) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		srcImage       C.VkImage
@@ -11139,14 +10893,12 @@ func (p PFN_vkCmdCopyImageToBuffer) Call(commandBuffer CommandBuffer, srcImage I
 			regions[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdCopyImageToBuffer(p.Raw, c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
+	C.callPFN_vkCmdCopyImageToBuffer(C.PFN_vkCmdCopyImageToBuffer(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
 }
 
-type PFN_vkCmdUpdateBuffer struct {
-	Raw C.PFN_vkCmdUpdateBuffer
-}
+type PFNCmdUpdateBuffer uintptr
 
-func (p PFN_vkCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
+func (p PFNCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		dstBuffer     C.VkBuffer
@@ -11175,14 +10927,12 @@ func (p PFN_vkCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffe
 			slice3[i3] = data[i3]
 		}
 	}
-	C.callPFN_vkCmdUpdateBuffer(p.Raw, c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
+	C.callPFN_vkCmdUpdateBuffer(C.PFN_vkCmdUpdateBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 }
 
-type PFN_vkCmdFillBuffer struct {
-	Raw C.PFN_vkCmdFillBuffer
-}
+type PFNCmdFillBuffer uintptr
 
-func (p PFN_vkCmdFillBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, size DeviceSize, data uint32) {
+func (p PFNCmdFillBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, size DeviceSize, data uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		dstBuffer     C.VkBuffer
@@ -11203,12 +10953,10 @@ func (p PFN_vkCmdFillBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer,
 		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.data = C.uint32_t(data)
-	C.callPFN_vkCmdFillBuffer(p.Raw, c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)
+	C.callPFN_vkCmdFillBuffer(C.PFN_vkCmdFillBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)
 }
 
-type PFN_vkCmdClearColorImage struct {
-	Raw C.PFN_vkCmdClearColorImage
-}
+type PFNCmdClearColorImage uintptr
 type ClearColorValue struct{ Raw C.VkClearColorValue }
 
 func (g *ClearColorValue) AssginFloat32(v [4]float32) {
@@ -11253,7 +11001,7 @@ func (g *ClearColorValue) Uint32() (v [4]uint32) {
 	}
 	return
 }
-func (p PFN_vkCmdClearColorImage) Call(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, color *ClearColorValue, ranges []ImageSubresourceRange) {
+func (p PFNCmdClearColorImage) Call(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, color *ClearColorValue, ranges []ImageSubresourceRange) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		image         C.VkImage
@@ -11279,12 +11027,10 @@ func (p PFN_vkCmdClearColorImage) Call(commandBuffer CommandBuffer, image Image,
 			ranges[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdClearColorImage(p.Raw, c.commandBuffer, c.image, c.imageLayout, c.pColor, c.rangeCount, c.pRanges)
+	C.callPFN_vkCmdClearColorImage(C.PFN_vkCmdClearColorImage(unsafe.Pointer(p)), c.commandBuffer, c.image, c.imageLayout, c.pColor, c.rangeCount, c.pRanges)
 }
 
-type PFN_vkCmdClearDepthStencilImage struct {
-	Raw C.PFN_vkCmdClearDepthStencilImage
-}
+type PFNCmdClearDepthStencilImage uintptr
 type ClearDepthStencilValue struct {
 	Depth   float32
 	Stencil uint32
@@ -11298,7 +11044,7 @@ func (g *ClearDepthStencilValue) fromC(c *C.VkClearDepthStencilValue) {
 	g.Depth = float32(c.depth)
 	g.Stencil = uint32(c.stencil)
 }
-func (p PFN_vkCmdClearDepthStencilImage) Call(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, depthStencil *ClearDepthStencilValue, ranges []ImageSubresourceRange) {
+func (p PFNCmdClearDepthStencilImage) Call(commandBuffer CommandBuffer, image Image, imageLayout ImageLayout, depthStencil *ClearDepthStencilValue, ranges []ImageSubresourceRange) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		image         C.VkImage
@@ -11324,12 +11070,10 @@ func (p PFN_vkCmdClearDepthStencilImage) Call(commandBuffer CommandBuffer, image
 			ranges[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdClearDepthStencilImage(p.Raw, c.commandBuffer, c.image, c.imageLayout, c.pDepthStencil, c.rangeCount, c.pRanges)
+	C.callPFN_vkCmdClearDepthStencilImage(C.PFN_vkCmdClearDepthStencilImage(unsafe.Pointer(p)), c.commandBuffer, c.image, c.imageLayout, c.pDepthStencil, c.rangeCount, c.pRanges)
 }
 
-type PFN_vkCmdClearAttachments struct {
-	Raw C.PFN_vkCmdClearAttachments
-}
+type PFNCmdClearAttachments uintptr
 type ClearValue struct{ Raw C.VkClearValue }
 
 func (g *ClearValue) AssginColor(v ClearColorValue) {
@@ -11402,7 +11146,7 @@ func (g *ClearRect) fromC(c *C.VkClearRect) {
 	g.BaseArrayLayer = uint32(c.baseArrayLayer)
 	g.LayerCount = uint32(c.layerCount)
 }
-func (p PFN_vkCmdClearAttachments) Call(commandBuffer CommandBuffer, attachments []ClearAttachment, rects []ClearRect) {
+func (p PFNCmdClearAttachments) Call(commandBuffer CommandBuffer, attachments []ClearAttachment, rects []ClearRect) {
 	var c struct {
 		commandBuffer   C.VkCommandBuffer
 		attachmentCount C.uint32_t
@@ -11429,12 +11173,10 @@ func (p PFN_vkCmdClearAttachments) Call(commandBuffer CommandBuffer, attachments
 			rects[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdClearAttachments(p.Raw, c.commandBuffer, c.attachmentCount, c.pAttachments, c.rectCount, c.pRects)
+	C.callPFN_vkCmdClearAttachments(C.PFN_vkCmdClearAttachments(unsafe.Pointer(p)), c.commandBuffer, c.attachmentCount, c.pAttachments, c.rectCount, c.pRects)
 }
 
-type PFN_vkCmdResolveImage struct {
-	Raw C.PFN_vkCmdResolveImage
-}
+type PFNCmdResolveImage uintptr
 type ImageResolve struct {
 	SrcSubresource ImageSubresourceLayers
 	SrcOffset      Offset3D
@@ -11457,7 +11199,7 @@ func (g *ImageResolve) fromC(c *C.VkImageResolve) {
 	g.DstOffset.fromC(&c.dstOffset)
 	g.Extent.fromC(&c.extent)
 }
-func (p PFN_vkCmdResolveImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) {
+func (p PFNCmdResolveImage) Call(commandBuffer CommandBuffer, srcImage Image, srcImageLayout ImageLayout, dstImage Image, dstImageLayout ImageLayout, regions []ImageResolve) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		srcImage       C.VkImage
@@ -11482,14 +11224,12 @@ func (p PFN_vkCmdResolveImage) Call(commandBuffer CommandBuffer, srcImage Image,
 			regions[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdResolveImage(p.Raw, c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
+	C.callPFN_vkCmdResolveImage(C.PFN_vkCmdResolveImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
 
-type PFN_vkCmdSetEvent struct {
-	Raw C.PFN_vkCmdSetEvent
-}
+type PFNCmdSetEvent uintptr
 
-func (p PFN_vkCmdSetEvent) Call(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
+func (p PFNCmdSetEvent) Call(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		event         C.VkEvent
@@ -11506,14 +11246,12 @@ func (p PFN_vkCmdSetEvent) Call(commandBuffer CommandBuffer, event Event, stageM
 		}
 		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
-	C.callPFN_vkCmdSetEvent(p.Raw, c.commandBuffer, c.event, c.stageMask)
+	C.callPFN_vkCmdSetEvent(C.PFN_vkCmdSetEvent(unsafe.Pointer(p)), c.commandBuffer, c.event, c.stageMask)
 }
 
-type PFN_vkCmdResetEvent struct {
-	Raw C.PFN_vkCmdResetEvent
-}
+type PFNCmdResetEvent uintptr
 
-func (p PFN_vkCmdResetEvent) Call(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
+func (p PFNCmdResetEvent) Call(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		event         C.VkEvent
@@ -11530,12 +11268,10 @@ func (p PFN_vkCmdResetEvent) Call(commandBuffer CommandBuffer, event Event, stag
 		}
 		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
-	C.callPFN_vkCmdResetEvent(p.Raw, c.commandBuffer, c.event, c.stageMask)
+	C.callPFN_vkCmdResetEvent(C.PFN_vkCmdResetEvent(unsafe.Pointer(p)), c.commandBuffer, c.event, c.stageMask)
 }
 
-type PFN_vkCmdWaitEvents struct {
-	Raw C.PFN_vkCmdWaitEvents
-}
+type PFNCmdWaitEvents uintptr
 type MemoryBarrier struct {
 	Next          Structure
 	SrcAccessMask AccessFlags
@@ -11806,7 +11542,7 @@ func (s *ImageMemoryBarrier) GetNext() Structure {
 func (s *ImageMemoryBarrier) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
+func (p PFNCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
 	var c struct {
 		commandBuffer            C.VkCommandBuffer
 		eventCount               C.uint32_t
@@ -11873,14 +11609,12 @@ func (p PFN_vkCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, s
 			imageMemoryBarriers[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkCmdWaitEvents(p.Raw, c.commandBuffer, c.eventCount, c.pEvents, c.srcStageMask, c.dstStageMask, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
+	C.callPFN_vkCmdWaitEvents(C.PFN_vkCmdWaitEvents(unsafe.Pointer(p)), c.commandBuffer, c.eventCount, c.pEvents, c.srcStageMask, c.dstStageMask, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
 
-type PFN_vkCmdPipelineBarrier struct {
-	Raw C.PFN_vkCmdPipelineBarrier
-}
+type PFNCmdPipelineBarrier uintptr
 
-func (p PFN_vkCmdPipelineBarrier) Call(commandBuffer CommandBuffer, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, dependencyFlags DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
+func (p PFNCmdPipelineBarrier) Call(commandBuffer CommandBuffer, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, dependencyFlags DependencyFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
 	var c struct {
 		commandBuffer            C.VkCommandBuffer
 		srcStageMask             C.VkPipelineStageFlags
@@ -11947,14 +11681,12 @@ func (p PFN_vkCmdPipelineBarrier) Call(commandBuffer CommandBuffer, srcStageMask
 			imageMemoryBarriers[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkCmdPipelineBarrier(p.Raw, c.commandBuffer, c.srcStageMask, c.dstStageMask, c.dependencyFlags, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
+	C.callPFN_vkCmdPipelineBarrier(C.PFN_vkCmdPipelineBarrier(unsafe.Pointer(p)), c.commandBuffer, c.srcStageMask, c.dstStageMask, c.dependencyFlags, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
 
-type PFN_vkCmdBeginQuery struct {
-	Raw C.PFN_vkCmdBeginQuery
-}
+type PFNCmdBeginQuery uintptr
 
-func (p PFN_vkCmdBeginQuery) Call(commandBuffer CommandBuffer, queryPool QueryPool, query uint32, flags QueryControlFlags) {
+func (p PFNCmdBeginQuery) Call(commandBuffer CommandBuffer, queryPool QueryPool, query uint32, flags QueryControlFlags) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		queryPool     C.VkQueryPool
@@ -11973,14 +11705,12 @@ func (p PFN_vkCmdBeginQuery) Call(commandBuffer CommandBuffer, queryPool QueryPo
 		}
 		c.flags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
 	}
-	C.callPFN_vkCmdBeginQuery(p.Raw, c.commandBuffer, c.queryPool, c.query, c.flags)
+	C.callPFN_vkCmdBeginQuery(C.PFN_vkCmdBeginQuery(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.query, c.flags)
 }
 
-type PFN_vkCmdEndQuery struct {
-	Raw C.PFN_vkCmdEndQuery
-}
+type PFNCmdEndQuery uintptr
 
-func (p PFN_vkCmdEndQuery) Call(commandBuffer CommandBuffer, queryPool QueryPool, query uint32) {
+func (p PFNCmdEndQuery) Call(commandBuffer CommandBuffer, queryPool QueryPool, query uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		queryPool     C.VkQueryPool
@@ -11989,14 +11719,12 @@ func (p PFN_vkCmdEndQuery) Call(commandBuffer CommandBuffer, queryPool QueryPool
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.queryPool = C.VkQueryPool(queryPool)
 	c.query = C.uint32_t(query)
-	C.callPFN_vkCmdEndQuery(p.Raw, c.commandBuffer, c.queryPool, c.query)
+	C.callPFN_vkCmdEndQuery(C.PFN_vkCmdEndQuery(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.query)
 }
 
-type PFN_vkCmdResetQueryPool struct {
-	Raw C.PFN_vkCmdResetQueryPool
-}
+type PFNCmdResetQueryPool uintptr
 
-func (p PFN_vkCmdResetQueryPool) Call(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32) {
+func (p PFNCmdResetQueryPool) Call(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		queryPool     C.VkQueryPool
@@ -12007,14 +11735,12 @@ func (p PFN_vkCmdResetQueryPool) Call(commandBuffer CommandBuffer, queryPool Que
 	c.queryPool = C.VkQueryPool(queryPool)
 	c.firstQuery = C.uint32_t(firstQuery)
 	c.queryCount = C.uint32_t(queryCount)
-	C.callPFN_vkCmdResetQueryPool(p.Raw, c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount)
+	C.callPFN_vkCmdResetQueryPool(C.PFN_vkCmdResetQueryPool(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount)
 }
 
-type PFN_vkCmdWriteTimestamp struct {
-	Raw C.PFN_vkCmdWriteTimestamp
-}
+type PFNCmdWriteTimestamp uintptr
 
-func (p PFN_vkCmdWriteTimestamp) Call(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, queryPool QueryPool, query uint32) {
+func (p PFNCmdWriteTimestamp) Call(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, queryPool QueryPool, query uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pipelineStage C.VkPipelineStageFlagBits
@@ -12025,14 +11751,12 @@ func (p PFN_vkCmdWriteTimestamp) Call(commandBuffer CommandBuffer, pipelineStage
 	c.pipelineStage = C.VkPipelineStageFlagBits(pipelineStage)
 	c.queryPool = C.VkQueryPool(queryPool)
 	c.query = C.uint32_t(query)
-	C.callPFN_vkCmdWriteTimestamp(p.Raw, c.commandBuffer, c.pipelineStage, c.queryPool, c.query)
+	C.callPFN_vkCmdWriteTimestamp(C.PFN_vkCmdWriteTimestamp(unsafe.Pointer(p)), c.commandBuffer, c.pipelineStage, c.queryPool, c.query)
 }
 
-type PFN_vkCmdCopyQueryPoolResults struct {
-	Raw C.PFN_vkCmdCopyQueryPoolResults
-}
+type PFNCmdCopyQueryPoolResults uintptr
 
-func (p PFN_vkCmdCopyQueryPoolResults) Call(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32, dstBuffer Buffer, dstOffset DeviceSize, stride DeviceSize, flags QueryResultFlags) {
+func (p PFNCmdCopyQueryPoolResults) Call(commandBuffer CommandBuffer, queryPool QueryPool, firstQuery uint32, queryCount uint32, dstBuffer Buffer, dstOffset DeviceSize, stride DeviceSize, flags QueryResultFlags) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		queryPool     C.VkQueryPool
@@ -12067,14 +11791,12 @@ func (p PFN_vkCmdCopyQueryPoolResults) Call(commandBuffer CommandBuffer, queryPo
 		}
 		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
 	}
-	C.callPFN_vkCmdCopyQueryPoolResults(p.Raw, c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount, c.dstBuffer, c.dstOffset, c.stride, c.flags)
+	C.callPFN_vkCmdCopyQueryPoolResults(C.PFN_vkCmdCopyQueryPoolResults(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount, c.dstBuffer, c.dstOffset, c.stride, c.flags)
 }
 
-type PFN_vkCmdPushConstants struct {
-	Raw C.PFN_vkCmdPushConstants
-}
+type PFNCmdPushConstants uintptr
 
-func (p PFN_vkCmdPushConstants) Call(commandBuffer CommandBuffer, layout PipelineLayout, stageFlags ShaderStageFlags, offset uint32, values []byte) {
+func (p PFNCmdPushConstants) Call(commandBuffer CommandBuffer, layout PipelineLayout, stageFlags ShaderStageFlags, offset uint32, values []byte) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		layout        C.VkPipelineLayout
@@ -12105,12 +11827,10 @@ func (p PFN_vkCmdPushConstants) Call(commandBuffer CommandBuffer, layout Pipelin
 			slice3[i3] = values[i3]
 		}
 	}
-	C.callPFN_vkCmdPushConstants(p.Raw, c.commandBuffer, c.layout, c.stageFlags, c.offset, c.size, c.pValues)
+	C.callPFN_vkCmdPushConstants(C.PFN_vkCmdPushConstants(unsafe.Pointer(p)), c.commandBuffer, c.layout, c.stageFlags, c.offset, c.size, c.pValues)
 }
 
-type PFN_vkCmdBeginRenderPass struct {
-	Raw C.PFN_vkCmdBeginRenderPass
-}
+type PFNCmdBeginRenderPass uintptr
 type RenderPassBeginInfo struct {
 	Next        Structure
 	RenderPass  RenderPass
@@ -12171,7 +11891,7 @@ func (s *RenderPassBeginInfo) GetNext() Structure {
 func (s *RenderPassBeginInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdBeginRenderPass) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, contents SubpassContents) {
+func (p PFNCmdBeginRenderPass) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, contents SubpassContents) {
 	var c struct {
 		commandBuffer    C.VkCommandBuffer
 		pRenderPassBegin *C.VkRenderPassBeginInfo
@@ -12185,38 +11905,32 @@ func (p PFN_vkCmdBeginRenderPass) Call(commandBuffer CommandBuffer, renderPassBe
 		renderPassBegin.toC(c.pRenderPassBegin, _sa)
 	}
 	c.contents = C.VkSubpassContents(contents)
-	C.callPFN_vkCmdBeginRenderPass(p.Raw, c.commandBuffer, c.pRenderPassBegin, c.contents)
+	C.callPFN_vkCmdBeginRenderPass(C.PFN_vkCmdBeginRenderPass(unsafe.Pointer(p)), c.commandBuffer, c.pRenderPassBegin, c.contents)
 }
 
-type PFN_vkCmdNextSubpass struct {
-	Raw C.PFN_vkCmdNextSubpass
-}
+type PFNCmdNextSubpass uintptr
 
-func (p PFN_vkCmdNextSubpass) Call(commandBuffer CommandBuffer, contents SubpassContents) {
+func (p PFNCmdNextSubpass) Call(commandBuffer CommandBuffer, contents SubpassContents) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		contents      C.VkSubpassContents
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.contents = C.VkSubpassContents(contents)
-	C.callPFN_vkCmdNextSubpass(p.Raw, c.commandBuffer, c.contents)
+	C.callPFN_vkCmdNextSubpass(C.PFN_vkCmdNextSubpass(unsafe.Pointer(p)), c.commandBuffer, c.contents)
 }
 
-type PFN_vkCmdEndRenderPass struct {
-	Raw C.PFN_vkCmdEndRenderPass
-}
+type PFNCmdEndRenderPass uintptr
 
-func (p PFN_vkCmdEndRenderPass) Call(commandBuffer CommandBuffer) {
+func (p PFNCmdEndRenderPass) Call(commandBuffer CommandBuffer) {
 	var c struct{ commandBuffer C.VkCommandBuffer }
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	C.callPFN_vkCmdEndRenderPass(p.Raw, c.commandBuffer)
+	C.callPFN_vkCmdEndRenderPass(C.PFN_vkCmdEndRenderPass(unsafe.Pointer(p)), c.commandBuffer)
 }
 
-type PFN_vkCmdExecuteCommands struct {
-	Raw C.PFN_vkCmdExecuteCommands
-}
+type PFNCmdExecuteCommands uintptr
 
-func (p PFN_vkCmdExecuteCommands) Call(commandBuffer CommandBuffer, commandBuffers []CommandBuffer) {
+func (p PFNCmdExecuteCommands) Call(commandBuffer CommandBuffer, commandBuffers []CommandBuffer) {
 	var c struct {
 		commandBuffer      C.VkCommandBuffer
 		commandBufferCount C.uint32_t
@@ -12233,7 +11947,7 @@ func (p PFN_vkCmdExecuteCommands) Call(commandBuffer CommandBuffer, commandBuffe
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
 	}
-	C.callPFN_vkCmdExecuteCommands(p.Raw, c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
+	C.callPFN_vkCmdExecuteCommands(C.PFN_vkCmdExecuteCommands(unsafe.Pointer(p)), c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
 }
 func CreateInstance(createInfo *InstanceCreateInfo, allocator *AllocationCallbacks, instance *Instance) (_ret Result) {
 	var c struct {
@@ -12482,7 +12196,7 @@ func GetPhysicalDeviceMemoryProperties(physicalDevice PhysicalDevice, memoryProp
 		}
 	}
 }
-func GetInstanceProcAddr(instance Instance, name string) (_ret PFN_vkVoidFunction) {
+func GetInstanceProcAddr(instance Instance, name string) (_ret PFNVoidFunction) {
 	var c struct {
 		instance C.VkInstance
 		pName    *C.char
@@ -12493,10 +12207,10 @@ func GetInstanceProcAddr(instance Instance, name string) (_ret PFN_vkVoidFunctio
 	c.instance = C.VkInstance(instance)
 	c.pName = toCString(name, _sa)
 	c._ret = C.vkGetInstanceProcAddr(c.instance, c.pName)
-	_ret.Raw = c._ret
+	_ret = PFNVoidFunction(unsafe.Pointer(c._ret))
 	return
 }
-func GetDeviceProcAddr(device Device, name string) (_ret PFN_vkVoidFunction) {
+func GetDeviceProcAddr(device Device, name string) (_ret PFNVoidFunction) {
 	var c struct {
 		device C.VkDevice
 		pName  *C.char
@@ -12507,7 +12221,7 @@ func GetDeviceProcAddr(device Device, name string) (_ret PFN_vkVoidFunction) {
 	c.device = C.VkDevice(device)
 	c.pName = toCString(name, _sa)
 	c._ret = C.vkGetDeviceProcAddr(c.device, c.pName)
-	_ret.Raw = c._ret
+	_ret = PFNVoidFunction(unsafe.Pointer(c._ret))
 	return
 }
 func CreateDevice(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, allocator *AllocationCallbacks, device *Device) (_ret Result) {
@@ -15650,11 +15364,9 @@ const (
 	EXTERNAL_SEMAPHORE_FEATURE_FLAG_BITS_MAX_ENUM ExternalSemaphoreFeatureFlagBits = 2147483647
 )
 
-type PFN_vkEnumerateInstanceVersion struct {
-	Raw C.PFN_vkEnumerateInstanceVersion
-}
+type PFNEnumerateInstanceVersion uintptr
 
-func (p PFN_vkEnumerateInstanceVersion) Call(apiVersion *uint32) (_ret Result) {
+func (p PFNEnumerateInstanceVersion) Call(apiVersion *uint32) (_ret Result) {
 	var c struct {
 		pApiVersion *C.uint32_t
 		_ret        C.VkResult
@@ -15665,15 +15377,13 @@ func (p PFN_vkEnumerateInstanceVersion) Call(apiVersion *uint32) (_ret Result) {
 		c.pApiVersion = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
 		*c.pApiVersion = C.uint32_t(*apiVersion)
 	}
-	c._ret = C.callPFN_vkEnumerateInstanceVersion(p.Raw, c.pApiVersion)
+	c._ret = C.callPFN_vkEnumerateInstanceVersion(C.PFN_vkEnumerateInstanceVersion(unsafe.Pointer(p)), c.pApiVersion)
 	_ret = Result(c._ret)
 	*apiVersion = uint32(*c.pApiVersion)
 	return
 }
 
-type PFN_vkBindBufferMemory2 struct {
-	Raw C.PFN_vkBindBufferMemory2
-}
+type PFNBindBufferMemory2 uintptr
 type BindBufferMemoryInfo struct {
 	Next         Structure
 	Buffer       Buffer
@@ -15726,7 +15436,7 @@ func (s *BindBufferMemoryInfo) GetNext() Structure {
 func (s *BindBufferMemoryInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkBindBufferMemory2) Call(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
+func (p PFNBindBufferMemory2) Call(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		bindInfoCount C.uint32_t
@@ -15744,14 +15454,12 @@ func (p PFN_vkBindBufferMemory2) Call(device Device, bindInfos []BindBufferMemor
 			bindInfos[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkBindBufferMemory2(p.Raw, c.device, c.bindInfoCount, c.pBindInfos)
+	c._ret = C.callPFN_vkBindBufferMemory2(C.PFN_vkBindBufferMemory2(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkBindImageMemory2 struct {
-	Raw C.PFN_vkBindImageMemory2
-}
+type PFNBindImageMemory2 uintptr
 type BindImageMemoryInfo struct {
 	Next         Structure
 	Image        Image
@@ -15804,7 +15512,7 @@ func (s *BindImageMemoryInfo) GetNext() Structure {
 func (s *BindImageMemoryInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkBindImageMemory2) Call(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
+func (p PFNBindImageMemory2) Call(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		bindInfoCount C.uint32_t
@@ -15822,17 +15530,15 @@ func (p PFN_vkBindImageMemory2) Call(device Device, bindInfos []BindImageMemoryI
 			bindInfos[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkBindImageMemory2(p.Raw, c.device, c.bindInfoCount, c.pBindInfos)
+	c._ret = C.callPFN_vkBindImageMemory2(C.PFN_vkBindImageMemory2(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetDeviceGroupPeerMemoryFeatures struct {
-	Raw C.PFN_vkGetDeviceGroupPeerMemoryFeatures
-}
+type PFNGetDeviceGroupPeerMemoryFeatures uintptr
 type PeerMemoryFeatureFlags Flags
 
-func (p PFN_vkGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+func (p PFNGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
 	var c struct {
 		device              C.VkDevice
 		heapIndex           C.uint32_t
@@ -15861,7 +15567,7 @@ func (p PFN_vkGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex ui
 			}
 		}
 	}
-	C.callPFN_vkGetDeviceGroupPeerMemoryFeatures(p.Raw, c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
+	C.callPFN_vkGetDeviceGroupPeerMemoryFeatures(C.PFN_vkGetDeviceGroupPeerMemoryFeatures(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
 	{
 		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i3, _ := range peerMemoryFeatures {
@@ -15878,25 +15584,21 @@ func (p PFN_vkGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex ui
 	}
 }
 
-type PFN_vkCmdSetDeviceMask struct {
-	Raw C.PFN_vkCmdSetDeviceMask
-}
+type PFNCmdSetDeviceMask uintptr
 
-func (p PFN_vkCmdSetDeviceMask) Call(commandBuffer CommandBuffer, deviceMask uint32) {
+func (p PFNCmdSetDeviceMask) Call(commandBuffer CommandBuffer, deviceMask uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		deviceMask    C.uint32_t
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.deviceMask = C.uint32_t(deviceMask)
-	C.callPFN_vkCmdSetDeviceMask(p.Raw, c.commandBuffer, c.deviceMask)
+	C.callPFN_vkCmdSetDeviceMask(C.PFN_vkCmdSetDeviceMask(unsafe.Pointer(p)), c.commandBuffer, c.deviceMask)
 }
 
-type PFN_vkCmdDispatchBase struct {
-	Raw C.PFN_vkCmdDispatchBase
-}
+type PFNCmdDispatchBase uintptr
 
-func (p PFN_vkCmdDispatchBase) Call(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
+func (p PFNCmdDispatchBase) Call(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		baseGroupX    C.uint32_t
@@ -15913,12 +15615,10 @@ func (p PFN_vkCmdDispatchBase) Call(commandBuffer CommandBuffer, baseGroupX uint
 	c.groupCountX = C.uint32_t(groupCountX)
 	c.groupCountY = C.uint32_t(groupCountY)
 	c.groupCountZ = C.uint32_t(groupCountZ)
-	C.callPFN_vkCmdDispatchBase(p.Raw, c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
+	C.callPFN_vkCmdDispatchBase(C.PFN_vkCmdDispatchBase(unsafe.Pointer(p)), c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
 }
 
-type PFN_vkEnumeratePhysicalDeviceGroups struct {
-	Raw C.PFN_vkEnumeratePhysicalDeviceGroups
-}
+type PFNEnumeratePhysicalDeviceGroups uintptr
 type PhysicalDeviceGroupProperties struct {
 	Next                Structure
 	PhysicalDeviceCount uint32
@@ -15971,7 +15671,7 @@ func (s *PhysicalDeviceGroupProperties) GetNext() Structure {
 func (s *PhysicalDeviceGroupProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+func (p PFNEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
 		instance                       C.VkInstance
 		pPhysicalDeviceGroupCount      *C.uint32_t
@@ -15992,7 +15692,7 @@ func (p PFN_vkEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDev
 			physicalDeviceGroupProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroups(p.Raw, c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
+	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroups(C.PFN_vkEnumeratePhysicalDeviceGroups(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
 	*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
 	{
@@ -16004,9 +15704,7 @@ func (p PFN_vkEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDev
 	return
 }
 
-type PFN_vkGetImageMemoryRequirements2 struct {
-	Raw C.PFN_vkGetImageMemoryRequirements2
-}
+type PFNGetImageMemoryRequirements2 uintptr
 type ImageMemoryRequirementsInfo2 struct {
 	Next  Structure
 	Image Image
@@ -16084,7 +15782,7 @@ func (s *MemoryRequirements2) GetNext() Structure {
 func (s *MemoryRequirements2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkImageMemoryRequirementsInfo2
@@ -16104,7 +15802,7 @@ func (p PFN_vkGetImageMemoryRequirements2) Call(device Device, info *ImageMemory
 			memoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetImageMemoryRequirements2(p.Raw, c.device, c.pInfo, c.pMemoryRequirements)
+	C.callPFN_vkGetImageMemoryRequirements2(C.PFN_vkGetImageMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -16113,9 +15811,7 @@ func (p PFN_vkGetImageMemoryRequirements2) Call(device Device, info *ImageMemory
 	}
 }
 
-type PFN_vkGetBufferMemoryRequirements2 struct {
-	Raw C.PFN_vkGetBufferMemoryRequirements2
-}
+type PFNGetBufferMemoryRequirements2 uintptr
 type BufferMemoryRequirementsInfo2 struct {
 	Next   Structure
 	Buffer Buffer
@@ -16154,7 +15850,7 @@ func (s *BufferMemoryRequirementsInfo2) GetNext() Structure {
 func (s *BufferMemoryRequirementsInfo2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkBufferMemoryRequirementsInfo2
@@ -16174,7 +15870,7 @@ func (p PFN_vkGetBufferMemoryRequirements2) Call(device Device, info *BufferMemo
 			memoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetBufferMemoryRequirements2(p.Raw, c.device, c.pInfo, c.pMemoryRequirements)
+	C.callPFN_vkGetBufferMemoryRequirements2(C.PFN_vkGetBufferMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -16183,9 +15879,7 @@ func (p PFN_vkGetBufferMemoryRequirements2) Call(device Device, info *BufferMemo
 	}
 }
 
-type PFN_vkGetImageSparseMemoryRequirements2 struct {
-	Raw C.PFN_vkGetImageSparseMemoryRequirements2
-}
+type PFNGetImageSparseMemoryRequirements2 uintptr
 type ImageSparseMemoryRequirementsInfo2 struct {
 	Next  Structure
 	Image Image
@@ -16263,7 +15957,7 @@ func (s *SparseImageMemoryRequirements2) GetNext() Structure {
 func (s *SparseImageMemoryRequirements2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+func (p PFNGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
 	var c struct {
 		device                        C.VkDevice
 		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
@@ -16288,7 +15982,7 @@ func (p PFN_vkGetImageSparseMemoryRequirements2) Call(device Device, info *Image
 			sparseMemoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetImageSparseMemoryRequirements2(p.Raw, c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
+	C.callPFN_vkGetImageSparseMemoryRequirements2(C.PFN_vkGetImageSparseMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
@@ -16298,9 +15992,7 @@ func (p PFN_vkGetImageSparseMemoryRequirements2) Call(device Device, info *Image
 	}
 }
 
-type PFN_vkGetPhysicalDeviceFeatures2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceFeatures2
-}
+type PFNGetPhysicalDeviceFeatures2 uintptr
 type PhysicalDeviceFeatures2 struct {
 	Next     Structure
 	Features PhysicalDeviceFeatures
@@ -16339,7 +16031,7 @@ func (s *PhysicalDeviceFeatures2) GetNext() Structure {
 func (s *PhysicalDeviceFeatures2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+func (p PFNGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures2
@@ -16354,7 +16046,7 @@ func (p PFN_vkGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, fe
 			features[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFeatures2(p.Raw, c.physicalDevice, c.pFeatures)
+	C.callPFN_vkGetPhysicalDeviceFeatures2(C.PFN_vkGetPhysicalDeviceFeatures2(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
 		for i3, _ := range features {
@@ -16363,9 +16055,7 @@ func (p PFN_vkGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, fe
 	}
 }
 
-type PFN_vkGetPhysicalDeviceProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceProperties2
-}
+type PFNGetPhysicalDeviceProperties2 uintptr
 type PhysicalDeviceProperties2 struct {
 	Next       Structure
 	Properties PhysicalDeviceProperties
@@ -16404,7 +16094,7 @@ func (s *PhysicalDeviceProperties2) GetNext() Structure {
 func (s *PhysicalDeviceProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+func (p PFNGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties2
@@ -16419,7 +16109,7 @@ func (p PFN_vkGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, 
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceProperties2(p.Raw, c.physicalDevice, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceProperties2(C.PFN_vkGetPhysicalDeviceProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
@@ -16428,9 +16118,7 @@ func (p PFN_vkGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, 
 	}
 }
 
-type PFN_vkGetPhysicalDeviceFormatProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceFormatProperties2
-}
+type PFNGetPhysicalDeviceFormatProperties2 uintptr
 type FormatProperties2 struct {
 	Next             Structure
 	FormatProperties FormatProperties
@@ -16469,7 +16157,7 @@ func (s *FormatProperties2) GetNext() Structure {
 func (s *FormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+func (p PFNGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -16486,7 +16174,7 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDe
 			formatProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFormatProperties2(p.Raw, c.physicalDevice, c.format, c.pFormatProperties)
+	C.callPFN_vkGetPhysicalDeviceFormatProperties2(C.PFN_vkGetPhysicalDeviceFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
 	{
 		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
 		for i3, _ := range formatProperties {
@@ -16495,9 +16183,7 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDe
 	}
 }
 
-type PFN_vkGetPhysicalDeviceImageFormatProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceImageFormatProperties2
-}
+type PFNGetPhysicalDeviceImageFormatProperties2 uintptr
 type PhysicalDeviceImageFormatInfo2 struct {
 	Next   Structure
 	Format Format
@@ -16619,7 +16305,7 @@ func (s *ImageFormatProperties2) GetNext() Structure {
 func (s *ImageFormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
@@ -16640,7 +16326,7 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice Physi
 			imageFormatProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2(p.Raw, c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2(C.PFN_vkGetPhysicalDeviceImageFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
@@ -16651,9 +16337,7 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice Physi
 	return
 }
 
-type PFN_vkGetPhysicalDeviceQueueFamilyProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2
-}
+type PFNGetPhysicalDeviceQueueFamilyProperties2 uintptr
 type QueueFamilyProperties2 struct {
 	Next                  Structure
 	QueueFamilyProperties QueueFamilyProperties
@@ -16692,7 +16376,7 @@ func (s *QueueFamilyProperties2) GetNext() Structure {
 func (s *QueueFamilyProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -16712,7 +16396,7 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice Physi
 			queueFamilyProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2(p.Raw, c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
+	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
@@ -16722,9 +16406,7 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice Physi
 	}
 }
 
-type PFN_vkGetPhysicalDeviceMemoryProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceMemoryProperties2
-}
+type PFNGetPhysicalDeviceMemoryProperties2 uintptr
 type PhysicalDeviceMemoryProperties2 struct {
 	Next             Structure
 	MemoryProperties PhysicalDeviceMemoryProperties
@@ -16763,7 +16445,7 @@ func (s *PhysicalDeviceMemoryProperties2) GetNext() Structure {
 func (s *PhysicalDeviceMemoryProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+func (p PFNGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
@@ -16778,7 +16460,7 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDe
 			memoryProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceMemoryProperties2(p.Raw, c.physicalDevice, c.pMemoryProperties)
+	C.callPFN_vkGetPhysicalDeviceMemoryProperties2(C.PFN_vkGetPhysicalDeviceMemoryProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
 		for i3, _ := range memoryProperties {
@@ -16787,9 +16469,7 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDe
 	}
 }
 
-type PFN_vkGetPhysicalDeviceSparseImageFormatProperties2 struct {
-	Raw C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2
-}
+type PFNGetPhysicalDeviceSparseImageFormatProperties2 uintptr
 type PhysicalDeviceSparseImageFormatInfo2 struct {
 	Next    Structure
 	Format  Format
@@ -16895,7 +16575,7 @@ func (s *SparseImageFormatProperties2) GetNext() Structure {
 func (s *SparseImageFormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
@@ -16920,7 +16600,7 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2(p.Raw, c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
@@ -16930,12 +16610,10 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice
 	}
 }
 
-type PFN_vkTrimCommandPool struct {
-	Raw C.PFN_vkTrimCommandPool
-}
+type PFNTrimCommandPool uintptr
 type CommandPoolTrimFlags Flags
 
-func (p PFN_vkTrimCommandPool) Call(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
+func (p PFNTrimCommandPool) Call(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
 	var c struct {
 		device      C.VkDevice
 		commandPool C.VkCommandPool
@@ -16952,12 +16630,10 @@ func (p PFN_vkTrimCommandPool) Call(device Device, commandPool CommandPool, flag
 		}
 		c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
 	}
-	C.callPFN_vkTrimCommandPool(p.Raw, c.device, c.commandPool, c.flags)
+	C.callPFN_vkTrimCommandPool(C.PFN_vkTrimCommandPool(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 }
 
-type PFN_vkGetDeviceQueue2 struct {
-	Raw C.PFN_vkGetDeviceQueue2
-}
+type PFNGetDeviceQueue2 uintptr
 type DeviceQueueInfo2 struct {
 	Next             Structure
 	Flags            DeviceQueueCreateFlags
@@ -17018,7 +16694,7 @@ func (s *DeviceQueueInfo2) GetNext() Structure {
 func (s *DeviceQueueInfo2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetDeviceQueue2) Call(device Device, queueInfo *DeviceQueueInfo2, queue *Queue) {
+func (p PFNGetDeviceQueue2) Call(device Device, queueInfo *DeviceQueueInfo2, queue *Queue) {
 	var c struct {
 		device     C.VkDevice
 		pQueueInfo *C.VkDeviceQueueInfo2
@@ -17035,13 +16711,11 @@ func (p PFN_vkGetDeviceQueue2) Call(device Device, queueInfo *DeviceQueueInfo2, 
 		c.pQueue = (*C.VkQueue)(_sa.alloc(C.sizeof_VkQueue))
 		*c.pQueue = C.VkQueue(*queue)
 	}
-	C.callPFN_vkGetDeviceQueue2(p.Raw, c.device, c.pQueueInfo, c.pQueue)
+	C.callPFN_vkGetDeviceQueue2(C.PFN_vkGetDeviceQueue2(unsafe.Pointer(p)), c.device, c.pQueueInfo, c.pQueue)
 	*queue = Queue(*c.pQueue)
 }
 
-type PFN_vkCreateSamplerYcbcrConversion struct {
-	Raw C.PFN_vkCreateSamplerYcbcrConversion
-}
+type PFNCreateSamplerYcbcrConversion uintptr
 type SamplerYcbcrConversionCreateInfo struct {
 	Next                        Structure
 	Format                      Format
@@ -17108,7 +16782,7 @@ func (s *SamplerYcbcrConversionCreateInfo) SetNext(n Structure) {
 
 type SamplerYcbcrConversion C.VkSamplerYcbcrConversion
 
-func (p PFN_vkCreateSamplerYcbcrConversion) Call(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
+func (p PFNCreateSamplerYcbcrConversion) Call(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		pCreateInfo      *C.VkSamplerYcbcrConversionCreateInfo
@@ -17131,17 +16805,15 @@ func (p PFN_vkCreateSamplerYcbcrConversion) Call(device Device, createInfo *Samp
 		c.pYcbcrConversion = (*C.VkSamplerYcbcrConversion)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversion))
 		*c.pYcbcrConversion = C.VkSamplerYcbcrConversion(*ycbcrConversion)
 	}
-	c._ret = C.callPFN_vkCreateSamplerYcbcrConversion(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
+	c._ret = C.callPFN_vkCreateSamplerYcbcrConversion(C.PFN_vkCreateSamplerYcbcrConversion(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
 	_ret = Result(c._ret)
 	*ycbcrConversion = SamplerYcbcrConversion(*c.pYcbcrConversion)
 	return
 }
 
-type PFN_vkDestroySamplerYcbcrConversion struct {
-	Raw C.PFN_vkDestroySamplerYcbcrConversion
-}
+type PFNDestroySamplerYcbcrConversion uintptr
 
-func (p PFN_vkDestroySamplerYcbcrConversion) Call(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
+func (p PFNDestroySamplerYcbcrConversion) Call(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
 	var c struct {
 		device          C.VkDevice
 		ycbcrConversion C.VkSamplerYcbcrConversion
@@ -17155,12 +16827,10 @@ func (p PFN_vkDestroySamplerYcbcrConversion) Call(device Device, ycbcrConversion
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySamplerYcbcrConversion(p.Raw, c.device, c.ycbcrConversion, c.pAllocator)
+	C.callPFN_vkDestroySamplerYcbcrConversion(C.PFN_vkDestroySamplerYcbcrConversion(unsafe.Pointer(p)), c.device, c.ycbcrConversion, c.pAllocator)
 }
 
-type PFN_vkCreateDescriptorUpdateTemplate struct {
-	Raw C.PFN_vkCreateDescriptorUpdateTemplate
-}
+type PFNCreateDescriptorUpdateTemplate uintptr
 type DescriptorUpdateTemplateCreateFlags Flags
 type DescriptorUpdateTemplateEntry struct {
 	DstBinding      uint32
@@ -17276,7 +16946,7 @@ func (s *DescriptorUpdateTemplateCreateInfo) SetNext(n Structure) {
 
 type DescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
 
-func (p PFN_vkCreateDescriptorUpdateTemplate) Call(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
+func (p PFNCreateDescriptorUpdateTemplate) Call(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
 	var c struct {
 		device                    C.VkDevice
 		pCreateInfo               *C.VkDescriptorUpdateTemplateCreateInfo
@@ -17299,17 +16969,15 @@ func (p PFN_vkCreateDescriptorUpdateTemplate) Call(device Device, createInfo *De
 		c.pDescriptorUpdateTemplate = (*C.VkDescriptorUpdateTemplate)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplate))
 		*c.pDescriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(*descriptorUpdateTemplate)
 	}
-	c._ret = C.callPFN_vkCreateDescriptorUpdateTemplate(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
+	c._ret = C.callPFN_vkCreateDescriptorUpdateTemplate(C.PFN_vkCreateDescriptorUpdateTemplate(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
 	_ret = Result(c._ret)
 	*descriptorUpdateTemplate = DescriptorUpdateTemplate(*c.pDescriptorUpdateTemplate)
 	return
 }
 
-type PFN_vkDestroyDescriptorUpdateTemplate struct {
-	Raw C.PFN_vkDestroyDescriptorUpdateTemplate
-}
+type PFNDestroyDescriptorUpdateTemplate uintptr
 
-func (p PFN_vkDestroyDescriptorUpdateTemplate) Call(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
+func (p PFNDestroyDescriptorUpdateTemplate) Call(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -17323,14 +16991,12 @@ func (p PFN_vkDestroyDescriptorUpdateTemplate) Call(device Device, descriptorUpd
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDescriptorUpdateTemplate(p.Raw, c.device, c.descriptorUpdateTemplate, c.pAllocator)
+	C.callPFN_vkDestroyDescriptorUpdateTemplate(C.PFN_vkDestroyDescriptorUpdateTemplate(unsafe.Pointer(p)), c.device, c.descriptorUpdateTemplate, c.pAllocator)
 }
 
-type PFN_vkUpdateDescriptorSetWithTemplate struct {
-	Raw C.PFN_vkUpdateDescriptorSetWithTemplate
-}
+type PFNUpdateDescriptorSetWithTemplate uintptr
 
-func (p PFN_vkUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+func (p PFNUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
@@ -17349,12 +17015,10 @@ func (p PFN_vkUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet
 			slice3[i3] = data[i3]
 		}
 	}
-	C.callPFN_vkUpdateDescriptorSetWithTemplate(p.Raw, c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
+	C.callPFN_vkUpdateDescriptorSetWithTemplate(C.PFN_vkUpdateDescriptorSetWithTemplate(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
 
-type PFN_vkGetPhysicalDeviceExternalBufferProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalBufferProperties
-}
+type PFNGetPhysicalDeviceExternalBufferProperties uintptr
 type PhysicalDeviceExternalBufferInfo struct {
 	Next       Structure
 	Flags      BufferCreateFlags
@@ -17537,7 +17201,7 @@ func (s *ExternalBufferProperties) GetNext() Structure {
 func (s *ExternalBufferProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+func (p PFNGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
@@ -17557,7 +17221,7 @@ func (p PFN_vkGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice Phy
 			externalBufferProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalBufferProperties(p.Raw, c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalBufferProperties(C.PFN_vkGetPhysicalDeviceExternalBufferProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
 		for i3, _ := range externalBufferProperties {
@@ -17566,9 +17230,7 @@ func (p PFN_vkGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice Phy
 	}
 }
 
-type PFN_vkGetPhysicalDeviceExternalFenceProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalFenceProperties
-}
+type PFNGetPhysicalDeviceExternalFenceProperties uintptr
 type PhysicalDeviceExternalFenceInfo struct {
 	Next       Structure
 	HandleType ExternalFenceHandleTypeFlagBits
@@ -17702,7 +17364,7 @@ func (s *ExternalFenceProperties) GetNext() Structure {
 func (s *ExternalFenceProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+func (p PFNGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
 	var c struct {
 		physicalDevice           C.VkPhysicalDevice
 		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
@@ -17722,7 +17384,7 @@ func (p PFN_vkGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice Phys
 			externalFenceProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalFenceProperties(p.Raw, c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalFenceProperties(C.PFN_vkGetPhysicalDeviceExternalFenceProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
 		for i3, _ := range externalFenceProperties {
@@ -17731,9 +17393,7 @@ func (p PFN_vkGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice Phys
 	}
 }
 
-type PFN_vkGetPhysicalDeviceExternalSemaphoreProperties struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalSemaphoreProperties
-}
+type PFNGetPhysicalDeviceExternalSemaphoreProperties uintptr
 type PhysicalDeviceExternalSemaphoreInfo struct {
 	Next       Structure
 	HandleType ExternalSemaphoreHandleTypeFlagBits
@@ -17867,7 +17527,7 @@ func (s *ExternalSemaphoreProperties) GetNext() Structure {
 func (s *ExternalSemaphoreProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+func (p PFNGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
 		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
@@ -17887,7 +17547,7 @@ func (p PFN_vkGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice 
 			externalSemaphoreProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalSemaphoreProperties(p.Raw, c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalSemaphoreProperties(C.PFN_vkGetPhysicalDeviceExternalSemaphoreProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
 		for i3, _ := range externalSemaphoreProperties {
@@ -17896,9 +17556,7 @@ func (p PFN_vkGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice 
 	}
 }
 
-type PFN_vkGetDescriptorSetLayoutSupport struct {
-	Raw C.PFN_vkGetDescriptorSetLayoutSupport
-}
+type PFNGetDescriptorSetLayoutSupport uintptr
 type DescriptorSetLayoutSupport struct {
 	Next      Structure
 	Supported bool
@@ -17941,7 +17599,7 @@ func (s *DescriptorSetLayoutSupport) GetNext() Structure {
 func (s *DescriptorSetLayoutSupport) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetDescriptorSetLayoutSupport) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
+func (p PFNGetDescriptorSetLayoutSupport) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkDescriptorSetLayoutCreateInfo
@@ -17958,7 +17616,7 @@ func (p PFN_vkGetDescriptorSetLayoutSupport) Call(device Device, createInfo *Des
 		c.pSupport = (*C.VkDescriptorSetLayoutSupport)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutSupport))
 		support.toC(c.pSupport, _sa)
 	}
-	C.callPFN_vkGetDescriptorSetLayoutSupport(p.Raw, c.device, c.pCreateInfo, c.pSupport)
+	C.callPFN_vkGetDescriptorSetLayoutSupport(C.PFN_vkGetDescriptorSetLayoutSupport(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pSupport)
 	support.fromC(c.pSupport)
 }
 func EnumerateInstanceVersion(apiVersion *uint32) (_ret Result) {
@@ -18721,12 +18379,10 @@ const (
 	COMPOSITE_ALPHA_FLAG_BITS_MAX_ENUM_KHR  CompositeAlphaFlagBitsKHR = 2147483647
 )
 
-type PFN_vkDestroySurfaceKHR struct {
-	Raw C.PFN_vkDestroySurfaceKHR
-}
+type PFNDestroySurfaceKHR uintptr
 type SurfaceKHR C.VkSurfaceKHR
 
-func (p PFN_vkDestroySurfaceKHR) Call(instance Instance, surface SurfaceKHR, allocator *AllocationCallbacks) {
+func (p PFNDestroySurfaceKHR) Call(instance Instance, surface SurfaceKHR, allocator *AllocationCallbacks) {
 	var c struct {
 		instance   C.VkInstance
 		surface    C.VkSurfaceKHR
@@ -18740,14 +18396,12 @@ func (p PFN_vkDestroySurfaceKHR) Call(instance Instance, surface SurfaceKHR, all
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySurfaceKHR(p.Raw, c.instance, c.surface, c.pAllocator)
+	C.callPFN_vkDestroySurfaceKHR(C.PFN_vkDestroySurfaceKHR(unsafe.Pointer(p)), c.instance, c.surface, c.pAllocator)
 }
 
-type PFN_vkGetPhysicalDeviceSurfaceSupportKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceSupportKHR
-}
+type PFNGetPhysicalDeviceSurfaceSupportKHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceSurfaceSupportKHR) Call(physicalDevice PhysicalDevice, queueFamilyIndex uint32, surface SurfaceKHR, supported *bool) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceSupportKHR) Call(physicalDevice PhysicalDevice, queueFamilyIndex uint32, surface SurfaceKHR, supported *bool) (_ret Result) {
 	var c struct {
 		physicalDevice   C.VkPhysicalDevice
 		queueFamilyIndex C.uint32_t
@@ -18768,15 +18422,13 @@ func (p PFN_vkGetPhysicalDeviceSurfaceSupportKHR) Call(physicalDevice PhysicalDe
 			*c.pSupported = 0
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceSupportKHR(p.Raw, c.physicalDevice, c.queueFamilyIndex, c.surface, c.pSupported)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceSupportKHR(C.PFN_vkGetPhysicalDeviceSurfaceSupportKHR(unsafe.Pointer(p)), c.physicalDevice, c.queueFamilyIndex, c.surface, c.pSupported)
 	_ret = Result(c._ret)
 	*supported = *c.pSupported != 0
 	return
 }
 
-type PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR
-}
+type PFNGetPhysicalDeviceSurfaceCapabilitiesKHR uintptr
 type SurfaceTransformFlagsKHR Flags
 type CompositeAlphaFlagsKHR Flags
 type SurfaceCapabilitiesKHR struct {
@@ -18864,7 +18516,7 @@ func (g *SurfaceCapabilitiesKHR) fromC(c *C.VkSurfaceCapabilitiesKHR) {
 		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 }
-func (p PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilitiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilitiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		surface              C.VkSurfaceKHR
@@ -18882,7 +18534,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice Physi
 			surfaceCapabilities[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(p.Raw, c.physicalDevice, c.surface, c.pSurfaceCapabilities)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(C.PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkSurfaceCapabilitiesKHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
@@ -18893,9 +18545,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice Physi
 	return
 }
 
-type PFN_vkGetPhysicalDeviceSurfaceFormatsKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceFormatsKHR
-}
+type PFNGetPhysicalDeviceSurfaceFormatsKHR uintptr
 type SurfaceFormatKHR struct {
 	Format     Format
 	ColorSpace ColorSpaceKHR
@@ -18909,7 +18559,7 @@ func (g *SurfaceFormatKHR) fromC(c *C.VkSurfaceFormatKHR) {
 	g.Format = Format(c.format)
 	g.ColorSpace = ColorSpaceKHR(c.colorSpace)
 }
-func (p PFN_vkGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormatKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormatKHR) (_ret Result) {
 	var c struct {
 		physicalDevice      C.VkPhysicalDevice
 		surface             C.VkSurfaceKHR
@@ -18932,7 +18582,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDe
 			surfaceFormats[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormatsKHR(p.Raw, c.physicalDevice, c.surface, c.pSurfaceFormatCount, c.pSurfaceFormats)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormatsKHR(C.PFN_vkGetPhysicalDeviceSurfaceFormatsKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
 	*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
 	{
@@ -18944,11 +18594,9 @@ func (p PFN_vkGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDe
 	return
 }
 
-type PFN_vkGetPhysicalDeviceSurfacePresentModesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfacePresentModesKHR
-}
+type PFNGetPhysicalDeviceSurfacePresentModesKHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes []PresentModeKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes []PresentModeKHR) (_ret Result) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		surface           C.VkSurfaceKHR
@@ -18971,7 +18619,7 @@ func (p PFN_vkGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice Physi
 			slice3[i3] = C.VkPresentModeKHR(presentModes[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfacePresentModesKHR(p.Raw, c.physicalDevice, c.surface, c.pPresentModeCount, c.pPresentModes)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfacePresentModesKHR(C.PFN_vkGetPhysicalDeviceSurfacePresentModesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pPresentModeCount, c.pPresentModes)
 	_ret = Result(c._ret)
 	*presentModeCount = uint32(*c.pPresentModeCount)
 	{
@@ -19001,9 +18649,7 @@ const (
 	DEVICE_GROUP_PRESENT_MODE_FLAG_BITS_MAX_ENUM_KHR     DeviceGroupPresentModeFlagBitsKHR = 2147483647
 )
 
-type PFN_vkCreateSwapchainKHR struct {
-	Raw C.PFN_vkCreateSwapchainKHR
-}
+type PFNCreateSwapchainKHR uintptr
 type SwapchainCreateFlagsKHR Flags
 type SwapchainKHR C.VkSwapchainKHR
 type SwapchainCreateInfoKHR struct {
@@ -19135,7 +18781,7 @@ func (s *SwapchainCreateInfoKHR) GetNext() Structure {
 func (s *SwapchainCreateInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateSwapchainKHR) Call(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result) {
+func (p PFNCreateSwapchainKHR) Call(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkSwapchainCreateInfoKHR
@@ -19158,17 +18804,15 @@ func (p PFN_vkCreateSwapchainKHR) Call(device Device, createInfo *SwapchainCreat
 		c.pSwapchain = (*C.VkSwapchainKHR)(_sa.alloc(C.sizeof_VkSwapchainKHR))
 		*c.pSwapchain = C.VkSwapchainKHR(*swapchain)
 	}
-	c._ret = C.callPFN_vkCreateSwapchainKHR(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pSwapchain)
+	c._ret = C.callPFN_vkCreateSwapchainKHR(C.PFN_vkCreateSwapchainKHR(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pSwapchain)
 	_ret = Result(c._ret)
 	*swapchain = SwapchainKHR(*c.pSwapchain)
 	return
 }
 
-type PFN_vkDestroySwapchainKHR struct {
-	Raw C.PFN_vkDestroySwapchainKHR
-}
+type PFNDestroySwapchainKHR uintptr
 
-func (p PFN_vkDestroySwapchainKHR) Call(device Device, swapchain SwapchainKHR, allocator *AllocationCallbacks) {
+func (p PFNDestroySwapchainKHR) Call(device Device, swapchain SwapchainKHR, allocator *AllocationCallbacks) {
 	var c struct {
 		device     C.VkDevice
 		swapchain  C.VkSwapchainKHR
@@ -19182,14 +18826,12 @@ func (p PFN_vkDestroySwapchainKHR) Call(device Device, swapchain SwapchainKHR, a
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySwapchainKHR(p.Raw, c.device, c.swapchain, c.pAllocator)
+	C.callPFN_vkDestroySwapchainKHR(C.PFN_vkDestroySwapchainKHR(unsafe.Pointer(p)), c.device, c.swapchain, c.pAllocator)
 }
 
-type PFN_vkGetSwapchainImagesKHR struct {
-	Raw C.PFN_vkGetSwapchainImagesKHR
-}
+type PFNGetSwapchainImagesKHR uintptr
 
-func (p PFN_vkGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, swapchainImageCount *uint32, swapchainImages []Image) (_ret Result) {
+func (p PFNGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, swapchainImageCount *uint32, swapchainImages []Image) (_ret Result) {
 	var c struct {
 		device               C.VkDevice
 		swapchain            C.VkSwapchainKHR
@@ -19212,7 +18854,7 @@ func (p PFN_vkGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR,
 			slice3[i3] = C.VkImage(swapchainImages[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetSwapchainImagesKHR(p.Raw, c.device, c.swapchain, c.pSwapchainImageCount, c.pSwapchainImages)
+	c._ret = C.callPFN_vkGetSwapchainImagesKHR(C.PFN_vkGetSwapchainImagesKHR(unsafe.Pointer(p)), c.device, c.swapchain, c.pSwapchainImageCount, c.pSwapchainImages)
 	_ret = Result(c._ret)
 	*swapchainImageCount = uint32(*c.pSwapchainImageCount)
 	{
@@ -19224,11 +18866,9 @@ func (p PFN_vkGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR,
 	return
 }
 
-type PFN_vkAcquireNextImageKHR struct {
-	Raw C.PFN_vkAcquireNextImageKHR
-}
+type PFNAcquireNextImageKHR uintptr
 
-func (p PFN_vkAcquireNextImageKHR) Call(device Device, swapchain SwapchainKHR, timeout uint64, semaphore Semaphore, fence Fence, imageIndex *uint32) (_ret Result) {
+func (p PFNAcquireNextImageKHR) Call(device Device, swapchain SwapchainKHR, timeout uint64, semaphore Semaphore, fence Fence, imageIndex *uint32) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		swapchain   C.VkSwapchainKHR
@@ -19249,15 +18889,13 @@ func (p PFN_vkAcquireNextImageKHR) Call(device Device, swapchain SwapchainKHR, t
 		c.pImageIndex = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
 		*c.pImageIndex = C.uint32_t(*imageIndex)
 	}
-	c._ret = C.callPFN_vkAcquireNextImageKHR(p.Raw, c.device, c.swapchain, c.timeout, c.semaphore, c.fence, c.pImageIndex)
+	c._ret = C.callPFN_vkAcquireNextImageKHR(C.PFN_vkAcquireNextImageKHR(unsafe.Pointer(p)), c.device, c.swapchain, c.timeout, c.semaphore, c.fence, c.pImageIndex)
 	_ret = Result(c._ret)
 	*imageIndex = uint32(*c.pImageIndex)
 	return
 }
 
-type PFN_vkQueuePresentKHR struct {
-	Raw C.PFN_vkQueuePresentKHR
-}
+type PFNQueuePresentKHR uintptr
 type PresentInfoKHR struct {
 	Next           Structure
 	WaitSemaphores []Semaphore
@@ -19353,7 +18991,7 @@ func (s *PresentInfoKHR) GetNext() Structure {
 func (s *PresentInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkQueuePresentKHR) Call(queue Queue, presentInfo *PresentInfoKHR) (_ret Result) {
+func (p PFNQueuePresentKHR) Call(queue Queue, presentInfo *PresentInfoKHR) (_ret Result) {
 	var c struct {
 		queue        C.VkQueue
 		pPresentInfo *C.VkPresentInfoKHR
@@ -19366,14 +19004,12 @@ func (p PFN_vkQueuePresentKHR) Call(queue Queue, presentInfo *PresentInfoKHR) (_
 		c.pPresentInfo = (*C.VkPresentInfoKHR)(_sa.alloc(C.sizeof_VkPresentInfoKHR))
 		presentInfo.toC(c.pPresentInfo, _sa)
 	}
-	c._ret = C.callPFN_vkQueuePresentKHR(p.Raw, c.queue, c.pPresentInfo)
+	c._ret = C.callPFN_vkQueuePresentKHR(C.PFN_vkQueuePresentKHR(unsafe.Pointer(p)), c.queue, c.pPresentInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetDeviceGroupPresentCapabilitiesKHR struct {
-	Raw C.PFN_vkGetDeviceGroupPresentCapabilitiesKHR
-}
+type PFNGetDeviceGroupPresentCapabilitiesKHR uintptr
 type DeviceGroupPresentModeFlagsKHR Flags
 type DeviceGroupPresentCapabilitiesKHR struct {
 	Next        Structure
@@ -19436,7 +19072,7 @@ func (s *DeviceGroupPresentCapabilitiesKHR) GetNext() Structure {
 func (s *DeviceGroupPresentCapabilitiesKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroupPresentCapabilities []DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
+func (p PFNGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroupPresentCapabilities []DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
 	var c struct {
 		device                          C.VkDevice
 		pDeviceGroupPresentCapabilities *C.VkDeviceGroupPresentCapabilitiesKHR
@@ -19452,7 +19088,7 @@ func (p PFN_vkGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGr
 			deviceGroupPresentCapabilities[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetDeviceGroupPresentCapabilitiesKHR(p.Raw, c.device, c.pDeviceGroupPresentCapabilities)
+	c._ret = C.callPFN_vkGetDeviceGroupPresentCapabilitiesKHR(C.PFN_vkGetDeviceGroupPresentCapabilitiesKHR(unsafe.Pointer(p)), c.device, c.pDeviceGroupPresentCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkDeviceGroupPresentCapabilitiesKHR)(unsafe.Pointer(c.pDeviceGroupPresentCapabilities))[:len(deviceGroupPresentCapabilities):len(deviceGroupPresentCapabilities)]
@@ -19463,11 +19099,9 @@ func (p PFN_vkGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGr
 	return
 }
 
-type PFN_vkGetDeviceGroupSurfacePresentModesKHR struct {
-	Raw C.PFN_vkGetDeviceGroupSurfacePresentModesKHR
-}
+type PFNGetDeviceGroupSurfacePresentModesKHR uintptr
 
-func (p PFN_vkGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface SurfaceKHR, modes []DeviceGroupPresentModeFlagsKHR) (_ret Result) {
+func (p PFNGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface SurfaceKHR, modes []DeviceGroupPresentModeFlagsKHR) (_ret Result) {
 	var c struct {
 		device  C.VkDevice
 		surface C.VkSurfaceKHR
@@ -19493,7 +19127,7 @@ func (p PFN_vkGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface 
 			}
 		}
 	}
-	c._ret = C.callPFN_vkGetDeviceGroupSurfacePresentModesKHR(p.Raw, c.device, c.surface, c.pModes)
+	c._ret = C.callPFN_vkGetDeviceGroupSurfacePresentModesKHR(C.PFN_vkGetDeviceGroupSurfacePresentModesKHR(unsafe.Pointer(p)), c.device, c.surface, c.pModes)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkDeviceGroupPresentModeFlagsKHR)(unsafe.Pointer(c.pModes))[:len(modes):len(modes)]
@@ -19512,11 +19146,9 @@ func (p PFN_vkGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface 
 	return
 }
 
-type PFN_vkGetPhysicalDevicePresentRectanglesKHR struct {
-	Raw C.PFN_vkGetPhysicalDevicePresentRectanglesKHR
-}
+type PFNGetPhysicalDevicePresentRectanglesKHR uintptr
 
-func (p PFN_vkGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, rectCount *uint32, rects []Rect2D) (_ret Result) {
+func (p PFNGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, rectCount *uint32, rects []Rect2D) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		surface        C.VkSurfaceKHR
@@ -19539,7 +19171,7 @@ func (p PFN_vkGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice Physica
 			rects[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDevicePresentRectanglesKHR(p.Raw, c.physicalDevice, c.surface, c.pRectCount, c.pRects)
+	c._ret = C.callPFN_vkGetPhysicalDevicePresentRectanglesKHR(C.PFN_vkGetPhysicalDevicePresentRectanglesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pRectCount, c.pRects)
 	_ret = Result(c._ret)
 	*rectCount = uint32(*c.pRectCount)
 	{
@@ -19551,9 +19183,7 @@ func (p PFN_vkGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice Physica
 	return
 }
 
-type PFN_vkAcquireNextImage2KHR struct {
-	Raw C.PFN_vkAcquireNextImage2KHR
-}
+type PFNAcquireNextImage2KHR uintptr
 type AcquireNextImageInfoKHR struct {
 	Next       Structure
 	Swapchain  SwapchainKHR
@@ -19604,7 +19234,7 @@ func (s *AcquireNextImageInfoKHR) GetNext() Structure {
 func (s *AcquireNextImageInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkAcquireNextImage2KHR) Call(device Device, acquireInfo *AcquireNextImageInfoKHR, imageIndex *uint32) (_ret Result) {
+func (p PFNAcquireNextImage2KHR) Call(device Device, acquireInfo *AcquireNextImageInfoKHR, imageIndex *uint32) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		pAcquireInfo *C.VkAcquireNextImageInfoKHR
@@ -19622,7 +19252,7 @@ func (p PFN_vkAcquireNextImage2KHR) Call(device Device, acquireInfo *AcquireNext
 		c.pImageIndex = (*C.uint32_t)(_sa.alloc(C.sizeof_uint32_t))
 		*c.pImageIndex = C.uint32_t(*imageIndex)
 	}
-	c._ret = C.callPFN_vkAcquireNextImage2KHR(p.Raw, c.device, c.pAcquireInfo, c.pImageIndex)
+	c._ret = C.callPFN_vkAcquireNextImage2KHR(C.PFN_vkAcquireNextImage2KHR(unsafe.Pointer(p)), c.device, c.pAcquireInfo, c.pImageIndex)
 	_ret = Result(c._ret)
 	*imageIndex = uint32(*c.pImageIndex)
 	return
@@ -19638,9 +19268,7 @@ const (
 	DISPLAY_PLANE_ALPHA_FLAG_BITS_MAX_ENUM_KHR          DisplayPlaneAlphaFlagBitsKHR = 2147483647
 )
 
-type PFN_vkGetPhysicalDeviceDisplayPropertiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceDisplayPropertiesKHR
-}
+type PFNGetPhysicalDeviceDisplayPropertiesKHR uintptr
 type DisplayKHR C.VkDisplayKHR
 type DisplayPropertiesKHR struct {
 	Display              DisplayKHR
@@ -19694,7 +19322,7 @@ func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
 	g.PlaneReorderPossible = c.planeReorderPossible != 0
 	g.PersistentContent = c.persistentContent != 0
 }
-func (p PFN_vkGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPropertiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -19715,7 +19343,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice Physica
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPropertiesKHR(p.Raw, c.physicalDevice, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -19727,9 +19355,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice Physica
 	return
 }
 
-type PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR
-}
+type PFNGetPhysicalDeviceDisplayPlanePropertiesKHR uintptr
 type DisplayPlanePropertiesKHR struct {
 	CurrentDisplay    DisplayKHR
 	CurrentStackIndex uint32
@@ -19743,7 +19369,7 @@ func (g *DisplayPlanePropertiesKHR) fromC(c *C.VkDisplayPlanePropertiesKHR) {
 	g.CurrentDisplay = DisplayKHR(c.currentDisplay)
 	g.CurrentStackIndex = uint32(c.currentStackIndex)
 }
-func (p PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlanePropertiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlanePropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -19764,7 +19390,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice Ph
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(p.Raw, c.physicalDevice, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -19776,11 +19402,9 @@ func (p PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice Ph
 	return
 }
 
-type PFN_vkGetDisplayPlaneSupportedDisplaysKHR struct {
-	Raw C.PFN_vkGetDisplayPlaneSupportedDisplaysKHR
-}
+type PFNGetDisplayPlaneSupportedDisplaysKHR uintptr
 
-func (p PFN_vkGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevice, planeIndex uint32, displayCount *uint32, displays []DisplayKHR) (_ret Result) {
+func (p PFNGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevice, planeIndex uint32, displayCount *uint32, displays []DisplayKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		planeIndex     C.uint32_t
@@ -19803,7 +19427,7 @@ func (p PFN_vkGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalD
 			slice3[i3] = C.VkDisplayKHR(displays[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetDisplayPlaneSupportedDisplaysKHR(p.Raw, c.physicalDevice, c.planeIndex, c.pDisplayCount, c.pDisplays)
+	c._ret = C.callPFN_vkGetDisplayPlaneSupportedDisplaysKHR(C.PFN_vkGetDisplayPlaneSupportedDisplaysKHR(unsafe.Pointer(p)), c.physicalDevice, c.planeIndex, c.pDisplayCount, c.pDisplays)
 	_ret = Result(c._ret)
 	*displayCount = uint32(*c.pDisplayCount)
 	{
@@ -19815,9 +19439,7 @@ func (p PFN_vkGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalD
 	return
 }
 
-type PFN_vkGetDisplayModePropertiesKHR struct {
-	Raw C.PFN_vkGetDisplayModePropertiesKHR
-}
+type PFNGetDisplayModePropertiesKHR uintptr
 type DisplayModeKHR C.VkDisplayModeKHR
 type DisplayModeParametersKHR struct {
 	VisibleRegion Extent2D
@@ -19846,7 +19468,7 @@ func (g *DisplayModePropertiesKHR) fromC(c *C.VkDisplayModePropertiesKHR) {
 	g.DisplayMode = DisplayModeKHR(c.displayMode)
 	g.Parameters.fromC(&c.parameters)
 }
-func (p PFN_vkGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModePropertiesKHR) (_ret Result) {
+func (p PFNGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModePropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -19869,7 +19491,7 @@ func (p PFN_vkGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, d
 			properties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetDisplayModePropertiesKHR(p.Raw, c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetDisplayModePropertiesKHR(C.PFN_vkGetDisplayModePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -19881,9 +19503,7 @@ func (p PFN_vkGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, d
 	return
 }
 
-type PFN_vkCreateDisplayModeKHR struct {
-	Raw C.PFN_vkCreateDisplayModeKHR
-}
+type PFNCreateDisplayModeKHR uintptr
 type DisplayModeCreateFlagsKHR Flags
 type DisplayModeCreateInfoKHR struct {
 	Next       Structure
@@ -19942,7 +19562,7 @@ func (s *DisplayModeCreateInfoKHR) GetNext() Structure {
 func (s *DisplayModeCreateInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateDisplayModeKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, createInfo *DisplayModeCreateInfoKHR, allocator *AllocationCallbacks, mode *DisplayModeKHR) (_ret Result) {
+func (p PFNCreateDisplayModeKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, createInfo *DisplayModeCreateInfoKHR, allocator *AllocationCallbacks, mode *DisplayModeKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -19967,15 +19587,13 @@ func (p PFN_vkCreateDisplayModeKHR) Call(physicalDevice PhysicalDevice, display 
 		c.pMode = (*C.VkDisplayModeKHR)(_sa.alloc(C.sizeof_VkDisplayModeKHR))
 		*c.pMode = C.VkDisplayModeKHR(*mode)
 	}
-	c._ret = C.callPFN_vkCreateDisplayModeKHR(p.Raw, c.physicalDevice, c.display, c.pCreateInfo, c.pAllocator, c.pMode)
+	c._ret = C.callPFN_vkCreateDisplayModeKHR(C.PFN_vkCreateDisplayModeKHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pCreateInfo, c.pAllocator, c.pMode)
 	_ret = Result(c._ret)
 	*mode = DisplayModeKHR(*c.pMode)
 	return
 }
 
-type PFN_vkGetDisplayPlaneCapabilitiesKHR struct {
-	Raw C.PFN_vkGetDisplayPlaneCapabilitiesKHR
-}
+type PFNGetDisplayPlaneCapabilitiesKHR uintptr
 type DisplayPlaneAlphaFlagsKHR Flags
 type DisplayPlaneCapabilitiesKHR struct {
 	SupportedAlpha DisplayPlaneAlphaFlagsKHR
@@ -20027,7 +19645,7 @@ func (g *DisplayPlaneCapabilitiesKHR) fromC(c *C.VkDisplayPlaneCapabilitiesKHR) 
 	g.MinDstExtent.fromC(&c.minDstExtent)
 	g.MaxDstExtent.fromC(&c.maxDstExtent)
 }
-func (p PFN_vkGetDisplayPlaneCapabilitiesKHR) Call(physicalDevice PhysicalDevice, mode DisplayModeKHR, capabilities []DisplayPlaneCapabilitiesKHR) (_ret Result) {
+func (p PFNGetDisplayPlaneCapabilitiesKHR) Call(physicalDevice PhysicalDevice, mode DisplayModeKHR, capabilities []DisplayPlaneCapabilitiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		mode           C.VkDisplayModeKHR
@@ -20047,7 +19665,7 @@ func (p PFN_vkGetDisplayPlaneCapabilitiesKHR) Call(physicalDevice PhysicalDevice
 			capabilities[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetDisplayPlaneCapabilitiesKHR(p.Raw, c.physicalDevice, c.mode, c.planeIndex, c.pCapabilities)
+	c._ret = C.callPFN_vkGetDisplayPlaneCapabilitiesKHR(C.PFN_vkGetDisplayPlaneCapabilitiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.mode, c.planeIndex, c.pCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilitiesKHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
@@ -20058,9 +19676,7 @@ func (p PFN_vkGetDisplayPlaneCapabilitiesKHR) Call(physicalDevice PhysicalDevice
 	return
 }
 
-type PFN_vkCreateDisplayPlaneSurfaceKHR struct {
-	Raw C.PFN_vkCreateDisplayPlaneSurfaceKHR
-}
+type PFNCreateDisplayPlaneSurfaceKHR uintptr
 type DisplaySurfaceCreateFlagsKHR Flags
 type DisplaySurfaceCreateInfoKHR struct {
 	Next            Structure
@@ -20137,7 +19753,7 @@ func (s *DisplaySurfaceCreateInfoKHR) GetNext() Structure {
 func (s *DisplaySurfaceCreateInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateDisplayPlaneSurfaceKHR) Call(instance Instance, createInfo *DisplaySurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
+func (p PFNCreateDisplayPlaneSurfaceKHR) Call(instance Instance, createInfo *DisplaySurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
 	var c struct {
 		instance    C.VkInstance
 		pCreateInfo *C.VkDisplaySurfaceCreateInfoKHR
@@ -20160,17 +19776,15 @@ func (p PFN_vkCreateDisplayPlaneSurfaceKHR) Call(instance Instance, createInfo *
 		c.pSurface = (*C.VkSurfaceKHR)(_sa.alloc(C.sizeof_VkSurfaceKHR))
 		*c.pSurface = C.VkSurfaceKHR(*surface)
 	}
-	c._ret = C.callPFN_vkCreateDisplayPlaneSurfaceKHR(p.Raw, c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
+	c._ret = C.callPFN_vkCreateDisplayPlaneSurfaceKHR(C.PFN_vkCreateDisplayPlaneSurfaceKHR(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
 	_ret = Result(c._ret)
 	*surface = SurfaceKHR(*c.pSurface)
 	return
 }
 
-type PFN_vkCreateSharedSwapchainsKHR struct {
-	Raw C.PFN_vkCreateSharedSwapchainsKHR
-}
+type PFNCreateSharedSwapchainsKHR uintptr
 
-func (p PFN_vkCreateSharedSwapchainsKHR) Call(device Device, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result) {
+func (p PFNCreateSharedSwapchainsKHR) Call(device Device, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result) {
 	var c struct {
 		device         C.VkDevice
 		swapchainCount C.uint32_t
@@ -20201,7 +19815,7 @@ func (p PFN_vkCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapc
 			slice3[i3] = C.VkSwapchainKHR(swapchains[i3])
 		}
 	}
-	c._ret = C.callPFN_vkCreateSharedSwapchainsKHR(p.Raw, c.device, c.swapchainCount, c.pCreateInfos, c.pAllocator, c.pSwapchains)
+	c._ret = C.callPFN_vkCreateSharedSwapchainsKHR(C.PFN_vkCreateSharedSwapchainsKHR(unsafe.Pointer(p)), c.device, c.swapchainCount, c.pCreateInfos, c.pAllocator, c.pSwapchains)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(swapchains):len(swapchains)]
@@ -20212,11 +19826,9 @@ func (p PFN_vkCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapc
 	return
 }
 
-type PFN_vkGetPhysicalDeviceFeatures2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceFeatures2KHR
-}
+type PFNGetPhysicalDeviceFeatures2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+func (p PFNGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures2
@@ -20231,7 +19843,7 @@ func (p PFN_vkGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice,
 			features[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFeatures2KHR(p.Raw, c.physicalDevice, c.pFeatures)
+	C.callPFN_vkGetPhysicalDeviceFeatures2KHR(C.PFN_vkGetPhysicalDeviceFeatures2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
 		for i3, _ := range features {
@@ -20240,11 +19852,9 @@ func (p PFN_vkGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice,
 	}
 }
 
-type PFN_vkGetPhysicalDeviceProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceProperties2KHR
-}
+type PFNGetPhysicalDeviceProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+func (p PFNGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties2
@@ -20259,7 +19869,7 @@ func (p PFN_vkGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevic
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceProperties2KHR(p.Raw, c.physicalDevice, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceProperties2KHR(C.PFN_vkGetPhysicalDeviceProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
@@ -20268,11 +19878,9 @@ func (p PFN_vkGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevic
 	}
 }
 
-type PFN_vkGetPhysicalDeviceFormatProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceFormatProperties2KHR
-}
+type PFNGetPhysicalDeviceFormatProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+func (p PFNGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -20289,7 +19897,7 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice Physica
 			formatProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceFormatProperties2KHR(p.Raw, c.physicalDevice, c.format, c.pFormatProperties)
+	C.callPFN_vkGetPhysicalDeviceFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
 	{
 		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
 		for i3, _ := range formatProperties {
@@ -20298,11 +19906,9 @@ func (p PFN_vkGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice Physica
 	}
 }
 
-type PFN_vkGetPhysicalDeviceImageFormatProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceImageFormatProperties2KHR
-}
+type PFNGetPhysicalDeviceImageFormatProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
@@ -20323,7 +19929,7 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice Ph
 			imageFormatProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2KHR(p.Raw, c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceImageFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
@@ -20334,11 +19940,9 @@ func (p PFN_vkGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice Ph
 	return
 }
 
-type PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR
-}
+type PFNGetPhysicalDeviceQueueFamilyProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -20358,7 +19962,7 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice Ph
 			queueFamilyProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(p.Raw, c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
+	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
@@ -20368,11 +19972,9 @@ func (p PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice Ph
 	}
 }
 
-type PFN_vkGetPhysicalDeviceMemoryProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceMemoryProperties2KHR
-}
+type PFNGetPhysicalDeviceMemoryProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+func (p PFNGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
@@ -20387,7 +19989,7 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice Physica
 			memoryProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceMemoryProperties2KHR(p.Raw, c.physicalDevice, c.pMemoryProperties)
+	C.callPFN_vkGetPhysicalDeviceMemoryProperties2KHR(C.PFN_vkGetPhysicalDeviceMemoryProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
 	{
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
 		for i3, _ := range memoryProperties {
@@ -20396,11 +19998,9 @@ func (p PFN_vkGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice Physica
 	}
 }
 
-type PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR
-}
+type PFNGetPhysicalDeviceSparseImageFormatProperties2KHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
@@ -20425,7 +20025,7 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDev
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(p.Raw, c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
+	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
@@ -20435,11 +20035,9 @@ func (p PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDev
 	}
 }
 
-type PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR struct {
-	Raw C.PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR
-}
+type PFNGetDeviceGroupPeerMemoryFeaturesKHR uintptr
 
-func (p PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+func (p PFNGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
 	var c struct {
 		device              C.VkDevice
 		heapIndex           C.uint32_t
@@ -20468,7 +20066,7 @@ func (p PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex
 			}
 		}
 	}
-	C.callPFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(p.Raw, c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
+	C.callPFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(C.PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
 	{
 		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i3, _ := range peerMemoryFeatures {
@@ -20485,25 +20083,21 @@ func (p PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex
 	}
 }
 
-type PFN_vkCmdSetDeviceMaskKHR struct {
-	Raw C.PFN_vkCmdSetDeviceMaskKHR
-}
+type PFNCmdSetDeviceMaskKHR uintptr
 
-func (p PFN_vkCmdSetDeviceMaskKHR) Call(commandBuffer CommandBuffer, deviceMask uint32) {
+func (p PFNCmdSetDeviceMaskKHR) Call(commandBuffer CommandBuffer, deviceMask uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		deviceMask    C.uint32_t
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.deviceMask = C.uint32_t(deviceMask)
-	C.callPFN_vkCmdSetDeviceMaskKHR(p.Raw, c.commandBuffer, c.deviceMask)
+	C.callPFN_vkCmdSetDeviceMaskKHR(C.PFN_vkCmdSetDeviceMaskKHR(unsafe.Pointer(p)), c.commandBuffer, c.deviceMask)
 }
 
-type PFN_vkCmdDispatchBaseKHR struct {
-	Raw C.PFN_vkCmdDispatchBaseKHR
-}
+type PFNCmdDispatchBaseKHR uintptr
 
-func (p PFN_vkCmdDispatchBaseKHR) Call(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
+func (p PFNCmdDispatchBaseKHR) Call(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY uint32, baseGroupZ uint32, groupCountX uint32, groupCountY uint32, groupCountZ uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		baseGroupX    C.uint32_t
@@ -20520,14 +20114,12 @@ func (p PFN_vkCmdDispatchBaseKHR) Call(commandBuffer CommandBuffer, baseGroupX u
 	c.groupCountX = C.uint32_t(groupCountX)
 	c.groupCountY = C.uint32_t(groupCountY)
 	c.groupCountZ = C.uint32_t(groupCountZ)
-	C.callPFN_vkCmdDispatchBaseKHR(p.Raw, c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
+	C.callPFN_vkCmdDispatchBaseKHR(C.PFN_vkCmdDispatchBaseKHR(unsafe.Pointer(p)), c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
 }
 
-type PFN_vkTrimCommandPoolKHR struct {
-	Raw C.PFN_vkTrimCommandPoolKHR
-}
+type PFNTrimCommandPoolKHR uintptr
 
-func (p PFN_vkTrimCommandPoolKHR) Call(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
+func (p PFNTrimCommandPoolKHR) Call(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
 	var c struct {
 		device      C.VkDevice
 		commandPool C.VkCommandPool
@@ -20544,14 +20136,12 @@ func (p PFN_vkTrimCommandPoolKHR) Call(device Device, commandPool CommandPool, f
 		}
 		c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
 	}
-	C.callPFN_vkTrimCommandPoolKHR(p.Raw, c.device, c.commandPool, c.flags)
+	C.callPFN_vkTrimCommandPoolKHR(C.PFN_vkTrimCommandPoolKHR(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 }
 
-type PFN_vkEnumeratePhysicalDeviceGroupsKHR struct {
-	Raw C.PFN_vkEnumeratePhysicalDeviceGroupsKHR
-}
+type PFNEnumeratePhysicalDeviceGroupsKHR uintptr
 
-func (p PFN_vkEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+func (p PFNEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
 		instance                       C.VkInstance
 		pPhysicalDeviceGroupCount      *C.uint32_t
@@ -20572,7 +20162,7 @@ func (p PFN_vkEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physical
 			physicalDeviceGroupProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroupsKHR(p.Raw, c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
+	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroupsKHR(C.PFN_vkEnumeratePhysicalDeviceGroupsKHR(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
 	*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
 	{
@@ -20584,11 +20174,9 @@ func (p PFN_vkEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physical
 	return
 }
 
-type PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR
-}
+type PFNGetPhysicalDeviceExternalBufferPropertiesKHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+func (p PFNGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
@@ -20608,7 +20196,7 @@ func (p PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice 
 			externalBufferProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR(p.Raw, c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
 		for i3, _ := range externalBufferProperties {
@@ -20617,9 +20205,7 @@ func (p PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice 
 	}
 }
 
-type PFN_vkGetMemoryFdKHR struct {
-	Raw C.PFN_vkGetMemoryFdKHR
-}
+type PFNGetMemoryFdKHR uintptr
 type MemoryGetFdInfoKHR struct {
 	Next       Structure
 	Memory     DeviceMemory
@@ -20661,7 +20247,7 @@ func (s *MemoryGetFdInfoKHR) GetNext() Structure {
 func (s *MemoryGetFdInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetMemoryFdKHR) Call(device Device, getFdInfo *MemoryGetFdInfoKHR, fd *int32) (_ret Result) {
+func (p PFNGetMemoryFdKHR) Call(device Device, getFdInfo *MemoryGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		pGetFdInfo *C.VkMemoryGetFdInfoKHR
@@ -20679,15 +20265,13 @@ func (p PFN_vkGetMemoryFdKHR) Call(device Device, getFdInfo *MemoryGetFdInfoKHR,
 		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
 		*c.pFd = C.int(*fd)
 	}
-	c._ret = C.callPFN_vkGetMemoryFdKHR(p.Raw, c.device, c.pGetFdInfo, c.pFd)
+	c._ret = C.callPFN_vkGetMemoryFdKHR(C.PFN_vkGetMemoryFdKHR(unsafe.Pointer(p)), c.device, c.pGetFdInfo, c.pFd)
 	_ret = Result(c._ret)
 	*fd = int32(*c.pFd)
 	return
 }
 
-type PFN_vkGetMemoryFdPropertiesKHR struct {
-	Raw C.PFN_vkGetMemoryFdPropertiesKHR
-}
+type PFNGetMemoryFdPropertiesKHR uintptr
 type MemoryFdPropertiesKHR struct {
 	Next           Structure
 	MemoryTypeBits uint32
@@ -20726,7 +20310,7 @@ func (s *MemoryFdPropertiesKHR) GetNext() Structure {
 func (s *MemoryFdPropertiesKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties []MemoryFdPropertiesKHR) (_ret Result) {
+func (p PFNGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties []MemoryFdPropertiesKHR) (_ret Result) {
 	var c struct {
 		device              C.VkDevice
 		handleType          C.VkExternalMemoryHandleTypeFlagBits
@@ -20746,7 +20330,7 @@ func (p PFN_vkGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalM
 			memoryFdProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetMemoryFdPropertiesKHR(p.Raw, c.device, c.handleType, c.fd, c.pMemoryFdProperties)
+	c._ret = C.callPFN_vkGetMemoryFdPropertiesKHR(C.PFN_vkGetMemoryFdPropertiesKHR(unsafe.Pointer(p)), c.device, c.handleType, c.fd, c.pMemoryFdProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryFdPropertiesKHR)(unsafe.Pointer(c.pMemoryFdProperties))[:len(memoryFdProperties):len(memoryFdProperties)]
@@ -20757,11 +20341,9 @@ func (p PFN_vkGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalM
 	return
 }
 
-type PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR
-}
+type PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+func (p PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
 		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
@@ -20781,7 +20363,7 @@ func (p PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevi
 			externalSemaphoreProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(p.Raw, c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
 		for i3, _ := range externalSemaphoreProperties {
@@ -20790,9 +20372,7 @@ func (p PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevi
 	}
 }
 
-type PFN_vkImportSemaphoreFdKHR struct {
-	Raw C.PFN_vkImportSemaphoreFdKHR
-}
+type PFNImportSemaphoreFdKHR uintptr
 type SemaphoreImportFlags Flags
 type ImportSemaphoreFdInfoKHR struct {
 	Next       Structure
@@ -20857,7 +20437,7 @@ func (s *ImportSemaphoreFdInfoKHR) GetNext() Structure {
 func (s *ImportSemaphoreFdInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkImportSemaphoreFdKHR) Call(device Device, importSemaphoreFdInfo *ImportSemaphoreFdInfoKHR) (_ret Result) {
+func (p PFNImportSemaphoreFdKHR) Call(device Device, importSemaphoreFdInfo *ImportSemaphoreFdInfoKHR) (_ret Result) {
 	var c struct {
 		device                 C.VkDevice
 		pImportSemaphoreFdInfo *C.VkImportSemaphoreFdInfoKHR
@@ -20870,14 +20450,12 @@ func (p PFN_vkImportSemaphoreFdKHR) Call(device Device, importSemaphoreFdInfo *I
 		c.pImportSemaphoreFdInfo = (*C.VkImportSemaphoreFdInfoKHR)(_sa.alloc(C.sizeof_VkImportSemaphoreFdInfoKHR))
 		importSemaphoreFdInfo.toC(c.pImportSemaphoreFdInfo, _sa)
 	}
-	c._ret = C.callPFN_vkImportSemaphoreFdKHR(p.Raw, c.device, c.pImportSemaphoreFdInfo)
+	c._ret = C.callPFN_vkImportSemaphoreFdKHR(C.PFN_vkImportSemaphoreFdKHR(unsafe.Pointer(p)), c.device, c.pImportSemaphoreFdInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetSemaphoreFdKHR struct {
-	Raw C.PFN_vkGetSemaphoreFdKHR
-}
+type PFNGetSemaphoreFdKHR uintptr
 type SemaphoreGetFdInfoKHR struct {
 	Next       Structure
 	Semaphore  Semaphore
@@ -20919,7 +20497,7 @@ func (s *SemaphoreGetFdInfoKHR) GetNext() Structure {
 func (s *SemaphoreGetFdInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetSemaphoreFdKHR) Call(device Device, getFdInfo *SemaphoreGetFdInfoKHR, fd *int32) (_ret Result) {
+func (p PFNGetSemaphoreFdKHR) Call(device Device, getFdInfo *SemaphoreGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		pGetFdInfo *C.VkSemaphoreGetFdInfoKHR
@@ -20937,17 +20515,15 @@ func (p PFN_vkGetSemaphoreFdKHR) Call(device Device, getFdInfo *SemaphoreGetFdIn
 		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
 		*c.pFd = C.int(*fd)
 	}
-	c._ret = C.callPFN_vkGetSemaphoreFdKHR(p.Raw, c.device, c.pGetFdInfo, c.pFd)
+	c._ret = C.callPFN_vkGetSemaphoreFdKHR(C.PFN_vkGetSemaphoreFdKHR(unsafe.Pointer(p)), c.device, c.pGetFdInfo, c.pFd)
 	_ret = Result(c._ret)
 	*fd = int32(*c.pFd)
 	return
 }
 
-type PFN_vkCmdPushDescriptorSetKHR struct {
-	Raw C.PFN_vkCmdPushDescriptorSetKHR
-}
+type PFNCmdPushDescriptorSetKHR uintptr
 
-func (p PFN_vkCmdPushDescriptorSetKHR) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, layout PipelineLayout, set uint32, descriptorWrites []WriteDescriptorSet) {
+func (p PFNCmdPushDescriptorSetKHR) Call(commandBuffer CommandBuffer, pipelineBindPoint PipelineBindPoint, layout PipelineLayout, set uint32, descriptorWrites []WriteDescriptorSet) {
 	var c struct {
 		commandBuffer        C.VkCommandBuffer
 		pipelineBindPoint    C.VkPipelineBindPoint
@@ -20970,14 +20546,12 @@ func (p PFN_vkCmdPushDescriptorSetKHR) Call(commandBuffer CommandBuffer, pipelin
 			descriptorWrites[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkCmdPushDescriptorSetKHR(p.Raw, c.commandBuffer, c.pipelineBindPoint, c.layout, c.set, c.descriptorWriteCount, c.pDescriptorWrites)
+	C.callPFN_vkCmdPushDescriptorSetKHR(C.PFN_vkCmdPushDescriptorSetKHR(unsafe.Pointer(p)), c.commandBuffer, c.pipelineBindPoint, c.layout, c.set, c.descriptorWriteCount, c.pDescriptorWrites)
 }
 
-type PFN_vkCmdPushDescriptorSetWithTemplateKHR struct {
-	Raw C.PFN_vkCmdPushDescriptorSetWithTemplateKHR
-}
+type PFNCmdPushDescriptorSetWithTemplateKHR uintptr
 
-func (p PFN_vkCmdPushDescriptorSetWithTemplateKHR) Call(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, data []byte) {
+func (p PFNCmdPushDescriptorSetWithTemplateKHR) Call(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, data []byte) {
 	var c struct {
 		commandBuffer            C.VkCommandBuffer
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -20998,14 +20572,12 @@ func (p PFN_vkCmdPushDescriptorSetWithTemplateKHR) Call(commandBuffer CommandBuf
 			slice3[i3] = data[i3]
 		}
 	}
-	C.callPFN_vkCmdPushDescriptorSetWithTemplateKHR(p.Raw, c.commandBuffer, c.descriptorUpdateTemplate, c.layout, c.set, c.pData)
+	C.callPFN_vkCmdPushDescriptorSetWithTemplateKHR(C.PFN_vkCmdPushDescriptorSetWithTemplateKHR(unsafe.Pointer(p)), c.commandBuffer, c.descriptorUpdateTemplate, c.layout, c.set, c.pData)
 }
 
-type PFN_vkCreateDescriptorUpdateTemplateKHR struct {
-	Raw C.PFN_vkCreateDescriptorUpdateTemplateKHR
-}
+type PFNCreateDescriptorUpdateTemplateKHR uintptr
 
-func (p PFN_vkCreateDescriptorUpdateTemplateKHR) Call(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
+func (p PFNCreateDescriptorUpdateTemplateKHR) Call(device Device, createInfo *DescriptorUpdateTemplateCreateInfo, allocator *AllocationCallbacks, descriptorUpdateTemplate *DescriptorUpdateTemplate) (_ret Result) {
 	var c struct {
 		device                    C.VkDevice
 		pCreateInfo               *C.VkDescriptorUpdateTemplateCreateInfo
@@ -21028,17 +20600,15 @@ func (p PFN_vkCreateDescriptorUpdateTemplateKHR) Call(device Device, createInfo 
 		c.pDescriptorUpdateTemplate = (*C.VkDescriptorUpdateTemplate)(_sa.alloc(C.sizeof_VkDescriptorUpdateTemplate))
 		*c.pDescriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(*descriptorUpdateTemplate)
 	}
-	c._ret = C.callPFN_vkCreateDescriptorUpdateTemplateKHR(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
+	c._ret = C.callPFN_vkCreateDescriptorUpdateTemplateKHR(C.PFN_vkCreateDescriptorUpdateTemplateKHR(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pDescriptorUpdateTemplate)
 	_ret = Result(c._ret)
 	*descriptorUpdateTemplate = DescriptorUpdateTemplate(*c.pDescriptorUpdateTemplate)
 	return
 }
 
-type PFN_vkDestroyDescriptorUpdateTemplateKHR struct {
-	Raw C.PFN_vkDestroyDescriptorUpdateTemplateKHR
-}
+type PFNDestroyDescriptorUpdateTemplateKHR uintptr
 
-func (p PFN_vkDestroyDescriptorUpdateTemplateKHR) Call(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
+func (p PFNDestroyDescriptorUpdateTemplateKHR) Call(device Device, descriptorUpdateTemplate DescriptorUpdateTemplate, allocator *AllocationCallbacks) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -21052,14 +20622,12 @@ func (p PFN_vkDestroyDescriptorUpdateTemplateKHR) Call(device Device, descriptor
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDescriptorUpdateTemplateKHR(p.Raw, c.device, c.descriptorUpdateTemplate, c.pAllocator)
+	C.callPFN_vkDestroyDescriptorUpdateTemplateKHR(C.PFN_vkDestroyDescriptorUpdateTemplateKHR(unsafe.Pointer(p)), c.device, c.descriptorUpdateTemplate, c.pAllocator)
 }
 
-type PFN_vkUpdateDescriptorSetWithTemplateKHR struct {
-	Raw C.PFN_vkUpdateDescriptorSetWithTemplateKHR
-}
+type PFNUpdateDescriptorSetWithTemplateKHR uintptr
 
-func (p PFN_vkUpdateDescriptorSetWithTemplateKHR) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+func (p PFNUpdateDescriptorSetWithTemplateKHR) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
@@ -21078,12 +20646,10 @@ func (p PFN_vkUpdateDescriptorSetWithTemplateKHR) Call(device Device, descriptor
 			slice3[i3] = data[i3]
 		}
 	}
-	C.callPFN_vkUpdateDescriptorSetWithTemplateKHR(p.Raw, c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
+	C.callPFN_vkUpdateDescriptorSetWithTemplateKHR(C.PFN_vkUpdateDescriptorSetWithTemplateKHR(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
 
-type PFN_vkCreateRenderPass2KHR struct {
-	Raw C.PFN_vkCreateRenderPass2KHR
-}
+type PFNCreateRenderPass2KHR uintptr
 type AttachmentDescription2KHR struct {
 	Next           Structure
 	Flags          AttachmentDescriptionFlags
@@ -21611,7 +21177,7 @@ func (s *RenderPassCreateInfo2KHR) GetNext() Structure {
 func (s *RenderPassCreateInfo2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateRenderPass2KHR) Call(device Device, createInfo *RenderPassCreateInfo2KHR, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
+func (p PFNCreateRenderPass2KHR) Call(device Device, createInfo *RenderPassCreateInfo2KHR, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkRenderPassCreateInfo2KHR
@@ -21634,15 +21200,13 @@ func (p PFN_vkCreateRenderPass2KHR) Call(device Device, createInfo *RenderPassCr
 		c.pRenderPass = (*C.VkRenderPass)(_sa.alloc(C.sizeof_VkRenderPass))
 		*c.pRenderPass = C.VkRenderPass(*renderPass)
 	}
-	c._ret = C.callPFN_vkCreateRenderPass2KHR(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pRenderPass)
+	c._ret = C.callPFN_vkCreateRenderPass2KHR(C.PFN_vkCreateRenderPass2KHR(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pRenderPass)
 	_ret = Result(c._ret)
 	*renderPass = RenderPass(*c.pRenderPass)
 	return
 }
 
-type PFN_vkCmdBeginRenderPass2KHR struct {
-	Raw C.PFN_vkCmdBeginRenderPass2KHR
-}
+type PFNCmdBeginRenderPass2KHR uintptr
 type SubpassBeginInfoKHR struct {
 	Next     Structure
 	Contents SubpassContents
@@ -21681,7 +21245,7 @@ func (s *SubpassBeginInfoKHR) GetNext() Structure {
 func (s *SubpassBeginInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdBeginRenderPass2KHR) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, subpassBeginInfo *SubpassBeginInfoKHR) {
+func (p PFNCmdBeginRenderPass2KHR) Call(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, subpassBeginInfo *SubpassBeginInfoKHR) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		pRenderPassBegin  *C.VkRenderPassBeginInfo
@@ -21698,12 +21262,10 @@ func (p PFN_vkCmdBeginRenderPass2KHR) Call(commandBuffer CommandBuffer, renderPa
 		c.pSubpassBeginInfo = (*C.VkSubpassBeginInfoKHR)(_sa.alloc(C.sizeof_VkSubpassBeginInfoKHR))
 		subpassBeginInfo.toC(c.pSubpassBeginInfo, _sa)
 	}
-	C.callPFN_vkCmdBeginRenderPass2KHR(p.Raw, c.commandBuffer, c.pRenderPassBegin, c.pSubpassBeginInfo)
+	C.callPFN_vkCmdBeginRenderPass2KHR(C.PFN_vkCmdBeginRenderPass2KHR(unsafe.Pointer(p)), c.commandBuffer, c.pRenderPassBegin, c.pSubpassBeginInfo)
 }
 
-type PFN_vkCmdNextSubpass2KHR struct {
-	Raw C.PFN_vkCmdNextSubpass2KHR
-}
+type PFNCmdNextSubpass2KHR uintptr
 type SubpassEndInfoKHR struct{ Next Structure }
 
 func (g *SubpassEndInfoKHR) toC(c *C.VkSubpassEndInfoKHR, _sa *stackAllocator) {
@@ -21737,7 +21299,7 @@ func (s *SubpassEndInfoKHR) GetNext() Structure {
 func (s *SubpassEndInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdNextSubpass2KHR) Call(commandBuffer CommandBuffer, subpassBeginInfo *SubpassBeginInfoKHR, subpassEndInfo *SubpassEndInfoKHR) {
+func (p PFNCmdNextSubpass2KHR) Call(commandBuffer CommandBuffer, subpassBeginInfo *SubpassBeginInfoKHR, subpassEndInfo *SubpassEndInfoKHR) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		pSubpassBeginInfo *C.VkSubpassBeginInfoKHR
@@ -21754,14 +21316,12 @@ func (p PFN_vkCmdNextSubpass2KHR) Call(commandBuffer CommandBuffer, subpassBegin
 		c.pSubpassEndInfo = (*C.VkSubpassEndInfoKHR)(_sa.alloc(C.sizeof_VkSubpassEndInfoKHR))
 		subpassEndInfo.toC(c.pSubpassEndInfo, _sa)
 	}
-	C.callPFN_vkCmdNextSubpass2KHR(p.Raw, c.commandBuffer, c.pSubpassBeginInfo, c.pSubpassEndInfo)
+	C.callPFN_vkCmdNextSubpass2KHR(C.PFN_vkCmdNextSubpass2KHR(unsafe.Pointer(p)), c.commandBuffer, c.pSubpassBeginInfo, c.pSubpassEndInfo)
 }
 
-type PFN_vkCmdEndRenderPass2KHR struct {
-	Raw C.PFN_vkCmdEndRenderPass2KHR
-}
+type PFNCmdEndRenderPass2KHR uintptr
 
-func (p PFN_vkCmdEndRenderPass2KHR) Call(commandBuffer CommandBuffer, subpassEndInfo *SubpassEndInfoKHR) {
+func (p PFNCmdEndRenderPass2KHR) Call(commandBuffer CommandBuffer, subpassEndInfo *SubpassEndInfoKHR) {
 	var c struct {
 		commandBuffer   C.VkCommandBuffer
 		pSubpassEndInfo *C.VkSubpassEndInfoKHR
@@ -21773,14 +21333,12 @@ func (p PFN_vkCmdEndRenderPass2KHR) Call(commandBuffer CommandBuffer, subpassEnd
 		c.pSubpassEndInfo = (*C.VkSubpassEndInfoKHR)(_sa.alloc(C.sizeof_VkSubpassEndInfoKHR))
 		subpassEndInfo.toC(c.pSubpassEndInfo, _sa)
 	}
-	C.callPFN_vkCmdEndRenderPass2KHR(p.Raw, c.commandBuffer, c.pSubpassEndInfo)
+	C.callPFN_vkCmdEndRenderPass2KHR(C.PFN_vkCmdEndRenderPass2KHR(unsafe.Pointer(p)), c.commandBuffer, c.pSubpassEndInfo)
 }
 
-type PFN_vkGetSwapchainStatusKHR struct {
-	Raw C.PFN_vkGetSwapchainStatusKHR
-}
+type PFNGetSwapchainStatusKHR uintptr
 
-func (p PFN_vkGetSwapchainStatusKHR) Call(device Device, swapchain SwapchainKHR) (_ret Result) {
+func (p PFNGetSwapchainStatusKHR) Call(device Device, swapchain SwapchainKHR) (_ret Result) {
 	var c struct {
 		device    C.VkDevice
 		swapchain C.VkSwapchainKHR
@@ -21788,16 +21346,14 @@ func (p PFN_vkGetSwapchainStatusKHR) Call(device Device, swapchain SwapchainKHR)
 	}
 	c.device = C.VkDevice(device)
 	c.swapchain = C.VkSwapchainKHR(swapchain)
-	c._ret = C.callPFN_vkGetSwapchainStatusKHR(p.Raw, c.device, c.swapchain)
+	c._ret = C.callPFN_vkGetSwapchainStatusKHR(C.PFN_vkGetSwapchainStatusKHR(unsafe.Pointer(p)), c.device, c.swapchain)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR
-}
+type PFNGetPhysicalDeviceExternalFencePropertiesKHR uintptr
 
-func (p PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+func (p PFNGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
 	var c struct {
 		physicalDevice           C.VkPhysicalDevice
 		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
@@ -21817,7 +21373,7 @@ func (p PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice P
 			externalFenceProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceExternalFencePropertiesKHR(p.Raw, c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
+	C.callPFN_vkGetPhysicalDeviceExternalFencePropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
 	{
 		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
 		for i3, _ := range externalFenceProperties {
@@ -21826,9 +21382,7 @@ func (p PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice P
 	}
 }
 
-type PFN_vkImportFenceFdKHR struct {
-	Raw C.PFN_vkImportFenceFdKHR
-}
+type PFNImportFenceFdKHR uintptr
 type FenceImportFlags Flags
 type ImportFenceFdInfoKHR struct {
 	Next       Structure
@@ -21893,7 +21447,7 @@ func (s *ImportFenceFdInfoKHR) GetNext() Structure {
 func (s *ImportFenceFdInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkImportFenceFdKHR) Call(device Device, importFenceFdInfo *ImportFenceFdInfoKHR) (_ret Result) {
+func (p PFNImportFenceFdKHR) Call(device Device, importFenceFdInfo *ImportFenceFdInfoKHR) (_ret Result) {
 	var c struct {
 		device             C.VkDevice
 		pImportFenceFdInfo *C.VkImportFenceFdInfoKHR
@@ -21906,14 +21460,12 @@ func (p PFN_vkImportFenceFdKHR) Call(device Device, importFenceFdInfo *ImportFen
 		c.pImportFenceFdInfo = (*C.VkImportFenceFdInfoKHR)(_sa.alloc(C.sizeof_VkImportFenceFdInfoKHR))
 		importFenceFdInfo.toC(c.pImportFenceFdInfo, _sa)
 	}
-	c._ret = C.callPFN_vkImportFenceFdKHR(p.Raw, c.device, c.pImportFenceFdInfo)
+	c._ret = C.callPFN_vkImportFenceFdKHR(C.PFN_vkImportFenceFdKHR(unsafe.Pointer(p)), c.device, c.pImportFenceFdInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetFenceFdKHR struct {
-	Raw C.PFN_vkGetFenceFdKHR
-}
+type PFNGetFenceFdKHR uintptr
 type FenceGetFdInfoKHR struct {
 	Next       Structure
 	Fence      Fence
@@ -21955,7 +21507,7 @@ func (s *FenceGetFdInfoKHR) GetNext() Structure {
 func (s *FenceGetFdInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetFenceFdKHR) Call(device Device, getFdInfo *FenceGetFdInfoKHR, fd *int32) (_ret Result) {
+func (p PFNGetFenceFdKHR) Call(device Device, getFdInfo *FenceGetFdInfoKHR, fd *int32) (_ret Result) {
 	var c struct {
 		device     C.VkDevice
 		pGetFdInfo *C.VkFenceGetFdInfoKHR
@@ -21973,15 +21525,13 @@ func (p PFN_vkGetFenceFdKHR) Call(device Device, getFdInfo *FenceGetFdInfoKHR, f
 		c.pFd = (*C.int)(_sa.alloc(C.sizeof_int))
 		*c.pFd = C.int(*fd)
 	}
-	c._ret = C.callPFN_vkGetFenceFdKHR(p.Raw, c.device, c.pGetFdInfo, c.pFd)
+	c._ret = C.callPFN_vkGetFenceFdKHR(C.PFN_vkGetFenceFdKHR(unsafe.Pointer(p)), c.device, c.pGetFdInfo, c.pFd)
 	_ret = Result(c._ret)
 	*fd = int32(*c.pFd)
 	return
 }
 
-type PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR
-}
+type PFNGetPhysicalDeviceSurfaceCapabilities2KHR uintptr
 type PhysicalDeviceSurfaceInfo2KHR struct {
 	Next    Structure
 	Surface SurfaceKHR
@@ -22059,7 +21609,7 @@ func (s *SurfaceCapabilities2KHR) GetNext() Structure {
 func (s *SurfaceCapabilities2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities []SurfaceCapabilities2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities []SurfaceCapabilities2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		pSurfaceInfo         *C.VkPhysicalDeviceSurfaceInfo2KHR
@@ -22080,7 +21630,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice Phys
 			surfaceCapabilities[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR(p.Raw, c.physicalDevice, c.pSurfaceInfo, c.pSurfaceCapabilities)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR(C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pSurfaceInfo, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2KHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
@@ -22091,9 +21641,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice Phys
 	return
 }
 
-type PFN_vkGetPhysicalDeviceSurfaceFormats2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceFormats2KHR
-}
+type PFNGetPhysicalDeviceSurfaceFormats2KHR uintptr
 type SurfaceFormat2KHR struct {
 	Next          Structure
 	SurfaceFormat SurfaceFormatKHR
@@ -22132,7 +21680,7 @@ func (s *SurfaceFormat2KHR) GetNext() Structure {
 func (s *SurfaceFormat2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice      C.VkPhysicalDevice
 		pSurfaceInfo        *C.VkPhysicalDeviceSurfaceInfo2KHR
@@ -22158,7 +21706,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalD
 			surfaceFormats[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormats2KHR(p.Raw, c.physicalDevice, c.pSurfaceInfo, c.pSurfaceFormatCount, c.pSurfaceFormats)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormats2KHR(C.PFN_vkGetPhysicalDeviceSurfaceFormats2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pSurfaceInfo, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
 	*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
 	{
@@ -22170,9 +21718,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalD
 	return
 }
 
-type PFN_vkGetPhysicalDeviceDisplayProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceDisplayProperties2KHR
-}
+type PFNGetPhysicalDeviceDisplayProperties2KHR uintptr
 type DisplayProperties2KHR struct {
 	Next              Structure
 	DisplayProperties DisplayPropertiesKHR
@@ -22211,7 +21757,7 @@ func (s *DisplayProperties2KHR) GetNext() Structure {
 func (s *DisplayProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -22232,7 +21778,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice Physic
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayProperties2KHR(p.Raw, c.physicalDevice, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -22244,9 +21790,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice Physic
 	return
 }
 
-type PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR struct {
-	Raw C.PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR
-}
+type PFNGetPhysicalDeviceDisplayPlaneProperties2KHR uintptr
 type DisplayPlaneProperties2KHR struct {
 	Next                   Structure
 	DisplayPlaneProperties DisplayPlanePropertiesKHR
@@ -22285,7 +21829,7 @@ func (s *DisplayPlaneProperties2KHR) GetNext() Structure {
 func (s *DisplayPlaneProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -22306,7 +21850,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice P
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(p.Raw, c.physicalDevice, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -22318,9 +21862,7 @@ func (p PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice P
 	return
 }
 
-type PFN_vkGetDisplayModeProperties2KHR struct {
-	Raw C.PFN_vkGetDisplayModeProperties2KHR
-}
+type PFNGetDisplayModeProperties2KHR uintptr
 type DisplayModeProperties2KHR struct {
 	Next                  Structure
 	DisplayModeProperties DisplayModePropertiesKHR
@@ -22359,7 +21901,7 @@ func (s *DisplayModeProperties2KHR) GetNext() Structure {
 func (s *DisplayModeProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result) {
+func (p PFNGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -22382,7 +21924,7 @@ func (p PFN_vkGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, 
 			properties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetDisplayModeProperties2KHR(p.Raw, c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
+	c._ret = C.callPFN_vkGetDisplayModeProperties2KHR(C.PFN_vkGetDisplayModeProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	*propertyCount = uint32(*c.pPropertyCount)
 	{
@@ -22394,9 +21936,7 @@ func (p PFN_vkGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, 
 	return
 }
 
-type PFN_vkGetDisplayPlaneCapabilities2KHR struct {
-	Raw C.PFN_vkGetDisplayPlaneCapabilities2KHR
-}
+type PFNGetDisplayPlaneCapabilities2KHR uintptr
 type DisplayPlaneInfo2KHR struct {
 	Next       Structure
 	Mode       DisplayModeKHR
@@ -22477,7 +22017,7 @@ func (s *DisplayPlaneCapabilities2KHR) GetNext() Structure {
 func (s *DisplayPlaneCapabilities2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities []DisplayPlaneCapabilities2KHR) (_ret Result) {
+func (p PFNGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities []DisplayPlaneCapabilities2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pDisplayPlaneInfo *C.VkDisplayPlaneInfo2KHR
@@ -22498,7 +22038,7 @@ func (p PFN_vkGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevic
 			capabilities[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetDisplayPlaneCapabilities2KHR(p.Raw, c.physicalDevice, c.pDisplayPlaneInfo, c.pCapabilities)
+	c._ret = C.callPFN_vkGetDisplayPlaneCapabilities2KHR(C.PFN_vkGetDisplayPlaneCapabilities2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pDisplayPlaneInfo, c.pCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilities2KHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
@@ -22509,11 +22049,9 @@ func (p PFN_vkGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevic
 	return
 }
 
-type PFN_vkGetImageMemoryRequirements2KHR struct {
-	Raw C.PFN_vkGetImageMemoryRequirements2KHR
-}
+type PFNGetImageMemoryRequirements2KHR uintptr
 
-func (p PFN_vkGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkImageMemoryRequirementsInfo2
@@ -22533,7 +22071,7 @@ func (p PFN_vkGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMem
 			memoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetImageMemoryRequirements2KHR(p.Raw, c.device, c.pInfo, c.pMemoryRequirements)
+	C.callPFN_vkGetImageMemoryRequirements2KHR(C.PFN_vkGetImageMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -22542,11 +22080,9 @@ func (p PFN_vkGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMem
 	}
 }
 
-type PFN_vkGetBufferMemoryRequirements2KHR struct {
-	Raw C.PFN_vkGetBufferMemoryRequirements2KHR
-}
+type PFNGetBufferMemoryRequirements2KHR uintptr
 
-func (p PFN_vkGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkBufferMemoryRequirementsInfo2
@@ -22566,7 +22102,7 @@ func (p PFN_vkGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferM
 			memoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetBufferMemoryRequirements2KHR(p.Raw, c.device, c.pInfo, c.pMemoryRequirements)
+	C.callPFN_vkGetBufferMemoryRequirements2KHR(C.PFN_vkGetBufferMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
 		for i3, _ := range memoryRequirements {
@@ -22575,11 +22111,9 @@ func (p PFN_vkGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferM
 	}
 }
 
-type PFN_vkGetImageSparseMemoryRequirements2KHR struct {
-	Raw C.PFN_vkGetImageSparseMemoryRequirements2KHR
-}
+type PFNGetImageSparseMemoryRequirements2KHR uintptr
 
-func (p PFN_vkGetImageSparseMemoryRequirements2KHR) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+func (p PFNGetImageSparseMemoryRequirements2KHR) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
 	var c struct {
 		device                        C.VkDevice
 		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
@@ -22604,7 +22138,7 @@ func (p PFN_vkGetImageSparseMemoryRequirements2KHR) Call(device Device, info *Im
 			sparseMemoryRequirements[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetImageSparseMemoryRequirements2KHR(p.Raw, c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
+	C.callPFN_vkGetImageSparseMemoryRequirements2KHR(C.PFN_vkGetImageSparseMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	{
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
@@ -22614,11 +22148,9 @@ func (p PFN_vkGetImageSparseMemoryRequirements2KHR) Call(device Device, info *Im
 	}
 }
 
-type PFN_vkCreateSamplerYcbcrConversionKHR struct {
-	Raw C.PFN_vkCreateSamplerYcbcrConversionKHR
-}
+type PFNCreateSamplerYcbcrConversionKHR uintptr
 
-func (p PFN_vkCreateSamplerYcbcrConversionKHR) Call(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
+func (p PFNCreateSamplerYcbcrConversionKHR) Call(device Device, createInfo *SamplerYcbcrConversionCreateInfo, allocator *AllocationCallbacks, ycbcrConversion *SamplerYcbcrConversion) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		pCreateInfo      *C.VkSamplerYcbcrConversionCreateInfo
@@ -22641,17 +22173,15 @@ func (p PFN_vkCreateSamplerYcbcrConversionKHR) Call(device Device, createInfo *S
 		c.pYcbcrConversion = (*C.VkSamplerYcbcrConversion)(_sa.alloc(C.sizeof_VkSamplerYcbcrConversion))
 		*c.pYcbcrConversion = C.VkSamplerYcbcrConversion(*ycbcrConversion)
 	}
-	c._ret = C.callPFN_vkCreateSamplerYcbcrConversionKHR(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
+	c._ret = C.callPFN_vkCreateSamplerYcbcrConversionKHR(C.PFN_vkCreateSamplerYcbcrConversionKHR(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pYcbcrConversion)
 	_ret = Result(c._ret)
 	*ycbcrConversion = SamplerYcbcrConversion(*c.pYcbcrConversion)
 	return
 }
 
-type PFN_vkDestroySamplerYcbcrConversionKHR struct {
-	Raw C.PFN_vkDestroySamplerYcbcrConversionKHR
-}
+type PFNDestroySamplerYcbcrConversionKHR uintptr
 
-func (p PFN_vkDestroySamplerYcbcrConversionKHR) Call(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
+func (p PFNDestroySamplerYcbcrConversionKHR) Call(device Device, ycbcrConversion SamplerYcbcrConversion, allocator *AllocationCallbacks) {
 	var c struct {
 		device          C.VkDevice
 		ycbcrConversion C.VkSamplerYcbcrConversion
@@ -22665,14 +22195,12 @@ func (p PFN_vkDestroySamplerYcbcrConversionKHR) Call(device Device, ycbcrConvers
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroySamplerYcbcrConversionKHR(p.Raw, c.device, c.ycbcrConversion, c.pAllocator)
+	C.callPFN_vkDestroySamplerYcbcrConversionKHR(C.PFN_vkDestroySamplerYcbcrConversionKHR(unsafe.Pointer(p)), c.device, c.ycbcrConversion, c.pAllocator)
 }
 
-type PFN_vkBindBufferMemory2KHR struct {
-	Raw C.PFN_vkBindBufferMemory2KHR
-}
+type PFNBindBufferMemory2KHR uintptr
 
-func (p PFN_vkBindBufferMemory2KHR) Call(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
+func (p PFNBindBufferMemory2KHR) Call(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		bindInfoCount C.uint32_t
@@ -22690,16 +22218,14 @@ func (p PFN_vkBindBufferMemory2KHR) Call(device Device, bindInfos []BindBufferMe
 			bindInfos[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkBindBufferMemory2KHR(p.Raw, c.device, c.bindInfoCount, c.pBindInfos)
+	c._ret = C.callPFN_vkBindBufferMemory2KHR(C.PFN_vkBindBufferMemory2KHR(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkBindImageMemory2KHR struct {
-	Raw C.PFN_vkBindImageMemory2KHR
-}
+type PFNBindImageMemory2KHR uintptr
 
-func (p PFN_vkBindImageMemory2KHR) Call(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
+func (p PFNBindImageMemory2KHR) Call(device Device, bindInfos []BindImageMemoryInfo) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		bindInfoCount C.uint32_t
@@ -22717,16 +22243,14 @@ func (p PFN_vkBindImageMemory2KHR) Call(device Device, bindInfos []BindImageMemo
 			bindInfos[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkBindImageMemory2KHR(p.Raw, c.device, c.bindInfoCount, c.pBindInfos)
+	c._ret = C.callPFN_vkBindImageMemory2KHR(C.PFN_vkBindImageMemory2KHR(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetDescriptorSetLayoutSupportKHR struct {
-	Raw C.PFN_vkGetDescriptorSetLayoutSupportKHR
-}
+type PFNGetDescriptorSetLayoutSupportKHR uintptr
 
-func (p PFN_vkGetDescriptorSetLayoutSupportKHR) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
+func (p PFNGetDescriptorSetLayoutSupportKHR) Call(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
 	var c struct {
 		device      C.VkDevice
 		pCreateInfo *C.VkDescriptorSetLayoutCreateInfo
@@ -22743,15 +22267,13 @@ func (p PFN_vkGetDescriptorSetLayoutSupportKHR) Call(device Device, createInfo *
 		c.pSupport = (*C.VkDescriptorSetLayoutSupport)(_sa.alloc(C.sizeof_VkDescriptorSetLayoutSupport))
 		support.toC(c.pSupport, _sa)
 	}
-	C.callPFN_vkGetDescriptorSetLayoutSupportKHR(p.Raw, c.device, c.pCreateInfo, c.pSupport)
+	C.callPFN_vkGetDescriptorSetLayoutSupportKHR(C.PFN_vkGetDescriptorSetLayoutSupportKHR(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pSupport)
 	support.fromC(c.pSupport)
 }
 
-type PFN_vkCmdDrawIndirectCountKHR struct {
-	Raw C.PFN_vkCmdDrawIndirectCountKHR
-}
+type PFNCmdDrawIndirectCountKHR uintptr
 
-func (p PFN_vkCmdDrawIndirectCountKHR) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndirectCountKHR) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		buffer            C.VkBuffer
@@ -22776,14 +22298,12 @@ func (p PFN_vkCmdDrawIndirectCountKHR) Call(commandBuffer CommandBuffer, buffer 
 	}
 	c.maxDrawCount = C.uint32_t(maxDrawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndirectCountKHR(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+	C.callPFN_vkCmdDrawIndirectCountKHR(C.PFN_vkCmdDrawIndirectCountKHR(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
-type PFN_vkCmdDrawIndexedIndirectCountKHR struct {
-	Raw C.PFN_vkCmdDrawIndexedIndirectCountKHR
-}
+type PFNCmdDrawIndexedIndirectCountKHR uintptr
 
-func (p PFN_vkCmdDrawIndexedIndirectCountKHR) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndexedIndirectCountKHR) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		buffer            C.VkBuffer
@@ -22808,7 +22328,7 @@ func (p PFN_vkCmdDrawIndexedIndirectCountKHR) Call(commandBuffer CommandBuffer, 
 	}
 	c.maxDrawCount = C.uint32_t(maxDrawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndexedIndirectCountKHR(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+	C.callPFN_vkCmdDrawIndexedIndirectCountKHR(C.PFN_vkCmdDrawIndexedIndirectCountKHR(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
 type DebugReportObjectTypeEXT int
@@ -22869,12 +22389,10 @@ const (
 	DEBUG_REPORT_FLAG_BITS_MAX_ENUM_EXT      DebugReportFlagBitsEXT = 2147483647
 )
 
-type PFN_vkDebugReportCallbackEXT struct {
-	Raw C.PFN_vkDebugReportCallbackEXT
-}
+type PFNDebugReportCallbackEXT uintptr
 type DebugReportFlagsEXT Flags
 
-func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret bool) {
+func (p PFNDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugReportObjectTypeEXT, arg2 uint64, arg3 uint, arg4 int32, arg5 string, arg6 string, arg7 unsafe.Pointer) (_ret bool) {
 	var c struct {
 		arg0 C.VkDebugReportFlagsEXT
 		arg1 C.VkDebugReportObjectTypeEXT
@@ -22904,18 +22422,16 @@ func (p PFN_vkDebugReportCallbackEXT) Call(arg0 DebugReportFlagsEXT, arg1 DebugR
 	c.arg5 = toCString(arg5, _sa)
 	c.arg6 = toCString(arg6, _sa)
 	c.arg7 = arg7
-	c._ret = C.callPFN_vkDebugReportCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3, c.arg4, c.arg5, c.arg6, c.arg7)
+	c._ret = C.callPFN_vkDebugReportCallbackEXT(C.PFN_vkDebugReportCallbackEXT(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3, c.arg4, c.arg5, c.arg6, c.arg7)
 	_ret = c._ret != 0
 	return
 }
 
-type PFN_vkCreateDebugReportCallbackEXT struct {
-	Raw C.PFN_vkCreateDebugReportCallbackEXT
-}
+type PFNCreateDebugReportCallbackEXT uintptr
 type DebugReportCallbackCreateInfoEXT struct {
 	Next     Structure
 	Flags    DebugReportFlagsEXT
-	Callback PFN_vkDebugReportCallbackEXT
+	Callback PFNDebugReportCallbackEXT
 	UserData []byte
 }
 
@@ -22931,7 +22447,7 @@ func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateI
 		}
 		c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
 	}
-	c.pfnCallback = g.Callback.Raw
+	c.pfnCallback = C.PFN_vkDebugReportCallbackEXT(unsafe.Pointer(g.Callback))
 	{
 		c.pUserData = _sa.alloc(C.sizeof_void_pointer * uint(len(g.UserData)))
 		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
@@ -22951,7 +22467,7 @@ func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreat
 		}
 		g.Flags = DebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
 	}
-	g.Callback.Raw = c.pfnCallback
+	g.Callback = PFNDebugReportCallbackEXT(unsafe.Pointer(c.pfnCallback))
 	{
 		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
 		for i2, _ := range g.UserData {
@@ -22986,7 +22502,7 @@ func (s *DebugReportCallbackCreateInfoEXT) SetNext(n Structure) {
 
 type DebugReportCallbackEXT C.VkDebugReportCallbackEXT
 
-func (p PFN_vkCreateDebugReportCallbackEXT) Call(instance Instance, createInfo *DebugReportCallbackCreateInfoEXT, allocator *AllocationCallbacks, callback *DebugReportCallbackEXT) (_ret Result) {
+func (p PFNCreateDebugReportCallbackEXT) Call(instance Instance, createInfo *DebugReportCallbackCreateInfoEXT, allocator *AllocationCallbacks, callback *DebugReportCallbackEXT) (_ret Result) {
 	var c struct {
 		instance    C.VkInstance
 		pCreateInfo *C.VkDebugReportCallbackCreateInfoEXT
@@ -23009,17 +22525,15 @@ func (p PFN_vkCreateDebugReportCallbackEXT) Call(instance Instance, createInfo *
 		c.pCallback = (*C.VkDebugReportCallbackEXT)(_sa.alloc(C.sizeof_VkDebugReportCallbackEXT))
 		*c.pCallback = C.VkDebugReportCallbackEXT(*callback)
 	}
-	c._ret = C.callPFN_vkCreateDebugReportCallbackEXT(p.Raw, c.instance, c.pCreateInfo, c.pAllocator, c.pCallback)
+	c._ret = C.callPFN_vkCreateDebugReportCallbackEXT(C.PFN_vkCreateDebugReportCallbackEXT(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pCallback)
 	_ret = Result(c._ret)
 	*callback = DebugReportCallbackEXT(*c.pCallback)
 	return
 }
 
-type PFN_vkDestroyDebugReportCallbackEXT struct {
-	Raw C.PFN_vkDestroyDebugReportCallbackEXT
-}
+type PFNDestroyDebugReportCallbackEXT uintptr
 
-func (p PFN_vkDestroyDebugReportCallbackEXT) Call(instance Instance, callback DebugReportCallbackEXT, allocator *AllocationCallbacks) {
+func (p PFNDestroyDebugReportCallbackEXT) Call(instance Instance, callback DebugReportCallbackEXT, allocator *AllocationCallbacks) {
 	var c struct {
 		instance   C.VkInstance
 		callback   C.VkDebugReportCallbackEXT
@@ -23033,14 +22547,12 @@ func (p PFN_vkDestroyDebugReportCallbackEXT) Call(instance Instance, callback De
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDebugReportCallbackEXT(p.Raw, c.instance, c.callback, c.pAllocator)
+	C.callPFN_vkDestroyDebugReportCallbackEXT(C.PFN_vkDestroyDebugReportCallbackEXT(unsafe.Pointer(p)), c.instance, c.callback, c.pAllocator)
 }
 
-type PFN_vkDebugReportMessageEXT struct {
-	Raw C.PFN_vkDebugReportMessageEXT
-}
+type PFNDebugReportMessageEXT uintptr
 
-func (p PFN_vkDebugReportMessageEXT) Call(instance Instance, flags DebugReportFlagsEXT, objectType DebugReportObjectTypeEXT, object uint64, location uint, messageCode int32, layerPrefix string, message string) {
+func (p PFNDebugReportMessageEXT) Call(instance Instance, flags DebugReportFlagsEXT, objectType DebugReportObjectTypeEXT, object uint64, location uint, messageCode int32, layerPrefix string, message string) {
 	var c struct {
 		instance     C.VkInstance
 		flags        C.VkDebugReportFlagsEXT
@@ -23069,7 +22581,7 @@ func (p PFN_vkDebugReportMessageEXT) Call(instance Instance, flags DebugReportFl
 	c.messageCode = C.int32_t(messageCode)
 	c.pLayerPrefix = toCString(layerPrefix, _sa)
 	c.pMessage = toCString(message, _sa)
-	C.callPFN_vkDebugReportMessageEXT(p.Raw, c.instance, c.flags, c.objectType, c.object, c.location, c.messageCode, c.pLayerPrefix, c.pMessage)
+	C.callPFN_vkDebugReportMessageEXT(C.PFN_vkDebugReportMessageEXT(unsafe.Pointer(p)), c.instance, c.flags, c.objectType, c.object, c.location, c.messageCode, c.pLayerPrefix, c.pMessage)
 }
 
 type RasterizationOrderAMD int
@@ -23083,9 +22595,7 @@ const (
 	RASTERIZATION_ORDER_MAX_ENUM_AMD    RasterizationOrderAMD = 2147483647
 )
 
-type PFN_vkDebugMarkerSetObjectTagEXT struct {
-	Raw C.PFN_vkDebugMarkerSetObjectTagEXT
-}
+type PFNDebugMarkerSetObjectTagEXT uintptr
 type DebugMarkerObjectTagInfoEXT struct {
 	Next       Structure
 	ObjectType DebugReportObjectTypeEXT
@@ -23136,7 +22646,7 @@ func (s *DebugMarkerObjectTagInfoEXT) GetNext() Structure {
 func (s *DebugMarkerObjectTagInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkDebugMarkerSetObjectTagEXT) Call(device Device, tagInfo *DebugMarkerObjectTagInfoEXT) (_ret Result) {
+func (p PFNDebugMarkerSetObjectTagEXT) Call(device Device, tagInfo *DebugMarkerObjectTagInfoEXT) (_ret Result) {
 	var c struct {
 		device   C.VkDevice
 		pTagInfo *C.VkDebugMarkerObjectTagInfoEXT
@@ -23149,14 +22659,12 @@ func (p PFN_vkDebugMarkerSetObjectTagEXT) Call(device Device, tagInfo *DebugMark
 		c.pTagInfo = (*C.VkDebugMarkerObjectTagInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerObjectTagInfoEXT))
 		tagInfo.toC(c.pTagInfo, _sa)
 	}
-	c._ret = C.callPFN_vkDebugMarkerSetObjectTagEXT(p.Raw, c.device, c.pTagInfo)
+	c._ret = C.callPFN_vkDebugMarkerSetObjectTagEXT(C.PFN_vkDebugMarkerSetObjectTagEXT(unsafe.Pointer(p)), c.device, c.pTagInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkDebugMarkerSetObjectNameEXT struct {
-	Raw C.PFN_vkDebugMarkerSetObjectNameEXT
-}
+type PFNDebugMarkerSetObjectNameEXT uintptr
 type DebugMarkerObjectNameInfoEXT struct {
 	Next       Structure
 	ObjectType DebugReportObjectTypeEXT
@@ -23201,7 +22709,7 @@ func (s *DebugMarkerObjectNameInfoEXT) GetNext() Structure {
 func (s *DebugMarkerObjectNameInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkDebugMarkerSetObjectNameEXT) Call(device Device, nameInfo *DebugMarkerObjectNameInfoEXT) (_ret Result) {
+func (p PFNDebugMarkerSetObjectNameEXT) Call(device Device, nameInfo *DebugMarkerObjectNameInfoEXT) (_ret Result) {
 	var c struct {
 		device    C.VkDevice
 		pNameInfo *C.VkDebugMarkerObjectNameInfoEXT
@@ -23214,14 +22722,12 @@ func (p PFN_vkDebugMarkerSetObjectNameEXT) Call(device Device, nameInfo *DebugMa
 		c.pNameInfo = (*C.VkDebugMarkerObjectNameInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerObjectNameInfoEXT))
 		nameInfo.toC(c.pNameInfo, _sa)
 	}
-	c._ret = C.callPFN_vkDebugMarkerSetObjectNameEXT(p.Raw, c.device, c.pNameInfo)
+	c._ret = C.callPFN_vkDebugMarkerSetObjectNameEXT(C.PFN_vkDebugMarkerSetObjectNameEXT(unsafe.Pointer(p)), c.device, c.pNameInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkCmdDebugMarkerBeginEXT struct {
-	Raw C.PFN_vkCmdDebugMarkerBeginEXT
-}
+type PFNCmdDebugMarkerBeginEXT uintptr
 type DebugMarkerMarkerInfoEXT struct {
 	Next       Structure
 	MarkerName string
@@ -23267,7 +22773,7 @@ func (s *DebugMarkerMarkerInfoEXT) GetNext() Structure {
 func (s *DebugMarkerMarkerInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdDebugMarkerBeginEXT) Call(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
+func (p PFNCmdDebugMarkerBeginEXT) Call(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pMarkerInfo   *C.VkDebugMarkerMarkerInfoEXT
@@ -23279,24 +22785,20 @@ func (p PFN_vkCmdDebugMarkerBeginEXT) Call(commandBuffer CommandBuffer, markerIn
 		c.pMarkerInfo = (*C.VkDebugMarkerMarkerInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerMarkerInfoEXT))
 		markerInfo.toC(c.pMarkerInfo, _sa)
 	}
-	C.callPFN_vkCmdDebugMarkerBeginEXT(p.Raw, c.commandBuffer, c.pMarkerInfo)
+	C.callPFN_vkCmdDebugMarkerBeginEXT(C.PFN_vkCmdDebugMarkerBeginEXT(unsafe.Pointer(p)), c.commandBuffer, c.pMarkerInfo)
 }
 
-type PFN_vkCmdDebugMarkerEndEXT struct {
-	Raw C.PFN_vkCmdDebugMarkerEndEXT
-}
+type PFNCmdDebugMarkerEndEXT uintptr
 
-func (p PFN_vkCmdDebugMarkerEndEXT) Call(commandBuffer CommandBuffer) {
+func (p PFNCmdDebugMarkerEndEXT) Call(commandBuffer CommandBuffer) {
 	var c struct{ commandBuffer C.VkCommandBuffer }
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	C.callPFN_vkCmdDebugMarkerEndEXT(p.Raw, c.commandBuffer)
+	C.callPFN_vkCmdDebugMarkerEndEXT(C.PFN_vkCmdDebugMarkerEndEXT(unsafe.Pointer(p)), c.commandBuffer)
 }
 
-type PFN_vkCmdDebugMarkerInsertEXT struct {
-	Raw C.PFN_vkCmdDebugMarkerInsertEXT
-}
+type PFNCmdDebugMarkerInsertEXT uintptr
 
-func (p PFN_vkCmdDebugMarkerInsertEXT) Call(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
+func (p PFNCmdDebugMarkerInsertEXT) Call(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pMarkerInfo   *C.VkDebugMarkerMarkerInfoEXT
@@ -23308,14 +22810,12 @@ func (p PFN_vkCmdDebugMarkerInsertEXT) Call(commandBuffer CommandBuffer, markerI
 		c.pMarkerInfo = (*C.VkDebugMarkerMarkerInfoEXT)(_sa.alloc(C.sizeof_VkDebugMarkerMarkerInfoEXT))
 		markerInfo.toC(c.pMarkerInfo, _sa)
 	}
-	C.callPFN_vkCmdDebugMarkerInsertEXT(p.Raw, c.commandBuffer, c.pMarkerInfo)
+	C.callPFN_vkCmdDebugMarkerInsertEXT(C.PFN_vkCmdDebugMarkerInsertEXT(unsafe.Pointer(p)), c.commandBuffer, c.pMarkerInfo)
 }
 
-type PFN_vkCmdDrawIndirectCountAMD struct {
-	Raw C.PFN_vkCmdDrawIndirectCountAMD
-}
+type PFNCmdDrawIndirectCountAMD uintptr
 
-func (p PFN_vkCmdDrawIndirectCountAMD) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndirectCountAMD) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		buffer            C.VkBuffer
@@ -23340,14 +22840,12 @@ func (p PFN_vkCmdDrawIndirectCountAMD) Call(commandBuffer CommandBuffer, buffer 
 	}
 	c.maxDrawCount = C.uint32_t(maxDrawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndirectCountAMD(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+	C.callPFN_vkCmdDrawIndirectCountAMD(C.PFN_vkCmdDrawIndirectCountAMD(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
-type PFN_vkCmdDrawIndexedIndirectCountAMD struct {
-	Raw C.PFN_vkCmdDrawIndexedIndirectCountAMD
-}
+type PFNCmdDrawIndexedIndirectCountAMD uintptr
 
-func (p PFN_vkCmdDrawIndexedIndirectCountAMD) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
+func (p PFNCmdDrawIndexedIndirectCountAMD) Call(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSize, countBuffer Buffer, countBufferOffset DeviceSize, maxDrawCount uint32, stride uint32) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		buffer            C.VkBuffer
@@ -23372,7 +22870,7 @@ func (p PFN_vkCmdDrawIndexedIndirectCountAMD) Call(commandBuffer CommandBuffer, 
 	}
 	c.maxDrawCount = C.uint32_t(maxDrawCount)
 	c.stride = C.uint32_t(stride)
-	C.callPFN_vkCmdDrawIndexedIndirectCountAMD(p.Raw, c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
+	C.callPFN_vkCmdDrawIndexedIndirectCountAMD(C.PFN_vkCmdDrawIndexedIndirectCountAMD(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
 }
 
 type ShaderInfoTypeAMD int
@@ -23387,11 +22885,9 @@ const (
 	SHADER_INFO_TYPE_MAX_ENUM_AMD    ShaderInfoTypeAMD = 2147483647
 )
 
-type PFN_vkGetShaderInfoAMD struct {
-	Raw C.PFN_vkGetShaderInfoAMD
-}
+type PFNGetShaderInfoAMD uintptr
 
-func (p PFN_vkGetShaderInfoAMD) Call(device Device, pipeline Pipeline, shaderStage ShaderStageFlagBits, infoType ShaderInfoTypeAMD, infoSize *uint, info unsafe.Pointer) (_ret Result) {
+func (p PFNGetShaderInfoAMD) Call(device Device, pipeline Pipeline, shaderStage ShaderStageFlagBits, infoType ShaderInfoTypeAMD, infoSize *uint, info unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device      C.VkDevice
 		pipeline    C.VkPipeline
@@ -23412,7 +22908,7 @@ func (p PFN_vkGetShaderInfoAMD) Call(device Device, pipeline Pipeline, shaderSta
 		*c.pInfoSize = C.size_t(*infoSize)
 	}
 	c.pInfo = info
-	c._ret = C.callPFN_vkGetShaderInfoAMD(p.Raw, c.device, c.pipeline, c.shaderStage, c.infoType, c.pInfoSize, c.pInfo)
+	c._ret = C.callPFN_vkGetShaderInfoAMD(C.PFN_vkGetShaderInfoAMD(unsafe.Pointer(p)), c.device, c.pipeline, c.shaderStage, c.infoType, c.pInfoSize, c.pInfo)
 	_ret = Result(c._ret)
 	*infoSize = uint(*c.pInfoSize)
 	return
@@ -23437,9 +22933,7 @@ const (
 	EXTERNAL_MEMORY_FEATURE_FLAG_BITS_MAX_ENUM_NV ExternalMemoryFeatureFlagBitsNV = 2147483647
 )
 
-type PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV struct {
-	Raw C.PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV
-}
+type PFNGetPhysicalDeviceExternalImageFormatPropertiesNV uintptr
 type ExternalMemoryHandleTypeFlagsNV Flags
 type ExternalMemoryFeatureFlagsNV Flags
 type ExternalImageFormatPropertiesNV struct {
@@ -23509,7 +23003,7 @@ func (g *ExternalImageFormatPropertiesNV) fromC(c *C.VkExternalImageFormatProper
 		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
 	}
 }
-func (p PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties []ExternalImageFormatPropertiesNV) (_ret Result) {
+func (p PFNGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties []ExternalImageFormatPropertiesNV) (_ret Result) {
 	var c struct {
 		physicalDevice                 C.VkPhysicalDevice
 		format                         C.VkFormat
@@ -23561,7 +23055,7 @@ func (p PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDev
 			externalImageFormatProperties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(p.Raw, c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.externalHandleType, c.pExternalImageFormatProperties)
+	c._ret = C.callPFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(C.PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.externalHandleType, c.pExternalImageFormatProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkExternalImageFormatPropertiesNV)(unsafe.Pointer(c.pExternalImageFormatProperties))[:len(externalImageFormatProperties):len(externalImageFormatProperties)]
@@ -23590,9 +23084,7 @@ const (
 	CONDITIONAL_RENDERING_FLAG_BITS_MAX_ENUM_EXT ConditionalRenderingFlagBitsEXT = 2147483647
 )
 
-type PFN_vkCmdBeginConditionalRenderingEXT struct {
-	Raw C.PFN_vkCmdBeginConditionalRenderingEXT
-}
+type PFNCmdBeginConditionalRenderingEXT uintptr
 type ConditionalRenderingFlagsEXT Flags
 type ConditionalRenderingBeginInfoEXT struct {
 	Next   Structure
@@ -23662,7 +23154,7 @@ func (s *ConditionalRenderingBeginInfoEXT) GetNext() Structure {
 func (s *ConditionalRenderingBeginInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdBeginConditionalRenderingEXT) Call(commandBuffer CommandBuffer, conditionalRenderingBegin *ConditionalRenderingBeginInfoEXT) {
+func (p PFNCmdBeginConditionalRenderingEXT) Call(commandBuffer CommandBuffer, conditionalRenderingBegin *ConditionalRenderingBeginInfoEXT) {
 	var c struct {
 		commandBuffer              C.VkCommandBuffer
 		pConditionalRenderingBegin *C.VkConditionalRenderingBeginInfoEXT
@@ -23674,17 +23166,15 @@ func (p PFN_vkCmdBeginConditionalRenderingEXT) Call(commandBuffer CommandBuffer,
 		c.pConditionalRenderingBegin = (*C.VkConditionalRenderingBeginInfoEXT)(_sa.alloc(C.sizeof_VkConditionalRenderingBeginInfoEXT))
 		conditionalRenderingBegin.toC(c.pConditionalRenderingBegin, _sa)
 	}
-	C.callPFN_vkCmdBeginConditionalRenderingEXT(p.Raw, c.commandBuffer, c.pConditionalRenderingBegin)
+	C.callPFN_vkCmdBeginConditionalRenderingEXT(C.PFN_vkCmdBeginConditionalRenderingEXT(unsafe.Pointer(p)), c.commandBuffer, c.pConditionalRenderingBegin)
 }
 
-type PFN_vkCmdEndConditionalRenderingEXT struct {
-	Raw C.PFN_vkCmdEndConditionalRenderingEXT
-}
+type PFNCmdEndConditionalRenderingEXT uintptr
 
-func (p PFN_vkCmdEndConditionalRenderingEXT) Call(commandBuffer CommandBuffer) {
+func (p PFNCmdEndConditionalRenderingEXT) Call(commandBuffer CommandBuffer) {
 	var c struct{ commandBuffer C.VkCommandBuffer }
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	C.callPFN_vkCmdEndConditionalRenderingEXT(p.Raw, c.commandBuffer)
+	C.callPFN_vkCmdEndConditionalRenderingEXT(C.PFN_vkCmdEndConditionalRenderingEXT(unsafe.Pointer(p)), c.commandBuffer)
 }
 
 type IndirectCommandsTokenTypeNVX int
@@ -23736,9 +23226,7 @@ const (
 	OBJECT_ENTRY_USAGE_FLAG_BITS_MAX_ENUM_NVX ObjectEntryUsageFlagBitsNVX = 2147483647
 )
 
-type PFN_vkCmdProcessCommandsNVX struct {
-	Raw C.PFN_vkCmdProcessCommandsNVX
-}
+type PFNCmdProcessCommandsNVX uintptr
 type ObjectTableNVX C.VkObjectTableNVX
 type IndirectCommandsLayoutNVX C.VkIndirectCommandsLayoutNVX
 type IndirectCommandsTokenNVX struct {
@@ -23857,7 +23345,7 @@ func (s *CmdProcessCommandsInfoNVX) GetNext() Structure {
 func (s *CmdProcessCommandsInfoNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdProcessCommandsNVX) Call(commandBuffer CommandBuffer, processCommandsInfo *CmdProcessCommandsInfoNVX) {
+func (p PFNCmdProcessCommandsNVX) Call(commandBuffer CommandBuffer, processCommandsInfo *CmdProcessCommandsInfoNVX) {
 	var c struct {
 		commandBuffer        C.VkCommandBuffer
 		pProcessCommandsInfo *C.VkCmdProcessCommandsInfoNVX
@@ -23869,12 +23357,10 @@ func (p PFN_vkCmdProcessCommandsNVX) Call(commandBuffer CommandBuffer, processCo
 		c.pProcessCommandsInfo = (*C.VkCmdProcessCommandsInfoNVX)(_sa.alloc(C.sizeof_VkCmdProcessCommandsInfoNVX))
 		processCommandsInfo.toC(c.pProcessCommandsInfo, _sa)
 	}
-	C.callPFN_vkCmdProcessCommandsNVX(p.Raw, c.commandBuffer, c.pProcessCommandsInfo)
+	C.callPFN_vkCmdProcessCommandsNVX(C.PFN_vkCmdProcessCommandsNVX(unsafe.Pointer(p)), c.commandBuffer, c.pProcessCommandsInfo)
 }
 
-type PFN_vkCmdReserveSpaceForCommandsNVX struct {
-	Raw C.PFN_vkCmdReserveSpaceForCommandsNVX
-}
+type PFNCmdReserveSpaceForCommandsNVX uintptr
 type CmdReserveSpaceForCommandsInfoNVX struct {
 	Next                   Structure
 	ObjectTable            ObjectTableNVX
@@ -23919,7 +23405,7 @@ func (s *CmdReserveSpaceForCommandsInfoNVX) GetNext() Structure {
 func (s *CmdReserveSpaceForCommandsInfoNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdReserveSpaceForCommandsNVX) Call(commandBuffer CommandBuffer, reserveSpaceInfo *CmdReserveSpaceForCommandsInfoNVX) {
+func (p PFNCmdReserveSpaceForCommandsNVX) Call(commandBuffer CommandBuffer, reserveSpaceInfo *CmdReserveSpaceForCommandsInfoNVX) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		pReserveSpaceInfo *C.VkCmdReserveSpaceForCommandsInfoNVX
@@ -23931,12 +23417,10 @@ func (p PFN_vkCmdReserveSpaceForCommandsNVX) Call(commandBuffer CommandBuffer, r
 		c.pReserveSpaceInfo = (*C.VkCmdReserveSpaceForCommandsInfoNVX)(_sa.alloc(C.sizeof_VkCmdReserveSpaceForCommandsInfoNVX))
 		reserveSpaceInfo.toC(c.pReserveSpaceInfo, _sa)
 	}
-	C.callPFN_vkCmdReserveSpaceForCommandsNVX(p.Raw, c.commandBuffer, c.pReserveSpaceInfo)
+	C.callPFN_vkCmdReserveSpaceForCommandsNVX(C.PFN_vkCmdReserveSpaceForCommandsNVX(unsafe.Pointer(p)), c.commandBuffer, c.pReserveSpaceInfo)
 }
 
-type PFN_vkCreateIndirectCommandsLayoutNVX struct {
-	Raw C.PFN_vkCreateIndirectCommandsLayoutNVX
-}
+type PFNCreateIndirectCommandsLayoutNVX uintptr
 type IndirectCommandsLayoutUsageFlagsNVX Flags
 type IndirectCommandsLayoutTokenNVX struct {
 	TokenType    IndirectCommandsTokenTypeNVX
@@ -24031,7 +23515,7 @@ func (s *IndirectCommandsLayoutCreateInfoNVX) GetNext() Structure {
 func (s *IndirectCommandsLayoutCreateInfoNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateIndirectCommandsLayoutNVX) Call(device Device, createInfo *IndirectCommandsLayoutCreateInfoNVX, allocator *AllocationCallbacks, indirectCommandsLayout *IndirectCommandsLayoutNVX) (_ret Result) {
+func (p PFNCreateIndirectCommandsLayoutNVX) Call(device Device, createInfo *IndirectCommandsLayoutCreateInfoNVX, allocator *AllocationCallbacks, indirectCommandsLayout *IndirectCommandsLayoutNVX) (_ret Result) {
 	var c struct {
 		device                  C.VkDevice
 		pCreateInfo             *C.VkIndirectCommandsLayoutCreateInfoNVX
@@ -24054,17 +23538,15 @@ func (p PFN_vkCreateIndirectCommandsLayoutNVX) Call(device Device, createInfo *I
 		c.pIndirectCommandsLayout = (*C.VkIndirectCommandsLayoutNVX)(_sa.alloc(C.sizeof_VkIndirectCommandsLayoutNVX))
 		*c.pIndirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(*indirectCommandsLayout)
 	}
-	c._ret = C.callPFN_vkCreateIndirectCommandsLayoutNVX(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pIndirectCommandsLayout)
+	c._ret = C.callPFN_vkCreateIndirectCommandsLayoutNVX(C.PFN_vkCreateIndirectCommandsLayoutNVX(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pIndirectCommandsLayout)
 	_ret = Result(c._ret)
 	*indirectCommandsLayout = IndirectCommandsLayoutNVX(*c.pIndirectCommandsLayout)
 	return
 }
 
-type PFN_vkDestroyIndirectCommandsLayoutNVX struct {
-	Raw C.PFN_vkDestroyIndirectCommandsLayoutNVX
-}
+type PFNDestroyIndirectCommandsLayoutNVX uintptr
 
-func (p PFN_vkDestroyIndirectCommandsLayoutNVX) Call(device Device, indirectCommandsLayout IndirectCommandsLayoutNVX, allocator *AllocationCallbacks) {
+func (p PFNDestroyIndirectCommandsLayoutNVX) Call(device Device, indirectCommandsLayout IndirectCommandsLayoutNVX, allocator *AllocationCallbacks) {
 	var c struct {
 		device                 C.VkDevice
 		indirectCommandsLayout C.VkIndirectCommandsLayoutNVX
@@ -24078,12 +23560,10 @@ func (p PFN_vkDestroyIndirectCommandsLayoutNVX) Call(device Device, indirectComm
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyIndirectCommandsLayoutNVX(p.Raw, c.device, c.indirectCommandsLayout, c.pAllocator)
+	C.callPFN_vkDestroyIndirectCommandsLayoutNVX(C.PFN_vkDestroyIndirectCommandsLayoutNVX(unsafe.Pointer(p)), c.device, c.indirectCommandsLayout, c.pAllocator)
 }
 
-type PFN_vkCreateObjectTableNVX struct {
-	Raw C.PFN_vkCreateObjectTableNVX
-}
+type PFNCreateObjectTableNVX uintptr
 type ObjectEntryUsageFlagsNVX Flags
 type ObjectTableCreateInfoNVX struct {
 	Next                           Structure
@@ -24195,7 +23675,7 @@ func (s *ObjectTableCreateInfoNVX) GetNext() Structure {
 func (s *ObjectTableCreateInfoNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCreateObjectTableNVX) Call(device Device, createInfo *ObjectTableCreateInfoNVX, allocator *AllocationCallbacks, objectTable *ObjectTableNVX) (_ret Result) {
+func (p PFNCreateObjectTableNVX) Call(device Device, createInfo *ObjectTableCreateInfoNVX, allocator *AllocationCallbacks, objectTable *ObjectTableNVX) (_ret Result) {
 	var c struct {
 		device       C.VkDevice
 		pCreateInfo  *C.VkObjectTableCreateInfoNVX
@@ -24218,17 +23698,15 @@ func (p PFN_vkCreateObjectTableNVX) Call(device Device, createInfo *ObjectTableC
 		c.pObjectTable = (*C.VkObjectTableNVX)(_sa.alloc(C.sizeof_VkObjectTableNVX))
 		*c.pObjectTable = C.VkObjectTableNVX(*objectTable)
 	}
-	c._ret = C.callPFN_vkCreateObjectTableNVX(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pObjectTable)
+	c._ret = C.callPFN_vkCreateObjectTableNVX(C.PFN_vkCreateObjectTableNVX(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pObjectTable)
 	_ret = Result(c._ret)
 	*objectTable = ObjectTableNVX(*c.pObjectTable)
 	return
 }
 
-type PFN_vkDestroyObjectTableNVX struct {
-	Raw C.PFN_vkDestroyObjectTableNVX
-}
+type PFNDestroyObjectTableNVX uintptr
 
-func (p PFN_vkDestroyObjectTableNVX) Call(device Device, objectTable ObjectTableNVX, allocator *AllocationCallbacks) {
+func (p PFNDestroyObjectTableNVX) Call(device Device, objectTable ObjectTableNVX, allocator *AllocationCallbacks) {
 	var c struct {
 		device      C.VkDevice
 		objectTable C.VkObjectTableNVX
@@ -24242,12 +23720,10 @@ func (p PFN_vkDestroyObjectTableNVX) Call(device Device, objectTable ObjectTable
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyObjectTableNVX(p.Raw, c.device, c.objectTable, c.pAllocator)
+	C.callPFN_vkDestroyObjectTableNVX(C.PFN_vkDestroyObjectTableNVX(unsafe.Pointer(p)), c.device, c.objectTable, c.pAllocator)
 }
 
-type PFN_vkRegisterObjectsNVX struct {
-	Raw C.PFN_vkRegisterObjectsNVX
-}
+type PFNRegisterObjectsNVX uintptr
 type ObjectTableEntryNVX struct {
 	Type  ObjectEntryTypeNVX
 	Flags ObjectEntryUsageFlagsNVX
@@ -24277,7 +23753,7 @@ func (g *ObjectTableEntryNVX) fromC(c *C.VkObjectTableEntryNVX) {
 		g.Flags = ObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
 	}
 }
-func (p PFN_vkRegisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, objectTableEntries []*ObjectTableEntryNVX, objectIndices []uint32) (_ret Result) {
+func (p PFNRegisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, objectTableEntries []*ObjectTableEntryNVX, objectIndices []uint32) (_ret Result) {
 	var c struct {
 		device               C.VkDevice
 		objectTable          C.VkObjectTableNVX
@@ -24308,16 +23784,14 @@ func (p PFN_vkRegisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX
 			slice3[i3] = C.uint32_t(objectIndices[i3])
 		}
 	}
-	c._ret = C.callPFN_vkRegisterObjectsNVX(p.Raw, c.device, c.objectTable, c.objectCount, c.ppObjectTableEntries, c.pObjectIndices)
+	c._ret = C.callPFN_vkRegisterObjectsNVX(C.PFN_vkRegisterObjectsNVX(unsafe.Pointer(p)), c.device, c.objectTable, c.objectCount, c.ppObjectTableEntries, c.pObjectIndices)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkUnregisterObjectsNVX struct {
-	Raw C.PFN_vkUnregisterObjectsNVX
-}
+type PFNUnregisterObjectsNVX uintptr
 
-func (p PFN_vkUnregisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, objectEntryTypes []ObjectEntryTypeNVX, objectIndices []uint32) (_ret Result) {
+func (p PFNUnregisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, objectEntryTypes []ObjectEntryTypeNVX, objectIndices []uint32) (_ret Result) {
 	var c struct {
 		device            C.VkDevice
 		objectTable       C.VkObjectTableNVX
@@ -24345,14 +23819,12 @@ func (p PFN_vkUnregisterObjectsNVX) Call(device Device, objectTable ObjectTableN
 			slice3[i3] = C.uint32_t(objectIndices[i3])
 		}
 	}
-	c._ret = C.callPFN_vkUnregisterObjectsNVX(p.Raw, c.device, c.objectTable, c.objectCount, c.pObjectEntryTypes, c.pObjectIndices)
+	c._ret = C.callPFN_vkUnregisterObjectsNVX(C.PFN_vkUnregisterObjectsNVX(unsafe.Pointer(p)), c.device, c.objectTable, c.objectCount, c.pObjectEntryTypes, c.pObjectIndices)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX struct {
-	Raw C.PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX
-}
+type PFNGetPhysicalDeviceGeneratedCommandsPropertiesNVX uintptr
 type DeviceGeneratedCommandsFeaturesNVX struct {
 	Next                       Structure
 	ComputeBindingPointSupport bool
@@ -24446,7 +23918,7 @@ func (s *DeviceGeneratedCommandsLimitsNVX) GetNext() Structure {
 func (s *DeviceGeneratedCommandsLimitsNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice PhysicalDevice, features []DeviceGeneratedCommandsFeaturesNVX, limits []DeviceGeneratedCommandsLimitsNVX) {
+func (p PFNGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice PhysicalDevice, features []DeviceGeneratedCommandsFeaturesNVX, limits []DeviceGeneratedCommandsLimitsNVX) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkDeviceGeneratedCommandsFeaturesNVX
@@ -24469,7 +23941,7 @@ func (p PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevi
 			limits[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(p.Raw, c.physicalDevice, c.pFeatures, c.pLimits)
+	C.callPFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(C.PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures, c.pLimits)
 	{
 		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsFeaturesNVX)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
 		for i3, _ := range features {
@@ -24484,9 +23956,7 @@ func (p PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevi
 	}
 }
 
-type PFN_vkCmdSetViewportWScalingNV struct {
-	Raw C.PFN_vkCmdSetViewportWScalingNV
-}
+type PFNCmdSetViewportWScalingNV uintptr
 type ViewportWScalingNV struct {
 	Xcoeff float32
 	Ycoeff float32
@@ -24500,7 +23970,7 @@ func (g *ViewportWScalingNV) fromC(c *C.VkViewportWScalingNV) {
 	g.Xcoeff = float32(c.xcoeff)
 	g.Ycoeff = float32(c.ycoeff)
 }
-func (p PFN_vkCmdSetViewportWScalingNV) Call(commandBuffer CommandBuffer, firstViewport uint32, viewportWScalings []ViewportWScalingNV) {
+func (p PFNCmdSetViewportWScalingNV) Call(commandBuffer CommandBuffer, firstViewport uint32, viewportWScalings []ViewportWScalingNV) {
 	var c struct {
 		commandBuffer      C.VkCommandBuffer
 		firstViewport      C.uint32_t
@@ -24519,14 +23989,12 @@ func (p PFN_vkCmdSetViewportWScalingNV) Call(commandBuffer CommandBuffer, firstV
 			viewportWScalings[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdSetViewportWScalingNV(p.Raw, c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewportWScalings)
+	C.callPFN_vkCmdSetViewportWScalingNV(C.PFN_vkCmdSetViewportWScalingNV(unsafe.Pointer(p)), c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewportWScalings)
 }
 
-type PFN_vkReleaseDisplayEXT struct {
-	Raw C.PFN_vkReleaseDisplayEXT
-}
+type PFNReleaseDisplayEXT uintptr
 
-func (p PFN_vkReleaseDisplayEXT) Call(physicalDevice PhysicalDevice, display DisplayKHR) (_ret Result) {
+func (p PFNReleaseDisplayEXT) Call(physicalDevice PhysicalDevice, display DisplayKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -24534,7 +24002,7 @@ func (p PFN_vkReleaseDisplayEXT) Call(physicalDevice PhysicalDevice, display Dis
 	}
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.display = C.VkDisplayKHR(display)
-	c._ret = C.callPFN_vkReleaseDisplayEXT(p.Raw, c.physicalDevice, c.display)
+	c._ret = C.callPFN_vkReleaseDisplayEXT(C.PFN_vkReleaseDisplayEXT(unsafe.Pointer(p)), c.physicalDevice, c.display)
 	_ret = Result(c._ret)
 	return
 }
@@ -24546,9 +24014,7 @@ const (
 	SURFACE_COUNTER_FLAG_BITS_MAX_ENUM_EXT SurfaceCounterFlagBitsEXT = 2147483647
 )
 
-type PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT struct {
-	Raw C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT
-}
+type PFNGetPhysicalDeviceSurfaceCapabilities2EXT uintptr
 type SurfaceCounterFlagsEXT Flags
 type SurfaceCapabilities2EXT struct {
 	Next                     Structure
@@ -24682,7 +24148,7 @@ func (s *SurfaceCapabilities2EXT) GetNext() Structure {
 func (s *SurfaceCapabilities2EXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilities2EXT) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilities2EXT) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		surface              C.VkSurfaceKHR
@@ -24700,7 +24166,7 @@ func (p PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice Phys
 			surfaceCapabilities[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT(p.Raw, c.physicalDevice, c.surface, c.pSurfaceCapabilities)
+	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT(C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2EXT)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
@@ -24743,9 +24209,7 @@ const (
 	DISPLAY_EVENT_TYPE_MAX_ENUM_EXT        DisplayEventTypeEXT = 2147483647
 )
 
-type PFN_vkDisplayPowerControlEXT struct {
-	Raw C.PFN_vkDisplayPowerControlEXT
-}
+type PFNDisplayPowerControlEXT uintptr
 type DisplayPowerInfoEXT struct {
 	Next       Structure
 	PowerState DisplayPowerStateEXT
@@ -24784,7 +24248,7 @@ func (s *DisplayPowerInfoEXT) GetNext() Structure {
 func (s *DisplayPowerInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkDisplayPowerControlEXT) Call(device Device, display DisplayKHR, displayPowerInfo *DisplayPowerInfoEXT) (_ret Result) {
+func (p PFNDisplayPowerControlEXT) Call(device Device, display DisplayKHR, displayPowerInfo *DisplayPowerInfoEXT) (_ret Result) {
 	var c struct {
 		device            C.VkDevice
 		display           C.VkDisplayKHR
@@ -24799,14 +24263,12 @@ func (p PFN_vkDisplayPowerControlEXT) Call(device Device, display DisplayKHR, di
 		c.pDisplayPowerInfo = (*C.VkDisplayPowerInfoEXT)(_sa.alloc(C.sizeof_VkDisplayPowerInfoEXT))
 		displayPowerInfo.toC(c.pDisplayPowerInfo, _sa)
 	}
-	c._ret = C.callPFN_vkDisplayPowerControlEXT(p.Raw, c.device, c.display, c.pDisplayPowerInfo)
+	c._ret = C.callPFN_vkDisplayPowerControlEXT(C.PFN_vkDisplayPowerControlEXT(unsafe.Pointer(p)), c.device, c.display, c.pDisplayPowerInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkRegisterDeviceEventEXT struct {
-	Raw C.PFN_vkRegisterDeviceEventEXT
-}
+type PFNRegisterDeviceEventEXT uintptr
 type DeviceEventInfoEXT struct {
 	Next        Structure
 	DeviceEvent DeviceEventTypeEXT
@@ -24845,7 +24307,7 @@ func (s *DeviceEventInfoEXT) GetNext() Structure {
 func (s *DeviceEventInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *DeviceEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
+func (p PFNRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *DeviceEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		pDeviceEventInfo *C.VkDeviceEventInfoEXT
@@ -24868,15 +24330,13 @@ func (p PFN_vkRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *Devic
 		c.pFence = (*C.VkFence)(_sa.alloc(C.sizeof_VkFence))
 		*c.pFence = C.VkFence(*fence)
 	}
-	c._ret = C.callPFN_vkRegisterDeviceEventEXT(p.Raw, c.device, c.pDeviceEventInfo, c.pAllocator, c.pFence)
+	c._ret = C.callPFN_vkRegisterDeviceEventEXT(C.PFN_vkRegisterDeviceEventEXT(unsafe.Pointer(p)), c.device, c.pDeviceEventInfo, c.pAllocator, c.pFence)
 	_ret = Result(c._ret)
 	*fence = Fence(*c.pFence)
 	return
 }
 
-type PFN_vkRegisterDisplayEventEXT struct {
-	Raw C.PFN_vkRegisterDisplayEventEXT
-}
+type PFNRegisterDisplayEventEXT uintptr
 type DisplayEventInfoEXT struct {
 	Next         Structure
 	DisplayEvent DisplayEventTypeEXT
@@ -24915,7 +24375,7 @@ func (s *DisplayEventInfoEXT) GetNext() Structure {
 func (s *DisplayEventInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, displayEventInfo *DisplayEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
+func (p PFNRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, displayEventInfo *DisplayEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result) {
 	var c struct {
 		device            C.VkDevice
 		display           C.VkDisplayKHR
@@ -24940,17 +24400,15 @@ func (p PFN_vkRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, d
 		c.pFence = (*C.VkFence)(_sa.alloc(C.sizeof_VkFence))
 		*c.pFence = C.VkFence(*fence)
 	}
-	c._ret = C.callPFN_vkRegisterDisplayEventEXT(p.Raw, c.device, c.display, c.pDisplayEventInfo, c.pAllocator, c.pFence)
+	c._ret = C.callPFN_vkRegisterDisplayEventEXT(C.PFN_vkRegisterDisplayEventEXT(unsafe.Pointer(p)), c.device, c.display, c.pDisplayEventInfo, c.pAllocator, c.pFence)
 	_ret = Result(c._ret)
 	*fence = Fence(*c.pFence)
 	return
 }
 
-type PFN_vkGetSwapchainCounterEXT struct {
-	Raw C.PFN_vkGetSwapchainCounterEXT
-}
+type PFNGetSwapchainCounterEXT uintptr
 
-func (p PFN_vkGetSwapchainCounterEXT) Call(device Device, swapchain SwapchainKHR, counter SurfaceCounterFlagBitsEXT, counterValue *uint64) (_ret Result) {
+func (p PFNGetSwapchainCounterEXT) Call(device Device, swapchain SwapchainKHR, counter SurfaceCounterFlagBitsEXT, counterValue *uint64) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		swapchain     C.VkSwapchainKHR
@@ -24967,15 +24425,13 @@ func (p PFN_vkGetSwapchainCounterEXT) Call(device Device, swapchain SwapchainKHR
 		c.pCounterValue = (*C.uint64_t)(_sa.alloc(C.sizeof_uint64_t))
 		*c.pCounterValue = C.uint64_t(*counterValue)
 	}
-	c._ret = C.callPFN_vkGetSwapchainCounterEXT(p.Raw, c.device, c.swapchain, c.counter, c.pCounterValue)
+	c._ret = C.callPFN_vkGetSwapchainCounterEXT(C.PFN_vkGetSwapchainCounterEXT(unsafe.Pointer(p)), c.device, c.swapchain, c.counter, c.pCounterValue)
 	_ret = Result(c._ret)
 	*counterValue = uint64(*c.pCounterValue)
 	return
 }
 
-type PFN_vkGetRefreshCycleDurationGOOGLE struct {
-	Raw C.PFN_vkGetRefreshCycleDurationGOOGLE
-}
+type PFNGetRefreshCycleDurationGOOGLE uintptr
 type RefreshCycleDurationGOOGLE struct{ RefreshDuration uint64 }
 
 func (g *RefreshCycleDurationGOOGLE) toC(c *C.VkRefreshCycleDurationGOOGLE) {
@@ -24984,7 +24440,7 @@ func (g *RefreshCycleDurationGOOGLE) toC(c *C.VkRefreshCycleDurationGOOGLE) {
 func (g *RefreshCycleDurationGOOGLE) fromC(c *C.VkRefreshCycleDurationGOOGLE) {
 	g.RefreshDuration = uint64(c.refreshDuration)
 }
-func (p PFN_vkGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain SwapchainKHR, displayTimingProperties []RefreshCycleDurationGOOGLE) (_ret Result) {
+func (p PFNGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain SwapchainKHR, displayTimingProperties []RefreshCycleDurationGOOGLE) (_ret Result) {
 	var c struct {
 		device                   C.VkDevice
 		swapchain                C.VkSwapchainKHR
@@ -25002,7 +24458,7 @@ func (p PFN_vkGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain Swapc
 			displayTimingProperties[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetRefreshCycleDurationGOOGLE(p.Raw, c.device, c.swapchain, c.pDisplayTimingProperties)
+	c._ret = C.callPFN_vkGetRefreshCycleDurationGOOGLE(C.PFN_vkGetRefreshCycleDurationGOOGLE(unsafe.Pointer(p)), c.device, c.swapchain, c.pDisplayTimingProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkRefreshCycleDurationGOOGLE)(unsafe.Pointer(c.pDisplayTimingProperties))[:len(displayTimingProperties):len(displayTimingProperties)]
@@ -25013,9 +24469,7 @@ func (p PFN_vkGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain Swapc
 	return
 }
 
-type PFN_vkGetPastPresentationTimingGOOGLE struct {
-	Raw C.PFN_vkGetPastPresentationTimingGOOGLE
-}
+type PFNGetPastPresentationTimingGOOGLE uintptr
 type PastPresentationTimingGOOGLE struct {
 	PresentID           uint32
 	DesiredPresentTime  uint64
@@ -25038,7 +24492,7 @@ func (g *PastPresentationTimingGOOGLE) fromC(c *C.VkPastPresentationTimingGOOGLE
 	g.EarliestPresentTime = uint64(c.earliestPresentTime)
 	g.PresentMargin = uint64(c.presentMargin)
 }
-func (p PFN_vkGetPastPresentationTimingGOOGLE) Call(device Device, swapchain SwapchainKHR, presentationTimingCount *uint32, presentationTimings []PastPresentationTimingGOOGLE) (_ret Result) {
+func (p PFNGetPastPresentationTimingGOOGLE) Call(device Device, swapchain SwapchainKHR, presentationTimingCount *uint32, presentationTimings []PastPresentationTimingGOOGLE) (_ret Result) {
 	var c struct {
 		device                   C.VkDevice
 		swapchain                C.VkSwapchainKHR
@@ -25061,7 +24515,7 @@ func (p PFN_vkGetPastPresentationTimingGOOGLE) Call(device Device, swapchain Swa
 			presentationTimings[i3].toC(&slice3[i3])
 		}
 	}
-	c._ret = C.callPFN_vkGetPastPresentationTimingGOOGLE(p.Raw, c.device, c.swapchain, c.pPresentationTimingCount, c.pPresentationTimings)
+	c._ret = C.callPFN_vkGetPastPresentationTimingGOOGLE(C.PFN_vkGetPastPresentationTimingGOOGLE(unsafe.Pointer(p)), c.device, c.swapchain, c.pPresentationTimingCount, c.pPresentationTimings)
 	_ret = Result(c._ret)
 	*presentationTimingCount = uint32(*c.pPresentationTimingCount)
 	{
@@ -25101,11 +24555,9 @@ const (
 	DISCARD_RECTANGLE_MODE_MAX_ENUM_EXT    DiscardRectangleModeEXT = 2147483647
 )
 
-type PFN_vkCmdSetDiscardRectangleEXT struct {
-	Raw C.PFN_vkCmdSetDiscardRectangleEXT
-}
+type PFNCmdSetDiscardRectangleEXT uintptr
 
-func (p PFN_vkCmdSetDiscardRectangleEXT) Call(commandBuffer CommandBuffer, firstDiscardRectangle uint32, discardRectangles []Rect2D) {
+func (p PFNCmdSetDiscardRectangleEXT) Call(commandBuffer CommandBuffer, firstDiscardRectangle uint32, discardRectangles []Rect2D) {
 	var c struct {
 		commandBuffer         C.VkCommandBuffer
 		firstDiscardRectangle C.uint32_t
@@ -25124,7 +24576,7 @@ func (p PFN_vkCmdSetDiscardRectangleEXT) Call(commandBuffer CommandBuffer, first
 			discardRectangles[i3].toC(&slice3[i3])
 		}
 	}
-	C.callPFN_vkCmdSetDiscardRectangleEXT(p.Raw, c.commandBuffer, c.firstDiscardRectangle, c.discardRectangleCount, c.pDiscardRectangles)
+	C.callPFN_vkCmdSetDiscardRectangleEXT(C.PFN_vkCmdSetDiscardRectangleEXT(unsafe.Pointer(p)), c.commandBuffer, c.firstDiscardRectangle, c.discardRectangleCount, c.pDiscardRectangles)
 }
 
 type ConservativeRasterizationModeEXT int
@@ -25139,9 +24591,7 @@ const (
 	CONSERVATIVE_RASTERIZATION_MODE_MAX_ENUM_EXT      ConservativeRasterizationModeEXT = 2147483647
 )
 
-type PFN_vkSetHdrMetadataEXT struct {
-	Raw C.PFN_vkSetHdrMetadataEXT
-}
+type PFNSetHdrMetadataEXT uintptr
 type XYColorEXT struct {
 	X float32
 	Y float32
@@ -25215,7 +24665,7 @@ func (s *HdrMetadataEXT) GetNext() Structure {
 func (s *HdrMetadataEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, metadata []HdrMetadataEXT) {
+func (p PFNSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, metadata []HdrMetadataEXT) {
 	var c struct {
 		device         C.VkDevice
 		swapchainCount C.uint32_t
@@ -25240,7 +24690,7 @@ func (p PFN_vkSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, 
 			metadata[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkSetHdrMetadataEXT(p.Raw, c.device, c.swapchainCount, c.pSwapchains, c.pMetadata)
+	C.callPFN_vkSetHdrMetadataEXT(C.PFN_vkSetHdrMetadataEXT(unsafe.Pointer(p)), c.device, c.swapchainCount, c.pSwapchains, c.pMetadata)
 }
 
 type DebugUtilsMessageSeverityFlagBitsEXT int
@@ -25262,9 +24712,7 @@ const (
 	DEBUG_UTILS_MESSAGE_TYPE_FLAG_BITS_MAX_ENUM_EXT DebugUtilsMessageTypeFlagBitsEXT = 2147483647
 )
 
-type PFN_vkDebugUtilsMessengerCallbackEXT struct {
-	Raw C.PFN_vkDebugUtilsMessengerCallbackEXT
-}
+type PFNDebugUtilsMessengerCallbackEXT uintptr
 type DebugUtilsMessageTypeFlagsEXT Flags
 type DebugUtilsMessengerCallbackDataFlagsEXT Flags
 type DebugUtilsLabelEXT struct {
@@ -25469,7 +24917,7 @@ func (s *DebugUtilsMessengerCallbackDataEXT) GetNext() Structure {
 func (s *DebugUtilsMessengerCallbackDataEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret bool) {
+func (p PFNDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret bool) {
 	var c struct {
 		arg0 C.VkDebugUtilsMessageSeverityFlagBitsEXT
 		arg1 C.VkDebugUtilsMessageTypeFlagsEXT
@@ -25494,16 +24942,14 @@ func (p PFN_vkDebugUtilsMessengerCallbackEXT) Call(arg0 DebugUtilsMessageSeverit
 		arg2.toC(c.arg2, _sa)
 	}
 	c.arg3 = arg3
-	c._ret = C.callPFN_vkDebugUtilsMessengerCallbackEXT(p.Raw, c.arg0, c.arg1, c.arg2, c.arg3)
+	c._ret = C.callPFN_vkDebugUtilsMessengerCallbackEXT(C.PFN_vkDebugUtilsMessengerCallbackEXT(unsafe.Pointer(p)), c.arg0, c.arg1, c.arg2, c.arg3)
 	_ret = c._ret != 0
 	return
 }
 
-type PFN_vkSetDebugUtilsObjectNameEXT struct {
-	Raw C.PFN_vkSetDebugUtilsObjectNameEXT
-}
+type PFNSetDebugUtilsObjectNameEXT uintptr
 
-func (p PFN_vkSetDebugUtilsObjectNameEXT) Call(device Device, nameInfo *DebugUtilsObjectNameInfoEXT) (_ret Result) {
+func (p PFNSetDebugUtilsObjectNameEXT) Call(device Device, nameInfo *DebugUtilsObjectNameInfoEXT) (_ret Result) {
 	var c struct {
 		device    C.VkDevice
 		pNameInfo *C.VkDebugUtilsObjectNameInfoEXT
@@ -25516,14 +24962,12 @@ func (p PFN_vkSetDebugUtilsObjectNameEXT) Call(device Device, nameInfo *DebugUti
 		c.pNameInfo = (*C.VkDebugUtilsObjectNameInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsObjectNameInfoEXT))
 		nameInfo.toC(c.pNameInfo, _sa)
 	}
-	c._ret = C.callPFN_vkSetDebugUtilsObjectNameEXT(p.Raw, c.device, c.pNameInfo)
+	c._ret = C.callPFN_vkSetDebugUtilsObjectNameEXT(C.PFN_vkSetDebugUtilsObjectNameEXT(unsafe.Pointer(p)), c.device, c.pNameInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkSetDebugUtilsObjectTagEXT struct {
-	Raw C.PFN_vkSetDebugUtilsObjectTagEXT
-}
+type PFNSetDebugUtilsObjectTagEXT uintptr
 type DebugUtilsObjectTagInfoEXT struct {
 	Next         Structure
 	ObjectType   ObjectType
@@ -25574,7 +25018,7 @@ func (s *DebugUtilsObjectTagInfoEXT) GetNext() Structure {
 func (s *DebugUtilsObjectTagInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkSetDebugUtilsObjectTagEXT) Call(device Device, tagInfo *DebugUtilsObjectTagInfoEXT) (_ret Result) {
+func (p PFNSetDebugUtilsObjectTagEXT) Call(device Device, tagInfo *DebugUtilsObjectTagInfoEXT) (_ret Result) {
 	var c struct {
 		device   C.VkDevice
 		pTagInfo *C.VkDebugUtilsObjectTagInfoEXT
@@ -25587,16 +25031,14 @@ func (p PFN_vkSetDebugUtilsObjectTagEXT) Call(device Device, tagInfo *DebugUtils
 		c.pTagInfo = (*C.VkDebugUtilsObjectTagInfoEXT)(_sa.alloc(C.sizeof_VkDebugUtilsObjectTagInfoEXT))
 		tagInfo.toC(c.pTagInfo, _sa)
 	}
-	c._ret = C.callPFN_vkSetDebugUtilsObjectTagEXT(p.Raw, c.device, c.pTagInfo)
+	c._ret = C.callPFN_vkSetDebugUtilsObjectTagEXT(C.PFN_vkSetDebugUtilsObjectTagEXT(unsafe.Pointer(p)), c.device, c.pTagInfo)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkQueueBeginDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkQueueBeginDebugUtilsLabelEXT
-}
+type PFNQueueBeginDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkQueueBeginDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugUtilsLabelEXT) {
+func (p PFNQueueBeginDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugUtilsLabelEXT) {
 	var c struct {
 		queue      C.VkQueue
 		pLabelInfo *C.VkDebugUtilsLabelEXT
@@ -25608,24 +25050,20 @@ func (p PFN_vkQueueBeginDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugUt
 		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
 		labelInfo.toC(c.pLabelInfo, _sa)
 	}
-	C.callPFN_vkQueueBeginDebugUtilsLabelEXT(p.Raw, c.queue, c.pLabelInfo)
+	C.callPFN_vkQueueBeginDebugUtilsLabelEXT(C.PFN_vkQueueBeginDebugUtilsLabelEXT(unsafe.Pointer(p)), c.queue, c.pLabelInfo)
 }
 
-type PFN_vkQueueEndDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkQueueEndDebugUtilsLabelEXT
-}
+type PFNQueueEndDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkQueueEndDebugUtilsLabelEXT) Call(queue Queue) {
+func (p PFNQueueEndDebugUtilsLabelEXT) Call(queue Queue) {
 	var c struct{ queue C.VkQueue }
 	c.queue = C.VkQueue(queue)
-	C.callPFN_vkQueueEndDebugUtilsLabelEXT(p.Raw, c.queue)
+	C.callPFN_vkQueueEndDebugUtilsLabelEXT(C.PFN_vkQueueEndDebugUtilsLabelEXT(unsafe.Pointer(p)), c.queue)
 }
 
-type PFN_vkQueueInsertDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkQueueInsertDebugUtilsLabelEXT
-}
+type PFNQueueInsertDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkQueueInsertDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugUtilsLabelEXT) {
+func (p PFNQueueInsertDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugUtilsLabelEXT) {
 	var c struct {
 		queue      C.VkQueue
 		pLabelInfo *C.VkDebugUtilsLabelEXT
@@ -25637,14 +25075,12 @@ func (p PFN_vkQueueInsertDebugUtilsLabelEXT) Call(queue Queue, labelInfo *DebugU
 		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
 		labelInfo.toC(c.pLabelInfo, _sa)
 	}
-	C.callPFN_vkQueueInsertDebugUtilsLabelEXT(p.Raw, c.queue, c.pLabelInfo)
+	C.callPFN_vkQueueInsertDebugUtilsLabelEXT(C.PFN_vkQueueInsertDebugUtilsLabelEXT(unsafe.Pointer(p)), c.queue, c.pLabelInfo)
 }
 
-type PFN_vkCmdBeginDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkCmdBeginDebugUtilsLabelEXT
-}
+type PFNCmdBeginDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkCmdBeginDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
+func (p PFNCmdBeginDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pLabelInfo    *C.VkDebugUtilsLabelEXT
@@ -25656,24 +25092,20 @@ func (p PFN_vkCmdBeginDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, labe
 		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
 		labelInfo.toC(c.pLabelInfo, _sa)
 	}
-	C.callPFN_vkCmdBeginDebugUtilsLabelEXT(p.Raw, c.commandBuffer, c.pLabelInfo)
+	C.callPFN_vkCmdBeginDebugUtilsLabelEXT(C.PFN_vkCmdBeginDebugUtilsLabelEXT(unsafe.Pointer(p)), c.commandBuffer, c.pLabelInfo)
 }
 
-type PFN_vkCmdEndDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkCmdEndDebugUtilsLabelEXT
-}
+type PFNCmdEndDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkCmdEndDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer) {
+func (p PFNCmdEndDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer) {
 	var c struct{ commandBuffer C.VkCommandBuffer }
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	C.callPFN_vkCmdEndDebugUtilsLabelEXT(p.Raw, c.commandBuffer)
+	C.callPFN_vkCmdEndDebugUtilsLabelEXT(C.PFN_vkCmdEndDebugUtilsLabelEXT(unsafe.Pointer(p)), c.commandBuffer)
 }
 
-type PFN_vkCmdInsertDebugUtilsLabelEXT struct {
-	Raw C.PFN_vkCmdInsertDebugUtilsLabelEXT
-}
+type PFNCmdInsertDebugUtilsLabelEXT uintptr
 
-func (p PFN_vkCmdInsertDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
+func (p PFNCmdInsertDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, labelInfo *DebugUtilsLabelEXT) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pLabelInfo    *C.VkDebugUtilsLabelEXT
@@ -25685,12 +25117,10 @@ func (p PFN_vkCmdInsertDebugUtilsLabelEXT) Call(commandBuffer CommandBuffer, lab
 		c.pLabelInfo = (*C.VkDebugUtilsLabelEXT)(_sa.alloc(C.sizeof_VkDebugUtilsLabelEXT))
 		labelInfo.toC(c.pLabelInfo, _sa)
 	}
-	C.callPFN_vkCmdInsertDebugUtilsLabelEXT(p.Raw, c.commandBuffer, c.pLabelInfo)
+	C.callPFN_vkCmdInsertDebugUtilsLabelEXT(C.PFN_vkCmdInsertDebugUtilsLabelEXT(unsafe.Pointer(p)), c.commandBuffer, c.pLabelInfo)
 }
 
-type PFN_vkCreateDebugUtilsMessengerEXT struct {
-	Raw C.PFN_vkCreateDebugUtilsMessengerEXT
-}
+type PFNCreateDebugUtilsMessengerEXT uintptr
 type DebugUtilsMessengerCreateFlagsEXT Flags
 type DebugUtilsMessageSeverityFlagsEXT Flags
 type DebugUtilsMessengerCreateInfoEXT struct {
@@ -25698,7 +25128,7 @@ type DebugUtilsMessengerCreateInfoEXT struct {
 	Flags           DebugUtilsMessengerCreateFlagsEXT
 	MessageSeverity DebugUtilsMessageSeverityFlagsEXT
 	MessageType     DebugUtilsMessageTypeFlagsEXT
-	UserCallback    PFN_vkDebugUtilsMessengerCallbackEXT
+	UserCallback    PFNDebugUtilsMessengerCallbackEXT
 	UserData        []byte
 }
 
@@ -25732,7 +25162,7 @@ func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateI
 		}
 		c.messageType = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
 	}
-	c.pfnUserCallback = g.UserCallback.Raw
+	c.pfnUserCallback = C.PFN_vkDebugUtilsMessengerCallbackEXT(unsafe.Pointer(g.UserCallback))
 	{
 		c.pUserData = _sa.alloc(C.sizeof_void_pointer * uint(len(g.UserData)))
 		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
@@ -25770,7 +25200,7 @@ func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreat
 		}
 		g.MessageType = DebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
 	}
-	g.UserCallback.Raw = c.pfnUserCallback
+	g.UserCallback = PFNDebugUtilsMessengerCallbackEXT(unsafe.Pointer(c.pfnUserCallback))
 	{
 		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
 		for i2, _ := range g.UserData {
@@ -25805,7 +25235,7 @@ func (s *DebugUtilsMessengerCreateInfoEXT) SetNext(n Structure) {
 
 type DebugUtilsMessengerEXT C.VkDebugUtilsMessengerEXT
 
-func (p PFN_vkCreateDebugUtilsMessengerEXT) Call(instance Instance, createInfo *DebugUtilsMessengerCreateInfoEXT, allocator *AllocationCallbacks, messenger *DebugUtilsMessengerEXT) (_ret Result) {
+func (p PFNCreateDebugUtilsMessengerEXT) Call(instance Instance, createInfo *DebugUtilsMessengerCreateInfoEXT, allocator *AllocationCallbacks, messenger *DebugUtilsMessengerEXT) (_ret Result) {
 	var c struct {
 		instance    C.VkInstance
 		pCreateInfo *C.VkDebugUtilsMessengerCreateInfoEXT
@@ -25828,17 +25258,15 @@ func (p PFN_vkCreateDebugUtilsMessengerEXT) Call(instance Instance, createInfo *
 		c.pMessenger = (*C.VkDebugUtilsMessengerEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerEXT))
 		*c.pMessenger = C.VkDebugUtilsMessengerEXT(*messenger)
 	}
-	c._ret = C.callPFN_vkCreateDebugUtilsMessengerEXT(p.Raw, c.instance, c.pCreateInfo, c.pAllocator, c.pMessenger)
+	c._ret = C.callPFN_vkCreateDebugUtilsMessengerEXT(C.PFN_vkCreateDebugUtilsMessengerEXT(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pMessenger)
 	_ret = Result(c._ret)
 	*messenger = DebugUtilsMessengerEXT(*c.pMessenger)
 	return
 }
 
-type PFN_vkDestroyDebugUtilsMessengerEXT struct {
-	Raw C.PFN_vkDestroyDebugUtilsMessengerEXT
-}
+type PFNDestroyDebugUtilsMessengerEXT uintptr
 
-func (p PFN_vkDestroyDebugUtilsMessengerEXT) Call(instance Instance, messenger DebugUtilsMessengerEXT, allocator *AllocationCallbacks) {
+func (p PFNDestroyDebugUtilsMessengerEXT) Call(instance Instance, messenger DebugUtilsMessengerEXT, allocator *AllocationCallbacks) {
 	var c struct {
 		instance   C.VkInstance
 		messenger  C.VkDebugUtilsMessengerEXT
@@ -25852,14 +25280,12 @@ func (p PFN_vkDestroyDebugUtilsMessengerEXT) Call(instance Instance, messenger D
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyDebugUtilsMessengerEXT(p.Raw, c.instance, c.messenger, c.pAllocator)
+	C.callPFN_vkDestroyDebugUtilsMessengerEXT(C.PFN_vkDestroyDebugUtilsMessengerEXT(unsafe.Pointer(p)), c.instance, c.messenger, c.pAllocator)
 }
 
-type PFN_vkSubmitDebugUtilsMessageEXT struct {
-	Raw C.PFN_vkSubmitDebugUtilsMessageEXT
-}
+type PFNSubmitDebugUtilsMessageEXT uintptr
 
-func (p PFN_vkSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverity DebugUtilsMessageSeverityFlagBitsEXT, messageTypes DebugUtilsMessageTypeFlagsEXT, callbackData []DebugUtilsMessengerCallbackDataEXT) {
+func (p PFNSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverity DebugUtilsMessageSeverityFlagBitsEXT, messageTypes DebugUtilsMessageTypeFlagsEXT, callbackData []DebugUtilsMessengerCallbackDataEXT) {
 	var c struct {
 		instance        C.VkInstance
 		messageSeverity C.VkDebugUtilsMessageSeverityFlagBitsEXT
@@ -25886,7 +25312,7 @@ func (p PFN_vkSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverit
 			callbackData[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkSubmitDebugUtilsMessageEXT(p.Raw, c.instance, c.messageSeverity, c.messageTypes, c.pCallbackData)
+	C.callPFN_vkSubmitDebugUtilsMessageEXT(C.PFN_vkSubmitDebugUtilsMessageEXT(unsafe.Pointer(p)), c.instance, c.messageSeverity, c.messageTypes, c.pCallbackData)
 }
 
 type SamplerReductionModeEXT int
@@ -25901,9 +25327,7 @@ const (
 	SAMPLER_REDUCTION_MODE_MAX_ENUM_EXT         SamplerReductionModeEXT = 2147483647
 )
 
-type PFN_vkCmdSetSampleLocationsEXT struct {
-	Raw C.PFN_vkCmdSetSampleLocationsEXT
-}
+type PFNCmdSetSampleLocationsEXT uintptr
 type SampleLocationEXT struct {
 	X float32
 	Y float32
@@ -25975,7 +25399,7 @@ func (s *SampleLocationsInfoEXT) GetNext() Structure {
 func (s *SampleLocationsInfoEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkCmdSetSampleLocationsEXT) Call(commandBuffer CommandBuffer, sampleLocationsInfo *SampleLocationsInfoEXT) {
+func (p PFNCmdSetSampleLocationsEXT) Call(commandBuffer CommandBuffer, sampleLocationsInfo *SampleLocationsInfoEXT) {
 	var c struct {
 		commandBuffer        C.VkCommandBuffer
 		pSampleLocationsInfo *C.VkSampleLocationsInfoEXT
@@ -25987,12 +25411,10 @@ func (p PFN_vkCmdSetSampleLocationsEXT) Call(commandBuffer CommandBuffer, sample
 		c.pSampleLocationsInfo = (*C.VkSampleLocationsInfoEXT)(_sa.alloc(C.sizeof_VkSampleLocationsInfoEXT))
 		sampleLocationsInfo.toC(c.pSampleLocationsInfo, _sa)
 	}
-	C.callPFN_vkCmdSetSampleLocationsEXT(p.Raw, c.commandBuffer, c.pSampleLocationsInfo)
+	C.callPFN_vkCmdSetSampleLocationsEXT(C.PFN_vkCmdSetSampleLocationsEXT(unsafe.Pointer(p)), c.commandBuffer, c.pSampleLocationsInfo)
 }
 
-type PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT struct {
-	Raw C.PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT
-}
+type PFNGetPhysicalDeviceMultisamplePropertiesEXT uintptr
 type MultisamplePropertiesEXT struct {
 	Next                      Structure
 	MaxSampleLocationGridSize Extent2D
@@ -26031,7 +25453,7 @@ func (s *MultisamplePropertiesEXT) GetNext() Structure {
 func (s *MultisamplePropertiesEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties []MultisamplePropertiesEXT) {
+func (p PFNGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties []MultisamplePropertiesEXT) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		samples                C.VkSampleCountFlagBits
@@ -26048,7 +25470,7 @@ func (p PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice Phy
 			multisampleProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(p.Raw, c.physicalDevice, c.samples, c.pMultisampleProperties)
+	C.callPFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(C.PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(unsafe.Pointer(p)), c.physicalDevice, c.samples, c.pMultisampleProperties)
 	{
 		slice3 := (*[1 << 31]C.VkMultisamplePropertiesEXT)(unsafe.Pointer(c.pMultisampleProperties))[:len(multisampleProperties):len(multisampleProperties)]
 		for i3, _ := range multisampleProperties {
@@ -26092,9 +25514,7 @@ const (
 	VALIDATION_CACHE_HEADER_VERSION_MAX_ENUM_EXT    ValidationCacheHeaderVersionEXT = 2147483647
 )
 
-type PFN_vkCreateValidationCacheEXT struct {
-	Raw C.PFN_vkCreateValidationCacheEXT
-}
+type PFNCreateValidationCacheEXT uintptr
 type ValidationCacheCreateFlagsEXT Flags
 type ValidationCacheCreateInfoEXT struct {
 	Next        Structure
@@ -26169,7 +25589,7 @@ func (s *ValidationCacheCreateInfoEXT) SetNext(n Structure) {
 
 type ValidationCacheEXT C.VkValidationCacheEXT
 
-func (p PFN_vkCreateValidationCacheEXT) Call(device Device, createInfo *ValidationCacheCreateInfoEXT, allocator *AllocationCallbacks, validationCache *ValidationCacheEXT) (_ret Result) {
+func (p PFNCreateValidationCacheEXT) Call(device Device, createInfo *ValidationCacheCreateInfoEXT, allocator *AllocationCallbacks, validationCache *ValidationCacheEXT) (_ret Result) {
 	var c struct {
 		device           C.VkDevice
 		pCreateInfo      *C.VkValidationCacheCreateInfoEXT
@@ -26192,17 +25612,15 @@ func (p PFN_vkCreateValidationCacheEXT) Call(device Device, createInfo *Validati
 		c.pValidationCache = (*C.VkValidationCacheEXT)(_sa.alloc(C.sizeof_VkValidationCacheEXT))
 		*c.pValidationCache = C.VkValidationCacheEXT(*validationCache)
 	}
-	c._ret = C.callPFN_vkCreateValidationCacheEXT(p.Raw, c.device, c.pCreateInfo, c.pAllocator, c.pValidationCache)
+	c._ret = C.callPFN_vkCreateValidationCacheEXT(C.PFN_vkCreateValidationCacheEXT(unsafe.Pointer(p)), c.device, c.pCreateInfo, c.pAllocator, c.pValidationCache)
 	_ret = Result(c._ret)
 	*validationCache = ValidationCacheEXT(*c.pValidationCache)
 	return
 }
 
-type PFN_vkDestroyValidationCacheEXT struct {
-	Raw C.PFN_vkDestroyValidationCacheEXT
-}
+type PFNDestroyValidationCacheEXT uintptr
 
-func (p PFN_vkDestroyValidationCacheEXT) Call(device Device, validationCache ValidationCacheEXT, allocator *AllocationCallbacks) {
+func (p PFNDestroyValidationCacheEXT) Call(device Device, validationCache ValidationCacheEXT, allocator *AllocationCallbacks) {
 	var c struct {
 		device          C.VkDevice
 		validationCache C.VkValidationCacheEXT
@@ -26216,14 +25634,12 @@ func (p PFN_vkDestroyValidationCacheEXT) Call(device Device, validationCache Val
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
 		allocator.toC(c.pAllocator, _sa)
 	}
-	C.callPFN_vkDestroyValidationCacheEXT(p.Raw, c.device, c.validationCache, c.pAllocator)
+	C.callPFN_vkDestroyValidationCacheEXT(C.PFN_vkDestroyValidationCacheEXT(unsafe.Pointer(p)), c.device, c.validationCache, c.pAllocator)
 }
 
-type PFN_vkMergeValidationCachesEXT struct {
-	Raw C.PFN_vkMergeValidationCachesEXT
-}
+type PFNMergeValidationCachesEXT uintptr
 
-func (p PFN_vkMergeValidationCachesEXT) Call(device Device, dstCache ValidationCacheEXT, srcCaches []ValidationCacheEXT) (_ret Result) {
+func (p PFNMergeValidationCachesEXT) Call(device Device, dstCache ValidationCacheEXT, srcCaches []ValidationCacheEXT) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		dstCache      C.VkValidationCacheEXT
@@ -26243,16 +25659,14 @@ func (p PFN_vkMergeValidationCachesEXT) Call(device Device, dstCache ValidationC
 			slice3[i3] = C.VkValidationCacheEXT(srcCaches[i3])
 		}
 	}
-	c._ret = C.callPFN_vkMergeValidationCachesEXT(p.Raw, c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
+	c._ret = C.callPFN_vkMergeValidationCachesEXT(C.PFN_vkMergeValidationCachesEXT(unsafe.Pointer(p)), c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
 	_ret = Result(c._ret)
 	return
 }
 
-type PFN_vkGetValidationCacheDataEXT struct {
-	Raw C.PFN_vkGetValidationCacheDataEXT
-}
+type PFNGetValidationCacheDataEXT uintptr
 
-func (p PFN_vkGetValidationCacheDataEXT) Call(device Device, validationCache ValidationCacheEXT, dataSize *uint, data []byte) (_ret Result) {
+func (p PFNGetValidationCacheDataEXT) Call(device Device, validationCache ValidationCacheEXT, dataSize *uint, data []byte) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		validationCache C.VkValidationCacheEXT
@@ -26275,7 +25689,7 @@ func (p PFN_vkGetValidationCacheDataEXT) Call(device Device, validationCache Val
 			slice3[i3] = data[i3]
 		}
 	}
-	c._ret = C.callPFN_vkGetValidationCacheDataEXT(p.Raw, c.device, c.validationCache, c.pDataSize, c.pData)
+	c._ret = C.callPFN_vkGetValidationCacheDataEXT(C.PFN_vkGetValidationCacheDataEXT(unsafe.Pointer(p)), c.device, c.validationCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
 	*dataSize = uint(*c.pDataSize)
 	{
@@ -26310,9 +25724,7 @@ const (
 	QUEUE_GLOBAL_PRIORITY_MAX_ENUM_EXT    QueueGlobalPriorityEXT = 2147483647
 )
 
-type PFN_vkGetMemoryHostPointerPropertiesEXT struct {
-	Raw C.PFN_vkGetMemoryHostPointerPropertiesEXT
-}
+type PFNGetMemoryHostPointerPropertiesEXT uintptr
 type MemoryHostPointerPropertiesEXT struct {
 	Next           Structure
 	MemoryTypeBits uint32
@@ -26351,7 +25763,7 @@ func (s *MemoryHostPointerPropertiesEXT) GetNext() Structure {
 func (s *MemoryHostPointerPropertiesEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties []MemoryHostPointerPropertiesEXT) (_ret Result) {
+func (p PFNGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties []MemoryHostPointerPropertiesEXT) (_ret Result) {
 	var c struct {
 		device                       C.VkDevice
 		handleType                   C.VkExternalMemoryHandleTypeFlagBits
@@ -26371,7 +25783,7 @@ func (p PFN_vkGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType 
 			memoryHostPointerProperties[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	c._ret = C.callPFN_vkGetMemoryHostPointerPropertiesEXT(p.Raw, c.device, c.handleType, c.pHostPointer, c.pMemoryHostPointerProperties)
+	c._ret = C.callPFN_vkGetMemoryHostPointerPropertiesEXT(C.PFN_vkGetMemoryHostPointerPropertiesEXT(unsafe.Pointer(p)), c.device, c.handleType, c.pHostPointer, c.pMemoryHostPointerProperties)
 	_ret = Result(c._ret)
 	{
 		slice3 := (*[1 << 31]C.VkMemoryHostPointerPropertiesEXT)(unsafe.Pointer(c.pMemoryHostPointerProperties))[:len(memoryHostPointerProperties):len(memoryHostPointerProperties)]
@@ -26382,11 +25794,9 @@ func (p PFN_vkGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType 
 	return
 }
 
-type PFN_vkCmdWriteBufferMarkerAMD struct {
-	Raw C.PFN_vkCmdWriteBufferMarkerAMD
-}
+type PFNCmdWriteBufferMarkerAMD uintptr
 
-func (p PFN_vkCmdWriteBufferMarkerAMD) Call(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, dstBuffer Buffer, dstOffset DeviceSize, marker uint32) {
+func (p PFNCmdWriteBufferMarkerAMD) Call(commandBuffer CommandBuffer, pipelineStage PipelineStageFlagBits, dstBuffer Buffer, dstOffset DeviceSize, marker uint32) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		pipelineStage C.VkPipelineStageFlagBits
@@ -26403,26 +25813,22 @@ func (p PFN_vkCmdWriteBufferMarkerAMD) Call(commandBuffer CommandBuffer, pipelin
 		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
 	c.marker = C.uint32_t(marker)
-	C.callPFN_vkCmdWriteBufferMarkerAMD(p.Raw, c.commandBuffer, c.pipelineStage, c.dstBuffer, c.dstOffset, c.marker)
+	C.callPFN_vkCmdWriteBufferMarkerAMD(C.PFN_vkCmdWriteBufferMarkerAMD(unsafe.Pointer(p)), c.commandBuffer, c.pipelineStage, c.dstBuffer, c.dstOffset, c.marker)
 }
 
-type PFN_vkCmdSetCheckpointNV struct {
-	Raw C.PFN_vkCmdSetCheckpointNV
-}
+type PFNCmdSetCheckpointNV uintptr
 
-func (p PFN_vkCmdSetCheckpointNV) Call(commandBuffer CommandBuffer, checkpointMarker unsafe.Pointer) {
+func (p PFNCmdSetCheckpointNV) Call(commandBuffer CommandBuffer, checkpointMarker unsafe.Pointer) {
 	var c struct {
 		commandBuffer     C.VkCommandBuffer
 		pCheckpointMarker unsafe.Pointer
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.pCheckpointMarker = checkpointMarker
-	C.callPFN_vkCmdSetCheckpointNV(p.Raw, c.commandBuffer, c.pCheckpointMarker)
+	C.callPFN_vkCmdSetCheckpointNV(C.PFN_vkCmdSetCheckpointNV(unsafe.Pointer(p)), c.commandBuffer, c.pCheckpointMarker)
 }
 
-type PFN_vkGetQueueCheckpointDataNV struct {
-	Raw C.PFN_vkGetQueueCheckpointDataNV
-}
+type PFNGetQueueCheckpointDataNV uintptr
 type CheckpointDataNV struct {
 	Next             Structure
 	Stage            PipelineStageFlagBits
@@ -26464,7 +25870,7 @@ func (s *CheckpointDataNV) GetNext() Structure {
 func (s *CheckpointDataNV) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFN_vkGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV) {
+func (p PFNGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV) {
 	var c struct {
 		queue                C.VkQueue
 		pCheckpointDataCount *C.uint32_t
@@ -26484,7 +25890,7 @@ func (p PFN_vkGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *u
 			checkpointData[i3].toC(&slice3[i3], _sa)
 		}
 	}
-	C.callPFN_vkGetQueueCheckpointDataNV(p.Raw, c.queue, c.pCheckpointDataCount, c.pCheckpointData)
+	C.callPFN_vkGetQueueCheckpointDataNV(C.PFN_vkGetQueueCheckpointDataNV(unsafe.Pointer(p)), c.queue, c.pCheckpointDataCount, c.pCheckpointData)
 	*checkpointDataCount = uint32(*c.pCheckpointDataCount)
 	{
 		slice3 := (*[1 << 31]C.VkCheckpointDataNV)(unsafe.Pointer(c.pCheckpointData))[:len(checkpointData):len(checkpointData)]

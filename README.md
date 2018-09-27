@@ -18,10 +18,11 @@ Use `vk` in your package:
 package main
 
 import (
-	"log"
-
 	"github.com/sparkkoori/go-vulkan/v1.1/vk"
 )
+
+type ccc uintptr
+type bbb uintptr
 
 func main() {
 	appInfo := &vk.ApplicationInfo{
@@ -40,14 +41,26 @@ func main() {
 	}
 
 	var ins vk.Instance
+
+	//Directly call
 	rs := vk.CreateInstance(createInfo, nil, &ins)
 	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
-		log.Fatalln("cannot find a compatible Vulkan ICD")
+		panic("cannot find a compatible Vulkan ICD")
 	} else if rs != vk.SUCCESS {
-		log.Fatalln("unknown error")
+		panic("unknown error")
 	}
-
 	vk.DestroyInstance(ins, nil)
+
+	//GetInstanceProcAddr
+	pfn := vk.GetInstanceProcAddr(nil, "vkCreateInstance")
+	rs = vk.PFNCreateInstance(pfn).Call(createInfo, nil, &ins)
+	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
+		panic("cannot find a compatible Vulkan ICD")
+	} else if rs != vk.SUCCESS {
+		panic("unknown error")
+	}
+	pfn = vk.GetInstanceProcAddr(ins, "vkDestroyInstance")
+	vk.PFNDestroyInstance(pfn).Call(ins, nil)
 }
 
 ```
@@ -77,7 +90,10 @@ The warping rules used in this package.
 
 - Map `void *` to `Structure` in `pNext` field.
 
-- Map `PFN_vk*` to structs with Call() method which calls bridge function.
+- Map `PFN*` to `uintptr`.
+
+	- This allow conversion between `PFN*`
+
 
 #### Memory Rules
 
@@ -86,18 +102,18 @@ The warping rules used in this package.
   - But no copy for `unsafe.Pointer`.
 
 
-- No memory management is need.
+- No manual memory management is need.
 
 
 #### Call Rules
 
-- Because cgo do not support calling function pointer, so for every `PFN_vk*`, a bridge method `Call()` is created.
+- Because cgo do not support calling function pointer, so for every `PFN*`, a bridge method `Call()` is created.
 
 #### Name Rules
 
-- Prefix was trimed.
+- Prefix has been trimed.
 
-  - eg. Vk, vk, VK_, p, pp, s
+  - eg. Vk, vk, VK_, p, pp
 
 ## License
 MIT

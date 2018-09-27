@@ -881,7 +881,14 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 	}
 	info := &typeInfo{}
 	g.types[decl.Name] = info
-	info.gotype = ident(trimPrefixs(decl.Name, "Vk"))
+	var name string
+	if strings.HasPrefix(decl.Name, "PFN_vk") {
+		name = trimPrefixs(decl.Name, "PFN_vk")
+		name = "PFN" + name
+	} else {
+		name = trimPrefixs(decl.Name, "Vk")
+	}
+	info.gotype = ident(name)
 	info.ctype = ident("C." + decl.Name)
 	info.csize = ident("C.sizeof_" + decl.Name)
 
@@ -893,19 +900,15 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 			if fpt, ok := ptt.ChildNodes[0].(*cast.FunctionProtoType); ok {
 
 				info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-					return assignStmt1n1(selectorExpr(govar, ident("Raw")), cvar)
+					cast := callExpr(info.gotype, callExpr(ident("unsafe.Pointer"), cvar))
+					return assignStmt1n1(govar, cast)
 				}
 				info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-					return assignStmt1n1(cvar, selectorExpr(govar, ident("Raw")))
+					cast := callExpr(info.ctype, callExpr(ident("unsafe.Pointer"), govar))
+					return assignStmt1n1(cvar, cast)
 				}
 				info.refc2go = nil
-				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), &goast.StructType{
-					Fields: &goast.FieldList{
-						List: []*goast.Field{
-							field(ident("C."+decl.Name), ident("Raw")),
-						},
-					},
-				}))
+				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), ident("uintptr")))
 				g.genBridgeCall(decl, info, fpt, decl.Name)
 				return info
 			}
@@ -1025,7 +1028,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 	//Call
 	{
 		args := []goast.Expr{}
-		args = append(args, selectorExpr(ident("p"), ident("Raw")))
+		args = append(args, callExpr(info.ctype, callExpr(ident("unsafe.Pointer"), ident("p"))))
 		for _, cparam := range cparams {
 			args = append(args, selectorExpr(ident("c"), cparam.Names[0]))
 		}
