@@ -27,7 +27,7 @@ func main() {
 		ApplicationVersion: 1,
 		EngineName:         "AppName",
 		EngineVersion:      1,
-		ApiVersion:         vk.MakeVersion(1, 1, 0),
+		ApiVersion:         vk.MAKE_VERSION(1, 1, 0),
 	}
 
 	createInfo := &vk.InstanceCreateInfo{
