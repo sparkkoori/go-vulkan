@@ -1,8 +1,6 @@
 package vk
 
 /*
-#define VK_USE_PLATFORM_MACOS_MVK
-#include "vulkan/vulkan.h"
 #include "bridges_darwin.h"
 typedef void * void_pointer;
 */
