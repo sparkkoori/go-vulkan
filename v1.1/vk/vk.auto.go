@@ -1855,7 +1855,7 @@ func (s *InstanceCreateInfo) SetNext(n Structure) {
 }
 
 type AllocationCallbacks struct {
-	UserData           []byte
+	UserData           unsafe.Pointer
 	Allocation         PFNAllocationFunction
 	Reallocation       PFNReallocationFunction
 	Free               PFNFreeFunction
@@ -1863,14 +1863,8 @@ type AllocationCallbacks struct {
 	InternalFree       PFNInternalFreeNotification
 }
 
-func (g *AllocationCallbacks) toC(c *C.VkAllocationCallbacks, _sa *stackAllocator) {
-	{
-		c.pUserData = _sa.alloc(C.sizeof_char * uint(len(g.UserData)))
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			slice2[i2] = g.UserData[i2]
-		}
-	}
+func (g *AllocationCallbacks) toC(c *C.VkAllocationCallbacks) {
+	c.pUserData = g.UserData
 	c.pfnAllocation = C.PFN_vkAllocationFunction(unsafe.Pointer(g.Allocation))
 	c.pfnReallocation = C.PFN_vkReallocationFunction(unsafe.Pointer(g.Reallocation))
 	c.pfnFree = C.PFN_vkFreeFunction(unsafe.Pointer(g.Free))
@@ -1878,12 +1872,7 @@ func (g *AllocationCallbacks) toC(c *C.VkAllocationCallbacks, _sa *stackAllocato
 	c.pfnInternalFree = C.PFN_vkInternalFreeNotification(unsafe.Pointer(g.InternalFree))
 }
 func (g *AllocationCallbacks) fromC(c *C.VkAllocationCallbacks) {
-	{
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			g.UserData[i2] = slice2[i2]
-		}
-	}
+	g.UserData = c.pUserData
 	g.Allocation = PFNAllocationFunction(unsafe.Pointer(c.pfnAllocation))
 	g.Reallocation = PFNReallocationFunction(unsafe.Pointer(c.pfnReallocation))
 	g.Free = PFNFreeFunction(unsafe.Pointer(c.pfnFree))
@@ -1910,7 +1899,7 @@ func (p PFNCreateInstance) Call(createInfo *InstanceCreateInfo, allocator *Alloc
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -1940,7 +1929,7 @@ func (p PFNDestroyInstance) Call(instance Instance, allocator *AllocationCallbac
 	c.instance = C.VkInstance(instance)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -1950,7 +1939,7 @@ func (p PFNDestroyInstance) Call(instance Instance, allocator *AllocationCallbac
 type PFNEnumeratePhysicalDevices uintptr
 type PhysicalDevice C.VkPhysicalDevice
 
-func (p PFNEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount *uint32, physicalDevices []PhysicalDevice) (_ret Result) {
+func (p PFNEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount *uint32, physicalDevices *PhysicalDevice) (_ret Result) {
 	var c struct {
 		instance             C.VkInstance
 		pPhysicalDeviceCount *C.uint32_t
@@ -1966,23 +1955,19 @@ func (p PFNEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount
 	} else {
 		c.pPhysicalDeviceCount = nil
 	}
-	{
-		c.pPhysicalDevices = (*C.VkPhysicalDevice)(_sa.alloc(C.sizeof_VkPhysicalDevice * uint(len(physicalDevices))))
-		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
-		for i3, _ := range physicalDevices {
-			slice3[i3] = C.VkPhysicalDevice(physicalDevices[i3])
-		}
+	if physicalDevices != nil {
+		c.pPhysicalDevices = (*C.VkPhysicalDevice)(_sa.alloc(C.sizeof_VkPhysicalDevice))
+		*c.pPhysicalDevices = C.VkPhysicalDevice(*physicalDevices)
+	} else {
+		c.pPhysicalDevices = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDevices(C.PFN_vkEnumeratePhysicalDevices(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
 	_ret = Result(c._ret)
 	if physicalDeviceCount != nil {
 		*physicalDeviceCount = uint32(*c.pPhysicalDeviceCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
-		for i3, _ := range physicalDevices {
-			physicalDevices[i3] = PhysicalDevice(slice3[i3])
-		}
+	if physicalDevices != nil {
+		*physicalDevices = PhysicalDevice(*c.pPhysicalDevices)
 	}
 	return
 }
@@ -2380,7 +2365,7 @@ func (g *PhysicalDeviceFeatures) fromC(c *C.VkPhysicalDeviceFeatures) {
 	g.VariableMultisampleRate = c.variableMultisampleRate != 0
 	g.InheritedQueries = c.inheritedQueries != 0
 }
-func (p PFNGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
+func (p PFNGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures
@@ -2388,19 +2373,15 @@ func (p PFNGetPhysicalDeviceFeatures) Call(physicalDevice PhysicalDevice, featur
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3])
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures))
+		features.toC(c.pFeatures)
+	} else {
+		c.pFeatures = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFeatures(C.PFN_vkGetPhysicalDeviceFeatures(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
 }
 
@@ -2470,7 +2451,7 @@ func (g *FormatProperties) fromC(c *C.VkFormatProperties) {
 		g.BufferFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
 	}
 }
-func (p PFNGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties) {
+func (p PFNGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -2480,19 +2461,15 @@ func (p PFNGetPhysicalDeviceFormatProperties) Call(physicalDevice PhysicalDevice
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	{
-		c.pFormatProperties = (*C.VkFormatProperties)(_sa.alloc(C.sizeof_VkFormatProperties * uint(len(formatProperties))))
-		slice3 := (*[1 << 31]C.VkFormatProperties)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].toC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		c.pFormatProperties = (*C.VkFormatProperties)(_sa.alloc(C.sizeof_VkFormatProperties))
+		formatProperties.toC(c.pFormatProperties)
+	} else {
+		c.pFormatProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFormatProperties(C.PFN_vkGetPhysicalDeviceFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
-	{
-		slice3 := (*[1 << 31]C.VkFormatProperties)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].fromC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		formatProperties.fromC(c.pFormatProperties)
 	}
 }
 
@@ -2564,7 +2541,7 @@ func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
 		g.MaxResourceSize = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFNGetPhysicalDeviceImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties *ImageFormatProperties) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		format                 C.VkFormat
@@ -2599,20 +2576,16 @@ func (p PFNGetPhysicalDeviceImageFormatProperties) Call(physicalDevice PhysicalD
 		}
 		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
-	{
-		c.pImageFormatProperties = (*C.VkImageFormatProperties)(_sa.alloc(C.sizeof_VkImageFormatProperties * uint(len(imageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkImageFormatProperties)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].toC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		c.pImageFormatProperties = (*C.VkImageFormatProperties)(_sa.alloc(C.sizeof_VkImageFormatProperties))
+		imageFormatProperties.toC(c.pImageFormatProperties)
+	} else {
+		c.pImageFormatProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties(C.PFN_vkGetPhysicalDeviceImageFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkImageFormatProperties)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		imageFormatProperties.fromC(c.pImageFormatProperties)
 	}
 	return
 }
@@ -3273,7 +3246,7 @@ func (g *PhysicalDeviceProperties) fromC(c *C.VkPhysicalDeviceProperties) {
 	g.Limits.fromC(&c.limits)
 	g.SparseProperties.fromC(&c.sparseProperties)
 }
-func (p PFNGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties) {
+func (p PFNGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties
@@ -3281,19 +3254,15 @@ func (p PFNGetPhysicalDeviceProperties) Call(physicalDevice PhysicalDevice, prop
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pProperties = (*C.VkPhysicalDeviceProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkPhysicalDeviceProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceProperties(C.PFN_vkGetPhysicalDeviceProperties(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
@@ -3334,7 +3303,7 @@ func (g *QueueFamilyProperties) fromC(c *C.VkQueueFamilyProperties) {
 	g.TimestampValidBits = uint32(c.timestampValidBits)
 	g.MinImageTransferGranularity.fromC(&c.minImageTransferGranularity)
 }
-func (p PFNGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties *QueueFamilyProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -3349,22 +3318,18 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalD
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
-		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(_sa.alloc(C.sizeof_VkQueueFamilyProperties * uint(len(queueFamilyProperties))))
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].toC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(_sa.alloc(C.sizeof_VkQueueFamilyProperties))
+		queueFamilyProperties.toC(c.pQueueFamilyProperties)
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
 		*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].fromC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		queueFamilyProperties.fromC(c.pQueueFamilyProperties)
 	}
 }
 
@@ -3466,7 +3431,7 @@ func (g *PhysicalDeviceMemoryProperties) fromC(c *C.VkPhysicalDeviceMemoryProper
 		g.MemoryHeaps[i].fromC(&c.memoryHeaps[i])
 	}
 }
-func (p PFNGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties) {
+func (p PFNGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties
@@ -3474,19 +3439,15 @@ func (p PFNGetPhysicalDeviceMemoryProperties) Call(physicalDevice PhysicalDevice
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties * uint(len(memoryProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].toC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties))
+		memoryProperties.toC(c.pMemoryProperties)
+	} else {
+		c.pMemoryProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceMemoryProperties(C.PFN_vkGetPhysicalDeviceMemoryProperties(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		memoryProperties.fromC(c.pMemoryProperties)
 	}
 }
 
@@ -3733,7 +3694,7 @@ func (p PFNCreateDevice) Call(physicalDevice PhysicalDevice, createInfo *DeviceC
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -3763,7 +3724,7 @@ func (p PFNDestroyDevice) Call(device Device, allocator *AllocationCallbacks) {
 	c.device = C.VkDevice(device)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -3788,7 +3749,7 @@ func (g *ExtensionProperties) fromC(c *C.VkExtensionProperties) {
 	}
 	g.SpecVersion = uint32(c.specVersion)
 }
-func (p PFNEnumerateInstanceExtensionProperties) Call(layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func (p PFNEnumerateInstanceExtensionProperties) Call(layerName string, propertyCount *uint32, properties *ExtensionProperties) (_ret Result) {
 	var c struct {
 		pLayerName     *C.char
 		pPropertyCount *C.uint32_t
@@ -3804,30 +3765,26 @@ func (p PFNEnumerateInstanceExtensionProperties) Call(layerName string, property
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateInstanceExtensionProperties(C.PFN_vkEnumerateInstanceExtensionProperties(unsafe.Pointer(p)), c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
 
 type PFNEnumerateDeviceExtensionProperties uintptr
 
-func (p PFNEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func (p PFNEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties *ExtensionProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pLayerName     *C.char
@@ -3845,23 +3802,19 @@ func (p PFNEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevic
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateDeviceExtensionProperties(C.PFN_vkEnumerateDeviceExtensionProperties(unsafe.Pointer(p)), c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -3894,7 +3847,7 @@ func (g *LayerProperties) fromC(c *C.VkLayerProperties) {
 		g.Description[i] = byte(c.description[i])
 	}
 }
-func (p PFNEnumerateInstanceLayerProperties) Call(propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func (p PFNEnumerateInstanceLayerProperties) Call(propertyCount *uint32, properties *LayerProperties) (_ret Result) {
 	var c struct {
 		pPropertyCount *C.uint32_t
 		pProperties    *C.VkLayerProperties
@@ -3908,30 +3861,26 @@ func (p PFNEnumerateInstanceLayerProperties) Call(propertyCount *uint32, propert
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateInstanceLayerProperties(C.PFN_vkEnumerateInstanceLayerProperties(unsafe.Pointer(p)), c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
 
 type PFNEnumerateDeviceLayerProperties uintptr
 
-func (p PFNEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func (p PFNEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties *LayerProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -3947,23 +3896,19 @@ func (p PFNEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, p
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateDeviceLayerProperties(C.PFN_vkEnumerateDeviceLayerProperties(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -4228,7 +4173,7 @@ func (p PFNAllocateMemory) Call(device Device, allocateInfo *MemoryAllocateInfo,
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -4260,7 +4205,7 @@ func (p PFNFreeMemory) Call(device Device, memory DeviceMemory, allocator *Alloc
 	c.memory = C.VkDeviceMemory(memory)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -4270,7 +4215,7 @@ func (p PFNFreeMemory) Call(device Device, memory DeviceMemory, allocator *Alloc
 type PFNMapMemory uintptr
 type MemoryMapFlags Flags
 
-func (p PFNMapMemory) Call(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data []unsafe.Pointer) (_ret Result) {
+func (p PFNMapMemory) Call(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data *unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		memory C.VkDeviceMemory
@@ -4303,20 +4248,16 @@ func (p PFNMapMemory) Call(device Device, memory DeviceMemory, offset DeviceSize
 		}
 		c.flags = C.VkMemoryMapFlags(temp_in_VkMemoryMapFlags)
 	}
-	{
-		c.ppData = (*unsafe.Pointer)(_sa.alloc(C.sizeof_void_pointer * uint(len(data))))
-		slice3 := (*[1 << 31]unsafe.Pointer)(unsafe.Pointer(c.ppData))[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
+	if data != nil {
+		c.ppData = (*unsafe.Pointer)(_sa.alloc(C.sizeof_void_pointer))
+		*c.ppData = *data
+	} else {
+		c.ppData = nil
 	}
 	c._ret = C.callPFN_vkMapMemory(C.PFN_vkMapMemory(unsafe.Pointer(p)), c.device, c.memory, c.offset, c.size, c.flags, c.ppData)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]unsafe.Pointer)(unsafe.Pointer(c.ppData))[:len(data):len(data)]
-		for i3, _ := range data {
-			data[i3] = slice3[i3]
-		}
+	if data != nil {
+		*data = *c.ppData
 	}
 	return
 }
@@ -4442,7 +4383,7 @@ func (p PFNInvalidateMappedMemoryRanges) Call(device Device, memoryRanges []Mapp
 
 type PFNGetDeviceMemoryCommitment uintptr
 
-func (p PFNGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory, committedMemoryInBytes []DeviceSize) {
+func (p PFNGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory, committedMemoryInBytes *DeviceSize) {
 	var c struct {
 		device                  C.VkDevice
 		memory                  C.VkDeviceMemory
@@ -4452,27 +4393,21 @@ func (p PFNGetDeviceMemoryCommitment) Call(device Device, memory DeviceMemory, c
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.memory = C.VkDeviceMemory(memory)
-	{
-		c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(_sa.alloc(C.sizeof_VkDeviceSize * uint(len(committedMemoryInBytes))))
-		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
-		for i3, _ := range committedMemoryInBytes {
-			{
-				var temp_in_VkDeviceSize C.uint64_t
-				temp_in_VkDeviceSize = C.uint64_t((uint64)(committedMemoryInBytes[i3]))
-				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
-			}
+	if committedMemoryInBytes != nil {
+		c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(_sa.alloc(C.sizeof_VkDeviceSize))
+		{
+			var temp_in_VkDeviceSize C.uint64_t
+			temp_in_VkDeviceSize = C.uint64_t((uint64)(*committedMemoryInBytes))
+			*c.pCommittedMemoryInBytes = C.VkDeviceSize(temp_in_VkDeviceSize)
 		}
+	} else {
+		c.pCommittedMemoryInBytes = nil
 	}
 	C.callPFN_vkGetDeviceMemoryCommitment(C.PFN_vkGetDeviceMemoryCommitment(unsafe.Pointer(p)), c.device, c.memory, c.pCommittedMemoryInBytes)
-	{
-		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
-		for i3, _ := range committedMemoryInBytes {
-			{
-				var temp_in_VkDeviceSize uint64
-				temp_in_VkDeviceSize = uint64((C.uint64_t)(slice3[i3]))
-				committedMemoryInBytes[i3] = DeviceSize(temp_in_VkDeviceSize)
-			}
-		}
+	if committedMemoryInBytes != nil {
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
+		*committedMemoryInBytes = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 
@@ -4557,7 +4492,7 @@ func (g *MemoryRequirements) fromC(c *C.VkMemoryRequirements) {
 	}
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
 }
-func (p PFNGetBufferMemoryRequirements) Call(device Device, buffer Buffer, memoryRequirements []MemoryRequirements) {
+func (p PFNGetBufferMemoryRequirements) Call(device Device, buffer Buffer, memoryRequirements *MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		buffer              C.VkBuffer
@@ -4567,25 +4502,21 @@ func (p PFNGetBufferMemoryRequirements) Call(device Device, buffer Buffer, memor
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements))
+		memoryRequirements.toC(c.pMemoryRequirements)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetBufferMemoryRequirements(C.PFN_vkGetBufferMemoryRequirements(unsafe.Pointer(p)), c.device, c.buffer, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
 type PFNGetImageMemoryRequirements uintptr
 
-func (p PFNGetImageMemoryRequirements) Call(device Device, image Image, memoryRequirements []MemoryRequirements) {
+func (p PFNGetImageMemoryRequirements) Call(device Device, image Image, memoryRequirements *MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		image               C.VkImage
@@ -4595,19 +4526,15 @@ func (p PFNGetImageMemoryRequirements) Call(device Device, image Image, memoryRe
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.image = C.VkImage(image)
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements))
+		memoryRequirements.toC(c.pMemoryRequirements)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageMemoryRequirements(C.PFN_vkGetImageMemoryRequirements(unsafe.Pointer(p)), c.device, c.image, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
@@ -4709,7 +4636,7 @@ func (g *SparseImageMemoryRequirements) fromC(c *C.VkSparseImageMemoryRequiremen
 		g.ImageMipTailStride = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
-func (p PFNGetImageSparseMemoryRequirements) Call(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements) {
+func (p PFNGetImageSparseMemoryRequirements) Call(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements *SparseImageMemoryRequirements) {
 	var c struct {
 		device                        C.VkDevice
 		image                         C.VkImage
@@ -4726,28 +4653,24 @@ func (p PFNGetImageSparseMemoryRequirements) Call(device Device, image Image, sp
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
-		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements * uint(len(sparseMemoryRequirements))))
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].toC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements))
+		sparseMemoryRequirements.toC(c.pSparseMemoryRequirements)
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements(C.PFN_vkGetImageSparseMemoryRequirements(unsafe.Pointer(p)), c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
 		*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		sparseMemoryRequirements.fromC(c.pSparseMemoryRequirements)
 	}
 }
 
 type PFNGetPhysicalDeviceSparseImageFormatProperties uintptr
 
-func (p PFNGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties *SparseImageFormatProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		format         C.VkFormat
@@ -4780,22 +4703,18 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice Phy
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkSparseImageFormatProperties)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkSparseImageFormatProperties)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
@@ -5255,7 +5174,7 @@ func (p PFNCreateFence) Call(device Device, createInfo *FenceCreateInfo, allocat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5287,7 +5206,7 @@ func (p PFNDestroyFence) Call(device Device, fence Fence, allocator *AllocationC
 	c.fence = C.VkFence(fence)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5440,7 +5359,7 @@ func (p PFNCreateSemaphore) Call(device Device, createInfo *SemaphoreCreateInfo,
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5472,7 +5391,7 @@ func (p PFNDestroySemaphore) Call(device Device, semaphore Semaphore, allocator 
 	c.semaphore = C.VkSemaphore(semaphore)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5555,7 +5474,7 @@ func (p PFNCreateEvent) Call(device Device, createInfo *EventCreateInfo, allocat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5587,7 +5506,7 @@ func (p PFNDestroyEvent) Call(device Device, event Event, allocator *AllocationC
 	c.event = C.VkEvent(event)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5741,7 +5660,7 @@ func (p PFNCreateQueryPool) Call(device Device, createInfo *QueryPoolCreateInfo,
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5773,7 +5692,7 @@ func (p PFNDestroyQueryPool) Call(device Device, queryPool QueryPool, allocator 
 	c.queryPool = C.VkQueryPool(queryPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5957,7 +5876,7 @@ func (p PFNCreateBuffer) Call(device Device, createInfo *BufferCreateInfo, alloc
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -5989,7 +5908,7 @@ func (p PFNDestroyBuffer) Call(device Device, buffer Buffer, allocator *Allocati
 	c.buffer = C.VkBuffer(buffer)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6100,7 +6019,7 @@ func (p PFNCreateBufferView) Call(device Device, createInfo *BufferViewCreateInf
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6132,7 +6051,7 @@ func (p PFNDestroyBufferView) Call(device Device, bufferView BufferView, allocat
 	c.bufferView = C.VkBufferView(bufferView)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6273,7 +6192,7 @@ func (p PFNCreateImage) Call(device Device, createInfo *ImageCreateInfo, allocat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6305,7 +6224,7 @@ func (p PFNDestroyImage) Call(device Device, image Image, allocator *AllocationC
 	c.image = C.VkImage(image)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6554,7 +6473,7 @@ func (p PFNCreateImageView) Call(device Device, createInfo *ImageViewCreateInfo,
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6586,7 +6505,7 @@ func (p PFNDestroyImageView) Call(device Device, imageView ImageView, allocator 
 	c.imageView = C.VkImageView(imageView)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6682,7 +6601,7 @@ func (p PFNCreateShaderModule) Call(device Device, createInfo *ShaderModuleCreat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6714,7 +6633,7 @@ func (p PFNDestroyShaderModule) Call(device Device, shaderModule ShaderModule, a
 	c.shaderModule = C.VkShaderModule(shaderModule)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6813,7 +6732,7 @@ func (p PFNCreatePipelineCache) Call(device Device, createInfo *PipelineCacheCre
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6845,7 +6764,7 @@ func (p PFNDestroyPipelineCache) Call(device Device, pipelineCache PipelineCache
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -6854,7 +6773,7 @@ func (p PFNDestroyPipelineCache) Call(device Device, pipelineCache PipelineCache
 
 type PFNGetPipelineCacheData uintptr
 
-func (p PFNGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache, dataSize *uint, data []byte) (_ret Result) {
+func (p PFNGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache, dataSize *uint, data unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		pipelineCache C.VkPipelineCache
@@ -6872,23 +6791,11 @@ func (p PFNGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache
 	} else {
 		c.pDataSize = nil
 	}
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	c._ret = C.callPFN_vkGetPipelineCacheData(C.PFN_vkGetPipelineCacheData(unsafe.Pointer(p)), c.device, c.pipelineCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
 	if dataSize != nil {
 		*dataSize = uint(*c.pDataSize)
-	}
-	{
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			data[i3] = slice3[i3]
-		}
 	}
 	return
 }
@@ -8197,7 +8104,7 @@ func (p PFNCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCa
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8308,7 +8215,7 @@ func (p PFNCreateComputePipelines) Call(device Device, pipelineCache PipelineCac
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8344,7 +8251,7 @@ func (p PFNDestroyPipeline) Call(device Device, pipeline Pipeline, allocator *Al
 	c.pipeline = C.VkPipeline(pipeline)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8491,7 +8398,7 @@ func (p PFNCreatePipelineLayout) Call(device Device, createInfo *PipelineLayoutC
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8523,7 +8430,7 @@ func (p PFNDestroyPipelineLayout) Call(device Device, pipelineLayout PipelineLay
 	c.pipelineLayout = C.VkPipelineLayout(pipelineLayout)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8663,7 +8570,7 @@ func (p PFNCreateSampler) Call(device Device, createInfo *SamplerCreateInfo, all
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8695,7 +8602,7 @@ func (p PFNDestroySampler) Call(device Device, sampler Sampler, allocator *Alloc
 	c.sampler = C.VkSampler(sampler)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8709,7 +8616,7 @@ type DescriptorSetLayoutBinding struct {
 	DescriptorType    DescriptorType
 	DescriptorCount   uint32
 	StageFlags        ShaderStageFlags
-	ImmutableSamplers []Sampler
+	ImmutableSamplers *Sampler
 }
 
 func (g *DescriptorSetLayoutBinding) toC(c *C.VkDescriptorSetLayoutBinding, _sa *stackAllocator) {
@@ -8725,12 +8632,11 @@ func (g *DescriptorSetLayoutBinding) toC(c *C.VkDescriptorSetLayoutBinding, _sa 
 		}
 		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
-	{
-		c.pImmutableSamplers = (*C.VkSampler)(_sa.alloc(C.sizeof_VkSampler * uint(len(g.ImmutableSamplers))))
-		slice2 := (*[1 << 31]C.VkSampler)(unsafe.Pointer(c.pImmutableSamplers))[:len(g.ImmutableSamplers):len(g.ImmutableSamplers)]
-		for i2, _ := range g.ImmutableSamplers {
-			slice2[i2] = C.VkSampler(g.ImmutableSamplers[i2])
-		}
+	if g.ImmutableSamplers != nil {
+		c.pImmutableSamplers = (*C.VkSampler)(_sa.alloc(C.sizeof_VkSampler))
+		*c.pImmutableSamplers = C.VkSampler(*g.ImmutableSamplers)
+	} else {
+		c.pImmutableSamplers = nil
 	}
 }
 func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
@@ -8746,11 +8652,8 @@ func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
 		}
 		g.StageFlags = ShaderStageFlags(temp_in_VkShaderStageFlags)
 	}
-	{
-		slice2 := (*[1 << 31]C.VkSampler)(unsafe.Pointer(c.pImmutableSamplers))[:len(g.ImmutableSamplers):len(g.ImmutableSamplers)]
-		for i2, _ := range g.ImmutableSamplers {
-			g.ImmutableSamplers[i2] = Sampler(slice2[i2])
-		}
+	if g.ImmutableSamplers != nil {
+		*g.ImmutableSamplers = Sampler(*c.pImmutableSamplers)
 	}
 }
 
@@ -8841,7 +8744,7 @@ func (p PFNCreateDescriptorSetLayout) Call(device Device, createInfo *Descriptor
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8873,7 +8776,7 @@ func (p PFNDestroyDescriptorSetLayout) Call(device Device, descriptorSetLayout D
 	c.descriptorSetLayout = C.VkDescriptorSetLayout(descriptorSetLayout)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -8989,7 +8892,7 @@ func (p PFNCreateDescriptorPool) Call(device Device, createInfo *DescriptorPoolC
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -9021,7 +8924,7 @@ func (p PFNDestroyDescriptorPool) Call(device Device, descriptorPool DescriptorP
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -9110,7 +9013,7 @@ func (s *DescriptorSetAllocateInfo) SetNext(n Structure) {
 
 type DescriptorSet C.VkDescriptorSet
 
-func (p PFNAllocateDescriptorSets) Call(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
+func (p PFNAllocateDescriptorSets) Call(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets *DescriptorSet) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkDescriptorSetAllocateInfo
@@ -9126,20 +9029,16 @@ func (p PFNAllocateDescriptorSets) Call(device Device, allocateInfo *DescriptorS
 	} else {
 		c.pAllocateInfo = nil
 	}
-	{
-		c.pDescriptorSets = (*C.VkDescriptorSet)(_sa.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
-		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
-		for i3, _ := range descriptorSets {
-			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
-		}
+	if descriptorSets != nil {
+		c.pDescriptorSets = (*C.VkDescriptorSet)(_sa.alloc(C.sizeof_VkDescriptorSet))
+		*c.pDescriptorSets = C.VkDescriptorSet(*descriptorSets)
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c._ret = C.callPFN_vkAllocateDescriptorSets(C.PFN_vkAllocateDescriptorSets(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pDescriptorSets)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
-		for i3, _ := range descriptorSets {
-			descriptorSets[i3] = DescriptorSet(slice3[i3])
-		}
+	if descriptorSets != nil {
+		*descriptorSets = DescriptorSet(*c.pDescriptorSets)
 	}
 	return
 }
@@ -9489,7 +9388,7 @@ func (p PFNCreateFramebuffer) Call(device Device, createInfo *FramebufferCreateI
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -9521,7 +9420,7 @@ func (p PFNDestroyFramebuffer) Call(device Device, framebuffer Framebuffer, allo
 	c.framebuffer = C.VkFramebuffer(framebuffer)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -9929,7 +9828,7 @@ func (p PFNCreateRenderPass) Call(device Device, createInfo *RenderPassCreateInf
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -9961,7 +9860,7 @@ func (p PFNDestroyRenderPass) Call(device Device, renderPass RenderPass, allocat
 	c.renderPass = C.VkRenderPass(renderPass)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -10071,7 +9970,7 @@ func (p PFNCreateCommandPool) Call(device Device, createInfo *CommandPoolCreateI
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -10103,7 +10002,7 @@ func (p PFNDestroyCommandPool) Call(device Device, commandPool CommandPool, allo
 	c.commandPool = C.VkCommandPool(commandPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -10179,7 +10078,7 @@ func (s *CommandBufferAllocateInfo) GetNext() Structure {
 func (s *CommandBufferAllocateInfo) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
+func (p PFNAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkCommandBufferAllocateInfo
@@ -10195,20 +10094,16 @@ func (p PFNAllocateCommandBuffers) Call(device Device, allocateInfo *CommandBuff
 	} else {
 		c.pAllocateInfo = nil
 	}
-	{
-		c.pCommandBuffers = (*C.VkCommandBuffer)(_sa.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
-		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
-		for i3, _ := range commandBuffers {
-			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
-		}
+	if commandBuffers != nil {
+		c.pCommandBuffers = (*C.VkCommandBuffer)(_sa.alloc(C.sizeof_VkCommandBuffer))
+		*c.pCommandBuffers = C.VkCommandBuffer(*commandBuffers)
+	} else {
+		c.pCommandBuffers = nil
 	}
 	c._ret = C.callPFN_vkAllocateCommandBuffers(C.PFN_vkAllocateCommandBuffers(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pCommandBuffers)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
-		for i3, _ := range commandBuffers {
-			commandBuffers[i3] = CommandBuffer(slice3[i3])
-		}
+	if commandBuffers != nil {
+		*commandBuffers = CommandBuffer(*c.pCommandBuffers)
 	}
 	return
 }
@@ -11148,7 +11043,7 @@ func (p PFNCmdCopyImageToBuffer) Call(commandBuffer CommandBuffer, srcImage Imag
 
 type PFNCmdUpdateBuffer uintptr
 
-func (p PFNCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
+func (p PFNCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data unsafe.Pointer) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		dstBuffer     C.VkBuffer
@@ -11156,8 +11051,6 @@ func (p PFNCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, 
 		dataSize      C.VkDeviceSize
 		pData         unsafe.Pointer
 	}
-	_sa := pool.take()
-	defer pool.give(_sa)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	{
@@ -11170,13 +11063,7 @@ func (p PFNCmdUpdateBuffer) Call(commandBuffer CommandBuffer, dstBuffer Buffer, 
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(dataSize))
 		c.dataSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	C.callPFN_vkCmdUpdateBuffer(C.PFN_vkCmdUpdateBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 }
 
@@ -12214,7 +12101,7 @@ func CreateInstance(createInfo *InstanceCreateInfo, allocator *AllocationCallbac
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -12241,13 +12128,13 @@ func DestroyInstance(instance Instance, allocator *AllocationCallbacks) {
 	c.instance = C.VkInstance(instance)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
 	C.vkDestroyInstance(c.instance, c.pAllocator)
 }
-func EnumeratePhysicalDevices(instance Instance, physicalDeviceCount *uint32, physicalDevices []PhysicalDevice) (_ret Result) {
+func EnumeratePhysicalDevices(instance Instance, physicalDeviceCount *uint32, physicalDevices *PhysicalDevice) (_ret Result) {
 	var c struct {
 		instance             C.VkInstance
 		pPhysicalDeviceCount *C.uint32_t
@@ -12263,27 +12150,23 @@ func EnumeratePhysicalDevices(instance Instance, physicalDeviceCount *uint32, ph
 	} else {
 		c.pPhysicalDeviceCount = nil
 	}
-	{
-		c.pPhysicalDevices = (*C.VkPhysicalDevice)(_sa.alloc(C.sizeof_VkPhysicalDevice * uint(len(physicalDevices))))
-		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
-		for i3, _ := range physicalDevices {
-			slice3[i3] = C.VkPhysicalDevice(physicalDevices[i3])
-		}
+	if physicalDevices != nil {
+		c.pPhysicalDevices = (*C.VkPhysicalDevice)(_sa.alloc(C.sizeof_VkPhysicalDevice))
+		*c.pPhysicalDevices = C.VkPhysicalDevice(*physicalDevices)
+	} else {
+		c.pPhysicalDevices = nil
 	}
 	c._ret = C.vkEnumeratePhysicalDevices(c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
 	_ret = Result(c._ret)
 	if physicalDeviceCount != nil {
 		*physicalDeviceCount = uint32(*c.pPhysicalDeviceCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
-		for i3, _ := range physicalDevices {
-			physicalDevices[i3] = PhysicalDevice(slice3[i3])
-		}
+	if physicalDevices != nil {
+		*physicalDevices = PhysicalDevice(*c.pPhysicalDevices)
 	}
 	return
 }
-func GetPhysicalDeviceFeatures(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures) {
+func GetPhysicalDeviceFeatures(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures
@@ -12291,22 +12174,18 @@ func GetPhysicalDeviceFeatures(physicalDevice PhysicalDevice, features []Physica
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3])
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures))
+		features.toC(c.pFeatures)
+	} else {
+		c.pFeatures = nil
 	}
 	C.vkGetPhysicalDeviceFeatures(c.physicalDevice, c.pFeatures)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
 }
-func GetPhysicalDeviceFormatProperties(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties) {
+func GetPhysicalDeviceFormatProperties(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -12316,22 +12195,18 @@ func GetPhysicalDeviceFormatProperties(physicalDevice PhysicalDevice, format For
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	{
-		c.pFormatProperties = (*C.VkFormatProperties)(_sa.alloc(C.sizeof_VkFormatProperties * uint(len(formatProperties))))
-		slice3 := (*[1 << 31]C.VkFormatProperties)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].toC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		c.pFormatProperties = (*C.VkFormatProperties)(_sa.alloc(C.sizeof_VkFormatProperties))
+		formatProperties.toC(c.pFormatProperties)
+	} else {
+		c.pFormatProperties = nil
 	}
 	C.vkGetPhysicalDeviceFormatProperties(c.physicalDevice, c.format, c.pFormatProperties)
-	{
-		slice3 := (*[1 << 31]C.VkFormatProperties)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].fromC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		formatProperties.fromC(c.pFormatProperties)
 	}
 }
-func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties []ImageFormatProperties) (_ret Result) {
+func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties *ImageFormatProperties) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		format                 C.VkFormat
@@ -12366,24 +12241,20 @@ func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, forma
 		}
 		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
 	}
-	{
-		c.pImageFormatProperties = (*C.VkImageFormatProperties)(_sa.alloc(C.sizeof_VkImageFormatProperties * uint(len(imageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkImageFormatProperties)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].toC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		c.pImageFormatProperties = (*C.VkImageFormatProperties)(_sa.alloc(C.sizeof_VkImageFormatProperties))
+		imageFormatProperties.toC(c.pImageFormatProperties)
+	} else {
+		c.pImageFormatProperties = nil
 	}
 	c._ret = C.vkGetPhysicalDeviceImageFormatProperties(c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.pImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkImageFormatProperties)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		imageFormatProperties.fromC(c.pImageFormatProperties)
 	}
 	return
 }
-func GetPhysicalDeviceProperties(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties) {
+func GetPhysicalDeviceProperties(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties
@@ -12391,22 +12262,18 @@ func GetPhysicalDeviceProperties(physicalDevice PhysicalDevice, properties []Phy
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pProperties = (*C.VkPhysicalDeviceProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkPhysicalDeviceProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceProperties(c.physicalDevice, c.pProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
-func GetPhysicalDeviceQueueFamilyProperties(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties) {
+func GetPhysicalDeviceQueueFamilyProperties(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties *QueueFamilyProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -12421,25 +12288,21 @@ func GetPhysicalDeviceQueueFamilyProperties(physicalDevice PhysicalDevice, queue
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
-		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(_sa.alloc(C.sizeof_VkQueueFamilyProperties * uint(len(queueFamilyProperties))))
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].toC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(_sa.alloc(C.sizeof_VkQueueFamilyProperties))
+		queueFamilyProperties.toC(c.pQueueFamilyProperties)
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.vkGetPhysicalDeviceQueueFamilyProperties(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
 		*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].fromC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		queueFamilyProperties.fromC(c.pQueueFamilyProperties)
 	}
 }
-func GetPhysicalDeviceMemoryProperties(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties) {
+func GetPhysicalDeviceMemoryProperties(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties
@@ -12447,19 +12310,15 @@ func GetPhysicalDeviceMemoryProperties(physicalDevice PhysicalDevice, memoryProp
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties * uint(len(memoryProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].toC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties))
+		memoryProperties.toC(c.pMemoryProperties)
+	} else {
+		c.pMemoryProperties = nil
 	}
 	C.vkGetPhysicalDeviceMemoryProperties(c.physicalDevice, c.pMemoryProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		memoryProperties.fromC(c.pMemoryProperties)
 	}
 }
 func GetInstanceProcAddr(instance Instance, name string) (_ret PFNVoidFunction) {
@@ -12509,7 +12368,7 @@ func CreateDevice(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, a
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -12536,13 +12395,13 @@ func DestroyDevice(device Device, allocator *AllocationCallbacks) {
 	c.device = C.VkDevice(device)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
 	C.vkDestroyDevice(c.device, c.pAllocator)
 }
-func EnumerateInstanceExtensionProperties(layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func EnumerateInstanceExtensionProperties(layerName string, propertyCount *uint32, properties *ExtensionProperties) (_ret Result) {
 	var c struct {
 		pLayerName     *C.char
 		pPropertyCount *C.uint32_t
@@ -12558,27 +12417,23 @@ func EnumerateInstanceExtensionProperties(layerName string, propertyCount *uint3
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateInstanceExtensionProperties(c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
-func EnumerateDeviceExtensionProperties(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties []ExtensionProperties) (_ret Result) {
+func EnumerateDeviceExtensionProperties(physicalDevice PhysicalDevice, layerName string, propertyCount *uint32, properties *ExtensionProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pLayerName     *C.char
@@ -12596,27 +12451,23 @@ func EnumerateDeviceExtensionProperties(physicalDevice PhysicalDevice, layerName
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkExtensionProperties)(_sa.alloc(C.sizeof_VkExtensionProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateDeviceExtensionProperties(c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
-func EnumerateInstanceLayerProperties(propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func EnumerateInstanceLayerProperties(propertyCount *uint32, properties *LayerProperties) (_ret Result) {
 	var c struct {
 		pPropertyCount *C.uint32_t
 		pProperties    *C.VkLayerProperties
@@ -12630,27 +12481,23 @@ func EnumerateInstanceLayerProperties(propertyCount *uint32, properties []LayerP
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateInstanceLayerProperties(c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
-func EnumerateDeviceLayerProperties(physicalDevice PhysicalDevice, propertyCount *uint32, properties []LayerProperties) (_ret Result) {
+func EnumerateDeviceLayerProperties(physicalDevice PhysicalDevice, propertyCount *uint32, properties *LayerProperties) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -12666,23 +12513,19 @@ func EnumerateDeviceLayerProperties(physicalDevice PhysicalDevice, propertyCount
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkLayerProperties)(_sa.alloc(C.sizeof_VkLayerProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateDeviceLayerProperties(c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -12772,7 +12615,7 @@ func AllocateMemory(device Device, allocateInfo *MemoryAllocateInfo, allocator *
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -12801,13 +12644,13 @@ func FreeMemory(device Device, memory DeviceMemory, allocator *AllocationCallbac
 	c.memory = C.VkDeviceMemory(memory)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
 	C.vkFreeMemory(c.device, c.memory, c.pAllocator)
 }
-func MapMemory(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data []unsafe.Pointer) (_ret Result) {
+func MapMemory(device Device, memory DeviceMemory, offset DeviceSize, size DeviceSize, flags MemoryMapFlags, data *unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device C.VkDevice
 		memory C.VkDeviceMemory
@@ -12840,20 +12683,16 @@ func MapMemory(device Device, memory DeviceMemory, offset DeviceSize, size Devic
 		}
 		c.flags = C.VkMemoryMapFlags(temp_in_VkMemoryMapFlags)
 	}
-	{
-		c.ppData = (*unsafe.Pointer)(_sa.alloc(C.sizeof_void_pointer * uint(len(data))))
-		slice3 := (*[1 << 31]unsafe.Pointer)(unsafe.Pointer(c.ppData))[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
+	if data != nil {
+		c.ppData = (*unsafe.Pointer)(_sa.alloc(C.sizeof_void_pointer))
+		*c.ppData = *data
+	} else {
+		c.ppData = nil
 	}
 	c._ret = C.vkMapMemory(c.device, c.memory, c.offset, c.size, c.flags, c.ppData)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]unsafe.Pointer)(unsafe.Pointer(c.ppData))[:len(data):len(data)]
-		for i3, _ := range data {
-			data[i3] = slice3[i3]
-		}
+	if data != nil {
+		*data = *c.ppData
 	}
 	return
 }
@@ -12910,7 +12749,7 @@ func InvalidateMappedMemoryRanges(device Device, memoryRanges []MappedMemoryRang
 	_ret = Result(c._ret)
 	return
 }
-func GetDeviceMemoryCommitment(device Device, memory DeviceMemory, committedMemoryInBytes []DeviceSize) {
+func GetDeviceMemoryCommitment(device Device, memory DeviceMemory, committedMemoryInBytes *DeviceSize) {
 	var c struct {
 		device                  C.VkDevice
 		memory                  C.VkDeviceMemory
@@ -12920,27 +12759,21 @@ func GetDeviceMemoryCommitment(device Device, memory DeviceMemory, committedMemo
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.memory = C.VkDeviceMemory(memory)
-	{
-		c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(_sa.alloc(C.sizeof_VkDeviceSize * uint(len(committedMemoryInBytes))))
-		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
-		for i3, _ := range committedMemoryInBytes {
-			{
-				var temp_in_VkDeviceSize C.uint64_t
-				temp_in_VkDeviceSize = C.uint64_t((uint64)(committedMemoryInBytes[i3]))
-				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
-			}
+	if committedMemoryInBytes != nil {
+		c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(_sa.alloc(C.sizeof_VkDeviceSize))
+		{
+			var temp_in_VkDeviceSize C.uint64_t
+			temp_in_VkDeviceSize = C.uint64_t((uint64)(*committedMemoryInBytes))
+			*c.pCommittedMemoryInBytes = C.VkDeviceSize(temp_in_VkDeviceSize)
 		}
+	} else {
+		c.pCommittedMemoryInBytes = nil
 	}
 	C.vkGetDeviceMemoryCommitment(c.device, c.memory, c.pCommittedMemoryInBytes)
-	{
-		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pCommittedMemoryInBytes))[:len(committedMemoryInBytes):len(committedMemoryInBytes)]
-		for i3, _ := range committedMemoryInBytes {
-			{
-				var temp_in_VkDeviceSize uint64
-				temp_in_VkDeviceSize = uint64((C.uint64_t)(slice3[i3]))
-				committedMemoryInBytes[i3] = DeviceSize(temp_in_VkDeviceSize)
-			}
-		}
+	if committedMemoryInBytes != nil {
+		var temp_in_VkDeviceSize uint64
+		temp_in_VkDeviceSize = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
+		*committedMemoryInBytes = DeviceSize(temp_in_VkDeviceSize)
 	}
 }
 func BindBufferMemory(device Device, buffer Buffer, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
@@ -12983,7 +12816,7 @@ func BindImageMemory(device Device, image Image, memory DeviceMemory, memoryOffs
 	_ret = Result(c._ret)
 	return
 }
-func GetBufferMemoryRequirements(device Device, buffer Buffer, memoryRequirements []MemoryRequirements) {
+func GetBufferMemoryRequirements(device Device, buffer Buffer, memoryRequirements *MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		buffer              C.VkBuffer
@@ -12993,22 +12826,18 @@ func GetBufferMemoryRequirements(device Device, buffer Buffer, memoryRequirement
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements))
+		memoryRequirements.toC(c.pMemoryRequirements)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.vkGetBufferMemoryRequirements(c.device, c.buffer, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
-func GetImageMemoryRequirements(device Device, image Image, memoryRequirements []MemoryRequirements) {
+func GetImageMemoryRequirements(device Device, image Image, memoryRequirements *MemoryRequirements) {
 	var c struct {
 		device              C.VkDevice
 		image               C.VkImage
@@ -13018,22 +12847,18 @@ func GetImageMemoryRequirements(device Device, image Image, memoryRequirements [
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.image = C.VkImage(image)
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements)(_sa.alloc(C.sizeof_VkMemoryRequirements))
+		memoryRequirements.toC(c.pMemoryRequirements)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.vkGetImageMemoryRequirements(c.device, c.image, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
-func GetImageSparseMemoryRequirements(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements) {
+func GetImageSparseMemoryRequirements(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements *SparseImageMemoryRequirements) {
 	var c struct {
 		device                        C.VkDevice
 		image                         C.VkImage
@@ -13050,25 +12875,21 @@ func GetImageSparseMemoryRequirements(device Device, image Image, sparseMemoryRe
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
-		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements * uint(len(sparseMemoryRequirements))))
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].toC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements))
+		sparseMemoryRequirements.toC(c.pSparseMemoryRequirements)
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.vkGetImageSparseMemoryRequirements(c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
 		*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		sparseMemoryRequirements.fromC(c.pSparseMemoryRequirements)
 	}
 }
-func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties []SparseImageFormatProperties) {
+func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice, format Format, _type ImageType, samples SampleCountFlagBits, usage ImageUsageFlags, tiling ImageTiling, propertyCount *uint32, properties *SparseImageFormatProperties) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		format         C.VkFormat
@@ -13101,22 +12922,18 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkSparseImageFormatProperties)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkSparseImageFormatProperties)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceSparseImageFormatProperties(c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 func QueueBindSparse(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo, fence Fence) (_ret Result) {
@@ -13161,7 +12978,7 @@ func CreateFence(device Device, createInfo *FenceCreateInfo, allocator *Allocati
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13190,7 +13007,7 @@ func DestroyFence(device Device, fence Fence, allocator *AllocationCallbacks) {
 	c.fence = C.VkFence(fence)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13279,7 +13096,7 @@ func CreateSemaphore(device Device, createInfo *SemaphoreCreateInfo, allocator *
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13308,7 +13125,7 @@ func DestroySemaphore(device Device, semaphore Semaphore, allocator *AllocationC
 	c.semaphore = C.VkSemaphore(semaphore)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13333,7 +13150,7 @@ func CreateEvent(device Device, createInfo *EventCreateInfo, allocator *Allocati
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13362,7 +13179,7 @@ func DestroyEvent(device Device, event Event, allocator *AllocationCallbacks) {
 	c.event = C.VkEvent(event)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13423,7 +13240,7 @@ func CreateQueryPool(device Device, createInfo *QueryPoolCreateInfo, allocator *
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13452,7 +13269,7 @@ func DestroyQueryPool(device Device, queryPool QueryPool, allocator *AllocationC
 	c.queryPool = C.VkQueryPool(queryPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13527,7 +13344,7 @@ func CreateBuffer(device Device, createInfo *BufferCreateInfo, allocator *Alloca
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13556,7 +13373,7 @@ func DestroyBuffer(device Device, buffer Buffer, allocator *AllocationCallbacks)
 	c.buffer = C.VkBuffer(buffer)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13581,7 +13398,7 @@ func CreateBufferView(device Device, createInfo *BufferViewCreateInfo, allocator
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13610,7 +13427,7 @@ func DestroyBufferView(device Device, bufferView BufferView, allocator *Allocati
 	c.bufferView = C.VkBufferView(bufferView)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13635,7 +13452,7 @@ func CreateImage(device Device, createInfo *ImageCreateInfo, allocator *Allocati
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13664,7 +13481,7 @@ func DestroyImage(device Device, image Image, allocator *AllocationCallbacks) {
 	c.image = C.VkImage(image)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13717,7 +13534,7 @@ func CreateImageView(device Device, createInfo *ImageViewCreateInfo, allocator *
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13746,7 +13563,7 @@ func DestroyImageView(device Device, imageView ImageView, allocator *AllocationC
 	c.imageView = C.VkImageView(imageView)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13771,7 +13588,7 @@ func CreateShaderModule(device Device, createInfo *ShaderModuleCreateInfo, alloc
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13800,7 +13617,7 @@ func DestroyShaderModule(device Device, shaderModule ShaderModule, allocator *Al
 	c.shaderModule = C.VkShaderModule(shaderModule)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13825,7 +13642,7 @@ func CreatePipelineCache(device Device, createInfo *PipelineCacheCreateInfo, all
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13854,13 +13671,13 @@ func DestroyPipelineCache(device Device, pipelineCache PipelineCache, allocator 
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
 	C.vkDestroyPipelineCache(c.device, c.pipelineCache, c.pAllocator)
 }
-func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *uint, data []byte) (_ret Result) {
+func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *uint, data unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device        C.VkDevice
 		pipelineCache C.VkPipelineCache
@@ -13878,23 +13695,11 @@ func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *
 	} else {
 		c.pDataSize = nil
 	}
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	c._ret = C.vkGetPipelineCacheData(c.device, c.pipelineCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
 	if dataSize != nil {
 		*dataSize = uint(*c.pDataSize)
-	}
-	{
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			data[i3] = slice3[i3]
-		}
 	}
 	return
 }
@@ -13946,7 +13751,7 @@ func CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, createI
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -13991,7 +13796,7 @@ func CreateComputePipelines(device Device, pipelineCache PipelineCache, createIn
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14024,7 +13829,7 @@ func DestroyPipeline(device Device, pipeline Pipeline, allocator *AllocationCall
 	c.pipeline = C.VkPipeline(pipeline)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14049,7 +13854,7 @@ func CreatePipelineLayout(device Device, createInfo *PipelineLayoutCreateInfo, a
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14078,7 +13883,7 @@ func DestroyPipelineLayout(device Device, pipelineLayout PipelineLayout, allocat
 	c.pipelineLayout = C.VkPipelineLayout(pipelineLayout)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14103,7 +13908,7 @@ func CreateSampler(device Device, createInfo *SamplerCreateInfo, allocator *Allo
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14132,7 +13937,7 @@ func DestroySampler(device Device, sampler Sampler, allocator *AllocationCallbac
 	c.sampler = C.VkSampler(sampler)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14157,7 +13962,7 @@ func CreateDescriptorSetLayout(device Device, createInfo *DescriptorSetLayoutCre
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14186,7 +13991,7 @@ func DestroyDescriptorSetLayout(device Device, descriptorSetLayout DescriptorSet
 	c.descriptorSetLayout = C.VkDescriptorSetLayout(descriptorSetLayout)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14211,7 +14016,7 @@ func CreateDescriptorPool(device Device, createInfo *DescriptorPoolCreateInfo, a
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14240,7 +14045,7 @@ func DestroyDescriptorPool(device Device, descriptorPool DescriptorPool, allocat
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14268,7 +14073,7 @@ func ResetDescriptorPool(device Device, descriptorPool DescriptorPool, flags Des
 	_ret = Result(c._ret)
 	return
 }
-func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
+func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets *DescriptorSet) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkDescriptorSetAllocateInfo
@@ -14284,20 +14089,16 @@ func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateIn
 	} else {
 		c.pAllocateInfo = nil
 	}
-	{
-		c.pDescriptorSets = (*C.VkDescriptorSet)(_sa.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
-		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
-		for i3, _ := range descriptorSets {
-			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
-		}
+	if descriptorSets != nil {
+		c.pDescriptorSets = (*C.VkDescriptorSet)(_sa.alloc(C.sizeof_VkDescriptorSet))
+		*c.pDescriptorSets = C.VkDescriptorSet(*descriptorSets)
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c._ret = C.vkAllocateDescriptorSets(c.device, c.pAllocateInfo, c.pDescriptorSets)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
-		for i3, _ := range descriptorSets {
-			descriptorSets[i3] = DescriptorSet(slice3[i3])
-		}
+	if descriptorSets != nil {
+		*descriptorSets = DescriptorSet(*c.pDescriptorSets)
 	}
 	return
 }
@@ -14373,7 +14174,7 @@ func CreateFramebuffer(device Device, createInfo *FramebufferCreateInfo, allocat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14402,7 +14203,7 @@ func DestroyFramebuffer(device Device, framebuffer Framebuffer, allocator *Alloc
 	c.framebuffer = C.VkFramebuffer(framebuffer)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14427,7 +14228,7 @@ func CreateRenderPass(device Device, createInfo *RenderPassCreateInfo, allocator
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14456,7 +14257,7 @@ func DestroyRenderPass(device Device, renderPass RenderPass, allocator *Allocati
 	c.renderPass = C.VkRenderPass(renderPass)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14502,7 +14303,7 @@ func CreateCommandPool(device Device, createInfo *CommandPoolCreateInfo, allocat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14531,7 +14332,7 @@ func DestroyCommandPool(device Device, commandPool CommandPool, allocator *Alloc
 	c.commandPool = C.VkCommandPool(commandPool)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -14559,7 +14360,7 @@ func ResetCommandPool(device Device, commandPool CommandPool, flags CommandPoolR
 	_ret = Result(c._ret)
 	return
 }
-func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
+func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkCommandBufferAllocateInfo
@@ -14575,20 +14376,16 @@ func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateIn
 	} else {
 		c.pAllocateInfo = nil
 	}
-	{
-		c.pCommandBuffers = (*C.VkCommandBuffer)(_sa.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
-		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
-		for i3, _ := range commandBuffers {
-			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
-		}
+	if commandBuffers != nil {
+		c.pCommandBuffers = (*C.VkCommandBuffer)(_sa.alloc(C.sizeof_VkCommandBuffer))
+		*c.pCommandBuffers = C.VkCommandBuffer(*commandBuffers)
+	} else {
+		c.pCommandBuffers = nil
 	}
 	c._ret = C.vkAllocateCommandBuffers(c.device, c.pAllocateInfo, c.pCommandBuffers)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
-		for i3, _ := range commandBuffers {
-			commandBuffers[i3] = CommandBuffer(slice3[i3])
-		}
+	if commandBuffers != nil {
+		*commandBuffers = CommandBuffer(*c.pCommandBuffers)
 	}
 	return
 }
@@ -14737,7 +14534,7 @@ func CmdSetDepthBias(commandBuffer CommandBuffer, depthBiasConstantFactor float3
 	c.depthBiasSlopeFactor = C.float(depthBiasSlopeFactor)
 	C.vkCmdSetDepthBias(c.commandBuffer, c.depthBiasConstantFactor, c.depthBiasClamp, c.depthBiasSlopeFactor)
 }
-func CmdSetBlendConstants(commandBuffer CommandBuffer, blendConstants []float32) {
+func CmdSetBlendConstants(commandBuffer CommandBuffer, blendConstants *float32) {
 	var c struct {
 		commandBuffer  C.VkCommandBuffer
 		blendConstants *C.float
@@ -14745,12 +14542,11 @@ func CmdSetBlendConstants(commandBuffer CommandBuffer, blendConstants []float32)
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		c.blendConstants = (*C.float)(_sa.alloc(C.sizeof_float * uint(len(blendConstants))))
-		slice3 := (*[1 << 31]C.float)(unsafe.Pointer(c.blendConstants))[:len(blendConstants):len(blendConstants)]
-		for i3, _ := range blendConstants {
-			slice3[i3] = C.float(blendConstants[i3])
-		}
+	if blendConstants != nil {
+		c.blendConstants = (*C.float)(_sa.alloc(C.sizeof_float))
+		*c.blendConstants = C.float(*blendConstants)
+	} else {
+		c.blendConstants = nil
 	}
 	C.vkCmdSetBlendConstants(c.commandBuffer, c.blendConstants)
 }
@@ -15134,7 +14930,7 @@ func CmdCopyImageToBuffer(commandBuffer CommandBuffer, srcImage Image, srcImageL
 	}
 	C.vkCmdCopyImageToBuffer(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
 }
-func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
+func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data unsafe.Pointer) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		dstBuffer     C.VkBuffer
@@ -15142,8 +14938,6 @@ func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset De
 		dataSize      C.VkDeviceSize
 		pData         unsafe.Pointer
 	}
-	_sa := pool.take()
-	defer pool.give(_sa)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	{
@@ -15156,13 +14950,7 @@ func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset De
 		temp_in_VkDeviceSize = C.uint64_t((uint64)(dataSize))
 		c.dataSize = C.VkDeviceSize(temp_in_VkDeviceSize)
 	}
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	C.vkCmdUpdateBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 }
 func CmdFillBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, size DeviceSize, data uint32) {
@@ -16187,7 +15975,7 @@ func (s *PhysicalDeviceGroupProperties) GetNext() Structure {
 func (s *PhysicalDeviceGroupProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+func (p PFNEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties *PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
 		instance                       C.VkInstance
 		pPhysicalDeviceGroupCount      *C.uint32_t
@@ -16203,23 +15991,19 @@ func (p PFNEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDevice
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
-		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if physicalDeviceGroupProperties != nil {
+		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties))
+		physicalDeviceGroupProperties.toC(c.pPhysicalDeviceGroupProperties, _sa)
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroups(C.PFN_vkEnumeratePhysicalDeviceGroups(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
 	if physicalDeviceGroupCount != nil {
 		*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].fromC(&slice3[i3])
-		}
+	if physicalDeviceGroupProperties != nil {
+		physicalDeviceGroupProperties.fromC(c.pPhysicalDeviceGroupProperties)
 	}
 	return
 }
@@ -16298,7 +16082,7 @@ func (s *MemoryRequirements2) GetNext() Structure {
 func (s *MemoryRequirements2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkImageMemoryRequirementsInfo2
@@ -16313,19 +16097,15 @@ func (p PFNGetImageMemoryRequirements2) Call(device Device, info *ImageMemoryReq
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageMemoryRequirements2(C.PFN_vkGetImageMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
@@ -16366,7 +16146,7 @@ func (s *BufferMemoryRequirementsInfo2) GetNext() Structure {
 func (s *BufferMemoryRequirementsInfo2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkBufferMemoryRequirementsInfo2
@@ -16381,19 +16161,15 @@ func (p PFNGetBufferMemoryRequirements2) Call(device Device, info *BufferMemoryR
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetBufferMemoryRequirements2(C.PFN_vkGetBufferMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
@@ -16471,7 +16247,7 @@ func (s *SparseImageMemoryRequirements2) GetNext() Structure {
 func (s *SparseImageMemoryRequirements2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+func (p PFNGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements *SparseImageMemoryRequirements2) {
 	var c struct {
 		device                        C.VkDevice
 		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
@@ -16493,22 +16269,18 @@ func (p PFNGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSpa
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
-		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if sparseMemoryRequirements != nil {
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2))
+		sparseMemoryRequirements.toC(c.pSparseMemoryRequirements, _sa)
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements2(C.PFN_vkGetImageSparseMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
 		*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		sparseMemoryRequirements.fromC(c.pSparseMemoryRequirements)
 	}
 }
 
@@ -16549,7 +16321,7 @@ func (s *PhysicalDeviceFeatures2) GetNext() Structure {
 func (s *PhysicalDeviceFeatures2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+func (p PFNGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures2
@@ -16557,19 +16329,15 @@ func (p PFNGetPhysicalDeviceFeatures2) Call(physicalDevice PhysicalDevice, featu
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2 * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3], _sa)
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2))
+		features.toC(c.pFeatures, _sa)
+	} else {
+		c.pFeatures = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFeatures2(C.PFN_vkGetPhysicalDeviceFeatures2(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
 }
 
@@ -16610,7 +16378,7 @@ func (s *PhysicalDeviceProperties2) GetNext() Structure {
 func (s *PhysicalDeviceProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+func (p PFNGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties2
@@ -16618,19 +16386,15 @@ func (p PFNGetPhysicalDeviceProperties2) Call(physicalDevice PhysicalDevice, pro
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceProperties2(C.PFN_vkGetPhysicalDeviceProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
@@ -16671,7 +16435,7 @@ func (s *FormatProperties2) GetNext() Structure {
 func (s *FormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+func (p PFNGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -16681,19 +16445,15 @@ func (p PFNGetPhysicalDeviceFormatProperties2) Call(physicalDevice PhysicalDevic
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	{
-		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2 * uint(len(formatProperties))))
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if formatProperties != nil {
+		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2))
+		formatProperties.toC(c.pFormatProperties, _sa)
+	} else {
+		c.pFormatProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFormatProperties2(C.PFN_vkGetPhysicalDeviceFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
-	{
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].fromC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		formatProperties.fromC(c.pFormatProperties)
 	}
 }
 
@@ -16815,7 +16575,7 @@ func (s *ImageFormatProperties2) GetNext() Structure {
 func (s *ImageFormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties *ImageFormatProperties2) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
@@ -16831,20 +16591,16 @@ func (p PFNGetPhysicalDeviceImageFormatProperties2) Call(physicalDevice Physical
 	} else {
 		c.pImageFormatInfo = nil
 	}
-	{
-		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2 * uint(len(imageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if imageFormatProperties != nil {
+		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2))
+		imageFormatProperties.toC(c.pImageFormatProperties, _sa)
+	} else {
+		c.pImageFormatProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2(C.PFN_vkGetPhysicalDeviceImageFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		imageFormatProperties.fromC(c.pImageFormatProperties)
 	}
 	return
 }
@@ -16886,7 +16642,7 @@ func (s *QueueFamilyProperties2) GetNext() Structure {
 func (s *QueueFamilyProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties *QueueFamilyProperties2) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -16901,22 +16657,18 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice Physical
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
-		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if queueFamilyProperties != nil {
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2))
+		queueFamilyProperties.toC(c.pQueueFamilyProperties, _sa)
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
 		*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].fromC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		queueFamilyProperties.fromC(c.pQueueFamilyProperties)
 	}
 }
 
@@ -16957,7 +16709,7 @@ func (s *PhysicalDeviceMemoryProperties2) GetNext() Structure {
 func (s *PhysicalDeviceMemoryProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+func (p PFNGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
@@ -16965,19 +16717,15 @@ func (p PFNGetPhysicalDeviceMemoryProperties2) Call(physicalDevice PhysicalDevic
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2 * uint(len(memoryProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryProperties != nil {
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2))
+		memoryProperties.toC(c.pMemoryProperties, _sa)
+	} else {
+		c.pMemoryProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceMemoryProperties2(C.PFN_vkGetPhysicalDeviceMemoryProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		memoryProperties.fromC(c.pMemoryProperties)
 	}
 }
 
@@ -17083,7 +16831,7 @@ func (s *SparseImageFormatProperties2) GetNext() Structure {
 func (s *SparseImageFormatProperties2) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties *SparseImageFormatProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
@@ -17105,22 +16853,18 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice Ph
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
@@ -17317,7 +17061,7 @@ func (p PFNCreateSamplerYcbcrConversion) Call(device Device, createInfo *Sampler
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -17349,7 +17093,7 @@ func (p PFNDestroySamplerYcbcrConversion) Call(device Device, ycbcrConversion Sa
 	c.ycbcrConversion = C.VkSamplerYcbcrConversion(ycbcrConversion)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -17489,7 +17233,7 @@ func (p PFNCreateDescriptorUpdateTemplate) Call(device Device, createInfo *Descr
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -17521,7 +17265,7 @@ func (p PFNDestroyDescriptorUpdateTemplate) Call(device Device, descriptorUpdate
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -17530,25 +17274,17 @@ func (p PFNDestroyDescriptorUpdateTemplate) Call(device Device, descriptorUpdate
 
 type PFNUpdateDescriptorSetWithTemplate uintptr
 
-func (p PFNUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+func (p PFNUpdateDescriptorSetWithTemplate) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
 		pData                    unsafe.Pointer
 	}
-	_sa := pool.take()
-	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	C.callPFN_vkUpdateDescriptorSetWithTemplate(C.PFN_vkUpdateDescriptorSetWithTemplate(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
 
@@ -17731,7 +17467,7 @@ func (s *ExternalBufferProperties) GetNext() Structure {
 func (s *ExternalBufferProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+func (p PFNGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties *ExternalBufferProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
@@ -17746,19 +17482,15 @@ func (p PFNGetPhysicalDeviceExternalBufferProperties) Call(physicalDevice Physic
 	} else {
 		c.pExternalBufferInfo = nil
 	}
-	{
-		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties * uint(len(externalBufferProperties))))
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalBufferProperties != nil {
+		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties))
+		externalBufferProperties.toC(c.pExternalBufferProperties, _sa)
+	} else {
+		c.pExternalBufferProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalBufferProperties(C.PFN_vkGetPhysicalDeviceExternalBufferProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].fromC(&slice3[i3])
-		}
+	if externalBufferProperties != nil {
+		externalBufferProperties.fromC(c.pExternalBufferProperties)
 	}
 }
 
@@ -17892,7 +17624,7 @@ func (s *ExternalFenceProperties) GetNext() Structure {
 func (s *ExternalFenceProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+func (p PFNGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties *ExternalFenceProperties) {
 	var c struct {
 		physicalDevice           C.VkPhysicalDevice
 		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
@@ -17907,19 +17639,15 @@ func (p PFNGetPhysicalDeviceExternalFenceProperties) Call(physicalDevice Physica
 	} else {
 		c.pExternalFenceInfo = nil
 	}
-	{
-		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties * uint(len(externalFenceProperties))))
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalFenceProperties != nil {
+		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties))
+		externalFenceProperties.toC(c.pExternalFenceProperties, _sa)
+	} else {
+		c.pExternalFenceProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalFenceProperties(C.PFN_vkGetPhysicalDeviceExternalFenceProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].fromC(&slice3[i3])
-		}
+	if externalFenceProperties != nil {
+		externalFenceProperties.fromC(c.pExternalFenceProperties)
 	}
 }
 
@@ -18053,7 +17781,7 @@ func (s *ExternalSemaphoreProperties) GetNext() Structure {
 func (s *ExternalSemaphoreProperties) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+func (p PFNGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties *ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
 		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
@@ -18068,19 +17796,15 @@ func (p PFNGetPhysicalDeviceExternalSemaphoreProperties) Call(physicalDevice Phy
 	} else {
 		c.pExternalSemaphoreInfo = nil
 	}
-	{
-		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties * uint(len(externalSemaphoreProperties))))
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalSemaphoreProperties != nil {
+		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties))
+		externalSemaphoreProperties.toC(c.pExternalSemaphoreProperties, _sa)
+	} else {
+		c.pExternalSemaphoreProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalSemaphoreProperties(C.PFN_vkGetPhysicalDeviceExternalSemaphoreProperties(unsafe.Pointer(p)), c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].fromC(&slice3[i3])
-		}
+	if externalSemaphoreProperties != nil {
+		externalSemaphoreProperties.fromC(c.pExternalSemaphoreProperties)
 	}
 }
 
@@ -18288,7 +18012,7 @@ func CmdDispatchBase(commandBuffer CommandBuffer, baseGroupX uint32, baseGroupY 
 	c.groupCountZ = C.uint32_t(groupCountZ)
 	C.vkCmdDispatchBase(c.commandBuffer, c.baseGroupX, c.baseGroupY, c.baseGroupZ, c.groupCountX, c.groupCountY, c.groupCountZ)
 }
-func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties *PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
 		instance                       C.VkInstance
 		pPhysicalDeviceGroupCount      *C.uint32_t
@@ -18304,27 +18028,23 @@ func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
-		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if physicalDeviceGroupProperties != nil {
+		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties))
+		physicalDeviceGroupProperties.toC(c.pPhysicalDeviceGroupProperties, _sa)
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.vkEnumeratePhysicalDeviceGroups(c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
 	if physicalDeviceGroupCount != nil {
 		*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].fromC(&slice3[i3])
-		}
+	if physicalDeviceGroupProperties != nil {
+		physicalDeviceGroupProperties.fromC(c.pPhysicalDeviceGroupProperties)
 	}
 	return
 }
-func GetImageMemoryRequirements2(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func GetImageMemoryRequirements2(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkImageMemoryRequirementsInfo2
@@ -18339,22 +18059,18 @@ func GetImageMemoryRequirements2(device Device, info *ImageMemoryRequirementsInf
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.vkGetImageMemoryRequirements2(c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
-func GetBufferMemoryRequirements2(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func GetBufferMemoryRequirements2(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkBufferMemoryRequirementsInfo2
@@ -18369,22 +18085,18 @@ func GetBufferMemoryRequirements2(device Device, info *BufferMemoryRequirementsI
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.vkGetBufferMemoryRequirements2(c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
-func GetImageSparseMemoryRequirements2(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+func GetImageSparseMemoryRequirements2(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements *SparseImageMemoryRequirements2) {
 	var c struct {
 		device                        C.VkDevice
 		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
@@ -18406,25 +18118,21 @@ func GetImageSparseMemoryRequirements2(device Device, info *ImageSparseMemoryReq
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
-		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if sparseMemoryRequirements != nil {
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2))
+		sparseMemoryRequirements.toC(c.pSparseMemoryRequirements, _sa)
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.vkGetImageSparseMemoryRequirements2(c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
 		*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		sparseMemoryRequirements.fromC(c.pSparseMemoryRequirements)
 	}
 }
-func GetPhysicalDeviceFeatures2(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+func GetPhysicalDeviceFeatures2(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures2
@@ -18432,22 +18140,18 @@ func GetPhysicalDeviceFeatures2(physicalDevice PhysicalDevice, features []Physic
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2 * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3], _sa)
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2))
+		features.toC(c.pFeatures, _sa)
+	} else {
+		c.pFeatures = nil
 	}
 	C.vkGetPhysicalDeviceFeatures2(c.physicalDevice, c.pFeatures)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
 }
-func GetPhysicalDeviceProperties2(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+func GetPhysicalDeviceProperties2(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties2
@@ -18455,22 +18159,18 @@ func GetPhysicalDeviceProperties2(physicalDevice PhysicalDevice, properties []Ph
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceProperties2(c.physicalDevice, c.pProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
-func GetPhysicalDeviceFormatProperties2(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+func GetPhysicalDeviceFormatProperties2(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -18480,22 +18180,18 @@ func GetPhysicalDeviceFormatProperties2(physicalDevice PhysicalDevice, format Fo
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	{
-		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2 * uint(len(formatProperties))))
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if formatProperties != nil {
+		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2))
+		formatProperties.toC(c.pFormatProperties, _sa)
+	} else {
+		c.pFormatProperties = nil
 	}
 	C.vkGetPhysicalDeviceFormatProperties2(c.physicalDevice, c.format, c.pFormatProperties)
-	{
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].fromC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		formatProperties.fromC(c.pFormatProperties)
 	}
 }
-func GetPhysicalDeviceImageFormatProperties2(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+func GetPhysicalDeviceImageFormatProperties2(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties *ImageFormatProperties2) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
@@ -18511,24 +18207,20 @@ func GetPhysicalDeviceImageFormatProperties2(physicalDevice PhysicalDevice, imag
 	} else {
 		c.pImageFormatInfo = nil
 	}
-	{
-		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2 * uint(len(imageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if imageFormatProperties != nil {
+		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2))
+		imageFormatProperties.toC(c.pImageFormatProperties, _sa)
+	} else {
+		c.pImageFormatProperties = nil
 	}
 	c._ret = C.vkGetPhysicalDeviceImageFormatProperties2(c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		imageFormatProperties.fromC(c.pImageFormatProperties)
 	}
 	return
 }
-func GetPhysicalDeviceQueueFamilyProperties2(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+func GetPhysicalDeviceQueueFamilyProperties2(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties *QueueFamilyProperties2) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -18543,25 +18235,21 @@ func GetPhysicalDeviceQueueFamilyProperties2(physicalDevice PhysicalDevice, queu
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
-		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if queueFamilyProperties != nil {
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2))
+		queueFamilyProperties.toC(c.pQueueFamilyProperties, _sa)
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.vkGetPhysicalDeviceQueueFamilyProperties2(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
 		*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].fromC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		queueFamilyProperties.fromC(c.pQueueFamilyProperties)
 	}
 }
-func GetPhysicalDeviceMemoryProperties2(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+func GetPhysicalDeviceMemoryProperties2(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
@@ -18569,22 +18257,18 @@ func GetPhysicalDeviceMemoryProperties2(physicalDevice PhysicalDevice, memoryPro
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2 * uint(len(memoryProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryProperties != nil {
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2))
+		memoryProperties.toC(c.pMemoryProperties, _sa)
+	} else {
+		c.pMemoryProperties = nil
 	}
 	C.vkGetPhysicalDeviceMemoryProperties2(c.physicalDevice, c.pMemoryProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		memoryProperties.fromC(c.pMemoryProperties)
 	}
 }
-func GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+func GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties *SparseImageFormatProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
@@ -18606,22 +18290,18 @@ func GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice PhysicalDevice
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceSparseImageFormatProperties2(c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 func TrimCommandPool(device Device, commandPool CommandPool, flags CommandPoolTrimFlags) {
@@ -18688,7 +18368,7 @@ func CreateSamplerYcbcrConversion(device Device, createInfo *SamplerYcbcrConvers
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -18717,7 +18397,7 @@ func DestroySamplerYcbcrConversion(device Device, ycbcrConversion SamplerYcbcrCo
 	c.ycbcrConversion = C.VkSamplerYcbcrConversion(ycbcrConversion)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -18742,7 +18422,7 @@ func CreateDescriptorUpdateTemplate(device Device, createInfo *DescriptorUpdateT
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -18771,34 +18451,26 @@ func DestroyDescriptorUpdateTemplate(device Device, descriptorUpdateTemplate Des
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
 	C.vkDestroyDescriptorUpdateTemplate(c.device, c.descriptorUpdateTemplate, c.pAllocator)
 }
-func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
 		pData                    unsafe.Pointer
 	}
-	_sa := pool.take()
-	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	C.vkUpdateDescriptorSetWithTemplate(c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
-func GetPhysicalDeviceExternalBufferProperties(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+func GetPhysicalDeviceExternalBufferProperties(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties *ExternalBufferProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
@@ -18813,22 +18485,18 @@ func GetPhysicalDeviceExternalBufferProperties(physicalDevice PhysicalDevice, ex
 	} else {
 		c.pExternalBufferInfo = nil
 	}
-	{
-		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties * uint(len(externalBufferProperties))))
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalBufferProperties != nil {
+		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties))
+		externalBufferProperties.toC(c.pExternalBufferProperties, _sa)
+	} else {
+		c.pExternalBufferProperties = nil
 	}
 	C.vkGetPhysicalDeviceExternalBufferProperties(c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].fromC(&slice3[i3])
-		}
+	if externalBufferProperties != nil {
+		externalBufferProperties.fromC(c.pExternalBufferProperties)
 	}
 }
-func GetPhysicalDeviceExternalFenceProperties(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+func GetPhysicalDeviceExternalFenceProperties(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties *ExternalFenceProperties) {
 	var c struct {
 		physicalDevice           C.VkPhysicalDevice
 		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
@@ -18843,22 +18511,18 @@ func GetPhysicalDeviceExternalFenceProperties(physicalDevice PhysicalDevice, ext
 	} else {
 		c.pExternalFenceInfo = nil
 	}
-	{
-		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties * uint(len(externalFenceProperties))))
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalFenceProperties != nil {
+		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties))
+		externalFenceProperties.toC(c.pExternalFenceProperties, _sa)
+	} else {
+		c.pExternalFenceProperties = nil
 	}
 	C.vkGetPhysicalDeviceExternalFenceProperties(c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].fromC(&slice3[i3])
-		}
+	if externalFenceProperties != nil {
+		externalFenceProperties.fromC(c.pExternalFenceProperties)
 	}
 }
-func GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+func GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties *ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
 		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
@@ -18873,19 +18537,15 @@ func GetPhysicalDeviceExternalSemaphoreProperties(physicalDevice PhysicalDevice,
 	} else {
 		c.pExternalSemaphoreInfo = nil
 	}
-	{
-		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties * uint(len(externalSemaphoreProperties))))
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalSemaphoreProperties != nil {
+		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties))
+		externalSemaphoreProperties.toC(c.pExternalSemaphoreProperties, _sa)
+	} else {
+		c.pExternalSemaphoreProperties = nil
 	}
 	C.vkGetPhysicalDeviceExternalSemaphoreProperties(c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].fromC(&slice3[i3])
-		}
+	if externalSemaphoreProperties != nil {
+		externalSemaphoreProperties.fromC(c.pExternalSemaphoreProperties)
 	}
 }
 func GetDescriptorSetLayoutSupport(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport) {
@@ -18994,7 +18654,7 @@ func (p PFNDestroySurfaceKHR) Call(instance Instance, surface SurfaceKHR, alloca
 	c.surface = C.VkSurfaceKHR(surface)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -19122,7 +18782,7 @@ func (g *SurfaceCapabilitiesKHR) fromC(c *C.VkSurfaceCapabilitiesKHR) {
 		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
 	}
 }
-func (p PFNGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilitiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities *SurfaceCapabilitiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		surface              C.VkSurfaceKHR
@@ -19133,20 +18793,16 @@ func (p PFNGetPhysicalDeviceSurfaceCapabilitiesKHR) Call(physicalDevice Physical
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.surface = C.VkSurfaceKHR(surface)
-	{
-		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilitiesKHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilitiesKHR * uint(len(surfaceCapabilities))))
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilitiesKHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].toC(&slice3[i3])
-		}
+	if surfaceCapabilities != nil {
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilitiesKHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilitiesKHR))
+		surfaceCapabilities.toC(c.pSurfaceCapabilities)
+	} else {
+		c.pSurfaceCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(C.PFN_vkGetPhysicalDeviceSurfaceCapabilitiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilitiesKHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].fromC(&slice3[i3])
-		}
+	if surfaceCapabilities != nil {
+		surfaceCapabilities.fromC(c.pSurfaceCapabilities)
 	}
 	return
 }
@@ -19165,7 +18821,7 @@ func (g *SurfaceFormatKHR) fromC(c *C.VkSurfaceFormatKHR) {
 	g.Format = Format(c.format)
 	g.ColorSpace = ColorSpaceKHR(c.colorSpace)
 }
-func (p PFNGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormatKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceFormatCount *uint32, surfaceFormats *SurfaceFormatKHR) (_ret Result) {
 	var c struct {
 		physicalDevice      C.VkPhysicalDevice
 		surface             C.VkSurfaceKHR
@@ -19183,30 +18839,26 @@ func (p PFNGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevic
 	} else {
 		c.pSurfaceFormatCount = nil
 	}
-	{
-		c.pSurfaceFormats = (*C.VkSurfaceFormatKHR)(_sa.alloc(C.sizeof_VkSurfaceFormatKHR * uint(len(surfaceFormats))))
-		slice3 := (*[1 << 31]C.VkSurfaceFormatKHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
-		for i3, _ := range surfaceFormats {
-			surfaceFormats[i3].toC(&slice3[i3])
-		}
+	if surfaceFormats != nil {
+		c.pSurfaceFormats = (*C.VkSurfaceFormatKHR)(_sa.alloc(C.sizeof_VkSurfaceFormatKHR))
+		surfaceFormats.toC(c.pSurfaceFormats)
+	} else {
+		c.pSurfaceFormats = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormatsKHR(C.PFN_vkGetPhysicalDeviceSurfaceFormatsKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
 	if surfaceFormatCount != nil {
 		*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSurfaceFormatKHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
-		for i3, _ := range surfaceFormats {
-			surfaceFormats[i3].fromC(&slice3[i3])
-		}
+	if surfaceFormats != nil {
+		surfaceFormats.fromC(c.pSurfaceFormats)
 	}
 	return
 }
 
 type PFNGetPhysicalDeviceSurfacePresentModesKHR uintptr
 
-func (p PFNGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes []PresentModeKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, presentModeCount *uint32, presentModes *PresentModeKHR) (_ret Result) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		surface           C.VkSurfaceKHR
@@ -19224,23 +18876,19 @@ func (p PFNGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice Physical
 	} else {
 		c.pPresentModeCount = nil
 	}
-	{
-		c.pPresentModes = (*C.VkPresentModeKHR)(_sa.alloc(C.sizeof_VkPresentModeKHR * uint(len(presentModes))))
-		slice3 := (*[1 << 31]C.VkPresentModeKHR)(unsafe.Pointer(c.pPresentModes))[:len(presentModes):len(presentModes)]
-		for i3, _ := range presentModes {
-			slice3[i3] = C.VkPresentModeKHR(presentModes[i3])
-		}
+	if presentModes != nil {
+		c.pPresentModes = (*C.VkPresentModeKHR)(_sa.alloc(C.sizeof_VkPresentModeKHR))
+		*c.pPresentModes = C.VkPresentModeKHR(*presentModes)
+	} else {
+		c.pPresentModes = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfacePresentModesKHR(C.PFN_vkGetPhysicalDeviceSurfacePresentModesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pPresentModeCount, c.pPresentModes)
 	_ret = Result(c._ret)
 	if presentModeCount != nil {
 		*presentModeCount = uint32(*c.pPresentModeCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPresentModeKHR)(unsafe.Pointer(c.pPresentModes))[:len(presentModes):len(presentModes)]
-		for i3, _ := range presentModes {
-			presentModes[i3] = PresentModeKHR(slice3[i3])
-		}
+	if presentModes != nil {
+		*presentModes = PresentModeKHR(*c.pPresentModes)
 	}
 	return
 }
@@ -19412,7 +19060,7 @@ func (p PFNCreateSwapchainKHR) Call(device Device, createInfo *SwapchainCreateIn
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -19444,7 +19092,7 @@ func (p PFNDestroySwapchainKHR) Call(device Device, swapchain SwapchainKHR, allo
 	c.swapchain = C.VkSwapchainKHR(swapchain)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -19453,7 +19101,7 @@ func (p PFNDestroySwapchainKHR) Call(device Device, swapchain SwapchainKHR, allo
 
 type PFNGetSwapchainImagesKHR uintptr
 
-func (p PFNGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, swapchainImageCount *uint32, swapchainImages []Image) (_ret Result) {
+func (p PFNGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, swapchainImageCount *uint32, swapchainImages *Image) (_ret Result) {
 	var c struct {
 		device               C.VkDevice
 		swapchain            C.VkSwapchainKHR
@@ -19471,23 +19119,19 @@ func (p PFNGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, sw
 	} else {
 		c.pSwapchainImageCount = nil
 	}
-	{
-		c.pSwapchainImages = (*C.VkImage)(_sa.alloc(C.sizeof_VkImage * uint(len(swapchainImages))))
-		slice3 := (*[1 << 31]C.VkImage)(unsafe.Pointer(c.pSwapchainImages))[:len(swapchainImages):len(swapchainImages)]
-		for i3, _ := range swapchainImages {
-			slice3[i3] = C.VkImage(swapchainImages[i3])
-		}
+	if swapchainImages != nil {
+		c.pSwapchainImages = (*C.VkImage)(_sa.alloc(C.sizeof_VkImage))
+		*c.pSwapchainImages = C.VkImage(*swapchainImages)
+	} else {
+		c.pSwapchainImages = nil
 	}
 	c._ret = C.callPFN_vkGetSwapchainImagesKHR(C.PFN_vkGetSwapchainImagesKHR(unsafe.Pointer(p)), c.device, c.swapchain, c.pSwapchainImageCount, c.pSwapchainImages)
 	_ret = Result(c._ret)
 	if swapchainImageCount != nil {
 		*swapchainImageCount = uint32(*c.pSwapchainImageCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkImage)(unsafe.Pointer(c.pSwapchainImages))[:len(swapchainImages):len(swapchainImages)]
-		for i3, _ := range swapchainImages {
-			swapchainImages[i3] = Image(slice3[i3])
-		}
+	if swapchainImages != nil {
+		*swapchainImages = Image(*c.pSwapchainImages)
 	}
 	return
 }
@@ -19700,7 +19344,7 @@ func (s *DeviceGroupPresentCapabilitiesKHR) GetNext() Structure {
 func (s *DeviceGroupPresentCapabilitiesKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroupPresentCapabilities []DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
+func (p PFNGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroupPresentCapabilities *DeviceGroupPresentCapabilitiesKHR) (_ret Result) {
 	var c struct {
 		device                          C.VkDevice
 		pDeviceGroupPresentCapabilities *C.VkDeviceGroupPresentCapabilitiesKHR
@@ -19709,27 +19353,23 @@ func (p PFNGetDeviceGroupPresentCapabilitiesKHR) Call(device Device, deviceGroup
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
-	{
-		c.pDeviceGroupPresentCapabilities = (*C.VkDeviceGroupPresentCapabilitiesKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentCapabilitiesKHR * uint(len(deviceGroupPresentCapabilities))))
-		slice3 := (*[1 << 31]C.VkDeviceGroupPresentCapabilitiesKHR)(unsafe.Pointer(c.pDeviceGroupPresentCapabilities))[:len(deviceGroupPresentCapabilities):len(deviceGroupPresentCapabilities)]
-		for i3, _ := range deviceGroupPresentCapabilities {
-			deviceGroupPresentCapabilities[i3].toC(&slice3[i3], _sa)
-		}
+	if deviceGroupPresentCapabilities != nil {
+		c.pDeviceGroupPresentCapabilities = (*C.VkDeviceGroupPresentCapabilitiesKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentCapabilitiesKHR))
+		deviceGroupPresentCapabilities.toC(c.pDeviceGroupPresentCapabilities, _sa)
+	} else {
+		c.pDeviceGroupPresentCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetDeviceGroupPresentCapabilitiesKHR(C.PFN_vkGetDeviceGroupPresentCapabilitiesKHR(unsafe.Pointer(p)), c.device, c.pDeviceGroupPresentCapabilities)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkDeviceGroupPresentCapabilitiesKHR)(unsafe.Pointer(c.pDeviceGroupPresentCapabilities))[:len(deviceGroupPresentCapabilities):len(deviceGroupPresentCapabilities)]
-		for i3, _ := range deviceGroupPresentCapabilities {
-			deviceGroupPresentCapabilities[i3].fromC(&slice3[i3])
-		}
+	if deviceGroupPresentCapabilities != nil {
+		deviceGroupPresentCapabilities.fromC(c.pDeviceGroupPresentCapabilities)
 	}
 	return
 }
 
 type PFNGetDeviceGroupSurfacePresentModesKHR uintptr
 
-func (p PFNGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface SurfaceKHR, modes []DeviceGroupPresentModeFlagsKHR) (_ret Result) {
+func (p PFNGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface SurfaceKHR, modes *DeviceGroupPresentModeFlagsKHR) (_ret Result) {
 	var c struct {
 		device  C.VkDevice
 		surface C.VkSurfaceKHR
@@ -19740,43 +19380,37 @@ func (p PFNGetDeviceGroupSurfacePresentModesKHR) Call(device Device, surface Sur
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.surface = C.VkSurfaceKHR(surface)
-	{
-		c.pModes = (*C.VkDeviceGroupPresentModeFlagsKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentModeFlagsKHR * uint(len(modes))))
-		slice3 := (*[1 << 31]C.VkDeviceGroupPresentModeFlagsKHR)(unsafe.Pointer(c.pModes))[:len(modes):len(modes)]
-		for i3, _ := range modes {
+	if modes != nil {
+		c.pModes = (*C.VkDeviceGroupPresentModeFlagsKHR)(_sa.alloc(C.sizeof_VkDeviceGroupPresentModeFlagsKHR))
+		{
+			var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
 			{
-				var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
-				{
-					var temp_in_VkFlags C.uint32_t
-					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(modes[i3])))
-					temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
-				}
-				slice3[i3] = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
+				var temp_in_VkFlags C.uint32_t
+				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(*modes)))
+				temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
 			}
+			*c.pModes = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
 		}
+	} else {
+		c.pModes = nil
 	}
 	c._ret = C.callPFN_vkGetDeviceGroupSurfacePresentModesKHR(C.PFN_vkGetDeviceGroupSurfacePresentModesKHR(unsafe.Pointer(p)), c.device, c.surface, c.pModes)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkDeviceGroupPresentModeFlagsKHR)(unsafe.Pointer(c.pModes))[:len(modes):len(modes)]
-		for i3, _ := range modes {
-			{
-				var temp_in_VkDeviceGroupPresentModeFlagsKHR Flags
-				{
-					var temp_in_VkFlags uint32
-					temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice3[i3])))
-					temp_in_VkDeviceGroupPresentModeFlagsKHR = Flags(temp_in_VkFlags)
-				}
-				modes[i3] = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
-			}
+	if modes != nil {
+		var temp_in_VkDeviceGroupPresentModeFlagsKHR Flags
+		{
+			var temp_in_VkFlags uint32
+			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(*c.pModes)))
+			temp_in_VkDeviceGroupPresentModeFlagsKHR = Flags(temp_in_VkFlags)
 		}
+		*modes = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
 	}
 	return
 }
 
 type PFNGetPhysicalDevicePresentRectanglesKHR uintptr
 
-func (p PFNGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, rectCount *uint32, rects []Rect2D) (_ret Result) {
+func (p PFNGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, rectCount *uint32, rects *Rect2D) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		surface        C.VkSurfaceKHR
@@ -19794,23 +19428,19 @@ func (p PFNGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDe
 	} else {
 		c.pRectCount = nil
 	}
-	{
-		c.pRects = (*C.VkRect2D)(_sa.alloc(C.sizeof_VkRect2D * uint(len(rects))))
-		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
-		for i3, _ := range rects {
-			rects[i3].toC(&slice3[i3])
-		}
+	if rects != nil {
+		c.pRects = (*C.VkRect2D)(_sa.alloc(C.sizeof_VkRect2D))
+		rects.toC(c.pRects)
+	} else {
+		c.pRects = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDevicePresentRectanglesKHR(C.PFN_vkGetPhysicalDevicePresentRectanglesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pRectCount, c.pRects)
 	_ret = Result(c._ret)
 	if rectCount != nil {
 		*rectCount = uint32(*c.pRectCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
-		for i3, _ := range rects {
-			rects[i3].fromC(&slice3[i3])
-		}
+	if rects != nil {
+		rects.fromC(c.pRects)
 	}
 	return
 }
@@ -19958,7 +19588,7 @@ func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
 	g.PlaneReorderPossible = c.planeReorderPossible != 0
 	g.PersistentContent = c.persistentContent != 0
 }
-func (p PFNGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPropertiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties *DisplayPropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -19974,23 +19604,19 @@ func (p PFNGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDe
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayPropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPropertiesKHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayPropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayPropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPropertiesKHR))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayPropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -20009,7 +19635,7 @@ func (g *DisplayPlanePropertiesKHR) fromC(c *C.VkDisplayPlanePropertiesKHR) {
 	g.CurrentDisplay = DisplayKHR(c.currentDisplay)
 	g.CurrentStackIndex = uint32(c.currentStackIndex)
 }
-func (p PFNGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlanePropertiesKHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties *DisplayPlanePropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -20025,30 +19651,26 @@ func (p PFNGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice Physi
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayPlanePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPlanePropertiesKHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayPlanePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayPlanePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayPlanePropertiesKHR))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayPlanePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
 
 type PFNGetDisplayPlaneSupportedDisplaysKHR uintptr
 
-func (p PFNGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevice, planeIndex uint32, displayCount *uint32, displays []DisplayKHR) (_ret Result) {
+func (p PFNGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevice, planeIndex uint32, displayCount *uint32, displays *DisplayKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		planeIndex     C.uint32_t
@@ -20066,23 +19688,19 @@ func (p PFNGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevi
 	} else {
 		c.pDisplayCount = nil
 	}
-	{
-		c.pDisplays = (*C.VkDisplayKHR)(_sa.alloc(C.sizeof_VkDisplayKHR * uint(len(displays))))
-		slice3 := (*[1 << 31]C.VkDisplayKHR)(unsafe.Pointer(c.pDisplays))[:len(displays):len(displays)]
-		for i3, _ := range displays {
-			slice3[i3] = C.VkDisplayKHR(displays[i3])
-		}
+	if displays != nil {
+		c.pDisplays = (*C.VkDisplayKHR)(_sa.alloc(C.sizeof_VkDisplayKHR))
+		*c.pDisplays = C.VkDisplayKHR(*displays)
+	} else {
+		c.pDisplays = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayPlaneSupportedDisplaysKHR(C.PFN_vkGetDisplayPlaneSupportedDisplaysKHR(unsafe.Pointer(p)), c.physicalDevice, c.planeIndex, c.pDisplayCount, c.pDisplays)
 	_ret = Result(c._ret)
 	if displayCount != nil {
 		*displayCount = uint32(*c.pDisplayCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayKHR)(unsafe.Pointer(c.pDisplays))[:len(displays):len(displays)]
-		for i3, _ := range displays {
-			displays[i3] = DisplayKHR(slice3[i3])
-		}
+	if displays != nil {
+		*displays = DisplayKHR(*c.pDisplays)
 	}
 	return
 }
@@ -20116,7 +19734,7 @@ func (g *DisplayModePropertiesKHR) fromC(c *C.VkDisplayModePropertiesKHR) {
 	g.DisplayMode = DisplayModeKHR(c.displayMode)
 	g.Parameters.fromC(&c.parameters)
 }
-func (p PFNGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModePropertiesKHR) (_ret Result) {
+func (p PFNGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties *DisplayModePropertiesKHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -20134,23 +19752,19 @@ func (p PFNGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, disp
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayModePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayModePropertiesKHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayModePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3])
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayModePropertiesKHR)(_sa.alloc(C.sizeof_VkDisplayModePropertiesKHR))
+		properties.toC(c.pProperties)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayModePropertiesKHR(C.PFN_vkGetDisplayModePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayModePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -20233,7 +19847,7 @@ func (p PFNCreateDisplayModeKHR) Call(physicalDevice PhysicalDevice, display Dis
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -20428,7 +20042,7 @@ func (p PFNCreateDisplayPlaneSurfaceKHR) Call(instance Instance, createInfo *Dis
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -20470,7 +20084,7 @@ func (p PFNCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapchai
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -20494,7 +20108,7 @@ func (p PFNCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapchai
 
 type PFNGetPhysicalDeviceFeatures2KHR uintptr
 
-func (p PFNGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice, features []PhysicalDeviceFeatures2) {
+func (p PFNGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkPhysicalDeviceFeatures2
@@ -20502,25 +20116,21 @@ func (p PFNGetPhysicalDeviceFeatures2KHR) Call(physicalDevice PhysicalDevice, fe
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2 * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3], _sa)
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkPhysicalDeviceFeatures2)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures2))
+		features.toC(c.pFeatures, _sa)
+	} else {
+		c.pFeatures = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFeatures2KHR(C.PFN_vkGetPhysicalDeviceFeatures2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceFeatures2)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
 }
 
 type PFNGetPhysicalDeviceProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevice, properties []PhysicalDeviceProperties2) {
+func (p PFNGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pProperties    *C.VkPhysicalDeviceProperties2
@@ -20528,25 +20138,21 @@ func (p PFNGetPhysicalDeviceProperties2KHR) Call(physicalDevice PhysicalDevice, 
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkPhysicalDeviceProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceProperties2KHR(C.PFN_vkGetPhysicalDeviceProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
 type PFNGetPhysicalDeviceFormatProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice PhysicalDevice, format Format, formatProperties []FormatProperties2) {
+func (p PFNGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		format            C.VkFormat
@@ -20556,25 +20162,21 @@ func (p PFNGetPhysicalDeviceFormatProperties2KHR) Call(physicalDevice PhysicalDe
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.format = C.VkFormat(format)
-	{
-		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2 * uint(len(formatProperties))))
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if formatProperties != nil {
+		c.pFormatProperties = (*C.VkFormatProperties2)(_sa.alloc(C.sizeof_VkFormatProperties2))
+		formatProperties.toC(c.pFormatProperties, _sa)
+	} else {
+		c.pFormatProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.format, c.pFormatProperties)
-	{
-		slice3 := (*[1 << 31]C.VkFormatProperties2)(unsafe.Pointer(c.pFormatProperties))[:len(formatProperties):len(formatProperties)]
-		for i3, _ := range formatProperties {
-			formatProperties[i3].fromC(&slice3[i3])
-		}
+	if formatProperties != nil {
+		formatProperties.fromC(c.pFormatProperties)
 	}
 }
 
 type PFNGetPhysicalDeviceImageFormatProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties []ImageFormatProperties2) (_ret Result) {
+func (p PFNGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties *ImageFormatProperties2) (_ret Result) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		pImageFormatInfo       *C.VkPhysicalDeviceImageFormatInfo2
@@ -20590,27 +20192,23 @@ func (p PFNGetPhysicalDeviceImageFormatProperties2KHR) Call(physicalDevice Physi
 	} else {
 		c.pImageFormatInfo = nil
 	}
-	{
-		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2 * uint(len(imageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if imageFormatProperties != nil {
+		c.pImageFormatProperties = (*C.VkImageFormatProperties2)(_sa.alloc(C.sizeof_VkImageFormatProperties2))
+		imageFormatProperties.toC(c.pImageFormatProperties, _sa)
+	} else {
+		c.pImageFormatProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceImageFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceImageFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pImageFormatInfo, c.pImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkImageFormatProperties2)(unsafe.Pointer(c.pImageFormatProperties))[:len(imageFormatProperties):len(imageFormatProperties)]
-		for i3, _ := range imageFormatProperties {
-			imageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if imageFormatProperties != nil {
+		imageFormatProperties.fromC(c.pImageFormatProperties)
 	}
 	return
 }
 
 type PFNGetPhysicalDeviceQueueFamilyProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2) {
+func (p PFNGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties *QueueFamilyProperties2) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pQueueFamilyPropertyCount *C.uint32_t
@@ -20625,28 +20223,24 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice Physi
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
-		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if queueFamilyProperties != nil {
+		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(_sa.alloc(C.sizeof_VkQueueFamilyProperties2))
+		queueFamilyProperties.toC(c.pQueueFamilyProperties, _sa)
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
 		*queueFamilyPropertyCount = uint32(*c.pQueueFamilyPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
-		for i3, _ := range queueFamilyProperties {
-			queueFamilyProperties[i3].fromC(&slice3[i3])
-		}
+	if queueFamilyProperties != nil {
+		queueFamilyProperties.fromC(c.pQueueFamilyProperties)
 	}
 }
 
 type PFNGetPhysicalDeviceMemoryProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice PhysicalDevice, memoryProperties []PhysicalDeviceMemoryProperties2) {
+func (p PFNGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties2) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pMemoryProperties *C.VkPhysicalDeviceMemoryProperties2
@@ -20654,25 +20248,21 @@ func (p PFNGetPhysicalDeviceMemoryProperties2KHR) Call(physicalDevice PhysicalDe
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2 * uint(len(memoryProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryProperties != nil {
+		c.pMemoryProperties = (*C.VkPhysicalDeviceMemoryProperties2)(_sa.alloc(C.sizeof_VkPhysicalDeviceMemoryProperties2))
+		memoryProperties.toC(c.pMemoryProperties, _sa)
+	} else {
+		c.pMemoryProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceMemoryProperties2KHR(C.PFN_vkGetPhysicalDeviceMemoryProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pMemoryProperties)
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceMemoryProperties2)(unsafe.Pointer(c.pMemoryProperties))[:len(memoryProperties):len(memoryProperties)]
-		for i3, _ := range memoryProperties {
-			memoryProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryProperties != nil {
+		memoryProperties.fromC(c.pMemoryProperties)
 	}
 }
 
 type PFNGetPhysicalDeviceSparseImageFormatProperties2KHR uintptr
 
-func (p PFNGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2) {
+func (p PFNGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties *SparseImageFormatProperties2) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFormatInfo    *C.VkPhysicalDeviceSparseImageFormatInfo2
@@ -20694,22 +20284,18 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkSparseImageFormatProperties2)(_sa.alloc(C.sizeof_VkSparseImageFormatProperties2))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 }
 
@@ -20819,7 +20405,7 @@ func (p PFNTrimCommandPoolKHR) Call(device Device, commandPool CommandPool, flag
 
 type PFNEnumeratePhysicalDeviceGroupsKHR uintptr
 
-func (p PFNEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result) {
+func (p PFNEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties *PhysicalDeviceGroupProperties) (_ret Result) {
 	var c struct {
 		instance                       C.VkInstance
 		pPhysicalDeviceGroupCount      *C.uint32_t
@@ -20835,30 +20421,26 @@ func (p PFNEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDev
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
-		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if physicalDeviceGroupProperties != nil {
+		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(_sa.alloc(C.sizeof_VkPhysicalDeviceGroupProperties))
+		physicalDeviceGroupProperties.toC(c.pPhysicalDeviceGroupProperties, _sa)
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroupsKHR(C.PFN_vkEnumeratePhysicalDeviceGroupsKHR(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
 	if physicalDeviceGroupCount != nil {
 		*physicalDeviceGroupCount = uint32(*c.pPhysicalDeviceGroupCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
-		for i3, _ := range physicalDeviceGroupProperties {
-			physicalDeviceGroupProperties[i3].fromC(&slice3[i3])
-		}
+	if physicalDeviceGroupProperties != nil {
+		physicalDeviceGroupProperties.fromC(c.pPhysicalDeviceGroupProperties)
 	}
 	return
 }
 
 type PFNGetPhysicalDeviceExternalBufferPropertiesKHR uintptr
 
-func (p PFNGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties []ExternalBufferProperties) {
+func (p PFNGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties *ExternalBufferProperties) {
 	var c struct {
 		physicalDevice            C.VkPhysicalDevice
 		pExternalBufferInfo       *C.VkPhysicalDeviceExternalBufferInfo
@@ -20873,19 +20455,15 @@ func (p PFNGetPhysicalDeviceExternalBufferPropertiesKHR) Call(physicalDevice Phy
 	} else {
 		c.pExternalBufferInfo = nil
 	}
-	{
-		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties * uint(len(externalBufferProperties))))
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalBufferProperties != nil {
+		c.pExternalBufferProperties = (*C.VkExternalBufferProperties)(_sa.alloc(C.sizeof_VkExternalBufferProperties))
+		externalBufferProperties.toC(c.pExternalBufferProperties, _sa)
+	} else {
+		c.pExternalBufferProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalBufferPropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalBufferInfo, c.pExternalBufferProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalBufferProperties)(unsafe.Pointer(c.pExternalBufferProperties))[:len(externalBufferProperties):len(externalBufferProperties)]
-		for i3, _ := range externalBufferProperties {
-			externalBufferProperties[i3].fromC(&slice3[i3])
-		}
+	if externalBufferProperties != nil {
+		externalBufferProperties.fromC(c.pExternalBufferProperties)
 	}
 }
 
@@ -20996,7 +20574,7 @@ func (s *MemoryFdPropertiesKHR) GetNext() Structure {
 func (s *MemoryFdPropertiesKHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties []MemoryFdPropertiesKHR) (_ret Result) {
+func (p PFNGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties *MemoryFdPropertiesKHR) (_ret Result) {
 	var c struct {
 		device              C.VkDevice
 		handleType          C.VkExternalMemoryHandleTypeFlagBits
@@ -21009,27 +20587,23 @@ func (p PFNGetMemoryFdPropertiesKHR) Call(device Device, handleType ExternalMemo
 	c.device = C.VkDevice(device)
 	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(handleType)
 	c.fd = C.int(fd)
-	{
-		c.pMemoryFdProperties = (*C.VkMemoryFdPropertiesKHR)(_sa.alloc(C.sizeof_VkMemoryFdPropertiesKHR * uint(len(memoryFdProperties))))
-		slice3 := (*[1 << 31]C.VkMemoryFdPropertiesKHR)(unsafe.Pointer(c.pMemoryFdProperties))[:len(memoryFdProperties):len(memoryFdProperties)]
-		for i3, _ := range memoryFdProperties {
-			memoryFdProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryFdProperties != nil {
+		c.pMemoryFdProperties = (*C.VkMemoryFdPropertiesKHR)(_sa.alloc(C.sizeof_VkMemoryFdPropertiesKHR))
+		memoryFdProperties.toC(c.pMemoryFdProperties, _sa)
+	} else {
+		c.pMemoryFdProperties = nil
 	}
 	c._ret = C.callPFN_vkGetMemoryFdPropertiesKHR(C.PFN_vkGetMemoryFdPropertiesKHR(unsafe.Pointer(p)), c.device, c.handleType, c.fd, c.pMemoryFdProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryFdPropertiesKHR)(unsafe.Pointer(c.pMemoryFdProperties))[:len(memoryFdProperties):len(memoryFdProperties)]
-		for i3, _ := range memoryFdProperties {
-			memoryFdProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryFdProperties != nil {
+		memoryFdProperties.fromC(c.pMemoryFdProperties)
 	}
 	return
 }
 
 type PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR uintptr
 
-func (p PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties []ExternalSemaphoreProperties) {
+func (p PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties *ExternalSemaphoreProperties) {
 	var c struct {
 		physicalDevice               C.VkPhysicalDevice
 		pExternalSemaphoreInfo       *C.VkPhysicalDeviceExternalSemaphoreInfo
@@ -21044,19 +20618,15 @@ func (p PFNGetPhysicalDeviceExternalSemaphorePropertiesKHR) Call(physicalDevice 
 	} else {
 		c.pExternalSemaphoreInfo = nil
 	}
-	{
-		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties * uint(len(externalSemaphoreProperties))))
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalSemaphoreProperties != nil {
+		c.pExternalSemaphoreProperties = (*C.VkExternalSemaphoreProperties)(_sa.alloc(C.sizeof_VkExternalSemaphoreProperties))
+		externalSemaphoreProperties.toC(c.pExternalSemaphoreProperties, _sa)
+	} else {
+		c.pExternalSemaphoreProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalSemaphorePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalSemaphoreInfo, c.pExternalSemaphoreProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalSemaphoreProperties)(unsafe.Pointer(c.pExternalSemaphoreProperties))[:len(externalSemaphoreProperties):len(externalSemaphoreProperties)]
-		for i3, _ := range externalSemaphoreProperties {
-			externalSemaphoreProperties[i3].fromC(&slice3[i3])
-		}
+	if externalSemaphoreProperties != nil {
+		externalSemaphoreProperties.fromC(c.pExternalSemaphoreProperties)
 	}
 }
 
@@ -21288,7 +20858,7 @@ func (p PFNCreateDescriptorUpdateTemplateKHR) Call(device Device, createInfo *De
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -21320,7 +20890,7 @@ func (p PFNDestroyDescriptorUpdateTemplateKHR) Call(device Device, descriptorUpd
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -21329,25 +20899,17 @@ func (p PFNDestroyDescriptorUpdateTemplateKHR) Call(device Device, descriptorUpd
 
 type PFNUpdateDescriptorSetWithTemplateKHR uintptr
 
-func (p PFNUpdateDescriptorSetWithTemplateKHR) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
+func (p PFNUpdateDescriptorSetWithTemplateKHR) Call(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
 		descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
 		pData                    unsafe.Pointer
 	}
-	_sa := pool.take()
-	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	C.callPFN_vkUpdateDescriptorSetWithTemplateKHR(C.PFN_vkUpdateDescriptorSetWithTemplateKHR(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
 
@@ -21892,7 +21454,7 @@ func (p PFNCreateRenderPass2KHR) Call(device Device, createInfo *RenderPassCreat
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -22063,7 +21625,7 @@ func (p PFNGetSwapchainStatusKHR) Call(device Device, swapchain SwapchainKHR) (_
 
 type PFNGetPhysicalDeviceExternalFencePropertiesKHR uintptr
 
-func (p PFNGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties []ExternalFenceProperties) {
+func (p PFNGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties *ExternalFenceProperties) {
 	var c struct {
 		physicalDevice           C.VkPhysicalDevice
 		pExternalFenceInfo       *C.VkPhysicalDeviceExternalFenceInfo
@@ -22078,19 +21640,15 @@ func (p PFNGetPhysicalDeviceExternalFencePropertiesKHR) Call(physicalDevice Phys
 	} else {
 		c.pExternalFenceInfo = nil
 	}
-	{
-		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties * uint(len(externalFenceProperties))))
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if externalFenceProperties != nil {
+		c.pExternalFenceProperties = (*C.VkExternalFenceProperties)(_sa.alloc(C.sizeof_VkExternalFenceProperties))
+		externalFenceProperties.toC(c.pExternalFenceProperties, _sa)
+	} else {
+		c.pExternalFenceProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceExternalFencePropertiesKHR(C.PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pExternalFenceInfo, c.pExternalFenceProperties)
-	{
-		slice3 := (*[1 << 31]C.VkExternalFenceProperties)(unsafe.Pointer(c.pExternalFenceProperties))[:len(externalFenceProperties):len(externalFenceProperties)]
-		for i3, _ := range externalFenceProperties {
-			externalFenceProperties[i3].fromC(&slice3[i3])
-		}
+	if externalFenceProperties != nil {
+		externalFenceProperties.fromC(c.pExternalFenceProperties)
 	}
 }
 
@@ -22321,7 +21879,7 @@ func (s *SurfaceCapabilities2KHR) GetNext() Structure {
 func (s *SurfaceCapabilities2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities []SurfaceCapabilities2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities *SurfaceCapabilities2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		pSurfaceInfo         *C.VkPhysicalDeviceSurfaceInfo2KHR
@@ -22337,20 +21895,16 @@ func (p PFNGetPhysicalDeviceSurfaceCapabilities2KHR) Call(physicalDevice Physica
 	} else {
 		c.pSurfaceInfo = nil
 	}
-	{
-		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2KHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2KHR * uint(len(surfaceCapabilities))))
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2KHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].toC(&slice3[i3], _sa)
-		}
+	if surfaceCapabilities != nil {
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2KHR)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2KHR))
+		surfaceCapabilities.toC(c.pSurfaceCapabilities, _sa)
+	} else {
+		c.pSurfaceCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR(C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pSurfaceInfo, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2KHR)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].fromC(&slice3[i3])
-		}
+	if surfaceCapabilities != nil {
+		surfaceCapabilities.fromC(c.pSurfaceCapabilities)
 	}
 	return
 }
@@ -22392,7 +21946,7 @@ func (s *SurfaceFormat2KHR) GetNext() Structure {
 func (s *SurfaceFormat2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats *SurfaceFormat2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice      C.VkPhysicalDevice
 		pSurfaceInfo        *C.VkPhysicalDeviceSurfaceInfo2KHR
@@ -22415,23 +21969,19 @@ func (p PFNGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevi
 	} else {
 		c.pSurfaceFormatCount = nil
 	}
-	{
-		c.pSurfaceFormats = (*C.VkSurfaceFormat2KHR)(_sa.alloc(C.sizeof_VkSurfaceFormat2KHR * uint(len(surfaceFormats))))
-		slice3 := (*[1 << 31]C.VkSurfaceFormat2KHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
-		for i3, _ := range surfaceFormats {
-			surfaceFormats[i3].toC(&slice3[i3], _sa)
-		}
+	if surfaceFormats != nil {
+		c.pSurfaceFormats = (*C.VkSurfaceFormat2KHR)(_sa.alloc(C.sizeof_VkSurfaceFormat2KHR))
+		surfaceFormats.toC(c.pSurfaceFormats, _sa)
+	} else {
+		c.pSurfaceFormats = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormats2KHR(C.PFN_vkGetPhysicalDeviceSurfaceFormats2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pSurfaceInfo, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
 	if surfaceFormatCount != nil {
 		*surfaceFormatCount = uint32(*c.pSurfaceFormatCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSurfaceFormat2KHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
-		for i3, _ := range surfaceFormats {
-			surfaceFormats[i3].fromC(&slice3[i3])
-		}
+	if surfaceFormats != nil {
+		surfaceFormats.fromC(c.pSurfaceFormats)
 	}
 	return
 }
@@ -22473,7 +22023,7 @@ func (s *DisplayProperties2KHR) GetNext() Structure {
 func (s *DisplayProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties *DisplayProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -22489,23 +22039,19 @@ func (p PFNGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalD
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayProperties2KHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayProperties2KHR))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -22547,7 +22093,7 @@ func (s *DisplayPlaneProperties2KHR) GetNext() Structure {
 func (s *DisplayPlaneProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result) {
+func (p PFNGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice PhysicalDevice, propertyCount *uint32, properties *DisplayPlaneProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pPropertyCount *C.uint32_t
@@ -22563,23 +22109,19 @@ func (p PFNGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice Phys
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayPlaneProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneProperties2KHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayPlaneProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayPlaneProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneProperties2KHR))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayPlaneProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -22621,7 +22163,7 @@ func (s *DisplayModeProperties2KHR) GetNext() Structure {
 func (s *DisplayModeProperties2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result) {
+func (p PFNGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties *DisplayModeProperties2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		display        C.VkDisplayKHR
@@ -22639,23 +22181,19 @@ func (p PFNGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, dis
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
-		c.pProperties = (*C.VkDisplayModeProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayModeProperties2KHR * uint(len(properties))))
-		slice3 := (*[1 << 31]C.VkDisplayModeProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].toC(&slice3[i3], _sa)
-		}
+	if properties != nil {
+		c.pProperties = (*C.VkDisplayModeProperties2KHR)(_sa.alloc(C.sizeof_VkDisplayModeProperties2KHR))
+		properties.toC(c.pProperties, _sa)
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayModeProperties2KHR(C.PFN_vkGetDisplayModeProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
 	if propertyCount != nil {
 		*propertyCount = uint32(*c.pPropertyCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDisplayModeProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
-		for i3, _ := range properties {
-			properties[i3].fromC(&slice3[i3])
-		}
+	if properties != nil {
+		properties.fromC(c.pProperties)
 	}
 	return
 }
@@ -22737,7 +22275,7 @@ func (s *DisplayPlaneCapabilities2KHR) GetNext() Structure {
 func (s *DisplayPlaneCapabilities2KHR) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities []DisplayPlaneCapabilities2KHR) (_ret Result) {
+func (p PFNGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities *DisplayPlaneCapabilities2KHR) (_ret Result) {
 	var c struct {
 		physicalDevice    C.VkPhysicalDevice
 		pDisplayPlaneInfo *C.VkDisplayPlaneInfo2KHR
@@ -22753,27 +22291,23 @@ func (p PFNGetDisplayPlaneCapabilities2KHR) Call(physicalDevice PhysicalDevice, 
 	} else {
 		c.pDisplayPlaneInfo = nil
 	}
-	{
-		c.pCapabilities = (*C.VkDisplayPlaneCapabilities2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneCapabilities2KHR * uint(len(capabilities))))
-		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilities2KHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
-		for i3, _ := range capabilities {
-			capabilities[i3].toC(&slice3[i3], _sa)
-		}
+	if capabilities != nil {
+		c.pCapabilities = (*C.VkDisplayPlaneCapabilities2KHR)(_sa.alloc(C.sizeof_VkDisplayPlaneCapabilities2KHR))
+		capabilities.toC(c.pCapabilities, _sa)
+	} else {
+		c.pCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayPlaneCapabilities2KHR(C.PFN_vkGetDisplayPlaneCapabilities2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pDisplayPlaneInfo, c.pCapabilities)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilities2KHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
-		for i3, _ := range capabilities {
-			capabilities[i3].fromC(&slice3[i3])
-		}
+	if capabilities != nil {
+		capabilities.fromC(c.pCapabilities)
 	}
 	return
 }
 
 type PFNGetImageMemoryRequirements2KHR uintptr
 
-func (p PFNGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkImageMemoryRequirementsInfo2
@@ -22788,25 +22322,21 @@ func (p PFNGetImageMemoryRequirements2KHR) Call(device Device, info *ImageMemory
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageMemoryRequirements2KHR(C.PFN_vkGetImageMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
 type PFNGetBufferMemoryRequirements2KHR uintptr
 
-func (p PFNGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements []MemoryRequirements2) {
+func (p PFNGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2) {
 	var c struct {
 		device              C.VkDevice
 		pInfo               *C.VkBufferMemoryRequirementsInfo2
@@ -22821,25 +22351,21 @@ func (p PFNGetBufferMemoryRequirements2KHR) Call(device Device, info *BufferMemo
 	} else {
 		c.pInfo = nil
 	}
-	{
-		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2 * uint(len(memoryRequirements))))
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryRequirements != nil {
+		c.pMemoryRequirements = (*C.VkMemoryRequirements2)(_sa.alloc(C.sizeof_VkMemoryRequirements2))
+		memoryRequirements.toC(c.pMemoryRequirements, _sa)
+	} else {
+		c.pMemoryRequirements = nil
 	}
 	C.callPFN_vkGetBufferMemoryRequirements2KHR(C.PFN_vkGetBufferMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pMemoryRequirements)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryRequirements2)(unsafe.Pointer(c.pMemoryRequirements))[:len(memoryRequirements):len(memoryRequirements)]
-		for i3, _ := range memoryRequirements {
-			memoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if memoryRequirements != nil {
+		memoryRequirements.fromC(c.pMemoryRequirements)
 	}
 }
 
 type PFNGetImageSparseMemoryRequirements2KHR uintptr
 
-func (p PFNGetImageSparseMemoryRequirements2KHR) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2) {
+func (p PFNGetImageSparseMemoryRequirements2KHR) Call(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements *SparseImageMemoryRequirements2) {
 	var c struct {
 		device                        C.VkDevice
 		pInfo                         *C.VkImageSparseMemoryRequirementsInfo2
@@ -22861,22 +22387,18 @@ func (p PFNGetImageSparseMemoryRequirements2KHR) Call(device Device, info *Image
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
-		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].toC(&slice3[i3], _sa)
-		}
+	if sparseMemoryRequirements != nil {
+		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(_sa.alloc(C.sizeof_VkSparseImageMemoryRequirements2))
+		sparseMemoryRequirements.toC(c.pSparseMemoryRequirements, _sa)
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements2KHR(C.PFN_vkGetImageSparseMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
 		*sparseMemoryRequirementCount = uint32(*c.pSparseMemoryRequirementCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
-		for i3, _ := range sparseMemoryRequirements {
-			sparseMemoryRequirements[i3].fromC(&slice3[i3])
-		}
+	if sparseMemoryRequirements != nil {
+		sparseMemoryRequirements.fromC(c.pSparseMemoryRequirements)
 	}
 }
 
@@ -22901,7 +22423,7 @@ func (p PFNCreateSamplerYcbcrConversionKHR) Call(device Device, createInfo *Samp
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -22933,7 +22455,7 @@ func (p PFNDestroySamplerYcbcrConversionKHR) Call(device Device, ycbcrConversion
 	c.ycbcrConversion = C.VkSamplerYcbcrConversion(ycbcrConversion)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -23180,7 +22702,7 @@ type DebugReportCallbackCreateInfoEXT struct {
 	Next     Structure
 	Flags    DebugReportFlagsEXT
 	Callback PFNDebugReportCallbackEXT
-	UserData []byte
+	UserData unsafe.Pointer
 }
 
 func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateInfoEXT, _sa *stackAllocator) {
@@ -23198,13 +22720,7 @@ func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateI
 		c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
 	}
 	c.pfnCallback = C.PFN_vkDebugReportCallbackEXT(unsafe.Pointer(g.Callback))
-	{
-		c.pUserData = _sa.alloc(C.sizeof_char * uint(len(g.UserData)))
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			slice2[i2] = g.UserData[i2]
-		}
-	}
+	c.pUserData = g.UserData
 }
 func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreateInfoEXT) {
 	if g.Next != nil {
@@ -23220,12 +22736,7 @@ func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreat
 		g.Flags = DebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
 	}
 	g.Callback = PFNDebugReportCallbackEXT(unsafe.Pointer(c.pfnCallback))
-	{
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			g.UserData[i2] = slice2[i2]
-		}
-	}
+	g.UserData = c.pUserData
 }
 func (s *DebugReportCallbackCreateInfoEXT) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DEBUG_REPORT_CALLBACK_CREATE_INFO_EXT
@@ -23267,7 +22778,7 @@ func (p PFNCreateDebugReportCallbackEXT) Call(instance Instance, createInfo *Deb
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -23299,7 +22810,7 @@ func (p PFNDestroyDebugReportCallbackEXT) Call(instance Instance, callback Debug
 	c.callback = C.VkDebugReportCallbackEXT(callback)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -23765,7 +23276,7 @@ func (g *ExternalImageFormatPropertiesNV) fromC(c *C.VkExternalImageFormatProper
 		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
 	}
 }
-func (p PFNGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties []ExternalImageFormatPropertiesNV) (_ret Result) {
+func (p PFNGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties *ExternalImageFormatPropertiesNV) (_ret Result) {
 	var c struct {
 		physicalDevice                 C.VkPhysicalDevice
 		format                         C.VkFormat
@@ -23810,20 +23321,16 @@ func (p PFNGetPhysicalDeviceExternalImageFormatPropertiesNV) Call(physicalDevice
 		}
 		c.externalHandleType = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
 	}
-	{
-		c.pExternalImageFormatProperties = (*C.VkExternalImageFormatPropertiesNV)(_sa.alloc(C.sizeof_VkExternalImageFormatPropertiesNV * uint(len(externalImageFormatProperties))))
-		slice3 := (*[1 << 31]C.VkExternalImageFormatPropertiesNV)(unsafe.Pointer(c.pExternalImageFormatProperties))[:len(externalImageFormatProperties):len(externalImageFormatProperties)]
-		for i3, _ := range externalImageFormatProperties {
-			externalImageFormatProperties[i3].toC(&slice3[i3])
-		}
+	if externalImageFormatProperties != nil {
+		c.pExternalImageFormatProperties = (*C.VkExternalImageFormatPropertiesNV)(_sa.alloc(C.sizeof_VkExternalImageFormatPropertiesNV))
+		externalImageFormatProperties.toC(c.pExternalImageFormatProperties)
+	} else {
+		c.pExternalImageFormatProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(C.PFN_vkGetPhysicalDeviceExternalImageFormatPropertiesNV(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.tiling, c.usage, c.flags, c.externalHandleType, c.pExternalImageFormatProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkExternalImageFormatPropertiesNV)(unsafe.Pointer(c.pExternalImageFormatProperties))[:len(externalImageFormatProperties):len(externalImageFormatProperties)]
-		for i3, _ := range externalImageFormatProperties {
-			externalImageFormatProperties[i3].fromC(&slice3[i3])
-		}
+	if externalImageFormatProperties != nil {
+		externalImageFormatProperties.fromC(c.pExternalImageFormatProperties)
 	}
 	return
 }
@@ -24294,7 +23801,7 @@ func (p PFNCreateIndirectCommandsLayoutNVX) Call(device Device, createInfo *Indi
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -24326,7 +23833,7 @@ func (p PFNDestroyIndirectCommandsLayoutNVX) Call(device Device, indirectCommand
 	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(indirectCommandsLayout)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -24462,7 +23969,7 @@ func (p PFNCreateObjectTableNVX) Call(device Device, createInfo *ObjectTableCrea
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -24494,7 +24001,7 @@ func (p PFNDestroyObjectTableNVX) Call(device Device, objectTable ObjectTableNVX
 	c.objectTable = C.VkObjectTableNVX(objectTable)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -24694,7 +24201,7 @@ func (s *DeviceGeneratedCommandsLimitsNVX) GetNext() Structure {
 func (s *DeviceGeneratedCommandsLimitsNVX) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice PhysicalDevice, features []DeviceGeneratedCommandsFeaturesNVX, limits []DeviceGeneratedCommandsLimitsNVX) {
+func (p PFNGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice PhysicalDevice, features *DeviceGeneratedCommandsFeaturesNVX, limits *DeviceGeneratedCommandsLimitsNVX) {
 	var c struct {
 		physicalDevice C.VkPhysicalDevice
 		pFeatures      *C.VkDeviceGeneratedCommandsFeaturesNVX
@@ -24703,32 +24210,24 @@ func (p PFNGetPhysicalDeviceGeneratedCommandsPropertiesNVX) Call(physicalDevice 
 	_sa := pool.take()
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	{
-		c.pFeatures = (*C.VkDeviceGeneratedCommandsFeaturesNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsFeaturesNVX * uint(len(features))))
-		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsFeaturesNVX)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].toC(&slice3[i3], _sa)
-		}
+	if features != nil {
+		c.pFeatures = (*C.VkDeviceGeneratedCommandsFeaturesNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsFeaturesNVX))
+		features.toC(c.pFeatures, _sa)
+	} else {
+		c.pFeatures = nil
 	}
-	{
-		c.pLimits = (*C.VkDeviceGeneratedCommandsLimitsNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsLimitsNVX * uint(len(limits))))
-		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsLimitsNVX)(unsafe.Pointer(c.pLimits))[:len(limits):len(limits)]
-		for i3, _ := range limits {
-			limits[i3].toC(&slice3[i3], _sa)
-		}
+	if limits != nil {
+		c.pLimits = (*C.VkDeviceGeneratedCommandsLimitsNVX)(_sa.alloc(C.sizeof_VkDeviceGeneratedCommandsLimitsNVX))
+		limits.toC(c.pLimits, _sa)
+	} else {
+		c.pLimits = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(C.PFN_vkGetPhysicalDeviceGeneratedCommandsPropertiesNVX(unsafe.Pointer(p)), c.physicalDevice, c.pFeatures, c.pLimits)
-	{
-		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsFeaturesNVX)(unsafe.Pointer(c.pFeatures))[:len(features):len(features)]
-		for i3, _ := range features {
-			features[i3].fromC(&slice3[i3])
-		}
+	if features != nil {
+		features.fromC(c.pFeatures)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkDeviceGeneratedCommandsLimitsNVX)(unsafe.Pointer(c.pLimits))[:len(limits):len(limits)]
-		for i3, _ := range limits {
-			limits[i3].fromC(&slice3[i3])
-		}
+	if limits != nil {
+		limits.fromC(c.pLimits)
 	}
 }
 
@@ -24922,7 +24421,7 @@ func (s *SurfaceCapabilities2EXT) GetNext() Structure {
 func (s *SurfaceCapabilities2EXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities []SurfaceCapabilities2EXT) (_ret Result) {
+func (p PFNGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities *SurfaceCapabilities2EXT) (_ret Result) {
 	var c struct {
 		physicalDevice       C.VkPhysicalDevice
 		surface              C.VkSurfaceKHR
@@ -24933,20 +24432,16 @@ func (p PFNGetPhysicalDeviceSurfaceCapabilities2EXT) Call(physicalDevice Physica
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.surface = C.VkSurfaceKHR(surface)
-	{
-		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2EXT)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2EXT * uint(len(surfaceCapabilities))))
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2EXT)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].toC(&slice3[i3], _sa)
-		}
+	if surfaceCapabilities != nil {
+		c.pSurfaceCapabilities = (*C.VkSurfaceCapabilities2EXT)(_sa.alloc(C.sizeof_VkSurfaceCapabilities2EXT))
+		surfaceCapabilities.toC(c.pSurfaceCapabilities, _sa)
+	} else {
+		c.pSurfaceCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT(C.PFN_vkGetPhysicalDeviceSurfaceCapabilities2EXT(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceCapabilities)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkSurfaceCapabilities2EXT)(unsafe.Pointer(c.pSurfaceCapabilities))[:len(surfaceCapabilities):len(surfaceCapabilities)]
-		for i3, _ := range surfaceCapabilities {
-			surfaceCapabilities[i3].fromC(&slice3[i3])
-		}
+	if surfaceCapabilities != nil {
+		surfaceCapabilities.fromC(c.pSurfaceCapabilities)
 	}
 	return
 }
@@ -25098,7 +24593,7 @@ func (p PFNRegisterDeviceEventEXT) Call(device Device, deviceEventInfo *DeviceEv
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -25174,7 +24669,7 @@ func (p PFNRegisterDisplayEventEXT) Call(device Device, display DisplayKHR, disp
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -25230,7 +24725,7 @@ func (g *RefreshCycleDurationGOOGLE) toC(c *C.VkRefreshCycleDurationGOOGLE) {
 func (g *RefreshCycleDurationGOOGLE) fromC(c *C.VkRefreshCycleDurationGOOGLE) {
 	g.RefreshDuration = uint64(c.refreshDuration)
 }
-func (p PFNGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain SwapchainKHR, displayTimingProperties []RefreshCycleDurationGOOGLE) (_ret Result) {
+func (p PFNGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain SwapchainKHR, displayTimingProperties *RefreshCycleDurationGOOGLE) (_ret Result) {
 	var c struct {
 		device                   C.VkDevice
 		swapchain                C.VkSwapchainKHR
@@ -25241,20 +24736,16 @@ func (p PFNGetRefreshCycleDurationGOOGLE) Call(device Device, swapchain Swapchai
 	defer pool.give(_sa)
 	c.device = C.VkDevice(device)
 	c.swapchain = C.VkSwapchainKHR(swapchain)
-	{
-		c.pDisplayTimingProperties = (*C.VkRefreshCycleDurationGOOGLE)(_sa.alloc(C.sizeof_VkRefreshCycleDurationGOOGLE * uint(len(displayTimingProperties))))
-		slice3 := (*[1 << 31]C.VkRefreshCycleDurationGOOGLE)(unsafe.Pointer(c.pDisplayTimingProperties))[:len(displayTimingProperties):len(displayTimingProperties)]
-		for i3, _ := range displayTimingProperties {
-			displayTimingProperties[i3].toC(&slice3[i3])
-		}
+	if displayTimingProperties != nil {
+		c.pDisplayTimingProperties = (*C.VkRefreshCycleDurationGOOGLE)(_sa.alloc(C.sizeof_VkRefreshCycleDurationGOOGLE))
+		displayTimingProperties.toC(c.pDisplayTimingProperties)
+	} else {
+		c.pDisplayTimingProperties = nil
 	}
 	c._ret = C.callPFN_vkGetRefreshCycleDurationGOOGLE(C.PFN_vkGetRefreshCycleDurationGOOGLE(unsafe.Pointer(p)), c.device, c.swapchain, c.pDisplayTimingProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkRefreshCycleDurationGOOGLE)(unsafe.Pointer(c.pDisplayTimingProperties))[:len(displayTimingProperties):len(displayTimingProperties)]
-		for i3, _ := range displayTimingProperties {
-			displayTimingProperties[i3].fromC(&slice3[i3])
-		}
+	if displayTimingProperties != nil {
+		displayTimingProperties.fromC(c.pDisplayTimingProperties)
 	}
 	return
 }
@@ -25282,7 +24773,7 @@ func (g *PastPresentationTimingGOOGLE) fromC(c *C.VkPastPresentationTimingGOOGLE
 	g.EarliestPresentTime = uint64(c.earliestPresentTime)
 	g.PresentMargin = uint64(c.presentMargin)
 }
-func (p PFNGetPastPresentationTimingGOOGLE) Call(device Device, swapchain SwapchainKHR, presentationTimingCount *uint32, presentationTimings []PastPresentationTimingGOOGLE) (_ret Result) {
+func (p PFNGetPastPresentationTimingGOOGLE) Call(device Device, swapchain SwapchainKHR, presentationTimingCount *uint32, presentationTimings *PastPresentationTimingGOOGLE) (_ret Result) {
 	var c struct {
 		device                   C.VkDevice
 		swapchain                C.VkSwapchainKHR
@@ -25300,23 +24791,19 @@ func (p PFNGetPastPresentationTimingGOOGLE) Call(device Device, swapchain Swapch
 	} else {
 		c.pPresentationTimingCount = nil
 	}
-	{
-		c.pPresentationTimings = (*C.VkPastPresentationTimingGOOGLE)(_sa.alloc(C.sizeof_VkPastPresentationTimingGOOGLE * uint(len(presentationTimings))))
-		slice3 := (*[1 << 31]C.VkPastPresentationTimingGOOGLE)(unsafe.Pointer(c.pPresentationTimings))[:len(presentationTimings):len(presentationTimings)]
-		for i3, _ := range presentationTimings {
-			presentationTimings[i3].toC(&slice3[i3])
-		}
+	if presentationTimings != nil {
+		c.pPresentationTimings = (*C.VkPastPresentationTimingGOOGLE)(_sa.alloc(C.sizeof_VkPastPresentationTimingGOOGLE))
+		presentationTimings.toC(c.pPresentationTimings)
+	} else {
+		c.pPresentationTimings = nil
 	}
 	c._ret = C.callPFN_vkGetPastPresentationTimingGOOGLE(C.PFN_vkGetPastPresentationTimingGOOGLE(unsafe.Pointer(p)), c.device, c.swapchain, c.pPresentationTimingCount, c.pPresentationTimings)
 	_ret = Result(c._ret)
 	if presentationTimingCount != nil {
 		*presentationTimingCount = uint32(*c.pPresentationTimingCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkPastPresentationTimingGOOGLE)(unsafe.Pointer(c.pPresentationTimings))[:len(presentationTimings):len(presentationTimings)]
-		for i3, _ := range presentationTimings {
-			presentationTimings[i3].fromC(&slice3[i3])
-		}
+	if presentationTimings != nil {
+		presentationTimings.fromC(c.pPresentationTimings)
 	}
 	return
 }
@@ -25927,7 +25414,7 @@ type DebugUtilsMessengerCreateInfoEXT struct {
 	MessageSeverity DebugUtilsMessageSeverityFlagsEXT
 	MessageType     DebugUtilsMessageTypeFlagsEXT
 	UserCallback    PFNDebugUtilsMessengerCallbackEXT
-	UserData        []byte
+	UserData        unsafe.Pointer
 }
 
 func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateInfoEXT, _sa *stackAllocator) {
@@ -25963,13 +25450,7 @@ func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateI
 		c.messageType = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
 	}
 	c.pfnUserCallback = C.PFN_vkDebugUtilsMessengerCallbackEXT(unsafe.Pointer(g.UserCallback))
-	{
-		c.pUserData = _sa.alloc(C.sizeof_char * uint(len(g.UserData)))
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			slice2[i2] = g.UserData[i2]
-		}
-	}
+	c.pUserData = g.UserData
 }
 func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreateInfoEXT) {
 	if g.Next != nil {
@@ -26003,12 +25484,7 @@ func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreat
 		g.MessageType = DebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
 	}
 	g.UserCallback = PFNDebugUtilsMessengerCallbackEXT(unsafe.Pointer(c.pfnUserCallback))
-	{
-		slice2 := (*[1 << 31]byte)(c.pUserData)[:len(g.UserData):len(g.UserData)]
-		for i2, _ := range g.UserData {
-			g.UserData[i2] = slice2[i2]
-		}
-	}
+	g.UserData = c.pUserData
 }
 func (s *DebugUtilsMessengerCreateInfoEXT) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT
@@ -26050,7 +25526,7 @@ func (p PFNCreateDebugUtilsMessengerEXT) Call(instance Instance, createInfo *Deb
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -26082,7 +25558,7 @@ func (p PFNDestroyDebugUtilsMessengerEXT) Call(instance Instance, messenger Debu
 	c.messenger = C.VkDebugUtilsMessengerEXT(messenger)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -26091,7 +25567,7 @@ func (p PFNDestroyDebugUtilsMessengerEXT) Call(instance Instance, messenger Debu
 
 type PFNSubmitDebugUtilsMessageEXT uintptr
 
-func (p PFNSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverity DebugUtilsMessageSeverityFlagBitsEXT, messageTypes DebugUtilsMessageTypeFlagsEXT, callbackData []DebugUtilsMessengerCallbackDataEXT) {
+func (p PFNSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverity DebugUtilsMessageSeverityFlagBitsEXT, messageTypes DebugUtilsMessageTypeFlagsEXT, callbackData *DebugUtilsMessengerCallbackDataEXT) {
 	var c struct {
 		instance        C.VkInstance
 		messageSeverity C.VkDebugUtilsMessageSeverityFlagBitsEXT
@@ -26111,12 +25587,11 @@ func (p PFNSubmitDebugUtilsMessageEXT) Call(instance Instance, messageSeverity D
 		}
 		c.messageTypes = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
 	}
-	{
-		c.pCallbackData = (*C.VkDebugUtilsMessengerCallbackDataEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT * uint(len(callbackData))))
-		slice3 := (*[1 << 31]C.VkDebugUtilsMessengerCallbackDataEXT)(unsafe.Pointer(c.pCallbackData))[:len(callbackData):len(callbackData)]
-		for i3, _ := range callbackData {
-			callbackData[i3].toC(&slice3[i3], _sa)
-		}
+	if callbackData != nil {
+		c.pCallbackData = (*C.VkDebugUtilsMessengerCallbackDataEXT)(_sa.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT))
+		callbackData.toC(c.pCallbackData, _sa)
+	} else {
+		c.pCallbackData = nil
 	}
 	C.callPFN_vkSubmitDebugUtilsMessageEXT(C.PFN_vkSubmitDebugUtilsMessageEXT(unsafe.Pointer(p)), c.instance, c.messageSeverity, c.messageTypes, c.pCallbackData)
 }
@@ -26257,7 +25732,7 @@ func (s *MultisamplePropertiesEXT) GetNext() Structure {
 func (s *MultisamplePropertiesEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties []MultisamplePropertiesEXT) {
+func (p PFNGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties *MultisamplePropertiesEXT) {
 	var c struct {
 		physicalDevice         C.VkPhysicalDevice
 		samples                C.VkSampleCountFlagBits
@@ -26267,19 +25742,15 @@ func (p PFNGetPhysicalDeviceMultisamplePropertiesEXT) Call(physicalDevice Physic
 	defer pool.give(_sa)
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.samples = C.VkSampleCountFlagBits(samples)
-	{
-		c.pMultisampleProperties = (*C.VkMultisamplePropertiesEXT)(_sa.alloc(C.sizeof_VkMultisamplePropertiesEXT * uint(len(multisampleProperties))))
-		slice3 := (*[1 << 31]C.VkMultisamplePropertiesEXT)(unsafe.Pointer(c.pMultisampleProperties))[:len(multisampleProperties):len(multisampleProperties)]
-		for i3, _ := range multisampleProperties {
-			multisampleProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if multisampleProperties != nil {
+		c.pMultisampleProperties = (*C.VkMultisamplePropertiesEXT)(_sa.alloc(C.sizeof_VkMultisamplePropertiesEXT))
+		multisampleProperties.toC(c.pMultisampleProperties, _sa)
+	} else {
+		c.pMultisampleProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(C.PFN_vkGetPhysicalDeviceMultisamplePropertiesEXT(unsafe.Pointer(p)), c.physicalDevice, c.samples, c.pMultisampleProperties)
-	{
-		slice3 := (*[1 << 31]C.VkMultisamplePropertiesEXT)(unsafe.Pointer(c.pMultisampleProperties))[:len(multisampleProperties):len(multisampleProperties)]
-		for i3, _ := range multisampleProperties {
-			multisampleProperties[i3].fromC(&slice3[i3])
-		}
+	if multisampleProperties != nil {
+		multisampleProperties.fromC(c.pMultisampleProperties)
 	}
 }
 
@@ -26410,7 +25881,7 @@ func (p PFNCreateValidationCacheEXT) Call(device Device, createInfo *ValidationC
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -26442,7 +25913,7 @@ func (p PFNDestroyValidationCacheEXT) Call(device Device, validationCache Valida
 	c.validationCache = C.VkValidationCacheEXT(validationCache)
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -26478,7 +25949,7 @@ func (p PFNMergeValidationCachesEXT) Call(device Device, dstCache ValidationCach
 
 type PFNGetValidationCacheDataEXT uintptr
 
-func (p PFNGetValidationCacheDataEXT) Call(device Device, validationCache ValidationCacheEXT, dataSize *uint, data []byte) (_ret Result) {
+func (p PFNGetValidationCacheDataEXT) Call(device Device, validationCache ValidationCacheEXT, dataSize *uint, data unsafe.Pointer) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		validationCache C.VkValidationCacheEXT
@@ -26496,23 +25967,11 @@ func (p PFNGetValidationCacheDataEXT) Call(device Device, validationCache Valida
 	} else {
 		c.pDataSize = nil
 	}
-	{
-		c.pData = _sa.alloc(C.sizeof_char * uint(len(data)))
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			slice3[i3] = data[i3]
-		}
-	}
+	c.pData = data
 	c._ret = C.callPFN_vkGetValidationCacheDataEXT(C.PFN_vkGetValidationCacheDataEXT(unsafe.Pointer(p)), c.device, c.validationCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
 	if dataSize != nil {
 		*dataSize = uint(*c.pDataSize)
-	}
-	{
-		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i3, _ := range data {
-			data[i3] = slice3[i3]
-		}
 	}
 	return
 }
@@ -26577,7 +26036,7 @@ func (s *MemoryHostPointerPropertiesEXT) GetNext() Structure {
 func (s *MemoryHostPointerPropertiesEXT) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties []MemoryHostPointerPropertiesEXT) (_ret Result) {
+func (p PFNGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties *MemoryHostPointerPropertiesEXT) (_ret Result) {
 	var c struct {
 		device                       C.VkDevice
 		handleType                   C.VkExternalMemoryHandleTypeFlagBits
@@ -26590,20 +26049,16 @@ func (p PFNGetMemoryHostPointerPropertiesEXT) Call(device Device, handleType Ext
 	c.device = C.VkDevice(device)
 	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(handleType)
 	c.pHostPointer = hostPointer
-	{
-		c.pMemoryHostPointerProperties = (*C.VkMemoryHostPointerPropertiesEXT)(_sa.alloc(C.sizeof_VkMemoryHostPointerPropertiesEXT * uint(len(memoryHostPointerProperties))))
-		slice3 := (*[1 << 31]C.VkMemoryHostPointerPropertiesEXT)(unsafe.Pointer(c.pMemoryHostPointerProperties))[:len(memoryHostPointerProperties):len(memoryHostPointerProperties)]
-		for i3, _ := range memoryHostPointerProperties {
-			memoryHostPointerProperties[i3].toC(&slice3[i3], _sa)
-		}
+	if memoryHostPointerProperties != nil {
+		c.pMemoryHostPointerProperties = (*C.VkMemoryHostPointerPropertiesEXT)(_sa.alloc(C.sizeof_VkMemoryHostPointerPropertiesEXT))
+		memoryHostPointerProperties.toC(c.pMemoryHostPointerProperties, _sa)
+	} else {
+		c.pMemoryHostPointerProperties = nil
 	}
 	c._ret = C.callPFN_vkGetMemoryHostPointerPropertiesEXT(C.PFN_vkGetMemoryHostPointerPropertiesEXT(unsafe.Pointer(p)), c.device, c.handleType, c.pHostPointer, c.pMemoryHostPointerProperties)
 	_ret = Result(c._ret)
-	{
-		slice3 := (*[1 << 31]C.VkMemoryHostPointerPropertiesEXT)(unsafe.Pointer(c.pMemoryHostPointerProperties))[:len(memoryHostPointerProperties):len(memoryHostPointerProperties)]
-		for i3, _ := range memoryHostPointerProperties {
-			memoryHostPointerProperties[i3].fromC(&slice3[i3])
-		}
+	if memoryHostPointerProperties != nil {
+		memoryHostPointerProperties.fromC(c.pMemoryHostPointerProperties)
 	}
 	return
 }
@@ -26682,7 +26137,7 @@ func (s *CheckpointDataNV) GetNext() Structure {
 func (s *CheckpointDataNV) SetNext(n Structure) {
 	s.Next = n
 }
-func (p PFNGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV) {
+func (p PFNGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint32, checkpointData *CheckpointDataNV) {
 	var c struct {
 		queue                C.VkQueue
 		pCheckpointDataCount *C.uint32_t
@@ -26697,21 +26152,17 @@ func (p PFNGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint
 	} else {
 		c.pCheckpointDataCount = nil
 	}
-	{
-		c.pCheckpointData = (*C.VkCheckpointDataNV)(_sa.alloc(C.sizeof_VkCheckpointDataNV * uint(len(checkpointData))))
-		slice3 := (*[1 << 31]C.VkCheckpointDataNV)(unsafe.Pointer(c.pCheckpointData))[:len(checkpointData):len(checkpointData)]
-		for i3, _ := range checkpointData {
-			checkpointData[i3].toC(&slice3[i3], _sa)
-		}
+	if checkpointData != nil {
+		c.pCheckpointData = (*C.VkCheckpointDataNV)(_sa.alloc(C.sizeof_VkCheckpointDataNV))
+		checkpointData.toC(c.pCheckpointData, _sa)
+	} else {
+		c.pCheckpointData = nil
 	}
 	C.callPFN_vkGetQueueCheckpointDataNV(C.PFN_vkGetQueueCheckpointDataNV(unsafe.Pointer(p)), c.queue, c.pCheckpointDataCount, c.pCheckpointData)
 	if checkpointDataCount != nil {
 		*checkpointDataCount = uint32(*c.pCheckpointDataCount)
 	}
-	{
-		slice3 := (*[1 << 31]C.VkCheckpointDataNV)(unsafe.Pointer(c.pCheckpointData))[:len(checkpointData):len(checkpointData)]
-		for i3, _ := range checkpointData {
-			checkpointData[i3].fromC(&slice3[i3])
-		}
+	if checkpointData != nil {
+		checkpointData.fromC(c.pCheckpointData)
 	}
 }

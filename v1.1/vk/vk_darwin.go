@@ -23,30 +23,15 @@ func (g *MacOSSurfaceCreateInfoMVK) toC(c *C.VkMacOSSurfaceCreateInfoMVK, _sa *s
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(_sa)
 	}
-	{
-		var temp_in_VkMacOSSurfaceCreateFlagsMVK C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkMacOSSurfaceCreateFlagsMVK = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkMacOSSurfaceCreateFlagsMVK(temp_in_VkMacOSSurfaceCreateFlagsMVK)
-	}
+	c.flags = C.VkMacOSSurfaceCreateFlagsMVK(g.Flags)
 	c.pView = g.View
 }
+
 func (g *MacOSSurfaceCreateInfoMVK) fromC(c *C.VkMacOSSurfaceCreateInfoMVK) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkMacOSSurfaceCreateFlagsMVK Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkMacOSSurfaceCreateFlagsMVK = Flags(temp_in_VkFlags)
-		}
-		g.Flags = MacOSSurfaceCreateFlagsMVK(temp_in_VkMacOSSurfaceCreateFlagsMVK)
-	}
+	g.Flags = MacOSSurfaceCreateFlagsMVK(c.flags)
 	g.View = c.pView
 }
 func (s *MacOSSurfaceCreateInfoMVK) sType() C.VkStructureType {
@@ -86,7 +71,7 @@ func (p PFNCreateMacOSSurfaceMVK) Call(instance Instance, createInfo *MacOSSurfa
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
@@ -97,43 +82,6 @@ func (p PFNCreateMacOSSurfaceMVK) Call(instance Instance, createInfo *MacOSSurfa
 		c.pSurface = nil
 	}
 	c._ret = C.callPFN_vkCreateMacOSSurfaceMVK(C.PFN_vkCreateMacOSSurfaceMVK(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
-	_ret = Result(c._ret)
-	if surface != nil {
-		*surface = SurfaceKHR(*c.pSurface)
-	}
-	return
-}
-
-func CreateMacOSSurfaceMVK(instance Instance, createInfo *MacOSSurfaceCreateInfoMVK, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
-	var c struct {
-		instance    C.VkInstance
-		pCreateInfo *C.VkMacOSSurfaceCreateInfoMVK
-		pAllocator  *C.VkAllocationCallbacks
-		pSurface    *C.VkSurfaceKHR
-		_ret        C.VkResult
-	}
-	_sa := pool.take()
-	defer pool.give(_sa)
-	c.instance = C.VkInstance(instance)
-	if createInfo != nil {
-		c.pCreateInfo = (*C.VkMacOSSurfaceCreateInfoMVK)(_sa.alloc(C.sizeof_VkMacOSSurfaceCreateInfoMVK))
-		createInfo.toC(c.pCreateInfo, _sa)
-	} else {
-		c.pCreateInfo = nil
-	}
-	if allocator != nil {
-		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
-	} else {
-		c.pAllocator = nil
-	}
-	if surface != nil {
-		c.pSurface = (*C.VkSurfaceKHR)(_sa.alloc(C.sizeof_VkSurfaceKHR))
-		*c.pSurface = C.VkSurfaceKHR(*surface)
-	} else {
-		c.pSurface = nil
-	}
-	c._ret = C.vkCreateMacOSSurfaceMVK(c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
 	_ret = Result(c._ret)
 	if surface != nil {
 		*surface = SurfaceKHR(*c.pSurface)

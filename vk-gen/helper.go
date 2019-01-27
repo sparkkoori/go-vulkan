@@ -144,7 +144,8 @@ func analyzeHint(h *hint, src Source) {
 	analyzeArrayAndSize := func(decls []*cast.FieldDecl, pid string) {
 		/*Array Conditions:
 		- It's pointer type.
-		- It may be a plural name .
+		- It may be a plural name.
+		- There must be one size of array, at least.
 		*/
 
 		/*Size of Array Conditions:
@@ -153,6 +154,7 @@ func analyzeHint(h *hint, src Source) {
 		// - The name is singular form of array with suffix of "Size" or "Count".
 		*/
 
+		existArraySize := false
 		for i := len(decls) - 1; i >= 0; i-- {
 			decl := decls[i]
 			id := pid + "." + strconv.Itoa(i)
@@ -167,9 +169,18 @@ func analyzeHint(h *hint, src Source) {
 					nid := pid + "." + strconv.Itoa(i+1)
 					if i < len(decls)-1 && h.isArray[nid] {
 						h.isArraySize[id] = true
+						existArraySize = true
 					}
 				}
 			default:
+			}
+		}
+
+		//There must be one size of array, at least.
+		if !existArraySize {
+			for i := len(decls) - 1; i >= 0; i-- {
+				id := pid + "." + strconv.Itoa(i)
+				delete(h.isArray, id)
 			}
 		}
 	}
