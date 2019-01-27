@@ -159,20 +159,34 @@ func analyzeHint(h *hint, src Source) {
 			decl := decls[i]
 			id := pid + "." + strconv.Itoa(i)
 
-			switch n := decl.ChildNodes[0].(type) {
-			case *cast.PointerType:
+			//array
+			if _, ok := decl.ChildNodes[0].(*cast.PointerType); ok {
 				if isMaybePlural(decl.Name) {
 					h.isArray[id] = true
 				}
-			case *cast.TypedefType:
-				if n.Type == "uint32_t" || n.Type == "size_t" {
-					nid := pid + "." + strconv.Itoa(i+1)
-					if i < len(decls)-1 && h.isArray[nid] {
-						h.isArraySize[id] = true
-						existArraySize = true
+			}
+
+			//size
+			{
+				switch n := decl.ChildNodes[0].(type) {
+				case *cast.PointerType:
+					if n.Type == "uint32_t *" || n.Type == "size_t *" {
+						nid := pid + "." + strconv.Itoa(i+1)
+						if i < len(decls)-1 && h.isArray[nid] {
+							delete(h.isArray, id)
+							existArraySize = true
+						}
+					}
+				case *cast.TypedefType:
+					if n.Type == "uint32_t" || n.Type == "size_t" {
+						nid := pid + "." + strconv.Itoa(i+1)
+						if i < len(decls)-1 && h.isArray[nid] {
+							delete(h.isArray, id)
+							existArraySize = true
+							h.isArraySize[id] = true
+						}
 					}
 				}
-			default:
 			}
 		}
 
