@@ -146,6 +146,7 @@ func analyzeHint(h *hint, src Source) {
 		- It's pointer type.
 		- It may be a plural name.
 		- There must be one size of array, at least.
+		- It's not explicitly excluded.
 		*/
 
 		/*Size of Array Conditions:
@@ -161,8 +162,12 @@ func analyzeHint(h *hint, src Source) {
 
 			//array
 			if _, ok := decl.ChildNodes[0].(*cast.PointerType); ok {
-				if isMaybePlural(decl.Name) {
-					h.isArray[id] = true
+				switch decl.Name {
+				case "pEnabledFeatures":
+				default:
+					if isMaybePlural(decl.Name) {
+						h.isArray[id] = true
+					}
 				}
 			}
 

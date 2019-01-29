@@ -3575,7 +3575,7 @@ type DeviceCreateInfo struct {
 	QueueCreateInfos      []DeviceQueueCreateInfo
 	EnabledLayerNames     []string
 	EnabledExtensionNames []string
-	EnabledFeatures       []PhysicalDeviceFeatures
+	EnabledFeatures       *PhysicalDeviceFeatures
 }
 
 func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, _sa *stackAllocator) {
@@ -3616,12 +3616,11 @@ func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, _sa *stackAllocator) {
 			slice2[i2] = toCString(g.EnabledExtensionNames[i2], _sa)
 		}
 	}
-	{
-		c.pEnabledFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures * uint(len(g.EnabledFeatures))))
-		slice2 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pEnabledFeatures))[:len(g.EnabledFeatures):len(g.EnabledFeatures)]
-		for i2, _ := range g.EnabledFeatures {
-			g.EnabledFeatures[i2].toC(&slice2[i2])
-		}
+	if g.EnabledFeatures != nil {
+		c.pEnabledFeatures = (*C.VkPhysicalDeviceFeatures)(_sa.alloc(C.sizeof_VkPhysicalDeviceFeatures))
+		g.EnabledFeatures.toC(c.pEnabledFeatures)
+	} else {
+		c.pEnabledFeatures = nil
 	}
 }
 func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
@@ -3658,11 +3657,8 @@ func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
 			g.EnabledExtensionNames[i2] = toGoString(slice2[i2])
 		}
 	}
-	{
-		slice2 := (*[1 << 31]C.VkPhysicalDeviceFeatures)(unsafe.Pointer(c.pEnabledFeatures))[:len(g.EnabledFeatures):len(g.EnabledFeatures)]
-		for i2, _ := range g.EnabledFeatures {
-			g.EnabledFeatures[i2].fromC(&slice2[i2])
-		}
+	if g.EnabledFeatures != nil {
+		g.EnabledFeatures.fromC(c.pEnabledFeatures)
 	}
 }
 func (s *DeviceCreateInfo) sType() C.VkStructureType {
