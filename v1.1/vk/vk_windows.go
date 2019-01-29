@@ -75,7 +75,7 @@ func (p PFNCreateWin32SurfaceKHR) Call(instance Instance, createInfo *Win32Surfa
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(_sa.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator, _sa)
+		allocator.toC(c.pAllocator)
 	} else {
 		c.pAllocator = nil
 	}
