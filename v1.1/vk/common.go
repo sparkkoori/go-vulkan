@@ -13,13 +13,13 @@ import (
 )
 
 var registry objectRegistry
-var pool stackAllocatorPool
+var pool cmemoryPool
 
 type Structure interface {
 	GetNext() Structure
 	SetNext(s Structure)
 	sType() C.VkStructureType
-	toCStructure(_sa *stackAllocator) unsafe.Pointer
+	toCStructure(*cmemory) unsafe.Pointer
 	fromCStructure(unsafe.Pointer)
 }
 
@@ -28,33 +28,15 @@ func init() {
 	pool.init(16)
 }
 
-type allocator interface {
-	alloc(s uint) unsafe.Pointer
-	free(p unsafe.Pointer)
-}
-
-type sysAllocator struct{}
-
-func (sa *sysAllocator) alloc(s uint) unsafe.Pointer {
-	return C.malloc(C.size_t(s))
-}
-
-func (sa *sysAllocator) free(ptr unsafe.Pointer) {
-	C.free(ptr)
-}
-
 /*
-stackAllocator is a stack memory allocator using C memory.
+cmemory is a stack memory allocator using C memory.
 
 Why?
-C code can't access Go's *dynamic memory*, which means that it's discontinuity,
-due to Cgo rules about pointer passing.
-When a C function's accepts a *dynamic memory* as a parameter, we can pass a
-stack memory or heap memory to it in C, but in Cgo, it's the only choice to pass
-a heap memory, it takes costs.
-So, a stack memory allocator on heap is needed.
+C memory is need.
+C code can't access Go's *discontinuity memory*, due to the pointer passing rule of Cgo.
+But, malloc() is expensive.
 */
-type stackAllocator struct {
+type cmemory struct {
 	start  unsafe.Pointer
 	offset uintptr
 	total  uintptr
@@ -62,45 +44,44 @@ type stackAllocator struct {
 	ptrs []unsafe.Pointer
 }
 
-func (sa *stackAllocator) init(totalSize uint) {
-	if sa.start != nil {
-		sa.deinit()
+func (m *cmemory) init(totalSize uint) {
+	if m.start != nil {
+		m.dispose()
 	}
-	sa.start = C.malloc(C.size_t(totalSize))
-	sa.offset = 0
-	sa.total = uintptr(totalSize)
+
+	m.start = C.malloc(C.size_t(totalSize))
+	m.offset = 0
+	m.total = uintptr(totalSize)
+	m.ptrs = nil
 }
 
-//Deinit releases all allocated memories, which include the buffer and the others
-//allocated by malloc().
-func (sa *stackAllocator) deinit() {
-	C.free(sa.start)
-	sa.start = nil
-	sa.offset = 0
-	sa.total = 0
-
-	for _, p := range sa.ptrs {
+func (m *cmemory) dispose() {
+	C.free(m.start)
+	m.start = nil
+	m.offset = 0
+	m.total = 0
+	for _, p := range m.ptrs {
 		C.free(p)
 	}
-	sa.ptrs = sa.ptrs[:0]
+	m.ptrs = m.ptrs[:0]
 }
 
 //Alloc allocate c memory(saignmented for any type) on the buffer,
 //if the buffer is out of memory, using malloc() instead,
 //but the allocated memories are still mamanged by this allocator.
-func (sa *stackAllocator) alloc(s uint) unsafe.Pointer {
+func (m *cmemory) alloc(s uint) unsafe.Pointer {
 	size := uintptr(s)
-	current := uintptr(sa.start) + sa.offset
+	current := uintptr(m.start) + m.offset
 	padding := calculatePaddingWithOneByteHeader(current, C.sizeof_intmax_t)
 
-	if len(sa.ptrs) == 0 && sa.offset+padding+size < sa.total {
+	if len(sa.ptrs) == 0 && m.offset+padding+size < m.total {
 		next := current + padding
 		header := next - 1
 
 		headerPtr := (*byte)(unsafe.Pointer(header))
 		*headerPtr = byte(padding)
 
-		sa.offset += padding + size
+		m.offset += padding + size
 
 		ptr := unsafe.Pointer(next)
 		return ptr
@@ -108,30 +89,16 @@ func (sa *stackAllocator) alloc(s uint) unsafe.Pointer {
 
 	//malloc
 	ptr := C.malloc(C.size_t(s))
-	sa.ptrs = append(sa.ptrs, ptr)
+	m.ptrs = append(m.ptrs, ptr)
 	return ptr
 }
 
-//Free all the memories allocated after the allocation of the passed pointer,
-//includes those memories using malloc().
-func (sa *stackAllocator) free(ptr unsafe.Pointer) {
-	//malloc
-	for i := len(sa.ptrs) - 1; i > 0; i-- {
-		_ptr := sa.ptrs[i]
-		C.free(_ptr)
-		sa.ptrs = sa.ptrs[:i]
-		if ptr == _ptr {
-			return
-		}
+func (m *cmemory) free() {
+	for i := range m.ptrs {
+		C.free(m.ptrs[i])
 	}
-
-	current := uintptr(ptr)
-	header := current - 1
-
-	headerPtr := (*byte)(unsafe.Pointer(header))
-	padding := uintptr(*headerPtr)
-
-	sa.offset = current - padding - uintptr(sa.start)
+	m.ptrs = m.ptrs[:0]
+	m.offset = 0
 }
 
 func calculatePadding(base, alignment uintptr) uintptr {
@@ -155,12 +122,12 @@ func calculatePaddingWithOneByteHeader(base, alignment uintptr) uintptr {
 	return padding
 }
 
-func toCString(s string, al allocator) *C.char {
+func toCString(s string, cmemory cmemory) *C.char {
 	if s == "" {
 		return nil
 	}
 	n := len(s)
-	p := al.alloc(uint(n + 1))
+	p := cmemory.alloc(uint(n + 1))
 	slice := (*[1 << 31]C.char)(p)[0 : n+1]
 
 	for i := 0; i < n; i++ {
@@ -188,80 +155,41 @@ func toGoString(p *C.char) string {
 	return buffer.String()
 }
 
-//
-// func newCStringArray(ss []string, al allocator) (**C.char, C.uint32_t) {
-// 	n := len(ss)
-// 	if n == 0 {
-// 		return nil, 0
-// 	}
-//
-// 	size := uintptr(n) * unsafe.Sizeof(uintptr(0))
-// 	_ss := (**C.char)(al.alloc(uint(size)))
-// 	slice := (*[1 << 31]*C.char)(unsafe.Pointer(_ss))[0:n]
-//
-// 	for i := 0; i < n; i++ {
-// 		slice[i] = newCString(ss[i], al)
-// 	}
-//
-// 	return _ss, C.uint32_t(n)
-// }
-//
-// func freeCStringArray(ss **C.char, n C.uint32_t, al allocator) {
-// 	_n := int(n)
-// 	slice := (*[1 << 31]*C.char)(unsafe.Pointer(ss))[0:_n]
-//
-// 	for i := 0; i < int(_n); i++ {
-// 		al.free(unsafe.Pointer(slice[i]))
-// 	}
-// 	al.free(unsafe.Pointer(ss))
-// }
-
-type disposer []func()
-
-func (d *disposer) add(disposeFn func()) {
-	*d = append(*d, disposeFn)
-}
-
-func (d *disposer) dispose() {
-	for _, fn := range *d {
-		fn()
-	}
-}
-
-type stackAllocatorPool struct {
-	allocators []*stackAllocator
-	max        int
+type cmemoryPool struct {
+	cmemories []*cmemory
+	max       int
 	sync.Mutex
 }
 
-func (ap *stackAllocatorPool) init(max int) {
-	ap.allocators = make([]*stackAllocator, 0, max)
-	ap.max = max
+func (p *cmemoryPool) init(max int) {
+	p.cmemories = make([]*cmemory, 0, max)
+	p.max = max
 }
 
-func (ap *stackAllocatorPool) take() *stackAllocator {
-	ap.Lock()
-	defer ap.Unlock()
-	n := len(ap.allocators)
+func (p *cmemoryPool) take() *cmemory {
+	p.Lock()
+	defer p.Unlock()
+	n := len(p.cmemories)
 	if n > 0 {
-		sa := ap.allocators[n-1]
-		ap.allocators = ap.allocators[:n-1]
-		return sa
+		m := p.cmemories[n-1]
+		p.cmemories = p.cmemories[:n-1]
+		return m
 	} else {
-		sa := &stackAllocator{}
-		sa.init(1024 * 2)
-		return sa
+		m := &cmemory{}
+		m.init(1024 * 2)
+		return m
 	}
 }
 
-func (ap *stackAllocatorPool) give(sa *stackAllocator) {
-	ap.Lock()
-	defer ap.Unlock()
-	n := len(ap.allocators)
-	if n < ap.max {
-		ap.allocators = append(ap.allocators, sa)
+func (p *cmemoryPool) give(m *cmemory) {
+	p.Lock()
+	defer p.Unlock()
+	n := len(p.allocators)
+	if n < p.max {
+		m.free()
+		p.cmemories = append(p.cmemories, m)
 	} else {
-		sa.deinit()
+		m.dispose()
 	}
 }
 

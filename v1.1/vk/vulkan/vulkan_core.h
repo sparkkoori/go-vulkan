@@ -5005,9 +5005,9 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateSharedSwapchainsKHR(
     VkSwapchainKHR*                             pSwapchains);
 #endif
 
-#define VK_KHR_sampler_mirror_clamp_to_edge 1
+#define VK_KHRmmpler_mirror_clamp_to_edge 1
 #define VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_SPEC_VERSION 1
-#define VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME "VK_KHR_sampler_mirror_clamp_to_edge"
+#define VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME "VK_KHRmmpler_mirror_clamp_to_edge"
 
 
 #define VK_KHR_multiview 1
@@ -5855,12 +5855,12 @@ typedef struct VkImageFormatListCreateInfoKHR {
 
 
 
-#define VK_KHR_sampler_ycbcr_conversion 1
+#define VK_KHRmmpler_ycbcr_conversion 1
 typedef VkSamplerYcbcrConversion VkSamplerYcbcrConversionKHR;
 
 
 #define VK_KHR_SAMPLER_YCBCR_CONVERSION_SPEC_VERSION 1
-#define VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME "VK_KHR_sampler_ycbcr_conversion"
+#define VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME "VK_KHRmmpler_ycbcr_conversion"
 
 typedef VkSamplerYcbcrModelConversion VkSamplerYcbcrModelConversionKHR;
 
@@ -6913,9 +6913,9 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetPastPresentationTimingGOOGLE(
     VkPastPresentationTimingGOOGLE*             pPresentationTimings);
 #endif
 
-#define VK_NV_sample_mask_override_coverage 1
+#define VK_NVmmple_mask_override_coverage 1
 #define VK_NV_SAMPLE_MASK_OVERRIDE_COVERAGE_SPEC_VERSION 1
-#define VK_NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME "VK_NV_sample_mask_override_coverage"
+#define VK_NV_SAMPLE_MASK_OVERRIDE_COVERAGE_EXTENSION_NAME "VK_NVmmple_mask_override_coverage"
 
 
 #define VK_NV_geometry_shader_passthrough 1
@@ -7255,9 +7255,9 @@ VKAPI_ATTR void VKAPI_CALL vkSubmitDebugUtilsMessageEXT(
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData);
 #endif
 
-#define VK_EXT_sampler_filter_minmax 1
+#define VK_EXTmmpler_filter_minmax 1
 #define VK_EXT_SAMPLER_FILTER_MINMAX_SPEC_VERSION 1
-#define VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME "VK_EXT_sampler_filter_minmax"
+#define VK_EXT_SAMPLER_FILTER_MINMAX_EXTENSION_NAME "VK_EXTmmpler_filter_minmax"
 
 
 typedef enum VkSamplerReductionModeEXT {
@@ -7290,9 +7290,9 @@ typedef struct VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT {
 #define VK_AMD_GPU_SHADER_INT16_EXTENSION_NAME "VK_AMD_gpu_shader_int16"
 
 
-#define VK_AMD_mixed_attachment_samples 1
+#define VK_AMD_mixed_attachmentmmples 1
 #define VK_AMD_MIXED_ATTACHMENT_SAMPLES_SPEC_VERSION 1
-#define VK_AMD_MIXED_ATTACHMENT_SAMPLES_EXTENSION_NAME "VK_AMD_mixed_attachment_samples"
+#define VK_AMD_MIXED_ATTACHMENT_SAMPLES_EXTENSION_NAME "VK_AMD_mixed_attachmentmmples"
 
 
 #define VK_AMD_shader_fragment_mask 1
@@ -7305,9 +7305,9 @@ typedef struct VkPhysicalDeviceSamplerFilterMinmaxPropertiesEXT {
 #define VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME "VK_EXT_shader_stencil_export"
 
 
-#define VK_EXT_sample_locations 1
+#define VK_EXTmmple_locations 1
 #define VK_EXT_SAMPLE_LOCATIONS_SPEC_VERSION 1
-#define VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME "VK_EXT_sample_locations"
+#define VK_EXT_SAMPLE_LOCATIONS_EXTENSION_NAME "VK_EXTmmple_locations"
 
 typedef struct VkSampleLocationEXT {
     float    x;
@@ -7438,9 +7438,9 @@ typedef struct VkPipelineCoverageToColorStateCreateInfoNV {
 
 
 
-#define VK_NV_framebuffer_mixed_samples 1
+#define VK_NV_framebuffer_mixedmmples 1
 #define VK_NV_FRAMEBUFFER_MIXED_SAMPLES_SPEC_VERSION 1
-#define VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME "VK_NV_framebuffer_mixed_samples"
+#define VK_NV_FRAMEBUFFER_MIXED_SAMPLES_EXTENSION_NAME "VK_NV_framebuffer_mixedmmples"
 
 
 typedef enum VkCoverageModulationModeNV {

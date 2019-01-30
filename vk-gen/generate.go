@@ -263,11 +263,11 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 			info.go2cAlloc = true
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
 				govar, cvar = takeAddr(govar, cvar)
-				return exprStmt(callExpr(selectorExpr(govar, ident("toC")), cvar, ident("_sa")))
+				return exprStmt(callExpr(selectorExpr(govar, ident("toC")), cvar, ident("m")))
 			}
 			fntype = funcType([]*goast.Field{
 				field(starExpr(info.ctype), ident("c")),
-				field(starExpr(ident("stackAllocator")), ident("_sa")),
+				field(starExpr(ident("cmemory")), ident("m")),
 			}, nil)
 		} else {
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
@@ -333,7 +333,7 @@ func (g *generator) genStructureMethods(name string, info *typeInfo) {
 	//toCStructure()
 	{
 		fnT := funcType([]*goast.Field{
-			field(starExpr(ident("stackAllocator")), ident("_sa")),
+			field(starExpr(ident("cmemory")), ident("m")),
 		}, []*goast.Field{
 			field(ident("unsafe.Pointer")),
 		})
@@ -586,7 +586,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 		}
 		info.go2cAlloc = true
 		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-			return assignStmt1n1(cvar, callExpr(ident("toCString"), govar, ident("_sa")))
+			return assignStmt1n1(cvar, callExpr(ident("toCString"), govar, ident("m")))
 		}
 		info.refc2go = nil //Strings are immutable in Go
 		return info
@@ -987,7 +987,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 		}
 
 		if info.go2cAlloc {
-			sa := ident("_sa")
+			sa := ident("m")
 			allocdefs = append(allocdefs,
 				assignStmt1n1D(sa, callExpr(ident("pool.take"))))
 			allocdefs = append(allocdefs, &goast.DeferStmt{
@@ -1200,7 +1200,7 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 			info.go2cAlloc = true
 			go2cFns = append(go2cFns, func(goscope, cscope goast.Expr) goast.Stmt {
 				fn := selectorExpr(selectorExpr(goscope, goname), ident("toCStructure"))
-				call := callExpr(fn, ident("_sa"))
+				call := callExpr(fn, ident("m"))
 				return &goast.IfStmt{
 					If:   token.Pos(1),
 					Cond: binExpr(selectorExpr(goscope, goname), ident("nil"), token.NEQ),
@@ -1330,7 +1330,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 		}
 
 		if info.go2cAlloc {
-			sa := ident("_sa")
+			sa := ident("m")
 			allocdefs = append(allocdefs,
 				assignStmt1n1D(sa, callExpr(ident("pool.take"))))
 			allocdefs = append(allocdefs, &goast.DeferStmt{

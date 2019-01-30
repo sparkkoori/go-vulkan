@@ -84,7 +84,7 @@ func halt(msg string, node cast.Node) {
 }
 
 func saalloc(typ, size goast.Expr) *goast.CallExpr {
-	arg := callExpr(ident("_sa.alloc"), size)
+	arg := callExpr(ident("m.alloc"), size)
 	if typ != nil {
 		fun := parenExpr(starExpr(typ))
 		call := callExpr(fun, arg)

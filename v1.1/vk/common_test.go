@@ -5,57 +5,53 @@ import (
 	"testing"
 )
 
-func TestStackAllocator(t *testing.T) {
-	al := stackAllocator{}
-	al.init(1024)
-	defer al.deinit()
+func TestCMemory(t *testing.T) {
+	m := cmemory{}
+	m.init(1024)
+	defer m.dispose()
 
-	p0 := al.alloc(100)
-	p1 := al.alloc(300)
-	p2 := al.alloc(500)
-	if len(al.ptrs) != 0 {
+	p0 := m.alloc(100)
+	p1 := m.alloc(300)
+	p2 := m.alloc(500)
+	if len(m.ptrs) != 0 {
 		t.Error()
 	}
-	p3 := al.alloc(800)
-	if len(al.ptrs) != 1 {
+	p3 := m.alloc(800)
+	if len(m.ptrs) != 1 {
 		t.Error()
 	}
 
-	al.free(p3)
-	al.free(p2)
-	al.free(p1)
-	al.free(p0)
-
-	if al.offset != 0 {
+	m.free()
+	if m.offset != 0 {
 		t.Error()
 	}
 }
 
-func BenchmarkStackAllocator1MB(b *testing.B) {
-	al := stackAllocator{}
-	al.init(1024 * 1024) // 1 MB
-	defer al.deinit()
+func BenchmarkCMemory1MB(b *testing.B) {
+	m := cmemory{}
+	m.init(1024 * 1024) // 1 MB
+	defer m.dispose()
 	for n := 0; n < b.N; n++ {
-		p := al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.free(p)
+		p := m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.free()
 	}
 }
 
-func BenchmarkStackAllocator1Byte(b *testing.B) {
-	al := stackAllocator{}
-	al.init(1)
-	defer al.deinit()
+func BenchmarkCMemory1Byte(b *testing.B) {
+	m := cmemory{}
+	m.init(1)
+	defer m.dispose()
 	for n := 0; n < b.N; n++ {
-		p := al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.alloc(100)
-		al.free(p)
+		p := m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.alloc(100)
+		m.free()
 	}
 }
 
