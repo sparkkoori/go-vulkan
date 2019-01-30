@@ -1787,20 +1787,24 @@ func (g *InstanceCreateInfo) toC(c *C.VkInstanceCreateInfo, m *cmemory) {
 		c.pApplicationInfo = nil
 	}
 	c.enabledLayerCount = C.uint32_t(len(g.EnabledLayerNames))
-	{
+	if g.EnabledLayerNames != nil {
 		c.ppEnabledLayerNames = (**C.char)(m.alloc(C.sizeof_void_pointer * uint(len(g.EnabledLayerNames))))
 		slice2 := (*[1 << 31]*C.char)(unsafe.Pointer(c.ppEnabledLayerNames))[:len(g.EnabledLayerNames):len(g.EnabledLayerNames)]
 		for i2, _ := range g.EnabledLayerNames {
 			slice2[i2] = toCString(g.EnabledLayerNames[i2], m)
 		}
+	} else {
+		c.ppEnabledLayerNames = nil
 	}
 	c.enabledExtensionCount = C.uint32_t(len(g.EnabledExtensionNames))
-	{
+	if g.EnabledExtensionNames != nil {
 		c.ppEnabledExtensionNames = (**C.char)(m.alloc(C.sizeof_void_pointer * uint(len(g.EnabledExtensionNames))))
 		slice2 := (*[1 << 31]*C.char)(unsafe.Pointer(c.ppEnabledExtensionNames))[:len(g.EnabledExtensionNames):len(g.EnabledExtensionNames)]
 		for i2, _ := range g.EnabledExtensionNames {
 			slice2[i2] = toCString(g.EnabledExtensionNames[i2], m)
 		}
+	} else {
+		c.ppEnabledExtensionNames = nil
 	}
 }
 func (g *InstanceCreateInfo) fromC(c *C.VkInstanceCreateInfo) {
@@ -1954,12 +1958,14 @@ func (p PFNEnumeratePhysicalDevices) Call(instance Instance, physicalDeviceCount
 	} else {
 		c.pPhysicalDeviceCount = nil
 	}
-	{
+	if physicalDevices != nil {
 		c.pPhysicalDevices = (*C.VkPhysicalDevice)(m.alloc(C.sizeof_VkPhysicalDevice * uint(len(physicalDevices))))
 		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
 		for i3, _ := range physicalDevices {
 			slice3[i3] = C.VkPhysicalDevice(physicalDevices[i3])
 		}
+	} else {
+		c.pPhysicalDevices = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDevices(C.PFN_vkEnumeratePhysicalDevices(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
 	_ret = Result(c._ret)
@@ -3321,12 +3327,14 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties) Call(physicalDevice PhysicalD
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
+	if queueFamilyProperties != nil {
 		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(m.alloc(C.sizeof_VkQueueFamilyProperties * uint(len(queueFamilyProperties))))
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
 		for i3, _ := range queueFamilyProperties {
 			queueFamilyProperties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
@@ -3519,12 +3527,14 @@ func (g *DeviceQueueCreateInfo) toC(c *C.VkDeviceQueueCreateInfo, m *cmemory) {
 	}
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 	c.queueCount = C.uint32_t(len(g.QueuePriorities))
-	{
+	if g.QueuePriorities != nil {
 		c.pQueuePriorities = (*C.float)(m.alloc(C.sizeof_float * uint(len(g.QueuePriorities))))
 		slice2 := (*[1 << 31]C.float)(unsafe.Pointer(c.pQueuePriorities))[:len(g.QueuePriorities):len(g.QueuePriorities)]
 		for i2, _ := range g.QueuePriorities {
 			slice2[i2] = C.float(g.QueuePriorities[i2])
 		}
+	} else {
+		c.pQueuePriorities = nil
 	}
 }
 func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
@@ -3592,28 +3602,34 @@ func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, m *cmemory) {
 		c.flags = C.VkDeviceCreateFlags(temp_in_VkDeviceCreateFlags)
 	}
 	c.queueCreateInfoCount = C.uint32_t(len(g.QueueCreateInfos))
-	{
+	if g.QueueCreateInfos != nil {
 		c.pQueueCreateInfos = (*C.VkDeviceQueueCreateInfo)(m.alloc(C.sizeof_VkDeviceQueueCreateInfo * uint(len(g.QueueCreateInfos))))
 		slice2 := (*[1 << 31]C.VkDeviceQueueCreateInfo)(unsafe.Pointer(c.pQueueCreateInfos))[:len(g.QueueCreateInfos):len(g.QueueCreateInfos)]
 		for i2, _ := range g.QueueCreateInfos {
 			g.QueueCreateInfos[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pQueueCreateInfos = nil
 	}
 	c.enabledLayerCount = C.uint32_t(len(g.EnabledLayerNames))
-	{
+	if g.EnabledLayerNames != nil {
 		c.ppEnabledLayerNames = (**C.char)(m.alloc(C.sizeof_void_pointer * uint(len(g.EnabledLayerNames))))
 		slice2 := (*[1 << 31]*C.char)(unsafe.Pointer(c.ppEnabledLayerNames))[:len(g.EnabledLayerNames):len(g.EnabledLayerNames)]
 		for i2, _ := range g.EnabledLayerNames {
 			slice2[i2] = toCString(g.EnabledLayerNames[i2], m)
 		}
+	} else {
+		c.ppEnabledLayerNames = nil
 	}
 	c.enabledExtensionCount = C.uint32_t(len(g.EnabledExtensionNames))
-	{
+	if g.EnabledExtensionNames != nil {
 		c.ppEnabledExtensionNames = (**C.char)(m.alloc(C.sizeof_void_pointer * uint(len(g.EnabledExtensionNames))))
 		slice2 := (*[1 << 31]*C.char)(unsafe.Pointer(c.ppEnabledExtensionNames))[:len(g.EnabledExtensionNames):len(g.EnabledExtensionNames)]
 		for i2, _ := range g.EnabledExtensionNames {
 			slice2[i2] = toCString(g.EnabledExtensionNames[i2], m)
 		}
+	} else {
+		c.ppEnabledExtensionNames = nil
 	}
 	if g.EnabledFeatures != nil {
 		c.pEnabledFeatures = (*C.VkPhysicalDeviceFeatures)(m.alloc(C.sizeof_VkPhysicalDeviceFeatures))
@@ -3768,12 +3784,14 @@ func (p PFNEnumerateInstanceExtensionProperties) Call(layerName string, property
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkExtensionProperties)(m.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateInstanceExtensionProperties(C.PFN_vkEnumerateInstanceExtensionProperties(unsafe.Pointer(p)), c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -3809,12 +3827,14 @@ func (p PFNEnumerateDeviceExtensionProperties) Call(physicalDevice PhysicalDevic
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkExtensionProperties)(m.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateDeviceExtensionProperties(C.PFN_vkEnumerateDeviceExtensionProperties(unsafe.Pointer(p)), c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -3872,12 +3892,14 @@ func (p PFNEnumerateInstanceLayerProperties) Call(propertyCount *uint32, propert
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkLayerProperties)(m.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateInstanceLayerProperties(C.PFN_vkEnumerateInstanceLayerProperties(unsafe.Pointer(p)), c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -3911,12 +3933,14 @@ func (p PFNEnumerateDeviceLayerProperties) Call(physicalDevice PhysicalDevice, p
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkLayerProperties)(m.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumerateDeviceLayerProperties(C.PFN_vkEnumerateDeviceLayerProperties(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -3977,12 +4001,14 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, m *cmemory) {
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
-	{
+	if g.WaitSemaphores != nil {
 		c.pWaitSemaphores = (*C.VkSemaphore)(m.alloc(C.sizeof_VkSemaphore * uint(len(g.WaitSemaphores))))
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
 		for i2, _ := range g.WaitSemaphores {
 			slice2[i2] = C.VkSemaphore(g.WaitSemaphores[i2])
 		}
+	} else {
+		c.pWaitSemaphores = nil
 	}
 	if g.WaitDstStageMask != nil {
 		c.pWaitDstStageMask = (*C.VkPipelineStageFlags)(m.alloc(C.sizeof_VkPipelineStageFlags))
@@ -3999,20 +4025,24 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, m *cmemory) {
 		c.pWaitDstStageMask = nil
 	}
 	c.commandBufferCount = C.uint32_t(len(g.CommandBuffers))
-	{
+	if g.CommandBuffers != nil {
 		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(g.CommandBuffers))))
 		slice2 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(g.CommandBuffers):len(g.CommandBuffers)]
 		for i2, _ := range g.CommandBuffers {
 			slice2[i2] = C.VkCommandBuffer(g.CommandBuffers[i2])
 		}
+	} else {
+		c.pCommandBuffers = nil
 	}
 	c.signalSemaphoreCount = C.uint32_t(len(g.SignalSemaphores))
-	{
+	if g.SignalSemaphores != nil {
 		c.pSignalSemaphores = (*C.VkSemaphore)(m.alloc(C.sizeof_VkSemaphore * uint(len(g.SignalSemaphores))))
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pSignalSemaphores))[:len(g.SignalSemaphores):len(g.SignalSemaphores)]
 		for i2, _ := range g.SignalSemaphores {
 			slice2[i2] = C.VkSemaphore(g.SignalSemaphores[i2])
 		}
+	} else {
+		c.pSignalSemaphores = nil
 	}
 }
 func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
@@ -4083,12 +4113,14 @@ func (p PFNQueueSubmit) Call(queue Queue, submits []SubmitInfo, fence Fence) (_r
 	defer pool.give(m)
 	c.queue = C.VkQueue(queue)
 	c.submitCount = C.uint32_t(len(submits))
-	{
+	if submits != nil {
 		c.pSubmits = (*C.VkSubmitInfo)(m.alloc(C.sizeof_VkSubmitInfo * uint(len(submits))))
 		slice3 := (*[1 << 31]C.VkSubmitInfo)(unsafe.Pointer(c.pSubmits))[:len(submits):len(submits)]
 		for i3, _ := range submits {
 			submits[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSubmits = nil
 	}
 	c.fence = C.VkFence(fence)
 	c._ret = C.callPFN_vkQueueSubmit(C.PFN_vkQueueSubmit(unsafe.Pointer(p)), c.queue, c.submitCount, c.pSubmits, c.fence)
@@ -4363,12 +4395,14 @@ func (p PFNFlushMappedMemoryRanges) Call(device Device, memoryRanges []MappedMem
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.memoryRangeCount = C.uint32_t(len(memoryRanges))
-	{
+	if memoryRanges != nil {
 		c.pMemoryRanges = (*C.VkMappedMemoryRange)(m.alloc(C.sizeof_VkMappedMemoryRange * uint(len(memoryRanges))))
 		slice3 := (*[1 << 31]C.VkMappedMemoryRange)(unsafe.Pointer(c.pMemoryRanges))[:len(memoryRanges):len(memoryRanges)]
 		for i3, _ := range memoryRanges {
 			memoryRanges[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryRanges = nil
 	}
 	c._ret = C.callPFN_vkFlushMappedMemoryRanges(C.PFN_vkFlushMappedMemoryRanges(unsafe.Pointer(p)), c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
@@ -4388,12 +4422,14 @@ func (p PFNInvalidateMappedMemoryRanges) Call(device Device, memoryRanges []Mapp
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.memoryRangeCount = C.uint32_t(len(memoryRanges))
-	{
+	if memoryRanges != nil {
 		c.pMemoryRanges = (*C.VkMappedMemoryRange)(m.alloc(C.sizeof_VkMappedMemoryRange * uint(len(memoryRanges))))
 		slice3 := (*[1 << 31]C.VkMappedMemoryRange)(unsafe.Pointer(c.pMemoryRanges))[:len(memoryRanges):len(memoryRanges)]
 		for i3, _ := range memoryRanges {
 			memoryRanges[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryRanges = nil
 	}
 	c._ret = C.callPFN_vkInvalidateMappedMemoryRanges(C.PFN_vkInvalidateMappedMemoryRanges(unsafe.Pointer(p)), c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
@@ -4672,12 +4708,14 @@ func (p PFNGetImageSparseMemoryRequirements) Call(device Device, image Image, sp
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
+	if sparseMemoryRequirements != nil {
 		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(m.alloc(C.sizeof_VkSparseImageMemoryRequirements * uint(len(sparseMemoryRequirements))))
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
 		for i3, _ := range sparseMemoryRequirements {
 			sparseMemoryRequirements[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements(C.PFN_vkGetImageSparseMemoryRequirements(unsafe.Pointer(p)), c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
@@ -4726,12 +4764,14 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties) Call(physicalDevice Phy
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkSparseImageFormatProperties)(m.alloc(C.sizeof_VkSparseImageFormatProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties(unsafe.Pointer(p)), c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
@@ -4818,12 +4858,14 @@ type SparseBufferMemoryBindInfo struct {
 func (g *SparseBufferMemoryBindInfo) toC(c *C.VkSparseBufferMemoryBindInfo, m *cmemory) {
 	c.buffer = C.VkBuffer(g.Buffer)
 	c.bindCount = C.uint32_t(len(g.Binds))
-	{
+	if g.Binds != nil {
 		c.pBinds = (*C.VkSparseMemoryBind)(m.alloc(C.sizeof_VkSparseMemoryBind * uint(len(g.Binds))))
 		slice2 := (*[1 << 31]C.VkSparseMemoryBind)(unsafe.Pointer(c.pBinds))[:len(g.Binds):len(g.Binds)]
 		for i2, _ := range g.Binds {
 			g.Binds[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pBinds = nil
 	}
 }
 func (g *SparseBufferMemoryBindInfo) fromC(c *C.VkSparseBufferMemoryBindInfo) {
@@ -4845,12 +4887,14 @@ type SparseImageOpaqueMemoryBindInfo struct {
 func (g *SparseImageOpaqueMemoryBindInfo) toC(c *C.VkSparseImageOpaqueMemoryBindInfo, m *cmemory) {
 	c.image = C.VkImage(g.Image)
 	c.bindCount = C.uint32_t(len(g.Binds))
-	{
+	if g.Binds != nil {
 		c.pBinds = (*C.VkSparseMemoryBind)(m.alloc(C.sizeof_VkSparseMemoryBind * uint(len(g.Binds))))
 		slice2 := (*[1 << 31]C.VkSparseMemoryBind)(unsafe.Pointer(c.pBinds))[:len(g.Binds):len(g.Binds)]
 		for i2, _ := range g.Binds {
 			g.Binds[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pBinds = nil
 	}
 }
 func (g *SparseImageOpaqueMemoryBindInfo) fromC(c *C.VkSparseImageOpaqueMemoryBindInfo) {
@@ -4972,12 +5016,14 @@ type SparseImageMemoryBindInfo struct {
 func (g *SparseImageMemoryBindInfo) toC(c *C.VkSparseImageMemoryBindInfo, m *cmemory) {
 	c.image = C.VkImage(g.Image)
 	c.bindCount = C.uint32_t(len(g.Binds))
-	{
+	if g.Binds != nil {
 		c.pBinds = (*C.VkSparseImageMemoryBind)(m.alloc(C.sizeof_VkSparseImageMemoryBind * uint(len(g.Binds))))
 		slice2 := (*[1 << 31]C.VkSparseImageMemoryBind)(unsafe.Pointer(c.pBinds))[:len(g.Binds):len(g.Binds)]
 		for i2, _ := range g.Binds {
 			g.Binds[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pBinds = nil
 	}
 }
 func (g *SparseImageMemoryBindInfo) fromC(c *C.VkSparseImageMemoryBindInfo) {
@@ -5006,44 +5052,54 @@ func (g *BindSparseInfo) toC(c *C.VkBindSparseInfo, m *cmemory) {
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
-	{
+	if g.WaitSemaphores != nil {
 		c.pWaitSemaphores = (*C.VkSemaphore)(m.alloc(C.sizeof_VkSemaphore * uint(len(g.WaitSemaphores))))
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
 		for i2, _ := range g.WaitSemaphores {
 			slice2[i2] = C.VkSemaphore(g.WaitSemaphores[i2])
 		}
+	} else {
+		c.pWaitSemaphores = nil
 	}
 	c.bufferBindCount = C.uint32_t(len(g.BufferBinds))
-	{
+	if g.BufferBinds != nil {
 		c.pBufferBinds = (*C.VkSparseBufferMemoryBindInfo)(m.alloc(C.sizeof_VkSparseBufferMemoryBindInfo * uint(len(g.BufferBinds))))
 		slice2 := (*[1 << 31]C.VkSparseBufferMemoryBindInfo)(unsafe.Pointer(c.pBufferBinds))[:len(g.BufferBinds):len(g.BufferBinds)]
 		for i2, _ := range g.BufferBinds {
 			g.BufferBinds[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pBufferBinds = nil
 	}
 	c.imageOpaqueBindCount = C.uint32_t(len(g.ImageOpaqueBinds))
-	{
+	if g.ImageOpaqueBinds != nil {
 		c.pImageOpaqueBinds = (*C.VkSparseImageOpaqueMemoryBindInfo)(m.alloc(C.sizeof_VkSparseImageOpaqueMemoryBindInfo * uint(len(g.ImageOpaqueBinds))))
 		slice2 := (*[1 << 31]C.VkSparseImageOpaqueMemoryBindInfo)(unsafe.Pointer(c.pImageOpaqueBinds))[:len(g.ImageOpaqueBinds):len(g.ImageOpaqueBinds)]
 		for i2, _ := range g.ImageOpaqueBinds {
 			g.ImageOpaqueBinds[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pImageOpaqueBinds = nil
 	}
 	c.imageBindCount = C.uint32_t(len(g.ImageBinds))
-	{
+	if g.ImageBinds != nil {
 		c.pImageBinds = (*C.VkSparseImageMemoryBindInfo)(m.alloc(C.sizeof_VkSparseImageMemoryBindInfo * uint(len(g.ImageBinds))))
 		slice2 := (*[1 << 31]C.VkSparseImageMemoryBindInfo)(unsafe.Pointer(c.pImageBinds))[:len(g.ImageBinds):len(g.ImageBinds)]
 		for i2, _ := range g.ImageBinds {
 			g.ImageBinds[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pImageBinds = nil
 	}
 	c.signalSemaphoreCount = C.uint32_t(len(g.SignalSemaphores))
-	{
+	if g.SignalSemaphores != nil {
 		c.pSignalSemaphores = (*C.VkSemaphore)(m.alloc(C.sizeof_VkSemaphore * uint(len(g.SignalSemaphores))))
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pSignalSemaphores))[:len(g.SignalSemaphores):len(g.SignalSemaphores)]
 		for i2, _ := range g.SignalSemaphores {
 			slice2[i2] = C.VkSemaphore(g.SignalSemaphores[i2])
 		}
+	} else {
+		c.pSignalSemaphores = nil
 	}
 }
 func (g *BindSparseInfo) fromC(c *C.VkBindSparseInfo) {
@@ -5253,12 +5309,14 @@ func (p PFNResetFences) Call(device Device, fences []Fence) (_ret Result) {
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.fenceCount = C.uint32_t(len(fences))
-	{
+	if fences != nil {
 		c.pFences = (*C.VkFence)(m.alloc(C.sizeof_VkFence * uint(len(fences))))
 		slice3 := (*[1 << 31]C.VkFence)(unsafe.Pointer(c.pFences))[:len(fences):len(fences)]
 		for i3, _ := range fences {
 			slice3[i3] = C.VkFence(fences[i3])
 		}
+	} else {
+		c.pFences = nil
 	}
 	c._ret = C.callPFN_vkResetFences(C.PFN_vkResetFences(unsafe.Pointer(p)), c.device, c.fenceCount, c.pFences)
 	_ret = Result(c._ret)
@@ -5295,12 +5353,14 @@ func (p PFNWaitForFences) Call(device Device, fences []Fence, waitAll bool, time
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.fenceCount = C.uint32_t(len(fences))
-	{
+	if fences != nil {
 		c.pFences = (*C.VkFence)(m.alloc(C.sizeof_VkFence * uint(len(fences))))
 		slice3 := (*[1 << 31]C.VkFence)(unsafe.Pointer(c.pFences))[:len(fences):len(fences)]
 		for i3, _ := range fences {
 			slice3[i3] = C.VkFence(fences[i3])
 		}
+	} else {
+		c.pFences = nil
 	}
 	if waitAll {
 		c.waitAll = 1
@@ -5748,12 +5808,14 @@ func (p PFNGetQueryPoolResults) Call(device Device, queryPool QueryPool, firstQu
 	c.firstQuery = C.uint32_t(firstQuery)
 	c.queryCount = C.uint32_t(queryCount)
 	c.dataSize = C.size_t(len(data))
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	{
 		var temp_in_VkDeviceSize C.uint64_t
@@ -5822,12 +5884,14 @@ func (g *BufferCreateInfo) toC(c *C.VkBufferCreateInfo, m *cmemory) {
 	}
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
-	{
+	if g.QueueFamilyIndices != nil {
 		c.pQueueFamilyIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.QueueFamilyIndices))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pQueueFamilyIndices))[:len(g.QueueFamilyIndices):len(g.QueueFamilyIndices)]
 		for i2, _ := range g.QueueFamilyIndices {
 			slice2[i2] = C.uint32_t(g.QueueFamilyIndices[i2])
 		}
+	} else {
+		c.pQueueFamilyIndices = nil
 	}
 }
 func (g *BufferCreateInfo) fromC(c *C.VkBufferCreateInfo) {
@@ -6134,12 +6198,14 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, m *cmemory) {
 	}
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
-	{
+	if g.QueueFamilyIndices != nil {
 		c.pQueueFamilyIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.QueueFamilyIndices))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pQueueFamilyIndices))[:len(g.QueueFamilyIndices):len(g.QueueFamilyIndices)]
 		for i2, _ := range g.QueueFamilyIndices {
 			slice2[i2] = C.uint32_t(g.QueueFamilyIndices[i2])
 		}
+	} else {
+		c.pQueueFamilyIndices = nil
 	}
 	c.initialLayout = C.VkImageLayout(g.InitialLayout)
 }
@@ -6690,12 +6756,14 @@ func (g *PipelineCacheCreateInfo) toC(c *C.VkPipelineCacheCreateInfo, m *cmemory
 		c.flags = C.VkPipelineCacheCreateFlags(temp_in_VkPipelineCacheCreateFlags)
 	}
 	c.initialDataSize = C.size_t(len(g.InitialData))
-	{
+	if g.InitialData != nil {
 		c.pInitialData = m.alloc(C.sizeof_char * uint(len(g.InitialData)))
 		slice2 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
 		for i2, _ := range g.InitialData {
 			slice2[i2] = g.InitialData[i2]
 		}
+	} else {
+		c.pInitialData = nil
 	}
 }
 func (g *PipelineCacheCreateInfo) fromC(c *C.VkPipelineCacheCreateInfo) {
@@ -6818,12 +6886,14 @@ func (p PFNGetPipelineCacheData) Call(device Device, pipelineCache PipelineCache
 	} else {
 		c.pDataSize = nil
 	}
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	c._ret = C.callPFN_vkGetPipelineCacheData(C.PFN_vkGetPipelineCacheData(unsafe.Pointer(p)), c.device, c.pipelineCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
@@ -6854,12 +6924,14 @@ func (p PFNMergePipelineCaches) Call(device Device, dstCache PipelineCache, srcC
 	c.device = C.VkDevice(device)
 	c.dstCache = C.VkPipelineCache(dstCache)
 	c.srcCacheCount = C.uint32_t(len(srcCaches))
-	{
+	if srcCaches != nil {
 		c.pSrcCaches = (*C.VkPipelineCache)(m.alloc(C.sizeof_VkPipelineCache * uint(len(srcCaches))))
 		slice3 := (*[1 << 31]C.VkPipelineCache)(unsafe.Pointer(c.pSrcCaches))[:len(srcCaches):len(srcCaches)]
 		for i3, _ := range srcCaches {
 			slice3[i3] = C.VkPipelineCache(srcCaches[i3])
 		}
+	} else {
+		c.pSrcCaches = nil
 	}
 	c._ret = C.callPFN_vkMergePipelineCaches(C.PFN_vkMergePipelineCaches(unsafe.Pointer(p)), c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
 	_ret = Result(c._ret)
@@ -6893,20 +6965,24 @@ type SpecializationInfo struct {
 
 func (g *SpecializationInfo) toC(c *C.VkSpecializationInfo, m *cmemory) {
 	c.mapEntryCount = C.uint32_t(len(g.MapEntries))
-	{
+	if g.MapEntries != nil {
 		c.pMapEntries = (*C.VkSpecializationMapEntry)(m.alloc(C.sizeof_VkSpecializationMapEntry * uint(len(g.MapEntries))))
 		slice2 := (*[1 << 31]C.VkSpecializationMapEntry)(unsafe.Pointer(c.pMapEntries))[:len(g.MapEntries):len(g.MapEntries)]
 		for i2, _ := range g.MapEntries {
 			g.MapEntries[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pMapEntries = nil
 	}
 	c.dataSize = C.size_t(len(g.Data))
-	{
+	if g.Data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(g.Data)))
 		slice2 := (*[1 << 31]byte)(c.pData)[:len(g.Data):len(g.Data)]
 		for i2, _ := range g.Data {
 			slice2[i2] = g.Data[i2]
 		}
+	} else {
+		c.pData = nil
 	}
 }
 func (g *SpecializationInfo) fromC(c *C.VkSpecializationInfo) {
@@ -7058,20 +7134,24 @@ func (g *PipelineVertexInputStateCreateInfo) toC(c *C.VkPipelineVertexInputState
 		c.flags = C.VkPipelineVertexInputStateCreateFlags(temp_in_VkPipelineVertexInputStateCreateFlags)
 	}
 	c.vertexBindingDescriptionCount = C.uint32_t(len(g.VertexBindingDescriptions))
-	{
+	if g.VertexBindingDescriptions != nil {
 		c.pVertexBindingDescriptions = (*C.VkVertexInputBindingDescription)(m.alloc(C.sizeof_VkVertexInputBindingDescription * uint(len(g.VertexBindingDescriptions))))
 		slice2 := (*[1 << 31]C.VkVertexInputBindingDescription)(unsafe.Pointer(c.pVertexBindingDescriptions))[:len(g.VertexBindingDescriptions):len(g.VertexBindingDescriptions)]
 		for i2, _ := range g.VertexBindingDescriptions {
 			g.VertexBindingDescriptions[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pVertexBindingDescriptions = nil
 	}
 	c.vertexAttributeDescriptionCount = C.uint32_t(len(g.VertexAttributeDescriptions))
-	{
+	if g.VertexAttributeDescriptions != nil {
 		c.pVertexAttributeDescriptions = (*C.VkVertexInputAttributeDescription)(m.alloc(C.sizeof_VkVertexInputAttributeDescription * uint(len(g.VertexAttributeDescriptions))))
 		slice2 := (*[1 << 31]C.VkVertexInputAttributeDescription)(unsafe.Pointer(c.pVertexAttributeDescriptions))[:len(g.VertexAttributeDescriptions):len(g.VertexAttributeDescriptions)]
 		for i2, _ := range g.VertexAttributeDescriptions {
 			g.VertexAttributeDescriptions[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pVertexAttributeDescriptions = nil
 	}
 }
 func (g *PipelineVertexInputStateCreateInfo) fromC(c *C.VkPipelineVertexInputStateCreateInfo) {
@@ -7333,20 +7413,24 @@ func (g *PipelineViewportStateCreateInfo) toC(c *C.VkPipelineViewportStateCreate
 		c.flags = C.VkPipelineViewportStateCreateFlags(temp_in_VkPipelineViewportStateCreateFlags)
 	}
 	c.viewportCount = C.uint32_t(len(g.Viewports))
-	{
+	if g.Viewports != nil {
 		c.pViewports = (*C.VkViewport)(m.alloc(C.sizeof_VkViewport * uint(len(g.Viewports))))
 		slice2 := (*[1 << 31]C.VkViewport)(unsafe.Pointer(c.pViewports))[:len(g.Viewports):len(g.Viewports)]
 		for i2, _ := range g.Viewports {
 			g.Viewports[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pViewports = nil
 	}
 	c.scissorCount = C.uint32_t(len(g.Scissors))
-	{
+	if g.Scissors != nil {
 		c.pScissors = (*C.VkRect2D)(m.alloc(C.sizeof_VkRect2D * uint(len(g.Scissors))))
 		slice2 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pScissors))[:len(g.Scissors):len(g.Scissors)]
 		for i2, _ := range g.Scissors {
 			g.Scissors[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pScissors = nil
 	}
 }
 func (g *PipelineViewportStateCreateInfo) fromC(c *C.VkPipelineViewportStateCreateInfo) {
@@ -7817,12 +7901,14 @@ func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCr
 	}
 	c.logicOp = C.VkLogicOp(g.LogicOp)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
-	{
+	if g.Attachments != nil {
 		c.pAttachments = (*C.VkPipelineColorBlendAttachmentState)(m.alloc(C.sizeof_VkPipelineColorBlendAttachmentState * uint(len(g.Attachments))))
 		slice2 := (*[1 << 31]C.VkPipelineColorBlendAttachmentState)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
 		for i2, _ := range g.Attachments {
 			g.Attachments[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	for i, _ := range g.BlendConstants {
 		c.blendConstants[i] = C.float(g.BlendConstants[i])
@@ -7895,12 +7981,14 @@ func (g *PipelineDynamicStateCreateInfo) toC(c *C.VkPipelineDynamicStateCreateIn
 		c.flags = C.VkPipelineDynamicStateCreateFlags(temp_in_VkPipelineDynamicStateCreateFlags)
 	}
 	c.dynamicStateCount = C.uint32_t(len(g.DynamicStates))
-	{
+	if g.DynamicStates != nil {
 		c.pDynamicStates = (*C.VkDynamicState)(m.alloc(C.sizeof_VkDynamicState * uint(len(g.DynamicStates))))
 		slice2 := (*[1 << 31]C.VkDynamicState)(unsafe.Pointer(c.pDynamicStates))[:len(g.DynamicStates):len(g.DynamicStates)]
 		for i2, _ := range g.DynamicStates {
 			slice2[i2] = C.VkDynamicState(g.DynamicStates[i2])
 		}
+	} else {
+		c.pDynamicStates = nil
 	}
 }
 func (g *PipelineDynamicStateCreateInfo) fromC(c *C.VkPipelineDynamicStateCreateInfo) {
@@ -7981,12 +8069,14 @@ func (g *GraphicsPipelineCreateInfo) toC(c *C.VkGraphicsPipelineCreateInfo, m *c
 		c.flags = C.VkPipelineCreateFlags(temp_in_VkPipelineCreateFlags)
 	}
 	c.stageCount = C.uint32_t(len(g.Stages))
-	{
+	if g.Stages != nil {
 		c.pStages = (*C.VkPipelineShaderStageCreateInfo)(m.alloc(C.sizeof_VkPipelineShaderStageCreateInfo * uint(len(g.Stages))))
 		slice2 := (*[1 << 31]C.VkPipelineShaderStageCreateInfo)(unsafe.Pointer(c.pStages))[:len(g.Stages):len(g.Stages)]
 		for i2, _ := range g.Stages {
 			g.Stages[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pStages = nil
 	}
 	if g.VertexInputState != nil {
 		c.pVertexInputState = (*C.VkPipelineVertexInputStateCreateInfo)(m.alloc(C.sizeof_VkPipelineVertexInputStateCreateInfo))
@@ -8134,12 +8224,14 @@ func (p PFNCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCa
 	c.device = C.VkDevice(device)
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	c.createInfoCount = C.uint32_t(len(createInfos))
-	{
+	if createInfos != nil {
 		c.pCreateInfos = (*C.VkGraphicsPipelineCreateInfo)(m.alloc(C.sizeof_VkGraphicsPipelineCreateInfo * uint(len(createInfos))))
 		slice3 := (*[1 << 31]C.VkGraphicsPipelineCreateInfo)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
 		for i3, _ := range createInfos {
 			createInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCreateInfos = nil
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
@@ -8147,12 +8239,14 @@ func (p PFNCreateGraphicsPipelines) Call(device Device, pipelineCache PipelineCa
 	} else {
 		c.pAllocator = nil
 	}
-	{
+	if pipelines != nil {
 		c.pPipelines = (*C.VkPipeline)(m.alloc(C.sizeof_VkPipeline * uint(len(pipelines))))
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
 		for i3, _ := range pipelines {
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
+	} else {
+		c.pPipelines = nil
 	}
 	c._ret = C.callPFN_vkCreateGraphicsPipelines(C.PFN_vkCreateGraphicsPipelines(unsafe.Pointer(p)), c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
@@ -8245,12 +8339,14 @@ func (p PFNCreateComputePipelines) Call(device Device, pipelineCache PipelineCac
 	c.device = C.VkDevice(device)
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	c.createInfoCount = C.uint32_t(len(createInfos))
-	{
+	if createInfos != nil {
 		c.pCreateInfos = (*C.VkComputePipelineCreateInfo)(m.alloc(C.sizeof_VkComputePipelineCreateInfo * uint(len(createInfos))))
 		slice3 := (*[1 << 31]C.VkComputePipelineCreateInfo)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
 		for i3, _ := range createInfos {
 			createInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCreateInfos = nil
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
@@ -8258,12 +8354,14 @@ func (p PFNCreateComputePipelines) Call(device Device, pipelineCache PipelineCac
 	} else {
 		c.pAllocator = nil
 	}
-	{
+	if pipelines != nil {
 		c.pPipelines = (*C.VkPipeline)(m.alloc(C.sizeof_VkPipeline * uint(len(pipelines))))
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
 		for i3, _ := range pipelines {
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
+	} else {
+		c.pPipelines = nil
 	}
 	c._ret = C.callPFN_vkCreateComputePipelines(C.PFN_vkCreateComputePipelines(unsafe.Pointer(p)), c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
@@ -8356,20 +8454,24 @@ func (g *PipelineLayoutCreateInfo) toC(c *C.VkPipelineLayoutCreateInfo, m *cmemo
 		c.flags = C.VkPipelineLayoutCreateFlags(temp_in_VkPipelineLayoutCreateFlags)
 	}
 	c.setLayoutCount = C.uint32_t(len(g.SetLayouts))
-	{
+	if g.SetLayouts != nil {
 		c.pSetLayouts = (*C.VkDescriptorSetLayout)(m.alloc(C.sizeof_VkDescriptorSetLayout * uint(len(g.SetLayouts))))
 		slice2 := (*[1 << 31]C.VkDescriptorSetLayout)(unsafe.Pointer(c.pSetLayouts))[:len(g.SetLayouts):len(g.SetLayouts)]
 		for i2, _ := range g.SetLayouts {
 			slice2[i2] = C.VkDescriptorSetLayout(g.SetLayouts[i2])
 		}
+	} else {
+		c.pSetLayouts = nil
 	}
 	c.pushConstantRangeCount = C.uint32_t(len(g.PushConstantRanges))
-	{
+	if g.PushConstantRanges != nil {
 		c.pPushConstantRanges = (*C.VkPushConstantRange)(m.alloc(C.sizeof_VkPushConstantRange * uint(len(g.PushConstantRanges))))
 		slice2 := (*[1 << 31]C.VkPushConstantRange)(unsafe.Pointer(c.pPushConstantRanges))[:len(g.PushConstantRanges):len(g.PushConstantRanges)]
 		for i2, _ := range g.PushConstantRanges {
 			g.PushConstantRanges[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pPushConstantRanges = nil
 	}
 }
 func (g *PipelineLayoutCreateInfo) fromC(c *C.VkPipelineLayoutCreateInfo) {
@@ -8717,12 +8819,14 @@ func (g *DescriptorSetLayoutCreateInfo) toC(c *C.VkDescriptorSetLayoutCreateInfo
 		c.flags = C.VkDescriptorSetLayoutCreateFlags(temp_in_VkDescriptorSetLayoutCreateFlags)
 	}
 	c.bindingCount = C.uint32_t(len(g.Bindings))
-	{
+	if g.Bindings != nil {
 		c.pBindings = (*C.VkDescriptorSetLayoutBinding)(m.alloc(C.sizeof_VkDescriptorSetLayoutBinding * uint(len(g.Bindings))))
 		slice2 := (*[1 << 31]C.VkDescriptorSetLayoutBinding)(unsafe.Pointer(c.pBindings))[:len(g.Bindings):len(g.Bindings)]
 		for i2, _ := range g.Bindings {
 			g.Bindings[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pBindings = nil
 	}
 }
 func (g *DescriptorSetLayoutCreateInfo) fromC(c *C.VkDescriptorSetLayoutCreateInfo) {
@@ -8861,12 +8965,14 @@ func (g *DescriptorPoolCreateInfo) toC(c *C.VkDescriptorPoolCreateInfo, m *cmemo
 	}
 	c.maxSets = C.uint32_t(g.MaxSets)
 	c.poolSizeCount = C.uint32_t(len(g.PoolSizes))
-	{
+	if g.PoolSizes != nil {
 		c.pPoolSizes = (*C.VkDescriptorPoolSize)(m.alloc(C.sizeof_VkDescriptorPoolSize * uint(len(g.PoolSizes))))
 		slice2 := (*[1 << 31]C.VkDescriptorPoolSize)(unsafe.Pointer(c.pPoolSizes))[:len(g.PoolSizes):len(g.PoolSizes)]
 		for i2, _ := range g.PoolSizes {
 			g.PoolSizes[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pPoolSizes = nil
 	}
 }
 func (g *DescriptorPoolCreateInfo) fromC(c *C.VkDescriptorPoolCreateInfo) {
@@ -9010,12 +9116,14 @@ func (g *DescriptorSetAllocateInfo) toC(c *C.VkDescriptorSetAllocateInfo, m *cme
 	}
 	c.descriptorPool = C.VkDescriptorPool(g.DescriptorPool)
 	c.descriptorSetCount = C.uint32_t(len(g.SetLayouts))
-	{
+	if g.SetLayouts != nil {
 		c.pSetLayouts = (*C.VkDescriptorSetLayout)(m.alloc(C.sizeof_VkDescriptorSetLayout * uint(len(g.SetLayouts))))
 		slice2 := (*[1 << 31]C.VkDescriptorSetLayout)(unsafe.Pointer(c.pSetLayouts))[:len(g.SetLayouts):len(g.SetLayouts)]
 		for i2, _ := range g.SetLayouts {
 			slice2[i2] = C.VkDescriptorSetLayout(g.SetLayouts[i2])
 		}
+	} else {
+		c.pSetLayouts = nil
 	}
 }
 func (g *DescriptorSetAllocateInfo) fromC(c *C.VkDescriptorSetAllocateInfo) {
@@ -9097,12 +9205,14 @@ func (p PFNFreeDescriptorSets) Call(device Device, descriptorPool DescriptorPool
 	c.device = C.VkDevice(device)
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
 	c.descriptorSetCount = C.uint32_t(len(descriptorSets))
-	{
+	if descriptorSets != nil {
 		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
 		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
 		for i3, _ := range descriptorSets {
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c._ret = C.callPFN_vkFreeDescriptorSets(C.PFN_vkFreeDescriptorSets(unsafe.Pointer(p)), c.device, c.descriptorPool, c.descriptorSetCount, c.pDescriptorSets)
 	_ret = Result(c._ret)
@@ -9305,20 +9415,24 @@ func (p PFNUpdateDescriptorSets) Call(device Device, descriptorWrites []WriteDes
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.descriptorWriteCount = C.uint32_t(len(descriptorWrites))
-	{
+	if descriptorWrites != nil {
 		c.pDescriptorWrites = (*C.VkWriteDescriptorSet)(m.alloc(C.sizeof_VkWriteDescriptorSet * uint(len(descriptorWrites))))
 		slice3 := (*[1 << 31]C.VkWriteDescriptorSet)(unsafe.Pointer(c.pDescriptorWrites))[:len(descriptorWrites):len(descriptorWrites)]
 		for i3, _ := range descriptorWrites {
 			descriptorWrites[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pDescriptorWrites = nil
 	}
 	c.descriptorCopyCount = C.uint32_t(len(descriptorCopies))
-	{
+	if descriptorCopies != nil {
 		c.pDescriptorCopies = (*C.VkCopyDescriptorSet)(m.alloc(C.sizeof_VkCopyDescriptorSet * uint(len(descriptorCopies))))
 		slice3 := (*[1 << 31]C.VkCopyDescriptorSet)(unsafe.Pointer(c.pDescriptorCopies))[:len(descriptorCopies):len(descriptorCopies)]
 		for i3, _ := range descriptorCopies {
 			descriptorCopies[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pDescriptorCopies = nil
 	}
 	C.callPFN_vkUpdateDescriptorSets(C.PFN_vkUpdateDescriptorSets(unsafe.Pointer(p)), c.device, c.descriptorWriteCount, c.pDescriptorWrites, c.descriptorCopyCount, c.pDescriptorCopies)
 }
@@ -9351,12 +9465,14 @@ func (g *FramebufferCreateInfo) toC(c *C.VkFramebufferCreateInfo, m *cmemory) {
 	}
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
-	{
+	if g.Attachments != nil {
 		c.pAttachments = (*C.VkImageView)(m.alloc(C.sizeof_VkImageView * uint(len(g.Attachments))))
 		slice2 := (*[1 << 31]C.VkImageView)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
 		for i2, _ := range g.Attachments {
 			slice2[i2] = C.VkImageView(g.Attachments[i2])
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	c.width = C.uint32_t(g.Width)
 	c.height = C.uint32_t(g.Height)
@@ -9557,27 +9673,33 @@ func (g *SubpassDescription) toC(c *C.VkSubpassDescription, m *cmemory) {
 	}
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
-	{
+	if g.InputAttachments != nil {
 		c.pInputAttachments = (*C.VkAttachmentReference)(m.alloc(C.sizeof_VkAttachmentReference * uint(len(g.InputAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference)(unsafe.Pointer(c.pInputAttachments))[:len(g.InputAttachments):len(g.InputAttachments)]
 		for i2, _ := range g.InputAttachments {
 			g.InputAttachments[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pInputAttachments = nil
 	}
 	c.colorAttachmentCount = C.uint32_t(len(g.ColorAttachments))
-	{
+	if g.ColorAttachments != nil {
 		c.pColorAttachments = (*C.VkAttachmentReference)(m.alloc(C.sizeof_VkAttachmentReference * uint(len(g.ColorAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference)(unsafe.Pointer(c.pColorAttachments))[:len(g.ColorAttachments):len(g.ColorAttachments)]
 		for i2, _ := range g.ColorAttachments {
 			g.ColorAttachments[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pColorAttachments = nil
 	}
-	{
+	if g.ResolveAttachments != nil {
 		c.pResolveAttachments = (*C.VkAttachmentReference)(m.alloc(C.sizeof_VkAttachmentReference * uint(len(g.ResolveAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference)(unsafe.Pointer(c.pResolveAttachments))[:len(g.ResolveAttachments):len(g.ResolveAttachments)]
 		for i2, _ := range g.ResolveAttachments {
 			g.ResolveAttachments[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pResolveAttachments = nil
 	}
 	if g.DepthStencilAttachment != nil {
 		c.pDepthStencilAttachment = (*C.VkAttachmentReference)(m.alloc(C.sizeof_VkAttachmentReference))
@@ -9586,12 +9708,14 @@ func (g *SubpassDescription) toC(c *C.VkSubpassDescription, m *cmemory) {
 		c.pDepthStencilAttachment = nil
 	}
 	c.preserveAttachmentCount = C.uint32_t(len(g.PreserveAttachments))
-	{
+	if g.PreserveAttachments != nil {
 		c.pPreserveAttachments = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.PreserveAttachments))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pPreserveAttachments))[:len(g.PreserveAttachments):len(g.PreserveAttachments)]
 		for i2, _ := range g.PreserveAttachments {
 			slice2[i2] = C.uint32_t(g.PreserveAttachments[i2])
 		}
+	} else {
+		c.pPreserveAttachments = nil
 	}
 }
 func (g *SubpassDescription) fromC(c *C.VkSubpassDescription) {
@@ -9771,28 +9895,34 @@ func (g *RenderPassCreateInfo) toC(c *C.VkRenderPassCreateInfo, m *cmemory) {
 		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
 	}
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
-	{
+	if g.Attachments != nil {
 		c.pAttachments = (*C.VkAttachmentDescription)(m.alloc(C.sizeof_VkAttachmentDescription * uint(len(g.Attachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentDescription)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
 		for i2, _ := range g.Attachments {
 			g.Attachments[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	c.subpassCount = C.uint32_t(len(g.Subpasses))
-	{
+	if g.Subpasses != nil {
 		c.pSubpasses = (*C.VkSubpassDescription)(m.alloc(C.sizeof_VkSubpassDescription * uint(len(g.Subpasses))))
 		slice2 := (*[1 << 31]C.VkSubpassDescription)(unsafe.Pointer(c.pSubpasses))[:len(g.Subpasses):len(g.Subpasses)]
 		for i2, _ := range g.Subpasses {
 			g.Subpasses[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pSubpasses = nil
 	}
 	c.dependencyCount = C.uint32_t(len(g.Dependencies))
-	{
+	if g.Dependencies != nil {
 		c.pDependencies = (*C.VkSubpassDependency)(m.alloc(C.sizeof_VkSubpassDependency * uint(len(g.Dependencies))))
 		slice2 := (*[1 << 31]C.VkSubpassDependency)(unsafe.Pointer(c.pDependencies))[:len(g.Dependencies):len(g.Dependencies)]
 		for i2, _ := range g.Dependencies {
 			g.Dependencies[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pDependencies = nil
 	}
 }
 func (g *RenderPassCreateInfo) fromC(c *C.VkRenderPassCreateInfo) {
@@ -10161,12 +10291,14 @@ func (p PFNFreeCommandBuffers) Call(device Device, commandPool CommandPool, comm
 	c.device = C.VkDevice(device)
 	c.commandPool = C.VkCommandPool(commandPool)
 	c.commandBufferCount = C.uint32_t(len(commandBuffers))
-	{
+	if commandBuffers != nil {
 		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
 		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
 		for i3, _ := range commandBuffers {
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
+	} else {
+		c.pCommandBuffers = nil
 	}
 	C.callPFN_vkFreeCommandBuffers(C.PFN_vkFreeCommandBuffers(unsafe.Pointer(p)), c.device, c.commandPool, c.commandBufferCount, c.pCommandBuffers)
 }
@@ -10409,12 +10541,14 @@ func (p PFNCmdSetViewport) Call(commandBuffer CommandBuffer, firstViewport uint3
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstViewport = C.uint32_t(firstViewport)
 	c.viewportCount = C.uint32_t(len(viewports))
-	{
+	if viewports != nil {
 		c.pViewports = (*C.VkViewport)(m.alloc(C.sizeof_VkViewport * uint(len(viewports))))
 		slice3 := (*[1 << 31]C.VkViewport)(unsafe.Pointer(c.pViewports))[:len(viewports):len(viewports)]
 		for i3, _ := range viewports {
 			viewports[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pViewports = nil
 	}
 	C.callPFN_vkCmdSetViewport(C.PFN_vkCmdSetViewport(unsafe.Pointer(p)), c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewports)
 }
@@ -10433,12 +10567,14 @@ func (p PFNCmdSetScissor) Call(commandBuffer CommandBuffer, firstScissor uint32,
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstScissor = C.uint32_t(firstScissor)
 	c.scissorCount = C.uint32_t(len(scissors))
-	{
+	if scissors != nil {
 		c.pScissors = (*C.VkRect2D)(m.alloc(C.sizeof_VkRect2D * uint(len(scissors))))
 		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pScissors))[:len(scissors):len(scissors)]
 		for i3, _ := range scissors {
 			scissors[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pScissors = nil
 	}
 	C.callPFN_vkCmdSetScissor(C.PFN_vkCmdSetScissor(unsafe.Pointer(p)), c.commandBuffer, c.firstScissor, c.scissorCount, c.pScissors)
 }
@@ -10592,20 +10728,24 @@ func (p PFNCmdBindDescriptorSets) Call(commandBuffer CommandBuffer, pipelineBind
 	c.layout = C.VkPipelineLayout(layout)
 	c.firstSet = C.uint32_t(firstSet)
 	c.descriptorSetCount = C.uint32_t(len(descriptorSets))
-	{
+	if descriptorSets != nil {
 		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
 		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
 		for i3, _ := range descriptorSets {
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c.dynamicOffsetCount = C.uint32_t(len(dynamicOffsets))
-	{
+	if dynamicOffsets != nil {
 		c.pDynamicOffsets = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(dynamicOffsets))))
 		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pDynamicOffsets))[:len(dynamicOffsets):len(dynamicOffsets)]
 		for i3, _ := range dynamicOffsets {
 			slice3[i3] = C.uint32_t(dynamicOffsets[i3])
 		}
+	} else {
+		c.pDynamicOffsets = nil
 	}
 	C.callPFN_vkCmdBindDescriptorSets(C.PFN_vkCmdBindDescriptorSets(unsafe.Pointer(p)), c.commandBuffer, c.pipelineBindPoint, c.layout, c.firstSet, c.descriptorSetCount, c.pDescriptorSets, c.dynamicOffsetCount, c.pDynamicOffsets)
 }
@@ -10645,14 +10785,16 @@ func (p PFNCmdBindVertexBuffers) Call(commandBuffer CommandBuffer, firstBinding 
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstBinding = C.uint32_t(firstBinding)
 	c.bindingCount = C.uint32_t(len(buffers))
-	{
+	if buffers != nil {
 		c.pBuffers = (*C.VkBuffer)(m.alloc(C.sizeof_VkBuffer * uint(len(buffers))))
 		slice3 := (*[1 << 31]C.VkBuffer)(unsafe.Pointer(c.pBuffers))[:len(buffers):len(buffers)]
 		for i3, _ := range buffers {
 			slice3[i3] = C.VkBuffer(buffers[i3])
 		}
+	} else {
+		c.pBuffers = nil
 	}
-	{
+	if offsets != nil {
 		c.pOffsets = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize * uint(len(offsets))))
 		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pOffsets))[:len(offsets):len(offsets)]
 		for i3, _ := range offsets {
@@ -10662,6 +10804,8 @@ func (p PFNCmdBindVertexBuffers) Call(commandBuffer CommandBuffer, firstBinding 
 				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
 			}
 		}
+	} else {
+		c.pOffsets = nil
 	}
 	C.callPFN_vkCmdBindVertexBuffers(C.PFN_vkCmdBindVertexBuffers(unsafe.Pointer(p)), c.commandBuffer, c.firstBinding, c.bindingCount, c.pBuffers, c.pOffsets)
 }
@@ -10837,12 +10981,14 @@ func (p PFNCmdCopyBuffer) Call(commandBuffer CommandBuffer, srcBuffer Buffer, ds
 	c.srcBuffer = C.VkBuffer(srcBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferCopy)(m.alloc(C.sizeof_VkBufferCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.callPFN_vkCmdCopyBuffer(C.PFN_vkCmdCopyBuffer(unsafe.Pointer(p)), c.commandBuffer, c.srcBuffer, c.dstBuffer, c.regionCount, c.pRegions)
 }
@@ -10924,12 +11070,14 @@ func (p PFNCmdCopyImage) Call(commandBuffer CommandBuffer, srcImage Image, srcIm
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageCopy)(m.alloc(C.sizeof_VkImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.callPFN_vkCmdCopyImage(C.PFN_vkCmdCopyImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -10981,12 +11129,14 @@ func (p PFNCmdBlitImage) Call(commandBuffer CommandBuffer, srcImage Image, srcIm
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageBlit)(m.alloc(C.sizeof_VkImageBlit * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageBlit)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	c.filter = C.VkFilter(filter)
 	C.callPFN_vkCmdBlitImage(C.PFN_vkCmdBlitImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions, c.filter)
@@ -11042,12 +11192,14 @@ func (p PFNCmdCopyBufferToImage) Call(commandBuffer CommandBuffer, srcBuffer Buf
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferImageCopy)(m.alloc(C.sizeof_VkBufferImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.callPFN_vkCmdCopyBufferToImage(C.PFN_vkCmdCopyBufferToImage(unsafe.Pointer(p)), c.commandBuffer, c.srcBuffer, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -11070,12 +11222,14 @@ func (p PFNCmdCopyImageToBuffer) Call(commandBuffer CommandBuffer, srcImage Imag
 	c.srcImageLayout = C.VkImageLayout(srcImageLayout)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferImageCopy)(m.alloc(C.sizeof_VkBufferImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.callPFN_vkCmdCopyImageToBuffer(C.PFN_vkCmdCopyImageToBuffer(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
 }
@@ -11198,12 +11352,14 @@ func (p PFNCmdClearColorImage) Call(commandBuffer CommandBuffer, image Image, im
 		c.pColor = nil
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
-	{
+	if ranges != nil {
 		c.pRanges = (*C.VkImageSubresourceRange)(m.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
 		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
 		for i3, _ := range ranges {
 			ranges[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRanges = nil
 	}
 	C.callPFN_vkCmdClearColorImage(C.PFN_vkCmdClearColorImage(unsafe.Pointer(p)), c.commandBuffer, c.image, c.imageLayout, c.pColor, c.rangeCount, c.pRanges)
 }
@@ -11243,12 +11399,14 @@ func (p PFNCmdClearDepthStencilImage) Call(commandBuffer CommandBuffer, image Im
 		c.pDepthStencil = nil
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
-	{
+	if ranges != nil {
 		c.pRanges = (*C.VkImageSubresourceRange)(m.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
 		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
 		for i3, _ := range ranges {
 			ranges[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRanges = nil
 	}
 	C.callPFN_vkCmdClearDepthStencilImage(C.PFN_vkCmdClearDepthStencilImage(unsafe.Pointer(p)), c.commandBuffer, c.image, c.imageLayout, c.pDepthStencil, c.rangeCount, c.pRanges)
 }
@@ -11338,20 +11496,24 @@ func (p PFNCmdClearAttachments) Call(commandBuffer CommandBuffer, attachments []
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.attachmentCount = C.uint32_t(len(attachments))
-	{
+	if attachments != nil {
 		c.pAttachments = (*C.VkClearAttachment)(m.alloc(C.sizeof_VkClearAttachment * uint(len(attachments))))
 		slice3 := (*[1 << 31]C.VkClearAttachment)(unsafe.Pointer(c.pAttachments))[:len(attachments):len(attachments)]
 		for i3, _ := range attachments {
 			attachments[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	c.rectCount = C.uint32_t(len(rects))
-	{
+	if rects != nil {
 		c.pRects = (*C.VkClearRect)(m.alloc(C.sizeof_VkClearRect * uint(len(rects))))
 		slice3 := (*[1 << 31]C.VkClearRect)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
 		for i3, _ := range rects {
 			rects[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRects = nil
 	}
 	C.callPFN_vkCmdClearAttachments(C.PFN_vkCmdClearAttachments(unsafe.Pointer(p)), c.commandBuffer, c.attachmentCount, c.pAttachments, c.rectCount, c.pRects)
 }
@@ -11397,12 +11559,14 @@ func (p PFNCmdResolveImage) Call(commandBuffer CommandBuffer, srcImage Image, sr
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageResolve)(m.alloc(C.sizeof_VkImageResolve * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageResolve)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.callPFN_vkCmdResolveImage(C.PFN_vkCmdResolveImage(unsafe.Pointer(p)), c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -11734,12 +11898,14 @@ func (p PFNCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, srcS
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.eventCount = C.uint32_t(len(events))
-	{
+	if events != nil {
 		c.pEvents = (*C.VkEvent)(m.alloc(C.sizeof_VkEvent * uint(len(events))))
 		slice3 := (*[1 << 31]C.VkEvent)(unsafe.Pointer(c.pEvents))[:len(events):len(events)]
 		for i3, _ := range events {
 			slice3[i3] = C.VkEvent(events[i3])
 		}
+	} else {
+		c.pEvents = nil
 	}
 	{
 		var temp_in_VkPipelineStageFlags C.VkFlags
@@ -11760,28 +11926,34 @@ func (p PFNCmdWaitEvents) Call(commandBuffer CommandBuffer, events []Event, srcS
 		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
-	{
+	if memoryBarriers != nil {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
 		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
 		for i3, _ := range memoryBarriers {
 			memoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryBarriers = nil
 	}
 	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
-	{
+	if bufferMemoryBarriers != nil {
 		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(m.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
 		for i3, _ := range bufferMemoryBarriers {
 			bufferMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBufferMemoryBarriers = nil
 	}
 	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
-	{
+	if imageMemoryBarriers != nil {
 		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(m.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
 		for i3, _ := range imageMemoryBarriers {
 			imageMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pImageMemoryBarriers = nil
 	}
 	C.callPFN_vkCmdWaitEvents(C.PFN_vkCmdWaitEvents(unsafe.Pointer(p)), c.commandBuffer, c.eventCount, c.pEvents, c.srcStageMask, c.dstStageMask, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
@@ -11832,28 +12004,34 @@ func (p PFNCmdPipelineBarrier) Call(commandBuffer CommandBuffer, srcStageMask Pi
 		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
 	}
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
-	{
+	if memoryBarriers != nil {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
 		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
 		for i3, _ := range memoryBarriers {
 			memoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryBarriers = nil
 	}
 	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
-	{
+	if bufferMemoryBarriers != nil {
 		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(m.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
 		for i3, _ := range bufferMemoryBarriers {
 			bufferMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBufferMemoryBarriers = nil
 	}
 	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
-	{
+	if imageMemoryBarriers != nil {
 		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(m.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
 		for i3, _ := range imageMemoryBarriers {
 			imageMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pImageMemoryBarriers = nil
 	}
 	C.callPFN_vkCmdPipelineBarrier(C.PFN_vkCmdPipelineBarrier(unsafe.Pointer(p)), c.commandBuffer, c.srcStageMask, c.dstStageMask, c.dependencyFlags, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
@@ -11994,12 +12172,14 @@ func (p PFNCmdPushConstants) Call(commandBuffer CommandBuffer, layout PipelineLa
 	}
 	c.offset = C.uint32_t(offset)
 	c.size = C.uint32_t(len(values))
-	{
+	if values != nil {
 		c.pValues = m.alloc(C.sizeof_char * uint(len(values)))
 		slice3 := (*[1 << 31]byte)(c.pValues)[:len(values):len(values)]
 		for i3, _ := range values {
 			slice3[i3] = values[i3]
 		}
+	} else {
+		c.pValues = nil
 	}
 	C.callPFN_vkCmdPushConstants(C.PFN_vkCmdPushConstants(unsafe.Pointer(p)), c.commandBuffer, c.layout, c.stageFlags, c.offset, c.size, c.pValues)
 }
@@ -12022,12 +12202,14 @@ func (g *RenderPassBeginInfo) toC(c *C.VkRenderPassBeginInfo, m *cmemory) {
 	c.framebuffer = C.VkFramebuffer(g.Framebuffer)
 	g.RenderArea.toC(&c.renderArea)
 	c.clearValueCount = C.uint32_t(len(g.ClearValues))
-	{
+	if g.ClearValues != nil {
 		c.pClearValues = (*C.VkClearValue)(m.alloc(C.sizeof_VkClearValue * uint(len(g.ClearValues))))
 		slice2 := (*[1 << 31]C.VkClearValue)(unsafe.Pointer(c.pClearValues))[:len(g.ClearValues):len(g.ClearValues)]
 		for i2, _ := range g.ClearValues {
 			slice2[i2] = C.VkClearValue(g.ClearValues[i2])
 		}
+	} else {
+		c.pClearValues = nil
 	}
 }
 func (g *RenderPassBeginInfo) fromC(c *C.VkRenderPassBeginInfo) {
@@ -12114,12 +12296,14 @@ func (p PFNCmdExecuteCommands) Call(commandBuffer CommandBuffer, commandBuffers 
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.commandBufferCount = C.uint32_t(len(commandBuffers))
-	{
+	if commandBuffers != nil {
 		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
 		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
 		for i3, _ := range commandBuffers {
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
+	} else {
+		c.pCommandBuffers = nil
 	}
 	C.callPFN_vkCmdExecuteCommands(C.PFN_vkCmdExecuteCommands(unsafe.Pointer(p)), c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
 }
@@ -12189,12 +12373,14 @@ func EnumeratePhysicalDevices(instance Instance, physicalDeviceCount *uint32, ph
 	} else {
 		c.pPhysicalDeviceCount = nil
 	}
-	{
+	if physicalDevices != nil {
 		c.pPhysicalDevices = (*C.VkPhysicalDevice)(m.alloc(C.sizeof_VkPhysicalDevice * uint(len(physicalDevices))))
 		slice3 := (*[1 << 31]C.VkPhysicalDevice)(unsafe.Pointer(c.pPhysicalDevices))[:len(physicalDevices):len(physicalDevices)]
 		for i3, _ := range physicalDevices {
 			slice3[i3] = C.VkPhysicalDevice(physicalDevices[i3])
 		}
+	} else {
+		c.pPhysicalDevices = nil
 	}
 	c._ret = C.vkEnumeratePhysicalDevices(c.instance, c.pPhysicalDeviceCount, c.pPhysicalDevices)
 	_ret = Result(c._ret)
@@ -12331,12 +12517,14 @@ func GetPhysicalDeviceQueueFamilyProperties(physicalDevice PhysicalDevice, queue
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
+	if queueFamilyProperties != nil {
 		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties)(m.alloc(C.sizeof_VkQueueFamilyProperties * uint(len(queueFamilyProperties))))
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
 		for i3, _ := range queueFamilyProperties {
 			queueFamilyProperties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.vkGetPhysicalDeviceQueueFamilyProperties(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
@@ -12464,12 +12652,14 @@ func EnumerateInstanceExtensionProperties(layerName string, propertyCount *uint3
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkExtensionProperties)(m.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateInstanceExtensionProperties(c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -12502,12 +12692,14 @@ func EnumerateDeviceExtensionProperties(physicalDevice PhysicalDevice, layerName
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkExtensionProperties)(m.alloc(C.sizeof_VkExtensionProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkExtensionProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateDeviceExtensionProperties(c.physicalDevice, c.pLayerName, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -12536,12 +12728,14 @@ func EnumerateInstanceLayerProperties(propertyCount *uint32, properties []LayerP
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkLayerProperties)(m.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateInstanceLayerProperties(c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -12572,12 +12766,14 @@ func EnumerateDeviceLayerProperties(physicalDevice PhysicalDevice, propertyCount
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkLayerProperties)(m.alloc(C.sizeof_VkLayerProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkLayerProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.vkEnumerateDeviceLayerProperties(c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -12627,12 +12823,14 @@ func QueueSubmit(queue Queue, submits []SubmitInfo, fence Fence) (_ret Result) {
 	defer pool.give(m)
 	c.queue = C.VkQueue(queue)
 	c.submitCount = C.uint32_t(len(submits))
-	{
+	if submits != nil {
 		c.pSubmits = (*C.VkSubmitInfo)(m.alloc(C.sizeof_VkSubmitInfo * uint(len(submits))))
 		slice3 := (*[1 << 31]C.VkSubmitInfo)(unsafe.Pointer(c.pSubmits))[:len(submits):len(submits)]
 		for i3, _ := range submits {
 			submits[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSubmits = nil
 	}
 	c.fence = C.VkFence(fence)
 	c._ret = C.vkQueueSubmit(c.queue, c.submitCount, c.pSubmits, c.fence)
@@ -12779,12 +12977,14 @@ func FlushMappedMemoryRanges(device Device, memoryRanges []MappedMemoryRange) (_
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.memoryRangeCount = C.uint32_t(len(memoryRanges))
-	{
+	if memoryRanges != nil {
 		c.pMemoryRanges = (*C.VkMappedMemoryRange)(m.alloc(C.sizeof_VkMappedMemoryRange * uint(len(memoryRanges))))
 		slice3 := (*[1 << 31]C.VkMappedMemoryRange)(unsafe.Pointer(c.pMemoryRanges))[:len(memoryRanges):len(memoryRanges)]
 		for i3, _ := range memoryRanges {
 			memoryRanges[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryRanges = nil
 	}
 	c._ret = C.vkFlushMappedMemoryRanges(c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
@@ -12801,12 +13001,14 @@ func InvalidateMappedMemoryRanges(device Device, memoryRanges []MappedMemoryRang
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.memoryRangeCount = C.uint32_t(len(memoryRanges))
-	{
+	if memoryRanges != nil {
 		c.pMemoryRanges = (*C.VkMappedMemoryRange)(m.alloc(C.sizeof_VkMappedMemoryRange * uint(len(memoryRanges))))
 		slice3 := (*[1 << 31]C.VkMappedMemoryRange)(unsafe.Pointer(c.pMemoryRanges))[:len(memoryRanges):len(memoryRanges)]
 		for i3, _ := range memoryRanges {
 			memoryRanges[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryRanges = nil
 	}
 	c._ret = C.vkInvalidateMappedMemoryRanges(c.device, c.memoryRangeCount, c.pMemoryRanges)
 	_ret = Result(c._ret)
@@ -12938,12 +13140,14 @@ func GetImageSparseMemoryRequirements(device Device, image Image, sparseMemoryRe
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
+	if sparseMemoryRequirements != nil {
 		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements)(m.alloc(C.sizeof_VkSparseImageMemoryRequirements * uint(len(sparseMemoryRequirements))))
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
 		for i3, _ := range sparseMemoryRequirements {
 			sparseMemoryRequirements[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.vkGetImageSparseMemoryRequirements(c.device, c.image, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
@@ -12989,12 +13193,14 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkSparseImageFormatProperties)(m.alloc(C.sizeof_VkSparseImageFormatProperties * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceSparseImageFormatProperties(c.physicalDevice, c.format, c._type, c.samples, c.usage, c.tiling, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
@@ -13095,12 +13301,14 @@ func ResetFences(device Device, fences []Fence) (_ret Result) {
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.fenceCount = C.uint32_t(len(fences))
-	{
+	if fences != nil {
 		c.pFences = (*C.VkFence)(m.alloc(C.sizeof_VkFence * uint(len(fences))))
 		slice3 := (*[1 << 31]C.VkFence)(unsafe.Pointer(c.pFences))[:len(fences):len(fences)]
 		for i3, _ := range fences {
 			slice3[i3] = C.VkFence(fences[i3])
 		}
+	} else {
+		c.pFences = nil
 	}
 	c._ret = C.vkResetFences(c.device, c.fenceCount, c.pFences)
 	_ret = Result(c._ret)
@@ -13131,12 +13339,14 @@ func WaitForFences(device Device, fences []Fence, waitAll bool, timeout uint64) 
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.fenceCount = C.uint32_t(len(fences))
-	{
+	if fences != nil {
 		c.pFences = (*C.VkFence)(m.alloc(C.sizeof_VkFence * uint(len(fences))))
 		slice3 := (*[1 << 31]C.VkFence)(unsafe.Pointer(c.pFences))[:len(fences):len(fences)]
 		for i3, _ := range fences {
 			slice3[i3] = C.VkFence(fences[i3])
 		}
+	} else {
+		c.pFences = nil
 	}
 	if waitAll {
 		c.waitAll = 1
@@ -13365,12 +13575,14 @@ func GetQueryPoolResults(device Device, queryPool QueryPool, firstQuery uint32, 
 	c.firstQuery = C.uint32_t(firstQuery)
 	c.queryCount = C.uint32_t(queryCount)
 	c.dataSize = C.size_t(len(data))
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	{
 		var temp_in_VkDeviceSize C.uint64_t
@@ -13766,12 +13978,14 @@ func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *
 	} else {
 		c.pDataSize = nil
 	}
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	c._ret = C.vkGetPipelineCacheData(c.device, c.pipelineCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
@@ -13799,12 +14013,14 @@ func MergePipelineCaches(device Device, dstCache PipelineCache, srcCaches []Pipe
 	c.device = C.VkDevice(device)
 	c.dstCache = C.VkPipelineCache(dstCache)
 	c.srcCacheCount = C.uint32_t(len(srcCaches))
-	{
+	if srcCaches != nil {
 		c.pSrcCaches = (*C.VkPipelineCache)(m.alloc(C.sizeof_VkPipelineCache * uint(len(srcCaches))))
 		slice3 := (*[1 << 31]C.VkPipelineCache)(unsafe.Pointer(c.pSrcCaches))[:len(srcCaches):len(srcCaches)]
 		for i3, _ := range srcCaches {
 			slice3[i3] = C.VkPipelineCache(srcCaches[i3])
 		}
+	} else {
+		c.pSrcCaches = nil
 	}
 	c._ret = C.vkMergePipelineCaches(c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
 	_ret = Result(c._ret)
@@ -13825,12 +14041,14 @@ func CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, createI
 	c.device = C.VkDevice(device)
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	c.createInfoCount = C.uint32_t(len(createInfos))
-	{
+	if createInfos != nil {
 		c.pCreateInfos = (*C.VkGraphicsPipelineCreateInfo)(m.alloc(C.sizeof_VkGraphicsPipelineCreateInfo * uint(len(createInfos))))
 		slice3 := (*[1 << 31]C.VkGraphicsPipelineCreateInfo)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
 		for i3, _ := range createInfos {
 			createInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCreateInfos = nil
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
@@ -13838,12 +14056,14 @@ func CreateGraphicsPipelines(device Device, pipelineCache PipelineCache, createI
 	} else {
 		c.pAllocator = nil
 	}
-	{
+	if pipelines != nil {
 		c.pPipelines = (*C.VkPipeline)(m.alloc(C.sizeof_VkPipeline * uint(len(pipelines))))
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
 		for i3, _ := range pipelines {
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
+	} else {
+		c.pPipelines = nil
 	}
 	c._ret = C.vkCreateGraphicsPipelines(c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
@@ -13870,12 +14090,14 @@ func CreateComputePipelines(device Device, pipelineCache PipelineCache, createIn
 	c.device = C.VkDevice(device)
 	c.pipelineCache = C.VkPipelineCache(pipelineCache)
 	c.createInfoCount = C.uint32_t(len(createInfos))
-	{
+	if createInfos != nil {
 		c.pCreateInfos = (*C.VkComputePipelineCreateInfo)(m.alloc(C.sizeof_VkComputePipelineCreateInfo * uint(len(createInfos))))
 		slice3 := (*[1 << 31]C.VkComputePipelineCreateInfo)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
 		for i3, _ := range createInfos {
 			createInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCreateInfos = nil
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
@@ -13883,12 +14105,14 @@ func CreateComputePipelines(device Device, pipelineCache PipelineCache, createIn
 	} else {
 		c.pAllocator = nil
 	}
-	{
+	if pipelines != nil {
 		c.pPipelines = (*C.VkPipeline)(m.alloc(C.sizeof_VkPipeline * uint(len(pipelines))))
 		slice3 := (*[1 << 31]C.VkPipeline)(unsafe.Pointer(c.pPipelines))[:len(pipelines):len(pipelines)]
 		for i3, _ := range pipelines {
 			slice3[i3] = C.VkPipeline(pipelines[i3])
 		}
+	} else {
+		c.pPipelines = nil
 	}
 	c._ret = C.vkCreateComputePipelines(c.device, c.pipelineCache, c.createInfoCount, c.pCreateInfos, c.pAllocator, c.pPipelines)
 	_ret = Result(c._ret)
@@ -14198,12 +14422,14 @@ func FreeDescriptorSets(device Device, descriptorPool DescriptorPool, descriptor
 	c.device = C.VkDevice(device)
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
 	c.descriptorSetCount = C.uint32_t(len(descriptorSets))
-	{
+	if descriptorSets != nil {
 		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
 		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
 		for i3, _ := range descriptorSets {
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c._ret = C.vkFreeDescriptorSets(c.device, c.descriptorPool, c.descriptorSetCount, c.pDescriptorSets)
 	_ret = Result(c._ret)
@@ -14221,20 +14447,24 @@ func UpdateDescriptorSets(device Device, descriptorWrites []WriteDescriptorSet, 
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.descriptorWriteCount = C.uint32_t(len(descriptorWrites))
-	{
+	if descriptorWrites != nil {
 		c.pDescriptorWrites = (*C.VkWriteDescriptorSet)(m.alloc(C.sizeof_VkWriteDescriptorSet * uint(len(descriptorWrites))))
 		slice3 := (*[1 << 31]C.VkWriteDescriptorSet)(unsafe.Pointer(c.pDescriptorWrites))[:len(descriptorWrites):len(descriptorWrites)]
 		for i3, _ := range descriptorWrites {
 			descriptorWrites[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pDescriptorWrites = nil
 	}
 	c.descriptorCopyCount = C.uint32_t(len(descriptorCopies))
-	{
+	if descriptorCopies != nil {
 		c.pDescriptorCopies = (*C.VkCopyDescriptorSet)(m.alloc(C.sizeof_VkCopyDescriptorSet * uint(len(descriptorCopies))))
 		slice3 := (*[1 << 31]C.VkCopyDescriptorSet)(unsafe.Pointer(c.pDescriptorCopies))[:len(descriptorCopies):len(descriptorCopies)]
 		for i3, _ := range descriptorCopies {
 			descriptorCopies[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pDescriptorCopies = nil
 	}
 	C.vkUpdateDescriptorSets(c.device, c.descriptorWriteCount, c.pDescriptorWrites, c.descriptorCopyCount, c.pDescriptorCopies)
 }
@@ -14484,12 +14714,14 @@ func FreeCommandBuffers(device Device, commandPool CommandPool, commandBuffers [
 	c.device = C.VkDevice(device)
 	c.commandPool = C.VkCommandPool(commandPool)
 	c.commandBufferCount = C.uint32_t(len(commandBuffers))
-	{
+	if commandBuffers != nil {
 		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
 		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
 		for i3, _ := range commandBuffers {
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
+	} else {
+		c.pCommandBuffers = nil
 	}
 	C.vkFreeCommandBuffers(c.device, c.commandPool, c.commandBufferCount, c.pCommandBuffers)
 }
@@ -14565,12 +14797,14 @@ func CmdSetViewport(commandBuffer CommandBuffer, firstViewport uint32, viewports
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstViewport = C.uint32_t(firstViewport)
 	c.viewportCount = C.uint32_t(len(viewports))
-	{
+	if viewports != nil {
 		c.pViewports = (*C.VkViewport)(m.alloc(C.sizeof_VkViewport * uint(len(viewports))))
 		slice3 := (*[1 << 31]C.VkViewport)(unsafe.Pointer(c.pViewports))[:len(viewports):len(viewports)]
 		for i3, _ := range viewports {
 			viewports[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pViewports = nil
 	}
 	C.vkCmdSetViewport(c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewports)
 }
@@ -14586,12 +14820,14 @@ func CmdSetScissor(commandBuffer CommandBuffer, firstScissor uint32, scissors []
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstScissor = C.uint32_t(firstScissor)
 	c.scissorCount = C.uint32_t(len(scissors))
-	{
+	if scissors != nil {
 		c.pScissors = (*C.VkRect2D)(m.alloc(C.sizeof_VkRect2D * uint(len(scissors))))
 		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pScissors))[:len(scissors):len(scissors)]
 		for i3, _ := range scissors {
 			scissors[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pScissors = nil
 	}
 	C.vkCmdSetScissor(c.commandBuffer, c.firstScissor, c.scissorCount, c.pScissors)
 }
@@ -14719,20 +14955,24 @@ func CmdBindDescriptorSets(commandBuffer CommandBuffer, pipelineBindPoint Pipeli
 	c.layout = C.VkPipelineLayout(layout)
 	c.firstSet = C.uint32_t(firstSet)
 	c.descriptorSetCount = C.uint32_t(len(descriptorSets))
-	{
+	if descriptorSets != nil {
 		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
 		slice3 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
 		for i3, _ := range descriptorSets {
 			slice3[i3] = C.VkDescriptorSet(descriptorSets[i3])
 		}
+	} else {
+		c.pDescriptorSets = nil
 	}
 	c.dynamicOffsetCount = C.uint32_t(len(dynamicOffsets))
-	{
+	if dynamicOffsets != nil {
 		c.pDynamicOffsets = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(dynamicOffsets))))
 		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pDynamicOffsets))[:len(dynamicOffsets):len(dynamicOffsets)]
 		for i3, _ := range dynamicOffsets {
 			slice3[i3] = C.uint32_t(dynamicOffsets[i3])
 		}
+	} else {
+		c.pDynamicOffsets = nil
 	}
 	C.vkCmdBindDescriptorSets(c.commandBuffer, c.pipelineBindPoint, c.layout, c.firstSet, c.descriptorSetCount, c.pDescriptorSets, c.dynamicOffsetCount, c.pDynamicOffsets)
 }
@@ -14766,14 +15006,16 @@ func CmdBindVertexBuffers(commandBuffer CommandBuffer, firstBinding uint32, buff
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstBinding = C.uint32_t(firstBinding)
 	c.bindingCount = C.uint32_t(len(buffers))
-	{
+	if buffers != nil {
 		c.pBuffers = (*C.VkBuffer)(m.alloc(C.sizeof_VkBuffer * uint(len(buffers))))
 		slice3 := (*[1 << 31]C.VkBuffer)(unsafe.Pointer(c.pBuffers))[:len(buffers):len(buffers)]
 		for i3, _ := range buffers {
 			slice3[i3] = C.VkBuffer(buffers[i3])
 		}
+	} else {
+		c.pBuffers = nil
 	}
-	{
+	if offsets != nil {
 		c.pOffsets = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize * uint(len(offsets))))
 		slice3 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pOffsets))[:len(offsets):len(offsets)]
 		for i3, _ := range offsets {
@@ -14783,6 +15025,8 @@ func CmdBindVertexBuffers(commandBuffer CommandBuffer, firstBinding uint32, buff
 				slice3[i3] = C.VkDeviceSize(temp_in_VkDeviceSize)
 			}
 		}
+	} else {
+		c.pOffsets = nil
 	}
 	C.vkCmdBindVertexBuffers(c.commandBuffer, c.firstBinding, c.bindingCount, c.pBuffers, c.pOffsets)
 }
@@ -14898,12 +15142,14 @@ func CmdCopyBuffer(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buff
 	c.srcBuffer = C.VkBuffer(srcBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferCopy)(m.alloc(C.sizeof_VkBufferCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.vkCmdCopyBuffer(c.commandBuffer, c.srcBuffer, c.dstBuffer, c.regionCount, c.pRegions)
 }
@@ -14925,12 +15171,14 @@ func CmdCopyImage(commandBuffer CommandBuffer, srcImage Image, srcImageLayout Im
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageCopy)(m.alloc(C.sizeof_VkImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.vkCmdCopyImage(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -14953,12 +15201,14 @@ func CmdBlitImage(commandBuffer CommandBuffer, srcImage Image, srcImageLayout Im
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageBlit)(m.alloc(C.sizeof_VkImageBlit * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageBlit)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	c.filter = C.VkFilter(filter)
 	C.vkCmdBlitImage(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions, c.filter)
@@ -14979,12 +15229,14 @@ func CmdCopyBufferToImage(commandBuffer CommandBuffer, srcBuffer Buffer, dstImag
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferImageCopy)(m.alloc(C.sizeof_VkBufferImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.vkCmdCopyBufferToImage(c.commandBuffer, c.srcBuffer, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -15004,12 +15256,14 @@ func CmdCopyImageToBuffer(commandBuffer CommandBuffer, srcImage Image, srcImageL
 	c.srcImageLayout = C.VkImageLayout(srcImageLayout)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkBufferImageCopy)(m.alloc(C.sizeof_VkBufferImageCopy * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkBufferImageCopy)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.vkCmdCopyImageToBuffer(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
 }
@@ -15080,12 +15334,14 @@ func CmdClearColorImage(commandBuffer CommandBuffer, image Image, imageLayout Im
 		c.pColor = nil
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
-	{
+	if ranges != nil {
 		c.pRanges = (*C.VkImageSubresourceRange)(m.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
 		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
 		for i3, _ := range ranges {
 			ranges[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRanges = nil
 	}
 	C.vkCmdClearColorImage(c.commandBuffer, c.image, c.imageLayout, c.pColor, c.rangeCount, c.pRanges)
 }
@@ -15110,12 +15366,14 @@ func CmdClearDepthStencilImage(commandBuffer CommandBuffer, image Image, imageLa
 		c.pDepthStencil = nil
 	}
 	c.rangeCount = C.uint32_t(len(ranges))
-	{
+	if ranges != nil {
 		c.pRanges = (*C.VkImageSubresourceRange)(m.alloc(C.sizeof_VkImageSubresourceRange * uint(len(ranges))))
 		slice3 := (*[1 << 31]C.VkImageSubresourceRange)(unsafe.Pointer(c.pRanges))[:len(ranges):len(ranges)]
 		for i3, _ := range ranges {
 			ranges[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRanges = nil
 	}
 	C.vkCmdClearDepthStencilImage(c.commandBuffer, c.image, c.imageLayout, c.pDepthStencil, c.rangeCount, c.pRanges)
 }
@@ -15131,20 +15389,24 @@ func CmdClearAttachments(commandBuffer CommandBuffer, attachments []ClearAttachm
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.attachmentCount = C.uint32_t(len(attachments))
-	{
+	if attachments != nil {
 		c.pAttachments = (*C.VkClearAttachment)(m.alloc(C.sizeof_VkClearAttachment * uint(len(attachments))))
 		slice3 := (*[1 << 31]C.VkClearAttachment)(unsafe.Pointer(c.pAttachments))[:len(attachments):len(attachments)]
 		for i3, _ := range attachments {
 			attachments[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	c.rectCount = C.uint32_t(len(rects))
-	{
+	if rects != nil {
 		c.pRects = (*C.VkClearRect)(m.alloc(C.sizeof_VkClearRect * uint(len(rects))))
 		slice3 := (*[1 << 31]C.VkClearRect)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
 		for i3, _ := range rects {
 			rects[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRects = nil
 	}
 	C.vkCmdClearAttachments(c.commandBuffer, c.attachmentCount, c.pAttachments, c.rectCount, c.pRects)
 }
@@ -15166,12 +15428,14 @@ func CmdResolveImage(commandBuffer CommandBuffer, srcImage Image, srcImageLayout
 	c.dstImage = C.VkImage(dstImage)
 	c.dstImageLayout = C.VkImageLayout(dstImageLayout)
 	c.regionCount = C.uint32_t(len(regions))
-	{
+	if regions != nil {
 		c.pRegions = (*C.VkImageResolve)(m.alloc(C.sizeof_VkImageResolve * uint(len(regions))))
 		slice3 := (*[1 << 31]C.VkImageResolve)(unsafe.Pointer(c.pRegions))[:len(regions):len(regions)]
 		for i3, _ := range regions {
 			regions[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRegions = nil
 	}
 	C.vkCmdResolveImage(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstImage, c.dstImageLayout, c.regionCount, c.pRegions)
 }
@@ -15231,12 +15495,14 @@ func CmdWaitEvents(commandBuffer CommandBuffer, events []Event, srcStageMask Pip
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.eventCount = C.uint32_t(len(events))
-	{
+	if events != nil {
 		c.pEvents = (*C.VkEvent)(m.alloc(C.sizeof_VkEvent * uint(len(events))))
 		slice3 := (*[1 << 31]C.VkEvent)(unsafe.Pointer(c.pEvents))[:len(events):len(events)]
 		for i3, _ := range events {
 			slice3[i3] = C.VkEvent(events[i3])
 		}
+	} else {
+		c.pEvents = nil
 	}
 	{
 		var temp_in_VkPipelineStageFlags C.VkFlags
@@ -15257,28 +15523,34 @@ func CmdWaitEvents(commandBuffer CommandBuffer, events []Event, srcStageMask Pip
 		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
 	}
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
-	{
+	if memoryBarriers != nil {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
 		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
 		for i3, _ := range memoryBarriers {
 			memoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryBarriers = nil
 	}
 	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
-	{
+	if bufferMemoryBarriers != nil {
 		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(m.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
 		for i3, _ := range bufferMemoryBarriers {
 			bufferMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBufferMemoryBarriers = nil
 	}
 	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
-	{
+	if imageMemoryBarriers != nil {
 		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(m.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
 		for i3, _ := range imageMemoryBarriers {
 			imageMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pImageMemoryBarriers = nil
 	}
 	C.vkCmdWaitEvents(c.commandBuffer, c.eventCount, c.pEvents, c.srcStageMask, c.dstStageMask, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
@@ -15326,28 +15598,34 @@ func CmdPipelineBarrier(commandBuffer CommandBuffer, srcStageMask PipelineStageF
 		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
 	}
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
-	{
+	if memoryBarriers != nil {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
 		slice3 := (*[1 << 31]C.VkMemoryBarrier)(unsafe.Pointer(c.pMemoryBarriers))[:len(memoryBarriers):len(memoryBarriers)]
 		for i3, _ := range memoryBarriers {
 			memoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMemoryBarriers = nil
 	}
 	c.bufferMemoryBarrierCount = C.uint32_t(len(bufferMemoryBarriers))
-	{
+	if bufferMemoryBarriers != nil {
 		c.pBufferMemoryBarriers = (*C.VkBufferMemoryBarrier)(m.alloc(C.sizeof_VkBufferMemoryBarrier * uint(len(bufferMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkBufferMemoryBarrier)(unsafe.Pointer(c.pBufferMemoryBarriers))[:len(bufferMemoryBarriers):len(bufferMemoryBarriers)]
 		for i3, _ := range bufferMemoryBarriers {
 			bufferMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBufferMemoryBarriers = nil
 	}
 	c.imageMemoryBarrierCount = C.uint32_t(len(imageMemoryBarriers))
-	{
+	if imageMemoryBarriers != nil {
 		c.pImageMemoryBarriers = (*C.VkImageMemoryBarrier)(m.alloc(C.sizeof_VkImageMemoryBarrier * uint(len(imageMemoryBarriers))))
 		slice3 := (*[1 << 31]C.VkImageMemoryBarrier)(unsafe.Pointer(c.pImageMemoryBarriers))[:len(imageMemoryBarriers):len(imageMemoryBarriers)]
 		for i3, _ := range imageMemoryBarriers {
 			imageMemoryBarriers[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pImageMemoryBarriers = nil
 	}
 	C.vkCmdPipelineBarrier(c.commandBuffer, c.srcStageMask, c.dstStageMask, c.dependencyFlags, c.memoryBarrierCount, c.pMemoryBarriers, c.bufferMemoryBarrierCount, c.pBufferMemoryBarriers, c.imageMemoryBarrierCount, c.pImageMemoryBarriers)
 }
@@ -15470,12 +15748,14 @@ func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageF
 	}
 	c.offset = C.uint32_t(offset)
 	c.size = C.uint32_t(len(values))
-	{
+	if values != nil {
 		c.pValues = m.alloc(C.sizeof_char * uint(len(values)))
 		slice3 := (*[1 << 31]byte)(c.pValues)[:len(values):len(values)]
 		for i3, _ := range values {
 			slice3[i3] = values[i3]
 		}
+	} else {
+		c.pValues = nil
 	}
 	C.vkCmdPushConstants(c.commandBuffer, c.layout, c.stageFlags, c.offset, c.size, c.pValues)
 }
@@ -15521,12 +15801,14 @@ func CmdExecuteCommands(commandBuffer CommandBuffer, commandBuffers []CommandBuf
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.commandBufferCount = C.uint32_t(len(commandBuffers))
-	{
+	if commandBuffers != nil {
 		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
 		slice3 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
 		for i3, _ := range commandBuffers {
 			slice3[i3] = C.VkCommandBuffer(commandBuffers[i3])
 		}
+	} else {
+		c.pCommandBuffers = nil
 	}
 	C.vkCmdExecuteCommands(c.commandBuffer, c.commandBufferCount, c.pCommandBuffers)
 }
@@ -15838,12 +16120,14 @@ func (p PFNBindBufferMemory2) Call(device Device, bindInfos []BindBufferMemoryIn
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindBufferMemoryInfo)(m.alloc(C.sizeof_VkBindBufferMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindBufferMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.callPFN_vkBindBufferMemory2(C.PFN_vkBindBufferMemory2(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -15912,12 +16196,14 @@ func (p PFNBindImageMemory2) Call(device Device, bindInfos []BindImageMemoryInfo
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindImageMemoryInfo)(m.alloc(C.sizeof_VkBindImageMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindImageMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.callPFN_vkBindImageMemory2(C.PFN_vkBindImageMemory2(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -15941,7 +16227,7 @@ func (p PFNGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex uint3
 	c.heapIndex = C.uint32_t(heapIndex)
 	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
 	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-	{
+	if peerMemoryFeatures != nil {
 		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i3, _ := range peerMemoryFeatures {
@@ -15955,6 +16241,8 @@ func (p PFNGetDeviceGroupPeerMemoryFeatures) Call(device Device, heapIndex uint3
 				slice3[i3] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
 			}
 		}
+	} else {
+		c.pPeerMemoryFeatures = nil
 	}
 	C.callPFN_vkGetDeviceGroupPeerMemoryFeatures(C.PFN_vkGetDeviceGroupPeerMemoryFeatures(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
 	{
@@ -16074,12 +16362,14 @@ func (p PFNEnumeratePhysicalDeviceGroups) Call(instance Instance, physicalDevice
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
+	if physicalDeviceGroupProperties != nil {
 		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(m.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
 		for i3, _ := range physicalDeviceGroupProperties {
 			physicalDeviceGroupProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroups(C.PFN_vkEnumeratePhysicalDeviceGroups(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
@@ -16356,12 +16646,14 @@ func (p PFNGetImageSparseMemoryRequirements2) Call(device Device, info *ImageSpa
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
+	if sparseMemoryRequirements != nil {
 		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(m.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
 		for i3, _ := range sparseMemoryRequirements {
 			sparseMemoryRequirements[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements2(C.PFN_vkGetImageSparseMemoryRequirements2(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
@@ -16748,12 +17040,14 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties2) Call(physicalDevice Physical
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
+	if queueFamilyProperties != nil {
 		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(m.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
 		for i3, _ := range queueFamilyProperties {
 			queueFamilyProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
@@ -16948,12 +17242,14 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties2) Call(physicalDevice Ph
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkSparseImageFormatProperties2)(m.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
@@ -17253,12 +17549,14 @@ func (g *DescriptorUpdateTemplateCreateInfo) toC(c *C.VkDescriptorUpdateTemplate
 		c.flags = C.VkDescriptorUpdateTemplateCreateFlags(temp_in_VkDescriptorUpdateTemplateCreateFlags)
 	}
 	c.descriptorUpdateEntryCount = C.uint32_t(len(g.DescriptorUpdateEntries))
-	{
+	if g.DescriptorUpdateEntries != nil {
 		c.pDescriptorUpdateEntries = (*C.VkDescriptorUpdateTemplateEntry)(m.alloc(C.sizeof_VkDescriptorUpdateTemplateEntry * uint(len(g.DescriptorUpdateEntries))))
 		slice2 := (*[1 << 31]C.VkDescriptorUpdateTemplateEntry)(unsafe.Pointer(c.pDescriptorUpdateEntries))[:len(g.DescriptorUpdateEntries):len(g.DescriptorUpdateEntries)]
 		for i2, _ := range g.DescriptorUpdateEntries {
 			g.DescriptorUpdateEntries[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pDescriptorUpdateEntries = nil
 	}
 	c.templateType = C.VkDescriptorUpdateTemplateType(g.TemplateType)
 	c.descriptorSetLayout = C.VkDescriptorSetLayout(g.DescriptorSetLayout)
@@ -18005,12 +18303,14 @@ func BindBufferMemory2(device Device, bindInfos []BindBufferMemoryInfo) (_ret Re
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindBufferMemoryInfo)(m.alloc(C.sizeof_VkBindBufferMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindBufferMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.vkBindBufferMemory2(c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -18027,12 +18327,14 @@ func BindImageMemory2(device Device, bindInfos []BindImageMemoryInfo) (_ret Resu
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindImageMemoryInfo)(m.alloc(C.sizeof_VkBindImageMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindImageMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.vkBindImageMemory2(c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -18052,7 +18354,7 @@ func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDevi
 	c.heapIndex = C.uint32_t(heapIndex)
 	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
 	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-	{
+	if peerMemoryFeatures != nil {
 		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i3, _ := range peerMemoryFeatures {
@@ -18066,6 +18368,8 @@ func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDevi
 				slice3[i3] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
 			}
 		}
+	} else {
+		c.pPeerMemoryFeatures = nil
 	}
 	C.vkGetDeviceGroupPeerMemoryFeatures(c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
 	{
@@ -18127,12 +18431,14 @@ func EnumeratePhysicalDeviceGroups(instance Instance, physicalDeviceGroupCount *
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
+	if physicalDeviceGroupProperties != nil {
 		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(m.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
 		for i3, _ := range physicalDeviceGroupProperties {
 			physicalDeviceGroupProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.vkEnumeratePhysicalDeviceGroups(c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
@@ -18221,12 +18527,14 @@ func GetImageSparseMemoryRequirements2(device Device, info *ImageSparseMemoryReq
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
+	if sparseMemoryRequirements != nil {
 		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(m.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
 		for i3, _ := range sparseMemoryRequirements {
 			sparseMemoryRequirements[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.vkGetImageSparseMemoryRequirements2(c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
@@ -18342,12 +18650,14 @@ func GetPhysicalDeviceQueueFamilyProperties2(physicalDevice PhysicalDevice, queu
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
+	if queueFamilyProperties != nil {
 		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(m.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
 		for i3, _ := range queueFamilyProperties {
 			queueFamilyProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.vkGetPhysicalDeviceQueueFamilyProperties2(c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
@@ -18401,12 +18711,14 @@ func GetPhysicalDeviceSparseImageFormatProperties2(physicalDevice PhysicalDevice
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkSparseImageFormatProperties2)(m.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	C.vkGetPhysicalDeviceSparseImageFormatProperties2(c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
@@ -18954,12 +19266,14 @@ func (p PFNGetPhysicalDeviceSurfaceFormatsKHR) Call(physicalDevice PhysicalDevic
 	} else {
 		c.pSurfaceFormatCount = nil
 	}
-	{
+	if surfaceFormats != nil {
 		c.pSurfaceFormats = (*C.VkSurfaceFormatKHR)(m.alloc(C.sizeof_VkSurfaceFormatKHR * uint(len(surfaceFormats))))
 		slice3 := (*[1 << 31]C.VkSurfaceFormatKHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
 		for i3, _ := range surfaceFormats {
 			surfaceFormats[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pSurfaceFormats = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormatsKHR(C.PFN_vkGetPhysicalDeviceSurfaceFormatsKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
@@ -18995,12 +19309,14 @@ func (p PFNGetPhysicalDeviceSurfacePresentModesKHR) Call(physicalDevice Physical
 	} else {
 		c.pPresentModeCount = nil
 	}
-	{
+	if presentModes != nil {
 		c.pPresentModes = (*C.VkPresentModeKHR)(m.alloc(C.sizeof_VkPresentModeKHR * uint(len(presentModes))))
 		slice3 := (*[1 << 31]C.VkPresentModeKHR)(unsafe.Pointer(c.pPresentModes))[:len(presentModes):len(presentModes)]
 		for i3, _ := range presentModes {
 			slice3[i3] = C.VkPresentModeKHR(presentModes[i3])
 		}
+	} else {
+		c.pPresentModes = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfacePresentModesKHR(C.PFN_vkGetPhysicalDeviceSurfacePresentModesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pPresentModeCount, c.pPresentModes)
 	_ret = Result(c._ret)
@@ -19087,12 +19403,14 @@ func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, m *cmemory) 
 	}
 	c.imageSharingMode = C.VkSharingMode(g.ImageSharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
-	{
+	if g.QueueFamilyIndices != nil {
 		c.pQueueFamilyIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.QueueFamilyIndices))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pQueueFamilyIndices))[:len(g.QueueFamilyIndices):len(g.QueueFamilyIndices)]
 		for i2, _ := range g.QueueFamilyIndices {
 			slice2[i2] = C.uint32_t(g.QueueFamilyIndices[i2])
 		}
+	} else {
+		c.pQueueFamilyIndices = nil
 	}
 	c.preTransform = C.VkSurfaceTransformFlagBitsKHR(g.PreTransform)
 	c.compositeAlpha = C.VkCompositeAlphaFlagBitsKHR(g.CompositeAlpha)
@@ -19242,12 +19560,14 @@ func (p PFNGetSwapchainImagesKHR) Call(device Device, swapchain SwapchainKHR, sw
 	} else {
 		c.pSwapchainImageCount = nil
 	}
-	{
+	if swapchainImages != nil {
 		c.pSwapchainImages = (*C.VkImage)(m.alloc(C.sizeof_VkImage * uint(len(swapchainImages))))
 		slice3 := (*[1 << 31]C.VkImage)(unsafe.Pointer(c.pSwapchainImages))[:len(swapchainImages):len(swapchainImages)]
 		for i3, _ := range swapchainImages {
 			slice3[i3] = C.VkImage(swapchainImages[i3])
 		}
+	} else {
+		c.pSwapchainImages = nil
 	}
 	c._ret = C.callPFN_vkGetSwapchainImagesKHR(C.PFN_vkGetSwapchainImagesKHR(unsafe.Pointer(p)), c.device, c.swapchain, c.pSwapchainImageCount, c.pSwapchainImages)
 	_ret = Result(c._ret)
@@ -19311,34 +19631,42 @@ func (g *PresentInfoKHR) toC(c *C.VkPresentInfoKHR, m *cmemory) {
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.waitSemaphoreCount = C.uint32_t(len(g.WaitSemaphores))
-	{
+	if g.WaitSemaphores != nil {
 		c.pWaitSemaphores = (*C.VkSemaphore)(m.alloc(C.sizeof_VkSemaphore * uint(len(g.WaitSemaphores))))
 		slice2 := (*[1 << 31]C.VkSemaphore)(unsafe.Pointer(c.pWaitSemaphores))[:len(g.WaitSemaphores):len(g.WaitSemaphores)]
 		for i2, _ := range g.WaitSemaphores {
 			slice2[i2] = C.VkSemaphore(g.WaitSemaphores[i2])
 		}
+	} else {
+		c.pWaitSemaphores = nil
 	}
 	c.swapchainCount = C.uint32_t(len(g.Swapchains))
-	{
+	if g.Swapchains != nil {
 		c.pSwapchains = (*C.VkSwapchainKHR)(m.alloc(C.sizeof_VkSwapchainKHR * uint(len(g.Swapchains))))
 		slice2 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(g.Swapchains):len(g.Swapchains)]
 		for i2, _ := range g.Swapchains {
 			slice2[i2] = C.VkSwapchainKHR(g.Swapchains[i2])
 		}
+	} else {
+		c.pSwapchains = nil
 	}
-	{
+	if g.ImageIndices != nil {
 		c.pImageIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.ImageIndices))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pImageIndices))[:len(g.ImageIndices):len(g.ImageIndices)]
 		for i2, _ := range g.ImageIndices {
 			slice2[i2] = C.uint32_t(g.ImageIndices[i2])
 		}
+	} else {
+		c.pImageIndices = nil
 	}
-	{
+	if g.Results != nil {
 		c.pResults = (*C.VkResult)(m.alloc(C.sizeof_VkResult * uint(len(g.Results))))
 		slice2 := (*[1 << 31]C.VkResult)(unsafe.Pointer(c.pResults))[:len(g.Results):len(g.Results)]
 		for i2, _ := range g.Results {
 			slice2[i2] = C.VkResult(g.Results[i2])
 		}
+	} else {
+		c.pResults = nil
 	}
 }
 func (g *PresentInfoKHR) fromC(c *C.VkPresentInfoKHR) {
@@ -19555,12 +19883,14 @@ func (p PFNGetPhysicalDevicePresentRectanglesKHR) Call(physicalDevice PhysicalDe
 	} else {
 		c.pRectCount = nil
 	}
-	{
+	if rects != nil {
 		c.pRects = (*C.VkRect2D)(m.alloc(C.sizeof_VkRect2D * uint(len(rects))))
 		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pRects))[:len(rects):len(rects)]
 		for i3, _ := range rects {
 			rects[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pRects = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDevicePresentRectanglesKHR(C.PFN_vkGetPhysicalDevicePresentRectanglesKHR(unsafe.Pointer(p)), c.physicalDevice, c.surface, c.pRectCount, c.pRects)
 	_ret = Result(c._ret)
@@ -19735,12 +20065,14 @@ func (p PFNGetPhysicalDeviceDisplayPropertiesKHR) Call(physicalDevice PhysicalDe
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayPropertiesKHR)(m.alloc(C.sizeof_VkDisplayPropertiesKHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayPropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -19786,12 +20118,14 @@ func (p PFNGetPhysicalDeviceDisplayPlanePropertiesKHR) Call(physicalDevice Physi
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayPlanePropertiesKHR)(m.alloc(C.sizeof_VkDisplayPlanePropertiesKHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayPlanePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(C.PFN_vkGetPhysicalDeviceDisplayPlanePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -19827,12 +20161,14 @@ func (p PFNGetDisplayPlaneSupportedDisplaysKHR) Call(physicalDevice PhysicalDevi
 	} else {
 		c.pDisplayCount = nil
 	}
-	{
+	if displays != nil {
 		c.pDisplays = (*C.VkDisplayKHR)(m.alloc(C.sizeof_VkDisplayKHR * uint(len(displays))))
 		slice3 := (*[1 << 31]C.VkDisplayKHR)(unsafe.Pointer(c.pDisplays))[:len(displays):len(displays)]
 		for i3, _ := range displays {
 			slice3[i3] = C.VkDisplayKHR(displays[i3])
 		}
+	} else {
+		c.pDisplays = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayPlaneSupportedDisplaysKHR(C.PFN_vkGetDisplayPlaneSupportedDisplaysKHR(unsafe.Pointer(p)), c.physicalDevice, c.planeIndex, c.pDisplayCount, c.pDisplays)
 	_ret = Result(c._ret)
@@ -19895,12 +20231,14 @@ func (p PFNGetDisplayModePropertiesKHR) Call(physicalDevice PhysicalDevice, disp
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayModePropertiesKHR)(m.alloc(C.sizeof_VkDisplayModePropertiesKHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayModePropertiesKHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayModePropertiesKHR(C.PFN_vkGetDisplayModePropertiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -20077,12 +20415,14 @@ func (p PFNGetDisplayPlaneCapabilitiesKHR) Call(physicalDevice PhysicalDevice, m
 	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 	c.mode = C.VkDisplayModeKHR(mode)
 	c.planeIndex = C.uint32_t(len(capabilities))
-	{
+	if capabilities != nil {
 		c.pCapabilities = (*C.VkDisplayPlaneCapabilitiesKHR)(m.alloc(C.sizeof_VkDisplayPlaneCapabilitiesKHR * uint(len(capabilities))))
 		slice3 := (*[1 << 31]C.VkDisplayPlaneCapabilitiesKHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
 		for i3, _ := range capabilities {
 			capabilities[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pCapabilities = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayPlaneCapabilitiesKHR(C.PFN_vkGetDisplayPlaneCapabilitiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.mode, c.planeIndex, c.pCapabilities)
 	_ret = Result(c._ret)
@@ -20222,12 +20562,14 @@ func (p PFNCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapchai
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.swapchainCount = C.uint32_t(len(createInfos))
-	{
+	if createInfos != nil {
 		c.pCreateInfos = (*C.VkSwapchainCreateInfoKHR)(m.alloc(C.sizeof_VkSwapchainCreateInfoKHR * uint(len(createInfos))))
 		slice3 := (*[1 << 31]C.VkSwapchainCreateInfoKHR)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
 		for i3, _ := range createInfos {
 			createInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCreateInfos = nil
 	}
 	if allocator != nil {
 		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
@@ -20235,12 +20577,14 @@ func (p PFNCreateSharedSwapchainsKHR) Call(device Device, createInfos []Swapchai
 	} else {
 		c.pAllocator = nil
 	}
-	{
+	if swapchains != nil {
 		c.pSwapchains = (*C.VkSwapchainKHR)(m.alloc(C.sizeof_VkSwapchainKHR * uint(len(swapchains))))
 		slice3 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(swapchains):len(swapchains)]
 		for i3, _ := range swapchains {
 			slice3[i3] = C.VkSwapchainKHR(swapchains[i3])
 		}
+	} else {
+		c.pSwapchains = nil
 	}
 	c._ret = C.callPFN_vkCreateSharedSwapchainsKHR(C.PFN_vkCreateSharedSwapchainsKHR(unsafe.Pointer(p)), c.device, c.swapchainCount, c.pCreateInfos, c.pAllocator, c.pSwapchains)
 	_ret = Result(c._ret)
@@ -20370,12 +20714,14 @@ func (p PFNGetPhysicalDeviceQueueFamilyProperties2KHR) Call(physicalDevice Physi
 	} else {
 		c.pQueueFamilyPropertyCount = nil
 	}
-	{
+	if queueFamilyProperties != nil {
 		c.pQueueFamilyProperties = (*C.VkQueueFamilyProperties2)(m.alloc(C.sizeof_VkQueueFamilyProperties2 * uint(len(queueFamilyProperties))))
 		slice3 := (*[1 << 31]C.VkQueueFamilyProperties2)(unsafe.Pointer(c.pQueueFamilyProperties))[:len(queueFamilyProperties):len(queueFamilyProperties)]
 		for i3, _ := range queueFamilyProperties {
 			queueFamilyProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pQueueFamilyProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(C.PFN_vkGetPhysicalDeviceQueueFamilyProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pQueueFamilyPropertyCount, c.pQueueFamilyProperties)
 	if queueFamilyPropertyCount != nil {
@@ -20435,12 +20781,14 @@ func (p PFNGetPhysicalDeviceSparseImageFormatProperties2KHR) Call(physicalDevice
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkSparseImageFormatProperties2)(m.alloc(C.sizeof_VkSparseImageFormatProperties2 * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkSparseImageFormatProperties2)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	C.callPFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(C.PFN_vkGetPhysicalDeviceSparseImageFormatProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pFormatInfo, c.pPropertyCount, c.pProperties)
 	if propertyCount != nil {
@@ -20470,7 +20818,7 @@ func (p PFNGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex ui
 	c.heapIndex = C.uint32_t(heapIndex)
 	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
 	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-	{
+	if peerMemoryFeatures != nil {
 		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 		slice3 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i3, _ := range peerMemoryFeatures {
@@ -20484,6 +20832,8 @@ func (p PFNGetDeviceGroupPeerMemoryFeaturesKHR) Call(device Device, heapIndex ui
 				slice3[i3] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
 			}
 		}
+	} else {
+		c.pPeerMemoryFeatures = nil
 	}
 	C.callPFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(C.PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
 	{
@@ -20576,12 +20926,14 @@ func (p PFNEnumeratePhysicalDeviceGroupsKHR) Call(instance Instance, physicalDev
 	} else {
 		c.pPhysicalDeviceGroupCount = nil
 	}
-	{
+	if physicalDeviceGroupProperties != nil {
 		c.pPhysicalDeviceGroupProperties = (*C.VkPhysicalDeviceGroupProperties)(m.alloc(C.sizeof_VkPhysicalDeviceGroupProperties * uint(len(physicalDeviceGroupProperties))))
 		slice3 := (*[1 << 31]C.VkPhysicalDeviceGroupProperties)(unsafe.Pointer(c.pPhysicalDeviceGroupProperties))[:len(physicalDeviceGroupProperties):len(physicalDeviceGroupProperties)]
 		for i3, _ := range physicalDeviceGroupProperties {
 			physicalDeviceGroupProperties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pPhysicalDeviceGroupProperties = nil
 	}
 	c._ret = C.callPFN_vkEnumeratePhysicalDeviceGroupsKHR(C.PFN_vkEnumeratePhysicalDeviceGroupsKHR(unsafe.Pointer(p)), c.instance, c.pPhysicalDeviceGroupCount, c.pPhysicalDeviceGroupProperties)
 	_ret = Result(c._ret)
@@ -20960,12 +21312,14 @@ func (p PFNCmdPushDescriptorSetKHR) Call(commandBuffer CommandBuffer, pipelineBi
 	c.layout = C.VkPipelineLayout(layout)
 	c.set = C.uint32_t(set)
 	c.descriptorWriteCount = C.uint32_t(len(descriptorWrites))
-	{
+	if descriptorWrites != nil {
 		c.pDescriptorWrites = (*C.VkWriteDescriptorSet)(m.alloc(C.sizeof_VkWriteDescriptorSet * uint(len(descriptorWrites))))
 		slice3 := (*[1 << 31]C.VkWriteDescriptorSet)(unsafe.Pointer(c.pDescriptorWrites))[:len(descriptorWrites):len(descriptorWrites)]
 		for i3, _ := range descriptorWrites {
 			descriptorWrites[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pDescriptorWrites = nil
 	}
 	C.callPFN_vkCmdPushDescriptorSetKHR(C.PFN_vkCmdPushDescriptorSetKHR(unsafe.Pointer(p)), c.commandBuffer, c.pipelineBindPoint, c.layout, c.set, c.descriptorWriteCount, c.pDescriptorWrites)
 }
@@ -20986,12 +21340,14 @@ func (p PFNCmdPushDescriptorSetWithTemplateKHR) Call(commandBuffer CommandBuffer
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 	c.layout = C.VkPipelineLayout(layout)
 	c.set = C.uint32_t(len(data))
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	C.callPFN_vkCmdPushDescriptorSetWithTemplateKHR(C.PFN_vkCmdPushDescriptorSetWithTemplateKHR(unsafe.Pointer(p)), c.commandBuffer, c.descriptorUpdateTemplate, c.layout, c.set, c.pData)
 }
@@ -21238,27 +21594,33 @@ func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, m *cmemory) 
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	c.viewMask = C.uint32_t(g.ViewMask)
 	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
-	{
+	if g.InputAttachments != nil {
 		c.pInputAttachments = (*C.VkAttachmentReference2KHR)(m.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.InputAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pInputAttachments))[:len(g.InputAttachments):len(g.InputAttachments)]
 		for i2, _ := range g.InputAttachments {
 			g.InputAttachments[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pInputAttachments = nil
 	}
 	c.colorAttachmentCount = C.uint32_t(len(g.ColorAttachments))
-	{
+	if g.ColorAttachments != nil {
 		c.pColorAttachments = (*C.VkAttachmentReference2KHR)(m.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.ColorAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pColorAttachments))[:len(g.ColorAttachments):len(g.ColorAttachments)]
 		for i2, _ := range g.ColorAttachments {
 			g.ColorAttachments[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pColorAttachments = nil
 	}
-	{
+	if g.ResolveAttachments != nil {
 		c.pResolveAttachments = (*C.VkAttachmentReference2KHR)(m.alloc(C.sizeof_VkAttachmentReference2KHR * uint(len(g.ResolveAttachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentReference2KHR)(unsafe.Pointer(c.pResolveAttachments))[:len(g.ResolveAttachments):len(g.ResolveAttachments)]
 		for i2, _ := range g.ResolveAttachments {
 			g.ResolveAttachments[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pResolveAttachments = nil
 	}
 	if g.DepthStencilAttachment != nil {
 		c.pDepthStencilAttachment = (*C.VkAttachmentReference2KHR)(m.alloc(C.sizeof_VkAttachmentReference2KHR))
@@ -21267,12 +21629,14 @@ func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, m *cmemory) 
 		c.pDepthStencilAttachment = nil
 	}
 	c.preserveAttachmentCount = C.uint32_t(len(g.PreserveAttachments))
-	{
+	if g.PreserveAttachments != nil {
 		c.pPreserveAttachments = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.PreserveAttachments))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pPreserveAttachments))[:len(g.PreserveAttachments):len(g.PreserveAttachments)]
 		for i2, _ := range g.PreserveAttachments {
 			slice2[i2] = C.uint32_t(g.PreserveAttachments[i2])
 		}
+	} else {
+		c.pPreserveAttachments = nil
 	}
 }
 func (g *SubpassDescription2KHR) fromC(c *C.VkSubpassDescription2KHR) {
@@ -21502,36 +21866,44 @@ func (g *RenderPassCreateInfo2KHR) toC(c *C.VkRenderPassCreateInfo2KHR, m *cmemo
 		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
 	}
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
-	{
+	if g.Attachments != nil {
 		c.pAttachments = (*C.VkAttachmentDescription2KHR)(m.alloc(C.sizeof_VkAttachmentDescription2KHR * uint(len(g.Attachments))))
 		slice2 := (*[1 << 31]C.VkAttachmentDescription2KHR)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
 		for i2, _ := range g.Attachments {
 			g.Attachments[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pAttachments = nil
 	}
 	c.subpassCount = C.uint32_t(len(g.Subpasses))
-	{
+	if g.Subpasses != nil {
 		c.pSubpasses = (*C.VkSubpassDescription2KHR)(m.alloc(C.sizeof_VkSubpassDescription2KHR * uint(len(g.Subpasses))))
 		slice2 := (*[1 << 31]C.VkSubpassDescription2KHR)(unsafe.Pointer(c.pSubpasses))[:len(g.Subpasses):len(g.Subpasses)]
 		for i2, _ := range g.Subpasses {
 			g.Subpasses[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pSubpasses = nil
 	}
 	c.dependencyCount = C.uint32_t(len(g.Dependencies))
-	{
+	if g.Dependencies != nil {
 		c.pDependencies = (*C.VkSubpassDependency2KHR)(m.alloc(C.sizeof_VkSubpassDependency2KHR * uint(len(g.Dependencies))))
 		slice2 := (*[1 << 31]C.VkSubpassDependency2KHR)(unsafe.Pointer(c.pDependencies))[:len(g.Dependencies):len(g.Dependencies)]
 		for i2, _ := range g.Dependencies {
 			g.Dependencies[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pDependencies = nil
 	}
 	c.correlatedViewMaskCount = C.uint32_t(len(g.CorrelatedViewMasks))
-	{
+	if g.CorrelatedViewMasks != nil {
 		c.pCorrelatedViewMasks = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.CorrelatedViewMasks))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCorrelatedViewMasks))[:len(g.CorrelatedViewMasks):len(g.CorrelatedViewMasks)]
 		for i2, _ := range g.CorrelatedViewMasks {
 			slice2[i2] = C.uint32_t(g.CorrelatedViewMasks[i2])
 		}
+	} else {
+		c.pCorrelatedViewMasks = nil
 	}
 }
 func (g *RenderPassCreateInfo2KHR) fromC(c *C.VkRenderPassCreateInfo2KHR) {
@@ -22128,12 +22500,14 @@ func (p PFNGetPhysicalDeviceSurfaceFormats2KHR) Call(physicalDevice PhysicalDevi
 	} else {
 		c.pSurfaceFormatCount = nil
 	}
-	{
+	if surfaceFormats != nil {
 		c.pSurfaceFormats = (*C.VkSurfaceFormat2KHR)(m.alloc(C.sizeof_VkSurfaceFormat2KHR * uint(len(surfaceFormats))))
 		slice3 := (*[1 << 31]C.VkSurfaceFormat2KHR)(unsafe.Pointer(c.pSurfaceFormats))[:len(surfaceFormats):len(surfaceFormats)]
 		for i3, _ := range surfaceFormats {
 			surfaceFormats[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSurfaceFormats = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceSurfaceFormats2KHR(C.PFN_vkGetPhysicalDeviceSurfaceFormats2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pSurfaceInfo, c.pSurfaceFormatCount, c.pSurfaceFormats)
 	_ret = Result(c._ret)
@@ -22202,12 +22576,14 @@ func (p PFNGetPhysicalDeviceDisplayProperties2KHR) Call(physicalDevice PhysicalD
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayProperties2KHR)(m.alloc(C.sizeof_VkDisplayProperties2KHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -22276,12 +22652,14 @@ func (p PFNGetPhysicalDeviceDisplayPlaneProperties2KHR) Call(physicalDevice Phys
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayPlaneProperties2KHR)(m.alloc(C.sizeof_VkDisplayPlaneProperties2KHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayPlaneProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(C.PFN_vkGetPhysicalDeviceDisplayPlaneProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -22352,12 +22730,14 @@ func (p PFNGetDisplayModeProperties2KHR) Call(physicalDevice PhysicalDevice, dis
 	} else {
 		c.pPropertyCount = nil
 	}
-	{
+	if properties != nil {
 		c.pProperties = (*C.VkDisplayModeProperties2KHR)(m.alloc(C.sizeof_VkDisplayModeProperties2KHR * uint(len(properties))))
 		slice3 := (*[1 << 31]C.VkDisplayModeProperties2KHR)(unsafe.Pointer(c.pProperties))[:len(properties):len(properties)]
 		for i3, _ := range properties {
 			properties[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pProperties = nil
 	}
 	c._ret = C.callPFN_vkGetDisplayModeProperties2KHR(C.PFN_vkGetDisplayModeProperties2KHR(unsafe.Pointer(p)), c.physicalDevice, c.display, c.pPropertyCount, c.pProperties)
 	_ret = Result(c._ret)
@@ -22562,12 +22942,14 @@ func (p PFNGetImageSparseMemoryRequirements2KHR) Call(device Device, info *Image
 	} else {
 		c.pSparseMemoryRequirementCount = nil
 	}
-	{
+	if sparseMemoryRequirements != nil {
 		c.pSparseMemoryRequirements = (*C.VkSparseImageMemoryRequirements2)(m.alloc(C.sizeof_VkSparseImageMemoryRequirements2 * uint(len(sparseMemoryRequirements))))
 		slice3 := (*[1 << 31]C.VkSparseImageMemoryRequirements2)(unsafe.Pointer(c.pSparseMemoryRequirements))[:len(sparseMemoryRequirements):len(sparseMemoryRequirements)]
 		for i3, _ := range sparseMemoryRequirements {
 			sparseMemoryRequirements[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pSparseMemoryRequirements = nil
 	}
 	C.callPFN_vkGetImageSparseMemoryRequirements2KHR(C.PFN_vkGetImageSparseMemoryRequirements2KHR(unsafe.Pointer(p)), c.device, c.pInfo, c.pSparseMemoryRequirementCount, c.pSparseMemoryRequirements)
 	if sparseMemoryRequirementCount != nil {
@@ -22654,12 +23036,14 @@ func (p PFNBindBufferMemory2KHR) Call(device Device, bindInfos []BindBufferMemor
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindBufferMemoryInfo)(m.alloc(C.sizeof_VkBindBufferMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindBufferMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.callPFN_vkBindBufferMemory2KHR(C.PFN_vkBindBufferMemory2KHR(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -22679,12 +23063,14 @@ func (p PFNBindImageMemory2KHR) Call(device Device, bindInfos []BindImageMemoryI
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.bindInfoCount = C.uint32_t(len(bindInfos))
-	{
+	if bindInfos != nil {
 		c.pBindInfos = (*C.VkBindImageMemoryInfo)(m.alloc(C.sizeof_VkBindImageMemoryInfo * uint(len(bindInfos))))
 		slice3 := (*[1 << 31]C.VkBindImageMemoryInfo)(unsafe.Pointer(c.pBindInfos))[:len(bindInfos):len(bindInfos)]
 		for i3, _ := range bindInfos {
 			bindInfos[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pBindInfos = nil
 	}
 	c._ret = C.callPFN_vkBindImageMemory2KHR(C.PFN_vkBindImageMemory2KHR(unsafe.Pointer(p)), c.device, c.bindInfoCount, c.pBindInfos)
 	_ret = Result(c._ret)
@@ -23723,12 +24109,14 @@ func (g *CmdProcessCommandsInfoNVX) toC(c *C.VkCmdProcessCommandsInfoNVX, m *cme
 	c.objectTable = C.VkObjectTableNVX(g.ObjectTable)
 	c.indirectCommandsLayout = C.VkIndirectCommandsLayoutNVX(g.IndirectCommandsLayout)
 	c.indirectCommandsTokenCount = C.uint32_t(len(g.IndirectCommandsTokens))
-	{
+	if g.IndirectCommandsTokens != nil {
 		c.pIndirectCommandsTokens = (*C.VkIndirectCommandsTokenNVX)(m.alloc(C.sizeof_VkIndirectCommandsTokenNVX * uint(len(g.IndirectCommandsTokens))))
 		slice2 := (*[1 << 31]C.VkIndirectCommandsTokenNVX)(unsafe.Pointer(c.pIndirectCommandsTokens))[:len(g.IndirectCommandsTokens):len(g.IndirectCommandsTokens)]
 		for i2, _ := range g.IndirectCommandsTokens {
 			g.IndirectCommandsTokens[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pIndirectCommandsTokens = nil
 	}
 	c.maxSequencesCount = C.uint32_t(g.MaxSequencesCount)
 	c.targetCommandBuffer = C.VkCommandBuffer(g.TargetCommandBuffer)
@@ -23913,12 +24301,14 @@ func (g *IndirectCommandsLayoutCreateInfoNVX) toC(c *C.VkIndirectCommandsLayoutC
 		c.flags = C.VkIndirectCommandsLayoutUsageFlagsNVX(temp_in_VkIndirectCommandsLayoutUsageFlagsNVX)
 	}
 	c.tokenCount = C.uint32_t(len(g.Tokens))
-	{
+	if g.Tokens != nil {
 		c.pTokens = (*C.VkIndirectCommandsLayoutTokenNVX)(m.alloc(C.sizeof_VkIndirectCommandsLayoutTokenNVX * uint(len(g.Tokens))))
 		slice2 := (*[1 << 31]C.VkIndirectCommandsLayoutTokenNVX)(unsafe.Pointer(c.pTokens))[:len(g.Tokens):len(g.Tokens)]
 		for i2, _ := range g.Tokens {
 			g.Tokens[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pTokens = nil
 	}
 }
 func (g *IndirectCommandsLayoutCreateInfoNVX) fromC(c *C.VkIndirectCommandsLayoutCreateInfoNVX) {
@@ -24039,21 +24429,25 @@ func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, m *cmemo
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.objectCount = C.uint32_t(len(g.ObjectEntryTypes))
-	{
+	if g.ObjectEntryTypes != nil {
 		c.pObjectEntryTypes = (*C.VkObjectEntryTypeNVX)(m.alloc(C.sizeof_VkObjectEntryTypeNVX * uint(len(g.ObjectEntryTypes))))
 		slice2 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(g.ObjectEntryTypes):len(g.ObjectEntryTypes)]
 		for i2, _ := range g.ObjectEntryTypes {
 			slice2[i2] = C.VkObjectEntryTypeNVX(g.ObjectEntryTypes[i2])
 		}
+	} else {
+		c.pObjectEntryTypes = nil
 	}
-	{
+	if g.ObjectEntryCounts != nil {
 		c.pObjectEntryCounts = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.ObjectEntryCounts))))
 		slice2 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectEntryCounts))[:len(g.ObjectEntryCounts):len(g.ObjectEntryCounts)]
 		for i2, _ := range g.ObjectEntryCounts {
 			slice2[i2] = C.uint32_t(g.ObjectEntryCounts[i2])
 		}
+	} else {
+		c.pObjectEntryCounts = nil
 	}
-	{
+	if g.ObjectEntryUsageFlags != nil {
 		c.pObjectEntryUsageFlags = (*C.VkObjectEntryUsageFlagsNVX)(m.alloc(C.sizeof_VkObjectEntryUsageFlagsNVX * uint(len(g.ObjectEntryUsageFlags))))
 		slice2 := (*[1 << 31]C.VkObjectEntryUsageFlagsNVX)(unsafe.Pointer(c.pObjectEntryUsageFlags))[:len(g.ObjectEntryUsageFlags):len(g.ObjectEntryUsageFlags)]
 		for i2, _ := range g.ObjectEntryUsageFlags {
@@ -24067,6 +24461,8 @@ func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, m *cmemo
 				slice2[i2] = C.VkObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
 			}
 		}
+	} else {
+		c.pObjectEntryUsageFlags = nil
 	}
 	c.maxUniformBuffersPerDescriptor = C.uint32_t(g.MaxUniformBuffersPerDescriptor)
 	c.maxStorageBuffersPerDescriptor = C.uint32_t(g.MaxStorageBuffersPerDescriptor)
@@ -24231,7 +24627,7 @@ func (p PFNRegisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, o
 	c.device = C.VkDevice(device)
 	c.objectTable = C.VkObjectTableNVX(objectTable)
 	c.objectCount = C.uint32_t(len(objectTableEntries))
-	{
+	if objectTableEntries != nil {
 		c.ppObjectTableEntries = (**C.VkObjectTableEntryNVX)(m.alloc(C.sizeof_void_pointer * uint(len(objectTableEntries))))
 		slice3 := (*[1 << 31]*C.VkObjectTableEntryNVX)(unsafe.Pointer(c.ppObjectTableEntries))[:len(objectTableEntries):len(objectTableEntries)]
 		for i3, _ := range objectTableEntries {
@@ -24242,13 +24638,17 @@ func (p PFNRegisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX, o
 				slice3[i3] = nil
 			}
 		}
+	} else {
+		c.ppObjectTableEntries = nil
 	}
-	{
+	if objectIndices != nil {
 		c.pObjectIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
 		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
 		for i3, _ := range objectIndices {
 			slice3[i3] = C.uint32_t(objectIndices[i3])
 		}
+	} else {
+		c.pObjectIndices = nil
 	}
 	c._ret = C.callPFN_vkRegisterObjectsNVX(C.PFN_vkRegisterObjectsNVX(unsafe.Pointer(p)), c.device, c.objectTable, c.objectCount, c.ppObjectTableEntries, c.pObjectIndices)
 	_ret = Result(c._ret)
@@ -24271,19 +24671,23 @@ func (p PFNUnregisterObjectsNVX) Call(device Device, objectTable ObjectTableNVX,
 	c.device = C.VkDevice(device)
 	c.objectTable = C.VkObjectTableNVX(objectTable)
 	c.objectCount = C.uint32_t(len(objectEntryTypes))
-	{
+	if objectEntryTypes != nil {
 		c.pObjectEntryTypes = (*C.VkObjectEntryTypeNVX)(m.alloc(C.sizeof_VkObjectEntryTypeNVX * uint(len(objectEntryTypes))))
 		slice3 := (*[1 << 31]C.VkObjectEntryTypeNVX)(unsafe.Pointer(c.pObjectEntryTypes))[:len(objectEntryTypes):len(objectEntryTypes)]
 		for i3, _ := range objectEntryTypes {
 			slice3[i3] = C.VkObjectEntryTypeNVX(objectEntryTypes[i3])
 		}
+	} else {
+		c.pObjectEntryTypes = nil
 	}
-	{
+	if objectIndices != nil {
 		c.pObjectIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
 		slice3 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
 		for i3, _ := range objectIndices {
 			slice3[i3] = C.uint32_t(objectIndices[i3])
 		}
+	} else {
+		c.pObjectIndices = nil
 	}
 	c._ret = C.callPFN_vkUnregisterObjectsNVX(C.PFN_vkUnregisterObjectsNVX(unsafe.Pointer(p)), c.device, c.objectTable, c.objectCount, c.pObjectEntryTypes, c.pObjectIndices)
 	_ret = Result(c._ret)
@@ -24436,12 +24840,14 @@ func (p PFNCmdSetViewportWScalingNV) Call(commandBuffer CommandBuffer, firstView
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstViewport = C.uint32_t(firstViewport)
 	c.viewportCount = C.uint32_t(len(viewportWScalings))
-	{
+	if viewportWScalings != nil {
 		c.pViewportWScalings = (*C.VkViewportWScalingNV)(m.alloc(C.sizeof_VkViewportWScalingNV * uint(len(viewportWScalings))))
 		slice3 := (*[1 << 31]C.VkViewportWScalingNV)(unsafe.Pointer(c.pViewportWScalings))[:len(viewportWScalings):len(viewportWScalings)]
 		for i3, _ := range viewportWScalings {
 			viewportWScalings[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pViewportWScalings = nil
 	}
 	C.callPFN_vkCmdSetViewportWScalingNV(C.PFN_vkCmdSetViewportWScalingNV(unsafe.Pointer(p)), c.commandBuffer, c.firstViewport, c.viewportCount, c.pViewportWScalings)
 }
@@ -24970,12 +25376,14 @@ func (p PFNGetPastPresentationTimingGOOGLE) Call(device Device, swapchain Swapch
 	} else {
 		c.pPresentationTimingCount = nil
 	}
-	{
+	if presentationTimings != nil {
 		c.pPresentationTimings = (*C.VkPastPresentationTimingGOOGLE)(m.alloc(C.sizeof_VkPastPresentationTimingGOOGLE * uint(len(presentationTimings))))
 		slice3 := (*[1 << 31]C.VkPastPresentationTimingGOOGLE)(unsafe.Pointer(c.pPresentationTimings))[:len(presentationTimings):len(presentationTimings)]
 		for i3, _ := range presentationTimings {
 			presentationTimings[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pPresentationTimings = nil
 	}
 	c._ret = C.callPFN_vkGetPastPresentationTimingGOOGLE(C.PFN_vkGetPastPresentationTimingGOOGLE(unsafe.Pointer(p)), c.device, c.swapchain, c.pPresentationTimingCount, c.pPresentationTimings)
 	_ret = Result(c._ret)
@@ -25033,12 +25441,14 @@ func (p PFNCmdSetDiscardRectangleEXT) Call(commandBuffer CommandBuffer, firstDis
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.firstDiscardRectangle = C.uint32_t(firstDiscardRectangle)
 	c.discardRectangleCount = C.uint32_t(len(discardRectangles))
-	{
+	if discardRectangles != nil {
 		c.pDiscardRectangles = (*C.VkRect2D)(m.alloc(C.sizeof_VkRect2D * uint(len(discardRectangles))))
 		slice3 := (*[1 << 31]C.VkRect2D)(unsafe.Pointer(c.pDiscardRectangles))[:len(discardRectangles):len(discardRectangles)]
 		for i3, _ := range discardRectangles {
 			discardRectangles[i3].toC(&slice3[i3])
 		}
+	} else {
+		c.pDiscardRectangles = nil
 	}
 	C.callPFN_vkCmdSetDiscardRectangleEXT(C.PFN_vkCmdSetDiscardRectangleEXT(unsafe.Pointer(p)), c.commandBuffer, c.firstDiscardRectangle, c.discardRectangleCount, c.pDiscardRectangles)
 }
@@ -25138,19 +25548,23 @@ func (p PFNSetHdrMetadataEXT) Call(device Device, swapchains []SwapchainKHR, met
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.swapchainCount = C.uint32_t(len(swapchains))
-	{
+	if swapchains != nil {
 		c.pSwapchains = (*C.VkSwapchainKHR)(m.alloc(C.sizeof_VkSwapchainKHR * uint(len(swapchains))))
 		slice3 := (*[1 << 31]C.VkSwapchainKHR)(unsafe.Pointer(c.pSwapchains))[:len(swapchains):len(swapchains)]
 		for i3, _ := range swapchains {
 			slice3[i3] = C.VkSwapchainKHR(swapchains[i3])
 		}
+	} else {
+		c.pSwapchains = nil
 	}
-	{
+	if metadata != nil {
 		c.pMetadata = (*C.VkHdrMetadataEXT)(m.alloc(C.sizeof_VkHdrMetadataEXT * uint(len(metadata))))
 		slice3 := (*[1 << 31]C.VkHdrMetadataEXT)(unsafe.Pointer(c.pMetadata))[:len(metadata):len(metadata)]
 		for i3, _ := range metadata {
 			metadata[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pMetadata = nil
 	}
 	C.callPFN_vkSetHdrMetadataEXT(C.PFN_vkSetHdrMetadataEXT(unsafe.Pointer(p)), c.device, c.swapchainCount, c.pSwapchains, c.pMetadata)
 }
@@ -25293,28 +25707,34 @@ func (g *DebugUtilsMessengerCallbackDataEXT) toC(c *C.VkDebugUtilsMessengerCallb
 	c.messageIdNumber = C.int32_t(g.MessageIdNumber)
 	c.pMessage = toCString(g.Message, m)
 	c.queueLabelCount = C.uint32_t(len(g.QueueLabels))
-	{
+	if g.QueueLabels != nil {
 		c.pQueueLabels = (*C.VkDebugUtilsLabelEXT)(m.alloc(C.sizeof_VkDebugUtilsLabelEXT * uint(len(g.QueueLabels))))
 		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pQueueLabels))[:len(g.QueueLabels):len(g.QueueLabels)]
 		for i2, _ := range g.QueueLabels {
 			g.QueueLabels[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pQueueLabels = nil
 	}
 	c.cmdBufLabelCount = C.uint32_t(len(g.CmdBufLabels))
-	{
+	if g.CmdBufLabels != nil {
 		c.pCmdBufLabels = (*C.VkDebugUtilsLabelEXT)(m.alloc(C.sizeof_VkDebugUtilsLabelEXT * uint(len(g.CmdBufLabels))))
 		slice2 := (*[1 << 31]C.VkDebugUtilsLabelEXT)(unsafe.Pointer(c.pCmdBufLabels))[:len(g.CmdBufLabels):len(g.CmdBufLabels)]
 		for i2, _ := range g.CmdBufLabels {
 			g.CmdBufLabels[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pCmdBufLabels = nil
 	}
 	c.objectCount = C.uint32_t(len(g.Objects))
-	{
+	if g.Objects != nil {
 		c.pObjects = (*C.VkDebugUtilsObjectNameInfoEXT)(m.alloc(C.sizeof_VkDebugUtilsObjectNameInfoEXT * uint(len(g.Objects))))
 		slice2 := (*[1 << 31]C.VkDebugUtilsObjectNameInfoEXT)(unsafe.Pointer(c.pObjects))[:len(g.Objects):len(g.Objects)]
 		for i2, _ := range g.Objects {
 			g.Objects[i2].toC(&slice2[i2], m)
 		}
+	} else {
+		c.pObjects = nil
 	}
 }
 func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCallbackDataEXT) {
@@ -25821,12 +26241,14 @@ func (g *SampleLocationsInfoEXT) toC(c *C.VkSampleLocationsInfoEXT, m *cmemory) 
 	c.sampleLocationsPerPixel = C.VkSampleCountFlagBits(g.SampleLocationsPerPixel)
 	g.SampleLocationGridSize.toC(&c.sampleLocationGridSize)
 	c.sampleLocationsCount = C.uint32_t(len(g.SampleLocations))
-	{
+	if g.SampleLocations != nil {
 		c.pSampleLocations = (*C.VkSampleLocationEXT)(m.alloc(C.sizeof_VkSampleLocationEXT * uint(len(g.SampleLocations))))
 		slice2 := (*[1 << 31]C.VkSampleLocationEXT)(unsafe.Pointer(c.pSampleLocations))[:len(g.SampleLocations):len(g.SampleLocations)]
 		for i2, _ := range g.SampleLocations {
 			g.SampleLocations[i2].toC(&slice2[i2])
 		}
+	} else {
+		c.pSampleLocations = nil
 	}
 }
 func (g *SampleLocationsInfoEXT) fromC(c *C.VkSampleLocationsInfoEXT) {
@@ -25995,12 +26417,14 @@ func (g *ValidationCacheCreateInfoEXT) toC(c *C.VkValidationCacheCreateInfoEXT, 
 		c.flags = C.VkValidationCacheCreateFlagsEXT(temp_in_VkValidationCacheCreateFlagsEXT)
 	}
 	c.initialDataSize = C.size_t(len(g.InitialData))
-	{
+	if g.InitialData != nil {
 		c.pInitialData = m.alloc(C.sizeof_char * uint(len(g.InitialData)))
 		slice2 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
 		for i2, _ := range g.InitialData {
 			slice2[i2] = g.InitialData[i2]
 		}
+	} else {
+		c.pInitialData = nil
 	}
 }
 func (g *ValidationCacheCreateInfoEXT) fromC(c *C.VkValidationCacheCreateInfoEXT) {
@@ -26118,12 +26542,14 @@ func (p PFNMergeValidationCachesEXT) Call(device Device, dstCache ValidationCach
 	c.device = C.VkDevice(device)
 	c.dstCache = C.VkValidationCacheEXT(dstCache)
 	c.srcCacheCount = C.uint32_t(len(srcCaches))
-	{
+	if srcCaches != nil {
 		c.pSrcCaches = (*C.VkValidationCacheEXT)(m.alloc(C.sizeof_VkValidationCacheEXT * uint(len(srcCaches))))
 		slice3 := (*[1 << 31]C.VkValidationCacheEXT)(unsafe.Pointer(c.pSrcCaches))[:len(srcCaches):len(srcCaches)]
 		for i3, _ := range srcCaches {
 			slice3[i3] = C.VkValidationCacheEXT(srcCaches[i3])
 		}
+	} else {
+		c.pSrcCaches = nil
 	}
 	c._ret = C.callPFN_vkMergeValidationCachesEXT(C.PFN_vkMergeValidationCachesEXT(unsafe.Pointer(p)), c.device, c.dstCache, c.srcCacheCount, c.pSrcCaches)
 	_ret = Result(c._ret)
@@ -26150,12 +26576,14 @@ func (p PFNGetValidationCacheDataEXT) Call(device Device, validationCache Valida
 	} else {
 		c.pDataSize = nil
 	}
-	{
+	if data != nil {
 		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
 		slice3 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
 		for i3, _ := range data {
 			slice3[i3] = data[i3]
 		}
+	} else {
+		c.pData = nil
 	}
 	c._ret = C.callPFN_vkGetValidationCacheDataEXT(C.PFN_vkGetValidationCacheDataEXT(unsafe.Pointer(p)), c.device, c.validationCache, c.pDataSize, c.pData)
 	_ret = Result(c._ret)
@@ -26347,12 +26775,14 @@ func (p PFNGetQueueCheckpointDataNV) Call(queue Queue, checkpointDataCount *uint
 	} else {
 		c.pCheckpointDataCount = nil
 	}
-	{
+	if checkpointData != nil {
 		c.pCheckpointData = (*C.VkCheckpointDataNV)(m.alloc(C.sizeof_VkCheckpointDataNV * uint(len(checkpointData))))
 		slice3 := (*[1 << 31]C.VkCheckpointDataNV)(unsafe.Pointer(c.pCheckpointData))[:len(checkpointData):len(checkpointData)]
 		for i3, _ := range checkpointData {
 			checkpointData[i3].toC(&slice3[i3], m)
 		}
+	} else {
+		c.pCheckpointData = nil
 	}
 	C.callPFN_vkGetQueueCheckpointDataNV(C.PFN_vkGetQueueCheckpointDataNV(unsafe.Pointer(p)), c.queue, c.pCheckpointDataCount, c.pCheckpointData)
 	if checkpointDataCount != nil {

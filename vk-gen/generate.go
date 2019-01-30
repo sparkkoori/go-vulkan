@@ -515,7 +515,12 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt2 := assignStmt1n1D(slice, toslice)
 				stmt3s := assignStmt1n1(indexExpr(slice, i), indexExpr(govar, i))
 				stmt3 := rangeStmti(govar, i, stmt3s)
-				return blockStmt(stmt1, stmt2, stmt3)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: blockStmt(stmt1, stmt2, stmt3),
+					Else: assignStmt1n1(cvar, ident("nil")),
+				}
 			}
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
@@ -541,7 +546,12 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt2 := assignStmt1n1D(slice, toslice)
 				stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
 				stmt3 := rangeStmti(govar, i, stmt3s)
-				return blockStmt(stmt1, stmt2, stmt3)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: blockStmt(stmt1, stmt2, stmt3),
+					Else: assignStmt1n1(cvar, ident("nil")),
+				}
 			}
 			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
 				slice := ident("slice" + level)
