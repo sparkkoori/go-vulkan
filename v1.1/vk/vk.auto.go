@@ -1,5 +1,4 @@
 package vk
-
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
 //typedef void * void_pointer;

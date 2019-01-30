@@ -74,7 +74,7 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 	current := uintptr(m.start) + m.offset
 	padding := calculatePaddingWithOneByteHeader(current, C.sizeof_intmax_t)
 
-	if len(sa.ptrs) == 0 && m.offset+padding+size < m.total {
+	if len(m.ptrs) == 0 && m.offset+padding+size < m.total {
 		next := current + padding
 		header := next - 1
 
@@ -122,12 +122,12 @@ func calculatePaddingWithOneByteHeader(base, alignment uintptr) uintptr {
 	return padding
 }
 
-func toCString(s string, cmemory cmemory) *C.char {
+func toCString(s string, m *cmemory) *C.char {
 	if s == "" {
 		return nil
 	}
 	n := len(s)
-	p := cmemory.alloc(uint(n + 1))
+	p := m.alloc(uint(n + 1))
 	slice := (*[1 << 31]C.char)(p)[0 : n+1]
 
 	for i := 0; i < n; i++ {
@@ -184,7 +184,7 @@ func (p *cmemoryPool) take() *cmemory {
 func (p *cmemoryPool) give(m *cmemory) {
 	p.Lock()
 	defer p.Unlock()
-	n := len(p.allocators)
+	n := len(p.cmemories)
 	if n < p.max {
 		m.free()
 		p.cmemories = append(p.cmemories, m)

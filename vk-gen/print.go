@@ -158,7 +158,7 @@ func printGo(nodes []goast.Node) {
 			Specs: []goast.Spec{
 				&goast.ImportSpec{
 					// Name: &goast.Ident{Name: ""},
-					Path: &goast.BasicLit{token.NoPos, token.STRING, "\"unsafe.Pointer\""},
+					Path: &goast.BasicLit{token.NoPos, token.STRING, "\"unsafe\""},
 				},
 			},
 		},
