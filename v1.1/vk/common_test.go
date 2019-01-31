@@ -10,13 +10,13 @@ func TestCMemory(t *testing.T) {
 	m.init(1024)
 	defer m.dispose()
 
-	p0 := m.alloc(100)
-	p1 := m.alloc(300)
-	p2 := m.alloc(500)
+	m.alloc(100)
+	m.alloc(300)
+	m.alloc(500)
 	if len(m.ptrs) != 0 {
 		t.Error()
 	}
-	p3 := m.alloc(800)
+	m.alloc(800)
 	if len(m.ptrs) != 1 {
 		t.Error()
 	}
@@ -32,7 +32,7 @@ func BenchmarkCMemory1MB(b *testing.B) {
 	m.init(1024 * 1024) // 1 MB
 	defer m.dispose()
 	for n := 0; n < b.N; n++ {
-		p := m.alloc(100)
+		m.alloc(100)
 		m.alloc(100)
 		m.alloc(100)
 		m.alloc(100)
@@ -46,7 +46,7 @@ func BenchmarkCMemory1Byte(b *testing.B) {
 	m.init(1)
 	defer m.dispose()
 	for n := 0; n < b.N; n++ {
-		p := m.alloc(100)
+		m.alloc(100)
 		m.alloc(100)
 		m.alloc(100)
 		m.alloc(100)
