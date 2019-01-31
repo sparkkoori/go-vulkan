@@ -3,6 +3,7 @@ package vk
 import (
 	"sync"
 	"testing"
+	"unsafe"
 )
 
 func TestCMemory(t *testing.T) {
@@ -10,19 +11,18 @@ func TestCMemory(t *testing.T) {
 	m.init(1024)
 	defer m.dispose()
 
-	m.alloc(100)
-	m.alloc(300)
-	m.alloc(500)
-	if len(m.ptrs) != 0 {
-		t.Error()
+	for i := 0; i < 20; i++ {
+		p := (*[10]int)(m.alloc(uint(unsafe.Sizeof([10]int{}))))
+		for j := range p {
+			(*p)[j] = 123
+		}
 	}
-	m.alloc(800)
-	if len(m.ptrs) != 1 {
+	if len(m.ptrs) == 0 {
 		t.Error()
 	}
 
 	m.free()
-	if m.offset != 0 {
+	if m.offset != 0 || len(m.ptrs) != 0 {
 		t.Error()
 	}
 }
