@@ -2,6 +2,7 @@ package vk
 
 /*
 #include "stdlib.h"
+#include "string.h"
 #include "vulkan/vulkan.h"
 */
 import "C"
@@ -50,6 +51,7 @@ func (m *cmemory) init(totalSize uint) {
 	}
 
 	m.start = C.malloc(C.size_t(totalSize))
+	C.memset(m.start, 0, C.size_t(totalSize))
 	m.offset = 0
 	m.total = uintptr(totalSize)
 	m.ptrs = nil
@@ -103,6 +105,7 @@ func (m *cmemory) free() {
 	}
 	m.ptrs = m.ptrs[:0]
 	m.offset = 0
+	C.memset(m.start, 0, C.size_t(m.total))
 }
 
 func calculatePadding(base, alignment uintptr) uintptr {
