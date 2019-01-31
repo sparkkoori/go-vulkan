@@ -517,7 +517,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt3 := rangeStmti(govar, i, stmt3s)
 				return &goast.IfStmt{
 					If:   token.Pos(1),
-					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
 					Body: blockStmt(stmt1, stmt2, stmt3),
 					Else: assignStmt1n1(cvar, ident("nil")),
 				}
@@ -531,9 +531,8 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				rangeSlice := rangeStmti(govar, i, assignValue)
 				return &goast.IfStmt{
 					If:   token.Pos(1),
-					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
 					Body: blockStmt(assignSlice, rangeSlice),
-					// Else: assignStmt1n1(govar, ident("nil")),
 				}
 			}
 			info.refc2go = info.c2go
@@ -553,7 +552,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				stmt3 := rangeStmti(govar, i, stmt3s)
 				return &goast.IfStmt{
 					If:   token.Pos(1),
-					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
 					Body: blockStmt(stmt1, stmt2, stmt3),
 					Else: assignStmt1n1(cvar, ident("nil")),
 				}
@@ -567,9 +566,8 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				rangeSlice := rangeStmti(govar, i, assignValue)
 				return &goast.IfStmt{
 					If:   token.Pos(1),
-					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
 					Body: blockStmt(assignSlice, rangeSlice),
-					// Else: assignStmt1n1(govar, ident("nil")),
 				}
 			}
 			info.refc2go = info.c2go

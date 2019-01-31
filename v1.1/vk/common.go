@@ -46,7 +46,7 @@ type cmemory struct {
 
 func (m *cmemory) init(totalSize uint) {
 	if m.start != nil {
-		m.dispose()
+		panic("Cmemory is already initialized")
 	}
 
 	m.start = C.malloc(C.size_t(totalSize))
@@ -56,20 +56,24 @@ func (m *cmemory) init(totalSize uint) {
 }
 
 func (m *cmemory) dispose() {
+	if m.start == nil {
+		panic("Cmemory is uninitialized")
+	}
+
+	m.free()
+
 	C.free(m.start)
 	m.start = nil
-	m.offset = 0
 	m.total = 0
-	for _, p := range m.ptrs {
-		C.free(p)
-	}
-	m.ptrs = m.ptrs[:0]
 }
 
-//Alloc allocate c memory(saignmented for any type) on the buffer,
+//Alloc allocate c memory on the buffer,
 //if the buffer is out of memory, using malloc() instead,
 //but the allocated memories are still mamanged by this allocator.
 func (m *cmemory) alloc(s uint) unsafe.Pointer {
+	if s == 0 {
+		panic("Allocate zero size memory")
+	}
 	size := uintptr(s)
 	current := uintptr(m.start) + m.offset
 	padding := calculatePaddingWithOneByteHeader(current, C.sizeof_intmax_t)
@@ -174,11 +178,10 @@ func (p *cmemoryPool) take() *cmemory {
 		m := p.cmemories[n-1]
 		p.cmemories = p.cmemories[:n-1]
 		return m
-	} else {
-		m := &cmemory{}
-		m.init(1024 * 2)
-		return m
 	}
+	m := &cmemory{}
+	m.init(1024 * 2)
+	return m
 }
 
 func (p *cmemoryPool) give(m *cmemory) {
@@ -188,9 +191,9 @@ func (p *cmemoryPool) give(m *cmemory) {
 	if n < p.max {
 		m.free()
 		p.cmemories = append(p.cmemories, m)
-	} else {
-		m.dispose()
+		return
 	}
+	m.dispose()
 }
 
 //ObjectRegistry keeps the mapping from id to go object.
