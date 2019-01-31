@@ -529,7 +529,12 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				assignSlice := assignStmt1n1D(slice, toslice)
 				assignValue := assignStmt1n1(indexExpr(govar, i), indexExpr(slice, i))
 				rangeSlice := rangeStmti(govar, i, assignValue)
-				return blockStmt(assignSlice, rangeSlice)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: blockStmt(assignSlice, rangeSlice),
+					// Else: assignStmt1n1(govar, ident("nil")),
+				}
 			}
 			info.refc2go = info.c2go
 		} else {
@@ -560,7 +565,12 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				assignSlice := assignStmt1n1D(slice, toslice)
 				assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
 				rangeSlice := rangeStmti(govar, i, assignValue)
-				return blockStmt(assignSlice, rangeSlice)
+				return &goast.IfStmt{
+					If:   token.Pos(1),
+					Cond: binExpr(govar, ident("nil"), token.NEQ),
+					Body: blockStmt(assignSlice, rangeSlice),
+					// Else: assignStmt1n1(govar, ident("nil")),
+				}
 			}
 			info.refc2go = info.c2go
 		}
