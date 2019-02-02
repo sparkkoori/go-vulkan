@@ -54,60 +54,66 @@ func (s *Win32SurfaceCreateInfoKHR) SetNext(n Structure) {
 	s.Next = n
 }
 
-type PFNCreateWin32SurfaceKHR uintptr
+type PFNCreateWin32SurfaceKHR C.PFN_vkCreateWin32SurfaceKHR
+type FuncCreateWin32SurfaceKHR func(instance Instance, createInfo *Win32SurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result)
 
-func (p PFNCreateWin32SurfaceKHR) Call(instance Instance, createInfo *Win32SurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
-	var c struct {
-		instance    C.VkInstance
-		pCreateInfo *C.VkWin32SurfaceCreateInfoKHR
-		pAllocator  *C.VkAllocationCallbacks
-		pSurface    *C.VkSurfaceKHR
-		_ret        C.VkResult
+func ToCreateWin32SurfaceKHR(p PFNVoidFunction) FuncCreateWin32SurfaceKHR {
+	return func(instance Instance, createInfo *Win32SurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result) {
+		var c struct {
+			instance    C.VkInstance
+			pCreateInfo *C.VkWin32SurfaceCreateInfoKHR
+			pAllocator  *C.VkAllocationCallbacks
+			pSurface    *C.VkSurfaceKHR
+			_ret        C.VkResult
+		}
+		m := pool.take()
+		defer pool.give(m)
+		c.instance = C.VkInstance(instance)
+		if createInfo != nil {
+			c.pCreateInfo = (*C.VkWin32SurfaceCreateInfoKHR)(m.alloc(C.sizeof_VkWin32SurfaceCreateInfoKHR))
+			createInfo.toC(c.pCreateInfo, m)
+		} else {
+			c.pCreateInfo = nil
+		}
+		if allocator != nil {
+			c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
+			allocator.toC(c.pAllocator)
+		} else {
+			c.pAllocator = nil
+		}
+		if surface != nil {
+			c.pSurface = (*C.VkSurfaceKHR)(m.alloc(C.sizeof_VkSurfaceKHR))
+			*c.pSurface = C.VkSurfaceKHR(*surface)
+		} else {
+			c.pSurface = nil
+		}
+		c._ret = C.callPFN_vkCreateWin32SurfaceKHR(C.PFN_vkCreateWin32SurfaceKHR(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
+		_ret = Result(c._ret)
+		if surface != nil {
+			*surface = SurfaceKHR(*c.pSurface)
+		}
+		return
 	}
-	m := pool.take()
-	defer pool.give(m)
-	c.instance = C.VkInstance(instance)
-	if createInfo != nil {
-		c.pCreateInfo = (*C.VkWin32SurfaceCreateInfoKHR)(m.alloc(C.sizeof_VkWin32SurfaceCreateInfoKHR))
-		createInfo.toC(c.pCreateInfo, m)
-	} else {
-		c.pCreateInfo = nil
-	}
-	if allocator != nil {
-		c.pAllocator = (*C.VkAllocationCallbacks)(m.alloc(C.sizeof_VkAllocationCallbacks))
-		allocator.toC(c.pAllocator)
-	} else {
-		c.pAllocator = nil
-	}
-	if surface != nil {
-		c.pSurface = (*C.VkSurfaceKHR)(m.alloc(C.sizeof_VkSurfaceKHR))
-		*c.pSurface = C.VkSurfaceKHR(*surface)
-	} else {
-		c.pSurface = nil
-	}
-	c._ret = C.callPFN_vkCreateWin32SurfaceKHR(C.PFN_vkCreateWin32SurfaceKHR(unsafe.Pointer(p)), c.instance, c.pCreateInfo, c.pAllocator, c.pSurface)
-	_ret = Result(c._ret)
-	if surface != nil {
-		*surface = SurfaceKHR(*c.pSurface)
-	}
-	return
 }
 
-type PFNGetPhysicalDeviceWin32PresentationSupportKHR uintptr
+type PFNGetPhysicalDeviceWin32PresentationSupportKHR C.PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR
+type FuncGetPhysicalDeviceWin32PresentationSupportKHR func(physicalDevice PhysicalDevice, queueFamilyIndex uint32) (_ret bool)
 
-func (p PFNGetPhysicalDeviceWin32PresentationSupportKHR) Call(physicalDevice PhysicalDevice, queueFamilyIndex uint32) (_ret bool) {
-	var c struct {
-		physicalDevice   C.VkPhysicalDevice
-		queueFamilyIndex C.uint32_t
-		_ret             C.VkBool32
+func ToGetPhysicalDeviceWin32PresentationSupportKHR(p PFNVoidFunction) FuncGetPhysicalDeviceWin32PresentationSupportKHR {
+	return func(physicalDevice PhysicalDevice, queueFamilyIndex uint32) (_ret bool) {
+		var c struct {
+			physicalDevice   C.VkPhysicalDevice
+			queueFamilyIndex C.uint32_t
+			_ret             C.VkBool32
+		}
+		m := pool.take()
+		defer pool.give(m)
+		c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
+		c.queueFamilyIndex = C.uint32_t(queueFamilyIndex)
+		c._ret = C.callPFN_vkGetPhysicalDeviceWin32PresentationSupportKHR(C.PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR(unsafe.Pointer(p)), c.physicalDevice, c.queueFamilyIndex)
+		_ret = c._ret != 0
+		return
 	}
-	m := pool.take()
-	defer pool.give(m)
-	c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
-	c.queueFamilyIndex = C.uint32_t(queueFamilyIndex)
-	c._ret = C.callPFN_vkGetPhysicalDeviceWin32PresentationSupportKHR(C.PFN_vkGetPhysicalDeviceWin32PresentationSupportKHR(unsafe.Pointer(p)), c.physicalDevice, c.queueFamilyIndex)
-	_ret = c._ret != 0
-	return
 }
 
 //TODO: other win32 extensions
