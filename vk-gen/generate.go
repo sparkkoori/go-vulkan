@@ -902,15 +902,15 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 			if fpt, ok := ptt.ChildNodes[0].(*cast.FunctionProtoType); ok {
 
 				info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-					cast := callExpr(info.gotype, callExpr(ident("unsafe.Pointer"), cvar))
+					cast := callExpr(info.gotype, cvar)
 					return assignStmt1n1(govar, cast)
 				}
 				info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-					cast := callExpr(info.ctype, callExpr(ident("unsafe.Pointer"), govar))
+					cast := callExpr(info.ctype, govar)
 					return assignStmt1n1(cvar, cast)
 				}
 				info.refc2go = nil
-				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), ident("uintptr")))
+				g.target.addGo(typeDecl(info.gotype.(*goast.Ident), info.ctype))
 				g.genBridgeCall(decl, info, fpt, decl.Name)
 				return info
 			}
@@ -1075,6 +1075,16 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 
 	//Generate
 	{
+		var name string
+		if strings.HasPrefix(decl.Name, "PFN_vk") {
+			name = trimPrefixs(decl.Name, "PFN_vk")
+		} else {
+			name = trimPrefixs(decl.Name, "Vk")
+		}
+
+		gofntype := funcType(goparams, goresults)
+		g.target.addGo(typeDecl(ident("Func"+name), gofntype))
+
 		var stmts []goast.Stmt
 		if cdef != nil {
 			stmts = append(stmts, cdef)
@@ -1089,9 +1099,15 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 		}
 
 		g.target.addC(decl)
-		gofntype := funcType(goparams, goresults)
-		gofndef := funcDecl(ident("Call"), field(info.gotype, ident("p")), gofntype, stmts...)
-		g.target.addGo(gofndef)
+		def := funcDecl(ident("To"+name), nil, funcType(
+			[]*goast.Field{field(ident("PFNVoidFunction"), ident("p"))},
+			[]*goast.Field{field(ident("Func"+name), ident("fn"))},
+		),
+			returnStmt(&goast.FuncLit{
+				Type: gofntype,
+				Body: blockStmt(stmts...),
+			}))
+		g.target.addGo(def)
 	}
 }
 
