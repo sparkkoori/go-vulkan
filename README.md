@@ -49,15 +49,19 @@ func main() {
 	vk.DestroyInstance(ins, nil)
 
 	//Indirectly Call
-	pfn := vk.GetInstanceProcAddr(nil, "vkCreateInstance")
-	rs = vk.PFNCreateInstance(pfn).Call(createInfo, nil, &ins)
-	if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
-		panic("cannot find a compatible Vulkan ICD")
-	} else if rs != vk.SUCCESS {
-		panic("unknown error")
+	{
+		fn := vk.ToCreateInstance(vk.GetInstanceProcAddr(nil, "vkCreateInstance"))
+		rs = fn(createInfo, nil, &ins)
+		if rs == vk.ERROR_INCOMPATIBLE_DRIVER {
+			panic("cannot find a compatible Vulkan ICD")
+		} else if rs != vk.SUCCESS {
+			panic("unknown error")
+		}
 	}
-	pfn = vk.GetInstanceProcAddr(ins, "vkDestroyInstance")
-	vk.PFNDestroyInstance(pfn).Call(ins, nil)
+	{
+		fn := vk.ToDestroyInstance(vk.GetInstanceProcAddr(ins, "vkDestroyInstance"))
+		fn(ins, nil)
+	}
 }
 
 ```
@@ -106,7 +110,7 @@ The warping rules used in this package.
 
 #### Call Rules
 
-- Because cgo does not support calling function pointer, so for every `PFN*`, a bridge method `Call()` was created.
+- Because cgo does not support calling function pointer, for every `PFN*`, a bridge method `To*()` was created.
 
 #### Name Rules
 
