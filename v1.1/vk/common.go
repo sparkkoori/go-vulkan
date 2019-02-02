@@ -4,6 +4,7 @@ package vk
 #include "stdlib.h"
 #include "string.h"
 #include "vulkan/vulkan.h"
+extern void* govkConvertSizeToPointer(size_t n);
 */
 import "C"
 import (
@@ -15,6 +16,10 @@ import (
 
 var Registry ObjectRegistry
 var pool cmemoryPool
+
+func Pointer(n uintptr) unsafe.Pointer {
+	return C.govkConvertSizeToPointer(C.size_t(n))
+}
 
 type Structure interface {
 	GetNext() Structure
