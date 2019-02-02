@@ -77,14 +77,14 @@ func TestCalculatePaddingWithOneByteHeader(t *testing.T) {
 func TestObjectRegistry(t *testing.T) {
 	reg := newObjectRegistry()
 	obj0 := "any object"
-	id := reg.register(obj0)
-	obj1, _ := reg.access(id)
+	id := reg.Register(obj0)
+	obj1, _ := reg.Access(id)
 	if obj0 != obj1 {
 		t.Error("Unxpected obj0 != obj1")
 	}
 
-	reg.unregister(id)
-	_, ok := reg.access(id)
+	reg.Unregister(id)
+	_, ok := reg.Access(id)
 	if ok {
 		t.Error("Unexpected ok")
 	}
@@ -94,7 +94,7 @@ func TestObjectRegistryShard(t *testing.T) {
 	reg := newObjectRegistry()
 
 	for i := 0; i < 10000; i++ {
-		reg.register("any")
+		reg.Register("any")
 	}
 
 	for _, s := range reg {
@@ -107,7 +107,7 @@ func TestObjectRegistryShard(t *testing.T) {
 func BenchmarkObjectRegistryGo1(b *testing.B) {
 	reg := newObjectRegistry()
 	for i := 0; i < b.N; i++ {
-		reg.register("value")
+		reg.Register("value")
 		// id := reg.register("value")
 		// reg.access(id)
 		// reg.unregister(id)
@@ -153,7 +153,7 @@ func BenchmarkObjectRegistryGo100(b *testing.B) {
 	for j := 0; j < 100; j++ {
 		go func() {
 			for i := 0; i < b.N/100; i++ {
-				reg.register("value")
+				reg.Register("value")
 				// id := reg.register("value")
 				// reg.access(id)
 				// reg.unregister(id)

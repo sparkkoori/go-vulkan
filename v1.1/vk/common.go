@@ -13,7 +13,7 @@ import (
 	"unsafe"
 )
 
-var registry objectRegistry
+var Registry ObjectRegistry
 var pool cmemoryPool
 
 type Structure interface {
@@ -25,7 +25,7 @@ type Structure interface {
 }
 
 func init() {
-	registry = newObjectRegistry()
+	Registry = newObjectRegistry()
 	pool.init(16)
 }
 
@@ -200,7 +200,7 @@ func (p *cmemoryPool) give(m *cmemory) {
 }
 
 //ObjectRegistry keeps the mapping from id to go object.
-type objectRegistry []*sharedObjectRegistry
+type ObjectRegistry []*sharedObjectRegistry
 
 type sharedObjectRegistry struct {
 	objs map[uintptr]interface{}
@@ -208,19 +208,19 @@ type sharedObjectRegistry struct {
 	sync.RWMutex
 }
 
-func newObjectRegistry() objectRegistry {
-	reg := make(objectRegistry, 256)
+func newObjectRegistry() ObjectRegistry {
+	reg := make(ObjectRegistry, 256)
 	for i := uintptr(0); i < 256; i++ {
 		reg[i] = &sharedObjectRegistry{objs: make(map[uintptr]interface{})}
 	}
 	return reg
 }
 
-func (reg objectRegistry) getShard(id uintptr) *sharedObjectRegistry {
+func (reg ObjectRegistry) getShard(id uintptr) *sharedObjectRegistry {
 	return reg[id&0xff]
 }
 
-func (reg objectRegistry) register(value interface{}) uintptr {
+func (reg ObjectRegistry) Register(value interface{}) uintptr {
 	shardN := uintptr(rand.Intn(256))
 	shard := reg.getShard(shardN)
 	var id uintptr
@@ -232,7 +232,7 @@ func (reg objectRegistry) register(value interface{}) uintptr {
 	return id
 }
 
-func (reg objectRegistry) access(id uintptr) (interface{}, bool) {
+func (reg ObjectRegistry) Access(id uintptr) (interface{}, bool) {
 	shard := reg.getShard(id)
 	shard.RLock()
 	val, ok := shard.objs[id]
@@ -240,7 +240,7 @@ func (reg objectRegistry) access(id uintptr) (interface{}, bool) {
 	return val, ok
 }
 
-func (reg objectRegistry) unregister(id uintptr) {
+func (reg ObjectRegistry) Unregister(id uintptr) {
 	shard := reg.getShard(id)
 	shard.Lock()
 	delete(shard.objs, id)

@@ -5,7 +5,7 @@ package vk
 extern VkBool32 defaultPFN_vkDebugUtilsMessengerCallbackEXT (
     VkDebugUtilsMessageSeverityFlagBitsEXT           messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT                  messageType,
-    const VkDebugUtilsMessengerCallbackDataEXT*      pCallbackData,
+    VkDebugUtilsMessengerCallbackDataEXT*      pCallbackData,
     void*                                            pUserData);
 
 */
@@ -34,12 +34,22 @@ func defaultPFN_vkDebugUtilsMessengerCallbackEXT(
 		g.callbackData.fromC(pCallbackData)
 	}
 
-	fn := (func(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT) (_ret bool))(pUserData)
-	g._ret = fn(g.messageSeverity, g.messageType, g.callbackData)
+	ptr, ok := Registry.Access(uintptr(pUserData))
+	if !ok {
+		panic("Unknown pUserData")
+	}
+	pfn := ptr.(*func(
+		messageSeverity DebugUtilsMessageSeverityFlagBitsEXT,
+		messageType DebugUtilsMessageTypeFlagsEXT,
+		callbackData *DebugUtilsMessengerCallbackDataEXT,
+	) (_ret bool))
+	g._ret = (*pfn)(g.messageSeverity, g.messageType, g.callbackData)
 	if g._ret {
 		_ret = 1
 	}
 	return
 }
 
-const DefaultPFNDebugUtilsMessengerCallbackEXT PFNDebugUtilsMessengerCallbackEXT = &C.defaultPFN_vkDebugUtilsMessengerCallbackEXT
+func DefaultDebugUtilsMessengerCallbackEXT() PFNDebugUtilsMessengerCallbackEXT {
+	return PFNDebugUtilsMessengerCallbackEXT(C.defaultPFN_vkDebugUtilsMessengerCallbackEXT)
+}
