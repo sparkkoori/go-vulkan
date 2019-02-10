@@ -1,7 +1,6 @@
 package vk
 
 import (
-	"sync"
 	"testing"
 	"unsafe"
 )
@@ -72,94 +71,4 @@ func TestCalculatePaddingWithOneByteHeader(t *testing.T) {
 	if pd != 32 {
 		t.Errorf("Expected 32, got %d.\n", pd)
 	}
-}
-
-func TestObjectRegistry(t *testing.T) {
-	reg := newObjectRegistry()
-	obj0 := "any object"
-	id := reg.Register(obj0)
-	obj1, _ := reg.Access(id)
-	if obj0 != obj1 {
-		t.Error("Unxpected obj0 != obj1")
-	}
-
-	reg.Unregister(id)
-	_, ok := reg.Access(id)
-	if ok {
-		t.Error("Unexpected ok")
-	}
-}
-
-func TestObjectRegistryShard(t *testing.T) {
-	reg := newObjectRegistry()
-
-	for i := 0; i < 10000; i++ {
-		reg.Register("any")
-	}
-
-	for _, s := range reg {
-		if len(s.objs) == 0 {
-			t.Fatal("Shard probaly dosn't work")
-		}
-	}
-}
-
-func BenchmarkObjectRegistryGo1(b *testing.B) {
-	reg := newObjectRegistry()
-	for i := 0; i < b.N; i++ {
-		reg.Register("value")
-		// id := reg.register("value")
-		// reg.access(id)
-		// reg.unregister(id)
-	}
-}
-
-func BenchmarkSyncedMapGo1(b *testing.B) {
-	m := make(map[int]interface{})
-	l := sync.RWMutex{}
-	for i := 0; i < b.N; i++ {
-		l.Lock()
-		m[i] = "value"
-		l.Unlock()
-	}
-}
-
-func BenchmarkSyncedMapGo100(b *testing.B) {
-	m := make(map[int]interface{})
-	l := sync.RWMutex{}
-	aid := 0
-	wg := sync.WaitGroup{}
-	wg.Add(100)
-	for j := 0; j < 100; j++ {
-		go func() {
-			for i := 0; i < b.N/100; i++ {
-				l.Lock()
-				aid++
-				id := aid<<8 + i
-				m[id] = "value"
-				l.Unlock()
-			}
-			wg.Done()
-		}()
-	}
-	wg.Wait()
-}
-
-func BenchmarkObjectRegistryGo100(b *testing.B) {
-	reg := newObjectRegistry()
-
-	wg := sync.WaitGroup{}
-	wg.Add(100)
-	for j := 0; j < 100; j++ {
-		go func() {
-			for i := 0; i < b.N/100; i++ {
-				reg.Register("value")
-				// id := reg.register("value")
-				// reg.access(id)
-				// reg.unregister(id)
-			}
-			wg.Done()
-		}()
-	}
-	wg.Wait()
 }

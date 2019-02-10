@@ -9,12 +9,10 @@ extern void* govkConvertSizeToPointer(size_t n);
 import "C"
 import (
 	"bytes"
-	"math/rand"
 	"sync"
 	"unsafe"
 )
 
-var Registry ObjectRegistry
 var pool cmemoryPool
 
 func Pointer(n uintptr) unsafe.Pointer {
@@ -30,7 +28,6 @@ type Structure interface {
 }
 
 func init() {
-	Registry = newObjectRegistry()
 	pool.init(16)
 }
 
@@ -202,52 +199,4 @@ func (p *cmemoryPool) give(m *cmemory) {
 		return
 	}
 	m.dispose()
-}
-
-//ObjectRegistry keeps the mapping from id to go object.
-type ObjectRegistry []*sharedObjectRegistry
-
-type sharedObjectRegistry struct {
-	objs map[uintptr]interface{}
-	id   uintptr
-	sync.RWMutex
-}
-
-func newObjectRegistry() ObjectRegistry {
-	reg := make(ObjectRegistry, 256)
-	for i := uintptr(0); i < 256; i++ {
-		reg[i] = &sharedObjectRegistry{objs: make(map[uintptr]interface{})}
-	}
-	return reg
-}
-
-func (reg ObjectRegistry) getShard(id uintptr) *sharedObjectRegistry {
-	return reg[id&0xff]
-}
-
-func (reg ObjectRegistry) Register(value interface{}) uintptr {
-	shardN := uintptr(rand.Intn(256))
-	shard := reg.getShard(shardN)
-	var id uintptr
-	shard.Lock()
-	shard.id++
-	id = shard.id<<8 + shardN
-	shard.objs[id] = value
-	shard.Unlock()
-	return id
-}
-
-func (reg ObjectRegistry) Access(id uintptr) (interface{}, bool) {
-	shard := reg.getShard(id)
-	shard.RLock()
-	val, ok := shard.objs[id]
-	shard.RUnlock()
-	return val, ok
-}
-
-func (reg ObjectRegistry) Unregister(id uintptr) {
-	shard := reg.getShard(id)
-	shard.Lock()
-	delete(shard.objs, id)
-	shard.Unlock()
 }
