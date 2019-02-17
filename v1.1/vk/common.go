@@ -80,23 +80,19 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 	}
 	size := uintptr(s)
 	current := uintptr(m.start) + m.offset
-	padding := calculatePaddingWithOneByteHeader(current, C.sizeof_intmax_t)
+	padding := calculatePadding(current, C.sizeof_intmax_t)
 
+	ptr := m.start
 	if len(m.ptrs) == 0 && m.offset+padding+size < m.total {
-		next := current + padding
-		header := next - 1
-
-		headerPtr := (*byte)(unsafe.Pointer(header))
-		*headerPtr = byte(padding)
-
+		bias := m.offset + padding
 		m.offset += padding + size
 
-		ptr := unsafe.Pointer(next)
+		ptr = unsafe.Pointer(uintptr(ptr) + bias)
 		return ptr
 	}
 
 	//malloc
-	ptr := C.malloc(C.size_t(s))
+	ptr = C.malloc(C.size_t(s))
 	m.ptrs = append(m.ptrs, ptr)
 	return ptr
 }
