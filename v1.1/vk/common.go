@@ -15,10 +15,6 @@ import (
 
 var pool cmemoryPool
 
-func Pointer(n uintptr) unsafe.Pointer {
-	return C.govkConvertSizeToPointer(C.size_t(n))
-}
-
 type Structure interface {
 	GetNext() Structure
 	SetNext(s Structure)
