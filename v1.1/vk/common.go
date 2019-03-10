@@ -24,7 +24,7 @@ type Structure interface {
 }
 
 func init() {
-	pool.init(16)
+	pool.init(16, 1024*2)
 }
 
 /*
@@ -43,7 +43,7 @@ type cmemory struct {
 	ptrs []unsafe.Pointer
 }
 
-func (m *cmemory) init(totalSize uint) {
+func (m *cmemory) init(totalSize int) {
 	if m.start != nil {
 		panic("Cmemory is already initialized")
 	}
@@ -74,21 +74,22 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 	if s == 0 {
 		panic("Allocate zero size memory")
 	}
+
 	size := uintptr(s)
 	current := uintptr(m.start) + m.offset
 	padding := calculatePadding(current, C.sizeof_intmax_t)
 
-	ptr := m.start
 	if len(m.ptrs) == 0 && m.offset+padding+size < m.total {
 		bias := m.offset + padding
 		m.offset += padding + size
 
+		ptr := m.start
 		ptr = unsafe.Pointer(uintptr(ptr) + bias)
 		return ptr
 	}
 
 	//malloc
-	ptr = C.malloc(C.size_t(s))
+	ptr := C.malloc(C.size_t(s))
 	m.ptrs = append(m.ptrs, ptr)
 	return ptr
 }
@@ -159,12 +160,14 @@ func toGoString(p *C.char) string {
 type cmemoryPool struct {
 	cmemories []*cmemory
 	max       int
+	size      int
 	sync.Mutex
 }
 
-func (p *cmemoryPool) init(max int) {
+func (p *cmemoryPool) init(max int, size int) {
 	p.cmemories = make([]*cmemory, 0, max)
 	p.max = max
+	p.size = size
 }
 
 func (p *cmemoryPool) take() *cmemory {
@@ -177,7 +180,7 @@ func (p *cmemoryPool) take() *cmemory {
 		return m
 	}
 	m := &cmemory{}
-	m.init(1024 * 2)
+	m.init(p.size)
 	return m
 }
 
