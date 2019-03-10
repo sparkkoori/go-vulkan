@@ -24,7 +24,7 @@ type Structure interface {
 }
 
 func init() {
-	pool.init(16, 1024*2)
+	pool.init(16, 1024*8)
 }
 
 /*
