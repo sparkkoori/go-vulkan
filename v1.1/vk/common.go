@@ -24,7 +24,7 @@ type Structure interface {
 }
 
 func init() {
-	pool.init(16, 1024*2)
+	pool.init(16, 1024*8)
 }
 
 /*
@@ -44,22 +44,26 @@ type cmemory struct {
 }
 
 func (m *cmemory) init(totalSize int) {
-	if totalSize > 0 {
-		size := C.size_t(totalSize)
-		m.start = C.malloc(size)
-		C.memset(m.start, 0, size)
+	if m.start != nil {
+		panic("Cmemory is already initialized")
 	}
+
+	m.start = C.malloc(C.size_t(totalSize))
+	C.memset(m.start, 0, C.size_t(totalSize))
 	m.offset = 0
 	m.total = uintptr(totalSize)
 	m.ptrs = nil
 }
 
 func (m *cmemory) dispose() {
-	m.free()
-	if m.start != nil {
-		C.free(m.start)
-		m.start = nil
+	if m.start == nil {
+		panic("Cmemory is uninitialized")
 	}
+
+	m.free()
+
+	C.free(m.start)
+	m.start = nil
 	m.total = 0
 }
 
@@ -72,9 +76,10 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 	}
 
 	size := uintptr(s)
-	padding := calculatePadding(uintptr(m.start)+m.offset, C.sizeof_intmax_t)
+	current := uintptr(m.start) + m.offset
+	padding := calculatePadding(current, C.sizeof_intmax_t)
 
-	if m.offset+padding+size < m.total {
+	if len(m.ptrs) == 0 && m.offset+padding+size < m.total {
 		bias := m.offset + padding
 		m.offset += padding + size
 
@@ -85,7 +90,6 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 
 	//malloc
 	ptr := C.malloc(C.size_t(s))
-	C.memset(ptr, 0, C.size_t(s))
 	m.ptrs = append(m.ptrs, ptr)
 	return ptr
 }
