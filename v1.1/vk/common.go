@@ -25,6 +25,7 @@ type Structure interface {
 
 func init() {
 	pool.init(16, 1024*8)
+	// pool.init(0, 0)
 }
 
 /*
@@ -37,8 +38,8 @@ But, malloc() is expensive.
 */
 type cmemory struct {
 	start  unsafe.Pointer
-	offset uintptr
 	total  uintptr
+	offset uintptr
 
 	ptrs []unsafe.Pointer
 }
@@ -49,8 +50,9 @@ func (m *cmemory) init(totalSize int) {
 		m.start = C.malloc(size)
 		C.memset(m.start, 0, size)
 	}
-	m.offset = 0
 	m.total = uintptr(totalSize)
+	m.offset = 0
+
 	m.ptrs = nil
 }
 
@@ -76,10 +78,11 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 
 	if m.offset+padding+size < m.total {
 		bias := m.offset + padding
-		m.offset += padding + size
-
 		ptr := m.start
 		ptr = unsafe.Pointer(uintptr(ptr) + bias)
+
+		m.offset += padding + size
+
 		return ptr
 	}
 
@@ -91,12 +94,17 @@ func (m *cmemory) alloc(s uint) unsafe.Pointer {
 }
 
 func (m *cmemory) free() {
-	for i := range m.ptrs {
-		C.free(m.ptrs[i])
+	if len(m.ptrs) > 0 {
+		for i := range m.ptrs {
+			C.free(m.ptrs[i])
+		}
+		m.ptrs = m.ptrs[:0]
 	}
-	m.ptrs = m.ptrs[:0]
-	m.offset = 0
-	C.memset(m.start, 0, C.size_t(m.total))
+
+	if m.start != nil {
+		C.memset(m.start, 0, C.size_t(m.offset))
+		m.offset = 0
+	}
 }
 
 func calculatePadding(base, alignment uintptr) uintptr {
