@@ -1,3 +1,4 @@
+//go:generate vk-gen
 package vk
 
 /*
