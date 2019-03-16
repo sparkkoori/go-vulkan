@@ -337,7 +337,7 @@ func (g *generator) genStructureMethods(name string, info *typeInfo) {
 		}, []*goast.Field{
 			field(ident("unsafe.Pointer")),
 		})
-		alloc := assignStmt1n1D(ident("c"), saalloc(info.ctype, info.csize))
+		alloc := assignStmt1n1D(ident("c"), m_alloc(info.ctype, info.csize))
 		conv := info.go2c(starExpr(ident("s")), starExpr(ident("c")))
 		ret := returnStmt(callExpr(ident("unsafe.Pointer"), ident("c")))
 		fn := funcDecl(ident("toCStructure"), field(starExpr(info.gotype), ident("s")), fnT, alloc, conv, ret)
@@ -511,7 +511,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				i := ident("i" + level)
 				size := mulExpr(ident("C.sizeof_char"), uintLen(govar))
 				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
-				stmt1 := assignStmt1n1(cvar, saalloc(nil, size))
+				stmt1 := assignStmt1n1(cvar, m_alloc(nil, size))
 				stmt2 := assignStmt1n1D(slice, toslice)
 				stmt3s := assignStmt1n1(indexExpr(slice, i), indexExpr(govar, i))
 				stmt3 := rangeStmti(govar, i, stmt3s)
@@ -546,7 +546,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 				i := ident("i" + level)
 				size := mulExpr(oinfo.csize, uintLen(govar))
 				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
-				stmt1 := assignStmt1n1(cvar, saalloc(oinfo.ctype, size))
+				stmt1 := assignStmt1n1(cvar, m_alloc(oinfo.ctype, size))
 				stmt2 := assignStmt1n1D(slice, toslice)
 				stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
 				stmt3 := rangeStmti(govar, i, stmt3s)
@@ -648,7 +648,7 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 			//Size is not 0
 			info.go2cAlloc = true
 			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-				alloc := assignStmt1n1(cvar, saalloc(oinfo.ctype, oinfo.csize))
+				alloc := assignStmt1n1(cvar, m_alloc(oinfo.ctype, oinfo.csize))
 				conv := oinfo.go2c(starExpr(govar), starExpr(cvar))
 				return &goast.IfStmt{
 					If:   token.Pos(1),
@@ -778,7 +778,7 @@ func (g *generator) mapDecayedType(n *cast.DecayedType, pid string) *typeInfo {
 		i := ident("i" + level)
 		memSize := mulExpr(oinfo.csize, size)
 		toslice := asSliceExpr(oinfo.ctype, cvar, size)
-		stmt1 := assignStmt1n1(cvar, saalloc(oinfo.ctype, memSize))
+		stmt1 := assignStmt1n1(cvar, m_alloc(oinfo.ctype, memSize))
 		stmt2 := assignStmt1n1D(slice, toslice)
 		stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
 		stmt3 := rangeStmti(govar, i, stmt3s)

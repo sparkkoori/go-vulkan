@@ -83,7 +83,7 @@ func halt(msg string, node cast.Node) {
 	panic(&halting{msg, node})
 }
 
-func saalloc(typ, size goast.Expr) *goast.CallExpr {
+func m_alloc(typ, size goast.Expr) *goast.CallExpr {
 	arg := callExpr(ident("m.alloc"), size)
 	if typ != nil {
 		fun := parenExpr(starExpr(typ))
