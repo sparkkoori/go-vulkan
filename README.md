@@ -102,8 +102,7 @@ The warping rules used in this package.
 
 - Copy data between go and c, instead of pass memory.
 
-  - But no copy for `unsafe.Pointer`.
-
+  - Except Go arrays with same layout as C arrays in function params.
 
 - No manual memory management is need.
 

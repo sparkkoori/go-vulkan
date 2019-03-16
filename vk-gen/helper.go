@@ -62,16 +62,20 @@ func trimPrefixs(s string, pfx ...string) string {
 	return s
 }
 
-func takeAddr(govar, cvar goast.Expr) (goast.Expr, goast.Expr) {
-	if starX, ok := govar.(*goast.StarExpr); ok {
-		govar = starX.X
-	}
-	if starX, ok := cvar.(*goast.StarExpr); ok {
-		cvar = starX.X
+func takeAddr(exp goast.Expr) goast.Expr {
+	if starX, ok := exp.(*goast.StarExpr); ok {
+		return starX.X
 	} else {
-		cvar = &goast.UnaryExpr{Op: token.AND, X: cvar}
+		return &goast.UnaryExpr{Op: token.AND, X: exp}
 	}
-	return govar, cvar
+}
+
+func trimAddr(exp goast.Expr) goast.Expr {
+	if starX, ok := exp.(*goast.StarExpr); ok {
+		return starX.X
+	} else {
+		return exp
+	}
 }
 
 type halting struct {
@@ -237,9 +241,9 @@ func analyzeHint(h *hint, src Source) {
 						ChildNodes: pvd.ChildNodes,
 					})
 				}
-				analyzeArrayAndSize(decls, n.Name)
-				analyzeArrayAndSize(decls, "PFN_"+n.Name)
-				h.argNames["PFN_"+n.Name] = argNames
+				analyzeArrayAndSize(decls, n.Name+"()")
+				analyzeArrayAndSize(decls, "PFN_"+n.Name+"()")
+				h.argNames["PFN_"+n.Name+"()"] = argNames
 			}
 		default:
 			halt("Unkown node in source", node)
@@ -249,6 +253,21 @@ func analyzeHint(h *hint, src Source) {
 	// for k, v := range m {
 	// 	fmt.Printf("%s: %#v \n", k, v)
 	// }
+}
+
+func getLevel(pid string) int {
+	return len(strings.Split(pid, ".")) - 1
+}
+
+func isCgoParam(pid string) bool {
+	strs := strings.Split(pid, ".")
+	if len(strs) != 2 {
+		return false
+	}
+	if strings.HasSuffix(strs[0], "()") {
+		return true
+	}
+	return false
 }
 
 func convOperator(op string) token.Token {

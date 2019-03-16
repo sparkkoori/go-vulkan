@@ -5998,19 +5998,13 @@ func ToGetQueryPoolResults(p PFNVoidFunction) (fn FuncGetQueryPoolResults) {
 			flags      C.VkQueryResultFlags
 			_ret       C.VkResult
 		}
-		m := pool.take()
-		defer pool.give(m)
 		c.device = C.VkDevice(device)
 		c.queryPool = C.VkQueryPool(queryPool)
 		c.firstQuery = C.uint32_t(firstQuery)
 		c.queryCount = C.uint32_t(queryCount)
 		c.dataSize = C.size_t(len(data))
 		if len(data) != 0 {
-			c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				slice1[i1] = data[i1]
-			}
+			c.pData = (unsafe.Pointer)(&data[0])
 		} else {
 			c.pData = nil
 		}
@@ -6030,12 +6024,6 @@ func ToGetQueryPoolResults(p PFNVoidFunction) (fn FuncGetQueryPoolResults) {
 		}
 		c._ret = C.callPFN_vkGetQueryPoolResults(C.PFN_vkGetQueryPoolResults(unsafe.Pointer(p)), c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 		_ret = Result(c._ret)
-		if len(data) != 0 {
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				data[i1] = slice1[i1]
-			}
-		}
 		return
 	}
 }
@@ -7137,11 +7125,7 @@ func ToGetPipelineCacheData(p PFNVoidFunction) (fn FuncGetPipelineCacheData) {
 			c.pDataSize = nil
 		}
 		if len(data) != 0 {
-			c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				slice1[i1] = data[i1]
-			}
+			c.pData = (unsafe.Pointer)(&data[0])
 		} else {
 			c.pData = nil
 		}
@@ -7149,12 +7133,6 @@ func ToGetPipelineCacheData(p PFNVoidFunction) (fn FuncGetPipelineCacheData) {
 		_ret = Result(c._ret)
 		if dataSize != nil {
 			*dataSize = uint(*c.pDataSize)
-		}
-		if len(data) != 0 {
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				data[i1] = slice1[i1]
-			}
 		}
 		return
 	}
@@ -12648,8 +12626,6 @@ func ToCmdPushConstants(p PFNVoidFunction) (fn FuncCmdPushConstants) {
 			size          C.uint32_t
 			pValues       unsafe.Pointer
 		}
-		m := pool.take()
-		defer pool.give(m)
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.layout = C.VkPipelineLayout(layout)
 		{
@@ -12664,11 +12640,7 @@ func ToCmdPushConstants(p PFNVoidFunction) (fn FuncCmdPushConstants) {
 		c.offset = C.uint32_t(offset)
 		c.size = C.uint32_t(len(values))
 		if len(values) != 0 {
-			c.pValues = m.alloc(C.sizeof_char * uint(len(values)))
-			slice1 := (*[1 << 31]byte)(c.pValues)[:len(values):len(values)]
-			for i1, _ := range values {
-				slice1[i1] = values[i1]
-			}
+			c.pValues = (unsafe.Pointer)(&values[0])
 		} else {
 			c.pValues = nil
 		}
@@ -14074,19 +14046,13 @@ func GetQueryPoolResults(device Device, queryPool QueryPool, firstQuery uint32, 
 		flags      C.VkQueryResultFlags
 		_ret       C.VkResult
 	}
-	m := pool.take()
-	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.queryPool = C.VkQueryPool(queryPool)
 	c.firstQuery = C.uint32_t(firstQuery)
 	c.queryCount = C.uint32_t(queryCount)
 	c.dataSize = C.size_t(len(data))
 	if len(data) != 0 {
-		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-		slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i1, _ := range data {
-			slice1[i1] = data[i1]
-		}
+		c.pData = (unsafe.Pointer)(&data[0])
 	} else {
 		c.pData = nil
 	}
@@ -14106,12 +14072,6 @@ func GetQueryPoolResults(device Device, queryPool QueryPool, firstQuery uint32, 
 	}
 	c._ret = C.vkGetQueryPoolResults(c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 	_ret = Result(c._ret)
-	if len(data) != 0 {
-		slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i1, _ := range data {
-			data[i1] = slice1[i1]
-		}
-	}
 	return
 }
 func CreateBuffer(device Device, createInfo *BufferCreateInfo, allocator *AllocationCallbacks, buffer *Buffer) (_ret Result) {
@@ -14485,11 +14445,7 @@ func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *
 		c.pDataSize = nil
 	}
 	if len(data) != 0 {
-		c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-		slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i1, _ := range data {
-			slice1[i1] = data[i1]
-		}
+		c.pData = (unsafe.Pointer)(&data[0])
 	} else {
 		c.pData = nil
 	}
@@ -14497,12 +14453,6 @@ func GetPipelineCacheData(device Device, pipelineCache PipelineCache, dataSize *
 	_ret = Result(c._ret)
 	if dataSize != nil {
 		*dataSize = uint(*c.pDataSize)
-	}
-	if len(data) != 0 {
-		slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-		for i1, _ := range data {
-			data[i1] = slice1[i1]
-		}
 	}
 	return
 }
@@ -16239,8 +16189,6 @@ func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageF
 		size          C.uint32_t
 		pValues       unsafe.Pointer
 	}
-	m := pool.take()
-	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.layout = C.VkPipelineLayout(layout)
 	{
@@ -16255,11 +16203,7 @@ func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageF
 	c.offset = C.uint32_t(offset)
 	c.size = C.uint32_t(len(values))
 	if len(values) != 0 {
-		c.pValues = m.alloc(C.sizeof_char * uint(len(values)))
-		slice1 := (*[1 << 31]byte)(c.pValues)[:len(values):len(values)]
-		for i1, _ := range values {
-			slice1[i1] = values[i1]
-		}
+		c.pValues = (unsafe.Pointer)(&values[0])
 	} else {
 		c.pValues = nil
 	}
@@ -22117,18 +22061,12 @@ func ToCmdPushDescriptorSetWithTemplateKHR(p PFNVoidFunction) (fn FuncCmdPushDes
 			set                      C.uint32_t
 			pData                    unsafe.Pointer
 		}
-		m := pool.take()
-		defer pool.give(m)
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 		c.layout = C.VkPipelineLayout(layout)
 		c.set = C.uint32_t(len(data))
 		if len(data) != 0 {
-			c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				slice1[i1] = data[i1]
-			}
+			c.pData = (unsafe.Pointer)(&data[0])
 		} else {
 			c.pData = nil
 		}
@@ -27668,11 +27606,7 @@ func ToGetValidationCacheDataEXT(p PFNVoidFunction) (fn FuncGetValidationCacheDa
 			c.pDataSize = nil
 		}
 		if len(data) != 0 {
-			c.pData = m.alloc(C.sizeof_char * uint(len(data)))
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				slice1[i1] = data[i1]
-			}
+			c.pData = (unsafe.Pointer)(&data[0])
 		} else {
 			c.pData = nil
 		}
@@ -27680,12 +27614,6 @@ func ToGetValidationCacheDataEXT(p PFNVoidFunction) (fn FuncGetValidationCacheDa
 		_ret = Result(c._ret)
 		if dataSize != nil {
 			*dataSize = uint(*c.pDataSize)
-		}
-		if len(data) != 0 {
-			slice1 := (*[1 << 31]byte)(c.pData)[:len(data):len(data)]
-			for i1, _ := range data {
-				data[i1] = slice1[i1]
-			}
 		}
 		return
 	}
