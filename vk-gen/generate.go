@@ -225,7 +225,7 @@ func (g *generator) genRecordTypeStruct(decl *cast.RecordDecl) *typeInfo {
 			}
 			fields = append(fields, fd)
 		}
-		cinfo = g.mapCompType(fields, decl.Name)
+		cinfo = g.mapCompType(fields, decl.Name, true)
 	}
 
 	info.gotype = ident(trimPrefixs(decl.Name, "Vk"))
@@ -498,80 +498,64 @@ func (g *generator) mapPointerType(n *cast.PointerType, pid string) *typeInfo {
 	if isArray {
 		o := n.ChildNodes[0]
 		oinfo := g.mapType(o, pid+".*")
-		level := strconv.Itoa(len(strings.Split(pid, ".")))
+		level := strconv.Itoa(len(strings.Split(pid, ".")) - 1)
 
 		info := &typeInfo{}
+		var o_csize, o_ctype goast.Expr
+		var o_go2c, o_c2go func(govar, cvar goast.Expr) goast.Stmt
 		if oinfo == nil {
 			info.gotype = arrayType(ident("byte"), nil)
 			info.ctype = ident("unsafe.Pointer")
 			info.csize = ident("C.sizeof_void_pointer")
-			info.go2cAlloc = true
-			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				size := mulExpr(ident("C.sizeof_char"), uintLen(govar))
-				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
-				stmt1 := assignStmt1n1(cvar, m_alloc(nil, size))
-				stmt2 := assignStmt1n1D(slice, toslice)
-				stmt3s := assignStmt1n1(indexExpr(slice, i), indexExpr(govar, i))
-				stmt3 := rangeStmti(govar, i, stmt3s)
-				return &goast.IfStmt{
-					If:   token.Pos(1),
-					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
-					Body: blockStmt(stmt1, stmt2, stmt3),
-					Else: assignStmt1n1(cvar, ident("nil")),
-				}
+			o_ctype = nil
+			o_csize = ident("C.sizeof_char")
+			o_go2c = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(cvar, govar)
 			}
-			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				toslice := asSliceExpr(nil, cvar, callExpr(ident("len"), govar))
-				assignSlice := assignStmt1n1D(slice, toslice)
-				assignValue := assignStmt1n1(indexExpr(govar, i), indexExpr(slice, i))
-				rangeSlice := rangeStmti(govar, i, assignValue)
-				return &goast.IfStmt{
-					If:   token.Pos(1),
-					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
-					Body: blockStmt(assignSlice, rangeSlice),
-				}
+			o_c2go = func(govar, cvar goast.Expr) goast.Stmt {
+				return assignStmt1n1(govar, cvar)
 			}
-			info.refc2go = info.c2go
 		} else {
 			info.gotype = arrayType(oinfo.gotype, nil)
 			info.ctype = starExpr(oinfo.ctype)
 			info.csize = ident("C.sizeof_void_pointer")
-			info.go2cAlloc = true
-			info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				size := mulExpr(oinfo.csize, uintLen(govar))
-				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
-				stmt1 := assignStmt1n1(cvar, m_alloc(oinfo.ctype, size))
-				stmt2 := assignStmt1n1D(slice, toslice)
-				stmt3s := oinfo.go2c(indexExpr(govar, i), indexExpr(slice, i))
-				stmt3 := rangeStmti(govar, i, stmt3s)
-				return &goast.IfStmt{
-					If:   token.Pos(1),
-					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
-					Body: blockStmt(stmt1, stmt2, stmt3),
-					Else: assignStmt1n1(cvar, ident("nil")),
-				}
-			}
-			info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-				slice := ident("slice" + level)
-				i := ident("i" + level)
-				toslice := asSliceExpr(oinfo.ctype, cvar, callExpr(ident("len"), govar))
-				assignSlice := assignStmt1n1D(slice, toslice)
-				assignValue := oinfo.c2go(indexExpr(govar, i), indexExpr(slice, i))
-				rangeSlice := rangeStmti(govar, i, assignValue)
-				return &goast.IfStmt{
-					If:   token.Pos(1),
-					Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
-					Body: blockStmt(assignSlice, rangeSlice),
-				}
-			}
-			info.refc2go = info.c2go
+			o_ctype = oinfo.ctype
+			o_csize = oinfo.csize
+			o_go2c = oinfo.go2c
+			o_c2go = oinfo.c2go
 		}
+
+		info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
+			slice := ident("slice" + level)
+			i := ident("i" + level)
+			size := mulExpr(o_csize, uintLen(govar))
+			toslice := asSliceExpr(o_ctype, cvar, callExpr(ident("len"), govar))
+			stmt1 := assignStmt1n1(cvar, m_alloc(o_ctype, size))
+			stmt2 := assignStmt1n1D(slice, toslice)
+			stmt3s := o_go2c(indexExpr(govar, i), indexExpr(slice, i))
+			stmt3 := rangeStmti(govar, i, stmt3s)
+			return &goast.IfStmt{
+				If:   token.Pos(1),
+				Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
+				Body: blockStmt(stmt1, stmt2, stmt3),
+				Else: assignStmt1n1(cvar, ident("nil")),
+			}
+		}
+		info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
+			slice := ident("slice" + level)
+			i := ident("i" + level)
+			toslice := asSliceExpr(o_ctype, cvar, callExpr(ident("len"), govar))
+			assignSlice := assignStmt1n1D(slice, toslice)
+			assignValue := o_c2go(indexExpr(govar, i), indexExpr(slice, i))
+			rangeSlice := rangeStmti(govar, i, assignValue)
+			return &goast.IfStmt{
+				If:   token.Pos(1),
+				Cond: binExpr(callExpr(ident("len"), govar), ident("0"), token.NEQ),
+				Body: blockStmt(assignSlice, rangeSlice),
+			}
+		}
+		info.go2cAlloc = true
+		info.refc2go = info.c2go
 		return info
 	}
 
@@ -770,7 +754,7 @@ func (g *generator) mapDecayedType(n *cast.DecayedType, pid string) *typeInfo {
 	info.ctype = starExpr(oinfo.ctype)
 	info.csize = ident("C.sizeof_void_pointer")
 
-	level := strconv.Itoa(len(strings.Split(pid, ".")))
+	level := strconv.Itoa(len(strings.Split(pid, ".")) - 1)
 	size := intLit(an.Size)
 	info.go2cAlloc = true
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
@@ -976,7 +960,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 
 	//Param
 	{
-		argNames := g.hint.argNames[id+".params"]
+		argNames := g.hint.argNames[id]
 		if argNames == nil {
 			argNames = make([]string, len(fpt.ChildNodes[1:]))
 			for i, _ := range argNames {
@@ -996,7 +980,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 			})
 		}
 
-		info := g.mapCompType(fieldDecls, id+"."+"params")
+		info := g.mapCompType(fieldDecls, id, false)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -1017,7 +1001,7 @@ func (g *generator) genBridgeCall(decl *cast.TypedefDecl, info *typeInfo, fpt *c
 
 	//Results
 	{
-		info := g.mapType(fpt.ChildNodes[0], id+"."+"result")
+		info := g.mapType(fpt.ChildNodes[0], id+"._ret")
 		goname := ident("_ret")
 		cname := ident("_ret")
 		if info != nil {
@@ -1184,7 +1168,7 @@ func (g *generator) mapBuiltinType(n *cast.BuiltinType, pid string) *typeInfo {
 	return info
 }
 
-func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compTypeInfo {
+func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string, export bool) *compTypeInfo {
 	info := &compTypeInfo{}
 
 	go2cFns := []func(goscope, cscope goast.Expr) goast.Stmt{}
@@ -1194,10 +1178,10 @@ func (g *generator) mapCompType(fieldDecls []*cast.FieldDecl, pid string) *compT
 	var pending func(arrtype goast.Expr, arrname *goast.Ident)
 	for i, fieldDecl := range fieldDecls {
 		ftn := fieldDecl.ChildNodes[0]
-		id := pid + "." + strconv.Itoa(i)
+		id := pid + "." + fieldDecl.Name
 		cname := ident(avoidGoKeyword(fieldDecl.Name))
 		goname := ident("")
-		if strings.HasSuffix(pid, ".params") {
+		if !export {
 			goname.Name = lowFirst(toGoFieldName(fieldDecl.Name))
 			goname.Name = avoidGoKeyword(goname.Name)
 		} else {
@@ -1355,7 +1339,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 			}
 			fieldDecls = append(fieldDecls, fieldDecl)
 		}
-		info := g.mapCompType(fieldDecls, fn.Name+"."+"params")
+		info := g.mapCompType(fieldDecls, fn.Name, false)
 		goparams = info.gofields
 		cparams = info.cfields
 		pconvs = info.go2c(nil, ident("c"))
@@ -1376,7 +1360,7 @@ func (g *generator) genFunc(fn *cast.FunctionDecl) {
 
 	//Results
 	{
-		info := g.mapType(fn.ChildNodes[0], fn.Name+"."+"result")
+		info := g.mapType(fn.ChildNodes[0], fn.Name+"._ret")
 		goname := ident("_ret")
 		cname := ident("_ret")
 		if info != nil {

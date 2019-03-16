@@ -158,7 +158,11 @@ func analyzeHint(h *hint, src Source) {
 		existArraySize := false
 		for i := len(decls) - 1; i >= 0; i-- {
 			decl := decls[i]
-			id := pid + "." + strconv.Itoa(i)
+			id := pid + "." + decl.Name
+			nid := ""
+			if i < len(decls)-1 {
+				nid = pid + "." + decls[i+1].Name
+			}
 
 			//array
 			if _, ok := decl.ChildNodes[0].(*cast.PointerType); ok {
@@ -180,16 +184,14 @@ func analyzeHint(h *hint, src Source) {
 				switch n := decl.ChildNodes[0].(type) {
 				case *cast.PointerType:
 					if n.Type == "uint32_t *" || n.Type == "size_t *" {
-						nid := pid + "." + strconv.Itoa(i+1)
-						if i < len(decls)-1 && h.isArray[nid] {
+						if nid != "" && h.isArray[nid] {
 							delete(h.isArray, id)
 							existArraySize = true
 						}
 					}
 				case *cast.TypedefType:
 					if n.Type == "uint32_t" || n.Type == "size_t" {
-						nid := pid + "." + strconv.Itoa(i+1)
-						if i < len(decls)-1 && h.isArray[nid] {
+						if nid != "" && h.isArray[nid] {
 							delete(h.isArray, id)
 							existArraySize = true
 							h.isArraySize[id] = true
@@ -202,7 +204,7 @@ func analyzeHint(h *hint, src Source) {
 		//There must be one size of array, at least.
 		if !existArraySize {
 			for i := len(decls) - 1; i >= 0; i-- {
-				id := pid + "." + strconv.Itoa(i)
+				id := pid + "." + decls[i].Name
 				delete(h.isArray, id)
 			}
 		}
@@ -235,9 +237,9 @@ func analyzeHint(h *hint, src Source) {
 						ChildNodes: pvd.ChildNodes,
 					})
 				}
-				analyzeArrayAndSize(decls, n.Name+".params")
-				analyzeArrayAndSize(decls, "PFN_"+n.Name+".params")
-				h.argNames["PFN_"+n.Name+".params"] = argNames
+				analyzeArrayAndSize(decls, n.Name)
+				analyzeArrayAndSize(decls, "PFN_"+n.Name)
+				h.argNames["PFN_"+n.Name] = argNames
 			}
 		default:
 			halt("Unkown node in source", node)
