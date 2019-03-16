@@ -164,6 +164,10 @@ func analyzeHint(h *hint, src Source) {
 			if _, ok := decl.ChildNodes[0].(*cast.PointerType); ok {
 				switch decl.Name {
 				case "pEnabledFeatures":
+				case "pData":
+					h.isArray[id] = true
+				case "pCode":
+					h.isArray[id] = true
 				default:
 					if isMaybePlural(decl.Name) {
 						h.isArray[id] = true
