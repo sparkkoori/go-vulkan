@@ -851,6 +851,7 @@ func (g *generator) mapTypedefType(n *cast.TypedefType, pid string) *typeInfo {
 			return assignStmt1n1(cvar, callExpr(info.ctype, govar))
 		}
 		info.refc2go = nil
+		info.sameLayout = true
 		return info
 	}
 

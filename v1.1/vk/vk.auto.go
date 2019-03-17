@@ -11104,11 +11104,7 @@ func ToCmdBindDescriptorSets(p PFNVoidFunction) (fn FuncCmdBindDescriptorSets) {
 		}
 		c.dynamicOffsetCount = C.uint32_t(len(dynamicOffsets))
 		if len(dynamicOffsets) != 0 {
-			c.pDynamicOffsets = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(dynamicOffsets))))
-			slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pDynamicOffsets))[:len(dynamicOffsets):len(dynamicOffsets)]
-			for i1, _ := range dynamicOffsets {
-				slice1[i1] = C.uint32_t(dynamicOffsets[i1])
-			}
+			c.pDynamicOffsets = (*C.uint32_t)(unsafe.Pointer(&dynamicOffsets[0]))
 		} else {
 			c.pDynamicOffsets = nil
 		}
@@ -15423,11 +15419,7 @@ func CmdBindDescriptorSets(commandBuffer CommandBuffer, pipelineBindPoint Pipeli
 	}
 	c.dynamicOffsetCount = C.uint32_t(len(dynamicOffsets))
 	if len(dynamicOffsets) != 0 {
-		c.pDynamicOffsets = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(dynamicOffsets))))
-		slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pDynamicOffsets))[:len(dynamicOffsets):len(dynamicOffsets)]
-		for i1, _ := range dynamicOffsets {
-			slice1[i1] = C.uint32_t(dynamicOffsets[i1])
-		}
+		c.pDynamicOffsets = (*C.uint32_t)(unsafe.Pointer(&dynamicOffsets[0]))
 	} else {
 		c.pDynamicOffsets = nil
 	}
@@ -25553,11 +25545,7 @@ func ToRegisterObjectsNVX(p PFNVoidFunction) (fn FuncRegisterObjectsNVX) {
 			c.ppObjectTableEntries = nil
 		}
 		if len(objectIndices) != 0 {
-			c.pObjectIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
-			slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
-			for i1, _ := range objectIndices {
-				slice1[i1] = C.uint32_t(objectIndices[i1])
-			}
+			c.pObjectIndices = (*C.uint32_t)(unsafe.Pointer(&objectIndices[0]))
 		} else {
 			c.pObjectIndices = nil
 		}
@@ -25595,11 +25583,7 @@ func ToUnregisterObjectsNVX(p PFNVoidFunction) (fn FuncUnregisterObjectsNVX) {
 			c.pObjectEntryTypes = nil
 		}
 		if len(objectIndices) != 0 {
-			c.pObjectIndices = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(objectIndices))))
-			slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pObjectIndices))[:len(objectIndices):len(objectIndices)]
-			for i1, _ := range objectIndices {
-				slice1[i1] = C.uint32_t(objectIndices[i1])
-			}
+			c.pObjectIndices = (*C.uint32_t)(unsafe.Pointer(&objectIndices[0]))
 		} else {
 			c.pObjectIndices = nil
 		}
