@@ -6827,9 +6827,10 @@ func ToDestroyImageView(p PFNVoidFunction) (fn FuncDestroyImageView) {
 type PFNCreateShaderModule C.PFN_vkCreateShaderModule
 type ShaderModuleCreateFlags Flags
 type ShaderModuleCreateInfo struct {
-	Next  Structure
-	Flags ShaderModuleCreateFlags
-	Code  []uint32
+	Next     Structure
+	Flags    ShaderModuleCreateFlags
+	CodeSize uint
+	Code     []uint32
 }
 
 func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, m *cmemory) {
@@ -6846,7 +6847,7 @@ func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, m *cmemory) 
 		}
 		c.flags = C.VkShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
 	}
-	c.codeSize = C.size_t(len(g.Code))
+	c.codeSize = C.size_t(g.CodeSize)
 	if len(g.Code) != 0 {
 		c.pCode = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.Code))))
 		slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCode))[:len(g.Code):len(g.Code)]
@@ -6870,7 +6871,7 @@ func (g *ShaderModuleCreateInfo) fromC(c *C.VkShaderModuleCreateInfo) {
 		}
 		g.Flags = ShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
 	}
-	g.Code = make([]uint32, int(c.codeSize))
+	g.CodeSize = uint(c.codeSize)
 	if len(g.Code) != 0 {
 		slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCode))[:len(g.Code):len(g.Code)]
 		for i1, _ := range g.Code {

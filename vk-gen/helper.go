@@ -185,6 +185,11 @@ func analyzeHint(h *hint, src Source) {
 
 			//size
 			{
+				if id == "VkShaderModuleCreateInfo.codeSize" {
+					delete(h.isArray, id)
+					existArraySize = true
+					continue
+				}
 				switch n := decl.ChildNodes[0].(type) {
 				case *cast.PointerType:
 					if n.Type == "uint32_t *" || n.Type == "size_t *" {
