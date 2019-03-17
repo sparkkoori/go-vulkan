@@ -1789,15 +1789,7 @@ func (g *InstanceCreateInfo) toC(c *C.VkInstanceCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkInstanceCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkInstanceCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkInstanceCreateFlags(temp_in_VkInstanceCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	if g.ApplicationInfo != nil {
 		c.pApplicationInfo = (*C.VkApplicationInfo)(m.alloc(C.sizeof_VkApplicationInfo))
 		g.ApplicationInfo.toC(c.pApplicationInfo, m)
@@ -1829,15 +1821,7 @@ func (g *InstanceCreateInfo) fromC(c *C.VkInstanceCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkInstanceCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkInstanceCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = InstanceCreateFlags(temp_in_VkInstanceCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	if g.ApplicationInfo != nil {
 		g.ApplicationInfo.fromC(c.pApplicationInfo)
 	}
@@ -2435,62 +2419,14 @@ type FormatProperties struct {
 }
 
 func (g *FormatProperties) toC(c *C.VkFormatProperties) {
-	{
-		var temp_in_VkFormatFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.LinearTilingFeatures)))
-			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.linearTilingFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
-	{
-		var temp_in_VkFormatFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.OptimalTilingFeatures)))
-			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.optimalTilingFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
-	{
-		var temp_in_VkFormatFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.BufferFeatures)))
-			temp_in_VkFormatFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.bufferFeatures = C.VkFormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.linearTilingFeatures)) = C.uint32_t((uint32)((Flags)(g.LinearTilingFeatures)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.optimalTilingFeatures)) = C.uint32_t((uint32)((Flags)(g.OptimalTilingFeatures)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.bufferFeatures)) = C.uint32_t((uint32)((Flags)(g.BufferFeatures)))
 }
 func (g *FormatProperties) fromC(c *C.VkFormatProperties) {
-	{
-		var temp_in_VkFormatFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.linearTilingFeatures)))
-			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.LinearTilingFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
-	{
-		var temp_in_VkFormatFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.optimalTilingFeatures)))
-			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.OptimalTilingFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
-	{
-		var temp_in_VkFormatFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.bufferFeatures)))
-			temp_in_VkFormatFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.BufferFeatures = FormatFeatureFlags(temp_in_VkFormatFeatureFlags)
-	}
+	*(*uint32)((*Flags)(&g.LinearTilingFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.linearTilingFeatures)))
+	*(*uint32)((*Flags)(&g.OptimalTilingFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.optimalTilingFeatures)))
+	*(*uint32)((*Flags)(&g.BufferFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.bufferFeatures)))
 }
 
 type FuncGetPhysicalDeviceFormatProperties func(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties)
@@ -2553,39 +2489,15 @@ func (g *ImageFormatProperties) toC(c *C.VkImageFormatProperties) {
 	g.MaxExtent.toC(&c.maxExtent)
 	c.maxMipLevels = C.uint32_t(g.MaxMipLevels)
 	c.maxArrayLayers = C.uint32_t(g.MaxArrayLayers)
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.sampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MaxResourceSize))
-		c.maxResourceSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.sampleCounts)) = C.uint32_t((uint32)((Flags)(g.SampleCounts)))
+	*(*C.uint64_t)(&c.maxResourceSize) = C.uint64_t((uint64)(g.MaxResourceSize))
 }
 func (g *ImageFormatProperties) fromC(c *C.VkImageFormatProperties) {
 	g.MaxExtent.fromC(&c.maxExtent)
 	g.MaxMipLevels = uint32(c.maxMipLevels)
 	g.MaxArrayLayers = uint32(c.maxArrayLayers)
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.SampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.maxResourceSize))
-		g.MaxResourceSize = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint32)((*Flags)(&g.SampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.sampleCounts)))
+	*(*uint64)(&g.MaxResourceSize) = uint64((C.uint64_t)(c.maxResourceSize))
 }
 
 type FuncGetPhysicalDeviceImageFormatProperties func(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, imageFormatProperties *ImageFormatProperties) (_ret Result)
@@ -2608,24 +2520,8 @@ func ToGetPhysicalDeviceImageFormatProperties(p PFNVoidFunction) (fn FuncGetPhys
 		c.format = C.VkFormat(format)
 		c._type = C.VkImageType(_type)
 		c.tiling = C.VkImageTiling(tiling)
-		{
-			var temp_in_VkImageUsageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
-				temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-		}
-		{
-			var temp_in_VkImageCreateFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(usage)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		if imageFormatProperties != nil {
 			c.pImageFormatProperties = (*C.VkImageFormatProperties)(m.alloc(C.sizeof_VkImageFormatProperties))
 			imageFormatProperties.toC(c.pImageFormatProperties)
@@ -2763,16 +2659,8 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.maxPushConstantsSize = C.uint32_t(g.MaxPushConstantsSize)
 	c.maxMemoryAllocationCount = C.uint32_t(g.MaxMemoryAllocationCount)
 	c.maxSamplerAllocationCount = C.uint32_t(g.MaxSamplerAllocationCount)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.BufferImageGranularity))
-		c.bufferImageGranularity = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SparseAddressSpaceSize))
-		c.sparseAddressSpaceSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.bufferImageGranularity) = C.uint64_t((uint64)(g.BufferImageGranularity))
+	*(*C.uint64_t)(&c.sparseAddressSpaceSize) = C.uint64_t((uint64)(g.SparseAddressSpaceSize))
 	c.maxBoundDescriptorSets = C.uint32_t(g.MaxBoundDescriptorSets)
 	c.maxPerStageDescriptorSamplers = C.uint32_t(g.MaxPerStageDescriptorSamplers)
 	c.maxPerStageDescriptorUniformBuffers = C.uint32_t(g.MaxPerStageDescriptorUniformBuffers)
@@ -2835,21 +2723,9 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	}
 	c.viewportSubPixelBits = C.uint32_t(g.ViewportSubPixelBits)
 	c.minMemoryMapAlignment = C.size_t(g.MinMemoryMapAlignment)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinTexelBufferOffsetAlignment))
-		c.minTexelBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinUniformBufferOffsetAlignment))
-		c.minUniformBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MinStorageBufferOffsetAlignment))
-		c.minStorageBufferOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.minTexelBufferOffsetAlignment) = C.uint64_t((uint64)(g.MinTexelBufferOffsetAlignment))
+	*(*C.uint64_t)(&c.minUniformBufferOffsetAlignment) = C.uint64_t((uint64)(g.MinUniformBufferOffsetAlignment))
+	*(*C.uint64_t)(&c.minStorageBufferOffsetAlignment) = C.uint64_t((uint64)(g.MinStorageBufferOffsetAlignment))
 	c.minTexelOffset = C.int32_t(g.MinTexelOffset)
 	c.maxTexelOffset = C.uint32_t(g.MaxTexelOffset)
 	c.minTexelGatherOffset = C.int32_t(g.MinTexelGatherOffset)
@@ -2860,88 +2736,16 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	c.maxFramebufferWidth = C.uint32_t(g.MaxFramebufferWidth)
 	c.maxFramebufferHeight = C.uint32_t(g.MaxFramebufferHeight)
 	c.maxFramebufferLayers = C.uint32_t(g.MaxFramebufferLayers)
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferColorSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.framebufferColorSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferDepthSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.framebufferDepthSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferStencilSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.framebufferStencilSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.FramebufferNoAttachmentsSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.framebufferNoAttachmentsSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.framebufferColorSampleCounts)) = C.uint32_t((uint32)((Flags)(g.FramebufferColorSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.framebufferDepthSampleCounts)) = C.uint32_t((uint32)((Flags)(g.FramebufferDepthSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.framebufferStencilSampleCounts)) = C.uint32_t((uint32)((Flags)(g.FramebufferStencilSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.framebufferNoAttachmentsSampleCounts)) = C.uint32_t((uint32)((Flags)(g.FramebufferNoAttachmentsSampleCounts)))
 	c.maxColorAttachments = C.uint32_t(g.MaxColorAttachments)
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageColorSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.sampledImageColorSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageIntegerSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.sampledImageIntegerSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageDepthSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.sampledImageDepthSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SampledImageStencilSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.sampledImageStencilSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StorageImageSampleCounts)))
-			temp_in_VkSampleCountFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.storageImageSampleCounts = C.VkSampleCountFlags(temp_in_VkSampleCountFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.sampledImageColorSampleCounts)) = C.uint32_t((uint32)((Flags)(g.SampledImageColorSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.sampledImageIntegerSampleCounts)) = C.uint32_t((uint32)((Flags)(g.SampledImageIntegerSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.sampledImageDepthSampleCounts)) = C.uint32_t((uint32)((Flags)(g.SampledImageDepthSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.sampledImageStencilSampleCounts)) = C.uint32_t((uint32)((Flags)(g.SampledImageStencilSampleCounts)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.storageImageSampleCounts)) = C.uint32_t((uint32)((Flags)(g.StorageImageSampleCounts)))
 	c.maxSampleMaskWords = C.uint32_t(g.MaxSampleMaskWords)
 	if g.TimestampComputeAndGraphics {
 		c.timestampComputeAndGraphics = 1
@@ -2971,21 +2775,9 @@ func (g *PhysicalDeviceLimits) toC(c *C.VkPhysicalDeviceLimits) {
 	} else {
 		c.standardSampleLocations = 0
 	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.OptimalBufferCopyOffsetAlignment))
-		c.optimalBufferCopyOffsetAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.OptimalBufferCopyRowPitchAlignment))
-		c.optimalBufferCopyRowPitchAlignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.NonCoherentAtomSize))
-		c.nonCoherentAtomSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.optimalBufferCopyOffsetAlignment) = C.uint64_t((uint64)(g.OptimalBufferCopyOffsetAlignment))
+	*(*C.uint64_t)(&c.optimalBufferCopyRowPitchAlignment) = C.uint64_t((uint64)(g.OptimalBufferCopyRowPitchAlignment))
+	*(*C.uint64_t)(&c.nonCoherentAtomSize) = C.uint64_t((uint64)(g.NonCoherentAtomSize))
 }
 func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.MaxImageDimension1D = uint32(c.maxImageDimension1D)
@@ -2999,16 +2791,8 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.MaxPushConstantsSize = uint32(c.maxPushConstantsSize)
 	g.MaxMemoryAllocationCount = uint32(c.maxMemoryAllocationCount)
 	g.MaxSamplerAllocationCount = uint32(c.maxSamplerAllocationCount)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.bufferImageGranularity))
-		g.BufferImageGranularity = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sparseAddressSpaceSize))
-		g.SparseAddressSpaceSize = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.BufferImageGranularity) = uint64((C.uint64_t)(c.bufferImageGranularity))
+	*(*uint64)(&g.SparseAddressSpaceSize) = uint64((C.uint64_t)(c.sparseAddressSpaceSize))
 	g.MaxBoundDescriptorSets = uint32(c.maxBoundDescriptorSets)
 	g.MaxPerStageDescriptorSamplers = uint32(c.maxPerStageDescriptorSamplers)
 	g.MaxPerStageDescriptorUniformBuffers = uint32(c.maxPerStageDescriptorUniformBuffers)
@@ -3071,21 +2855,9 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	}
 	g.ViewportSubPixelBits = uint32(c.viewportSubPixelBits)
 	g.MinMemoryMapAlignment = uint(c.minMemoryMapAlignment)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minTexelBufferOffsetAlignment))
-		g.MinTexelBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minUniformBufferOffsetAlignment))
-		g.MinUniformBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.minStorageBufferOffsetAlignment))
-		g.MinStorageBufferOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.MinTexelBufferOffsetAlignment) = uint64((C.uint64_t)(c.minTexelBufferOffsetAlignment))
+	*(*uint64)(&g.MinUniformBufferOffsetAlignment) = uint64((C.uint64_t)(c.minUniformBufferOffsetAlignment))
+	*(*uint64)(&g.MinStorageBufferOffsetAlignment) = uint64((C.uint64_t)(c.minStorageBufferOffsetAlignment))
 	g.MinTexelOffset = int32(c.minTexelOffset)
 	g.MaxTexelOffset = uint32(c.maxTexelOffset)
 	g.MinTexelGatherOffset = int32(c.minTexelGatherOffset)
@@ -3096,88 +2868,16 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.MaxFramebufferWidth = uint32(c.maxFramebufferWidth)
 	g.MaxFramebufferHeight = uint32(c.maxFramebufferHeight)
 	g.MaxFramebufferLayers = uint32(c.maxFramebufferLayers)
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferColorSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.FramebufferColorSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferDepthSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.FramebufferDepthSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferStencilSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.FramebufferStencilSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.framebufferNoAttachmentsSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.FramebufferNoAttachmentsSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
+	*(*uint32)((*Flags)(&g.FramebufferColorSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.framebufferColorSampleCounts)))
+	*(*uint32)((*Flags)(&g.FramebufferDepthSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.framebufferDepthSampleCounts)))
+	*(*uint32)((*Flags)(&g.FramebufferStencilSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.framebufferStencilSampleCounts)))
+	*(*uint32)((*Flags)(&g.FramebufferNoAttachmentsSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.framebufferNoAttachmentsSampleCounts)))
 	g.MaxColorAttachments = uint32(c.maxColorAttachments)
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageColorSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.SampledImageColorSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageIntegerSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.SampledImageIntegerSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageDepthSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.SampledImageDepthSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageStencilSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.SampledImageStencilSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
-	{
-		var temp_in_VkSampleCountFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.storageImageSampleCounts)))
-			temp_in_VkSampleCountFlags = Flags(temp_in_VkFlags)
-		}
-		g.StorageImageSampleCounts = SampleCountFlags(temp_in_VkSampleCountFlags)
-	}
+	*(*uint32)((*Flags)(&g.SampledImageColorSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageColorSampleCounts)))
+	*(*uint32)((*Flags)(&g.SampledImageIntegerSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageIntegerSampleCounts)))
+	*(*uint32)((*Flags)(&g.SampledImageDepthSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageDepthSampleCounts)))
+	*(*uint32)((*Flags)(&g.SampledImageStencilSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.sampledImageStencilSampleCounts)))
+	*(*uint32)((*Flags)(&g.StorageImageSampleCounts)) = uint32((C.uint32_t)((C.VkFlags)(c.storageImageSampleCounts)))
 	g.MaxSampleMaskWords = uint32(c.maxSampleMaskWords)
 	g.TimestampComputeAndGraphics = c.timestampComputeAndGraphics != 0
 	g.TimestampPeriod = float32(c.timestampPeriod)
@@ -3195,21 +2895,9 @@ func (g *PhysicalDeviceLimits) fromC(c *C.VkPhysicalDeviceLimits) {
 	g.LineWidthGranularity = float32(c.lineWidthGranularity)
 	g.StrictLines = c.strictLines != 0
 	g.StandardSampleLocations = c.standardSampleLocations != 0
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.optimalBufferCopyOffsetAlignment))
-		g.OptimalBufferCopyOffsetAlignment = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.optimalBufferCopyRowPitchAlignment))
-		g.OptimalBufferCopyRowPitchAlignment = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.nonCoherentAtomSize))
-		g.NonCoherentAtomSize = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.OptimalBufferCopyOffsetAlignment) = uint64((C.uint64_t)(c.optimalBufferCopyOffsetAlignment))
+	*(*uint64)(&g.OptimalBufferCopyRowPitchAlignment) = uint64((C.uint64_t)(c.optimalBufferCopyRowPitchAlignment))
+	*(*uint64)(&g.NonCoherentAtomSize) = uint64((C.uint64_t)(c.nonCoherentAtomSize))
 }
 
 type PhysicalDeviceSparseProperties struct {
@@ -3332,29 +3020,13 @@ type QueueFamilyProperties struct {
 }
 
 func (g *QueueFamilyProperties) toC(c *C.VkQueueFamilyProperties) {
-	{
-		var temp_in_VkQueueFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.QueueFlags)))
-			temp_in_VkQueueFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.queueFlags = C.VkQueueFlags(temp_in_VkQueueFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.queueFlags)) = C.uint32_t((uint32)((Flags)(g.QueueFlags)))
 	c.queueCount = C.uint32_t(g.QueueCount)
 	c.timestampValidBits = C.uint32_t(g.TimestampValidBits)
 	g.MinImageTransferGranularity.toC(&c.minImageTransferGranularity)
 }
 func (g *QueueFamilyProperties) fromC(c *C.VkQueueFamilyProperties) {
-	{
-		var temp_in_VkQueueFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.queueFlags)))
-			temp_in_VkQueueFlags = Flags(temp_in_VkFlags)
-		}
-		g.QueueFlags = QueueFlags(temp_in_VkQueueFlags)
-	}
+	*(*uint32)((*Flags)(&g.QueueFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.queueFlags)))
 	g.QueueCount = uint32(c.queueCount)
 	g.TimestampValidBits = uint32(c.timestampValidBits)
 	g.MinImageTransferGranularity.fromC(&c.minImageTransferGranularity)
@@ -3408,27 +3080,11 @@ type MemoryType struct {
 }
 
 func (g *MemoryType) toC(c *C.VkMemoryType) {
-	{
-		var temp_in_VkMemoryPropertyFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PropertyFlags)))
-			temp_in_VkMemoryPropertyFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.propertyFlags = C.VkMemoryPropertyFlags(temp_in_VkMemoryPropertyFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.propertyFlags)) = C.uint32_t((uint32)((Flags)(g.PropertyFlags)))
 	c.heapIndex = C.uint32_t(g.HeapIndex)
 }
 func (g *MemoryType) fromC(c *C.VkMemoryType) {
-	{
-		var temp_in_VkMemoryPropertyFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.propertyFlags)))
-			temp_in_VkMemoryPropertyFlags = Flags(temp_in_VkFlags)
-		}
-		g.PropertyFlags = MemoryPropertyFlags(temp_in_VkMemoryPropertyFlags)
-	}
+	*(*uint32)((*Flags)(&g.PropertyFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.propertyFlags)))
 	g.HeapIndex = uint32(c.heapIndex)
 }
 
@@ -3439,36 +3095,12 @@ type MemoryHeap struct {
 }
 
 func (g *MemoryHeap) toC(c *C.VkMemoryHeap) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkMemoryHeapFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkMemoryHeapFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkMemoryHeapFlags(temp_in_VkMemoryHeapFlags)
-	}
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *MemoryHeap) fromC(c *C.VkMemoryHeap) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkMemoryHeapFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkMemoryHeapFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = MemoryHeapFlags(temp_in_VkMemoryHeapFlags)
-	}
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 
 type PhysicalDeviceMemoryProperties struct {
@@ -3579,15 +3211,7 @@ func (g *DeviceQueueCreateInfo) toC(c *C.VkDeviceQueueCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDeviceQueueCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 	c.queueCount = C.uint32_t(len(g.QueuePriorities))
 	if len(g.QueuePriorities) != 0 {
@@ -3604,15 +3228,7 @@ func (g *DeviceQueueCreateInfo) fromC(c *C.VkDeviceQueueCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDeviceQueueCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDeviceQueueCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 	g.QueuePriorities = make([]float32, int(c.queueCount))
 	if len(g.QueuePriorities) != 0 {
@@ -3655,15 +3271,7 @@ func (g *DeviceCreateInfo) toC(c *C.VkDeviceCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDeviceCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDeviceCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDeviceCreateFlags(temp_in_VkDeviceCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.queueCreateInfoCount = C.uint32_t(len(g.QueueCreateInfos))
 	if len(g.QueueCreateInfos) != 0 {
 		c.pQueueCreateInfos = (*C.VkDeviceQueueCreateInfo)(m.alloc(C.sizeof_VkDeviceQueueCreateInfo * uint(len(g.QueueCreateInfos))))
@@ -3705,15 +3313,7 @@ func (g *DeviceCreateInfo) fromC(c *C.VkDeviceCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDeviceCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDeviceCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DeviceCreateFlags(temp_in_VkDeviceCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.QueueCreateInfos = make([]DeviceQueueCreateInfo, int(c.queueCreateInfoCount))
 	if len(g.QueueCreateInfos) != 0 {
 		slice1 := (*[1 << 31]C.VkDeviceQueueCreateInfo)(unsafe.Pointer(c.pQueueCreateInfos))[:len(g.QueueCreateInfos):len(g.QueueCreateInfos)]
@@ -4102,15 +3702,7 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, m *cmemory) {
 	}
 	if g.WaitDstStageMask != nil {
 		c.pWaitDstStageMask = (*C.VkPipelineStageFlags)(m.alloc(C.sizeof_VkPipelineStageFlags))
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(*g.WaitDstStageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			*c.pWaitDstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(c.pWaitDstStageMask)) = C.uint32_t((uint32)((Flags)(*g.WaitDstStageMask)))
 	} else {
 		c.pWaitDstStageMask = nil
 	}
@@ -4147,13 +3739,7 @@ func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
 		}
 	}
 	if g.WaitDstStageMask != nil {
-		var temp_in_VkPipelineStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(*c.pWaitDstStageMask)))
-			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
-		}
-		*g.WaitDstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
+		*(*uint32)((*Flags)(g.WaitDstStageMask)) = uint32((C.uint32_t)((C.VkFlags)(*c.pWaitDstStageMask)))
 	}
 	g.CommandBuffers = make([]CommandBuffer, int(c.commandBufferCount))
 	if len(g.CommandBuffers) != 0 {
@@ -4265,22 +3851,14 @@ func (g *MemoryAllocateInfo) toC(c *C.VkMemoryAllocateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.AllocationSize))
-		c.allocationSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.allocationSize) = C.uint64_t((uint64)(g.AllocationSize))
 	c.memoryTypeIndex = C.uint32_t(g.MemoryTypeIndex)
 }
 func (g *MemoryAllocateInfo) fromC(c *C.VkMemoryAllocateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.allocationSize))
-		g.AllocationSize = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.AllocationSize) = uint64((C.uint64_t)(c.allocationSize))
 	g.MemoryTypeIndex = uint32(c.memoryTypeIndex)
 }
 func (s *MemoryAllocateInfo) sType() C.VkStructureType {
@@ -4387,25 +3965,9 @@ func ToMapMemory(p PFNVoidFunction) (fn FuncMapMemory) {
 		defer pool.give(m)
 		c.device = C.VkDevice(device)
 		c.memory = C.VkDeviceMemory(memory)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
-			c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkMemoryMapFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkMemoryMapFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkMemoryMapFlags(temp_in_VkMemoryMapFlags)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
+		*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(size))
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		if data != nil {
 			c.ppData = (*unsafe.Pointer)(m.alloc(C.sizeof_void_pointer))
 			*c.ppData = *data
@@ -4450,32 +4012,16 @@ func (g *MappedMemoryRange) toC(c *C.VkMappedMemoryRange, m *cmemory) {
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.memory = C.VkDeviceMemory(g.Memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
 }
 func (g *MappedMemoryRange) fromC(c *C.VkMappedMemoryRange) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
 	g.Memory = DeviceMemory(c.memory)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
 }
 func (s *MappedMemoryRange) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE
@@ -4571,19 +4117,13 @@ func ToGetDeviceMemoryCommitment(p PFNVoidFunction) (fn FuncGetDeviceMemoryCommi
 		c.memory = C.VkDeviceMemory(memory)
 		if committedMemoryInBytes != nil {
 			c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize))
-			{
-				var temp_in_VkDeviceSize C.uint64_t
-				temp_in_VkDeviceSize = C.uint64_t((uint64)(*committedMemoryInBytes))
-				*c.pCommittedMemoryInBytes = C.VkDeviceSize(temp_in_VkDeviceSize)
-			}
+			*(*C.uint64_t)(c.pCommittedMemoryInBytes) = C.uint64_t((uint64)(*committedMemoryInBytes))
 		} else {
 			c.pCommittedMemoryInBytes = nil
 		}
 		C.callPFN_vkGetDeviceMemoryCommitment(C.PFN_vkGetDeviceMemoryCommitment(unsafe.Pointer(p)), c.device, c.memory, c.pCommittedMemoryInBytes)
 		if committedMemoryInBytes != nil {
-			var temp_in_VkDeviceSize uint64
-			temp_in_VkDeviceSize = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
-			*committedMemoryInBytes = DeviceSize(temp_in_VkDeviceSize)
+			*(*uint64)(committedMemoryInBytes) = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
 		}
 	}
 }
@@ -4604,11 +4144,7 @@ func ToBindBufferMemory(p PFNVoidFunction) (fn FuncBindBufferMemory) {
 		c.device = C.VkDevice(device)
 		c.buffer = C.VkBuffer(buffer)
 		c.memory = C.VkDeviceMemory(memory)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
-			c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(memoryOffset))
 		c._ret = C.callPFN_vkBindBufferMemory(C.PFN_vkBindBufferMemory(unsafe.Pointer(p)), c.device, c.buffer, c.memory, c.memoryOffset)
 		_ret = Result(c._ret)
 		return
@@ -4631,11 +4167,7 @@ func ToBindImageMemory(p PFNVoidFunction) (fn FuncBindImageMemory) {
 		c.device = C.VkDevice(device)
 		c.image = C.VkImage(image)
 		c.memory = C.VkDeviceMemory(memory)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
-			c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(memoryOffset))
 		c._ret = C.callPFN_vkBindImageMemory(C.PFN_vkBindImageMemory(unsafe.Pointer(p)), c.device, c.image, c.memory, c.memoryOffset)
 		_ret = Result(c._ret)
 		return
@@ -4650,29 +4182,13 @@ type MemoryRequirements struct {
 }
 
 func (g *MemoryRequirements) toC(c *C.VkMemoryRequirements) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Alignment))
-		c.alignment = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
+	*(*C.uint64_t)(&c.alignment) = C.uint64_t((uint64)(g.Alignment))
 	c.memoryTypeBits = C.uint32_t(g.MemoryTypeBits)
 }
 func (g *MemoryRequirements) fromC(c *C.VkMemoryRequirements) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.alignment))
-		g.Alignment = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
+	*(*uint64)(&g.Alignment) = uint64((C.uint64_t)(c.alignment))
 	g.MemoryTypeBits = uint32(c.memoryTypeBits)
 }
 
@@ -4739,46 +4255,14 @@ type SparseImageFormatProperties struct {
 }
 
 func (g *SparseImageFormatProperties) toC(c *C.VkSparseImageFormatProperties) {
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 	g.ImageGranularity.toC(&c.imageGranularity)
-	{
-		var temp_in_VkSparseImageFormatFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSparseImageFormatFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSparseImageFormatFlags(temp_in_VkSparseImageFormatFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *SparseImageFormatProperties) fromC(c *C.VkSparseImageFormatProperties) {
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 	g.ImageGranularity.fromC(&c.imageGranularity)
-	{
-		var temp_in_VkSparseImageFormatFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSparseImageFormatFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SparseImageFormatFlags(temp_in_VkSparseImageFormatFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 
 type SparseImageMemoryRequirements struct {
@@ -4792,40 +4276,16 @@ type SparseImageMemoryRequirements struct {
 func (g *SparseImageMemoryRequirements) toC(c *C.VkSparseImageMemoryRequirements) {
 	g.FormatProperties.toC(&c.formatProperties)
 	c.imageMipTailFirstLod = C.uint32_t(g.ImageMipTailFirstLod)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailSize))
-		c.imageMipTailSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailOffset))
-		c.imageMipTailOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ImageMipTailStride))
-		c.imageMipTailStride = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.imageMipTailSize) = C.uint64_t((uint64)(g.ImageMipTailSize))
+	*(*C.uint64_t)(&c.imageMipTailOffset) = C.uint64_t((uint64)(g.ImageMipTailOffset))
+	*(*C.uint64_t)(&c.imageMipTailStride) = C.uint64_t((uint64)(g.ImageMipTailStride))
 }
 func (g *SparseImageMemoryRequirements) fromC(c *C.VkSparseImageMemoryRequirements) {
 	g.FormatProperties.fromC(&c.formatProperties)
 	g.ImageMipTailFirstLod = uint32(c.imageMipTailFirstLod)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailSize))
-		g.ImageMipTailSize = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailOffset))
-		g.ImageMipTailOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.imageMipTailStride))
-		g.ImageMipTailStride = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.ImageMipTailSize) = uint64((C.uint64_t)(c.imageMipTailSize))
+	*(*uint64)(&g.ImageMipTailOffset) = uint64((C.uint64_t)(c.imageMipTailOffset))
+	*(*uint64)(&g.ImageMipTailStride) = uint64((C.uint64_t)(c.imageMipTailStride))
 }
 
 type FuncGetImageSparseMemoryRequirements func(device Device, image Image, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements)
@@ -4891,15 +4351,7 @@ func ToGetPhysicalDeviceSparseImageFormatProperties(p PFNVoidFunction) (fn FuncG
 		c.format = C.VkFormat(format)
 		c._type = C.VkImageType(_type)
 		c.samples = C.VkSampleCountFlagBits(samples)
-		{
-			var temp_in_VkImageUsageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
-				temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(usage)))
 		c.tiling = C.VkImageTiling(tiling)
 		if propertyCount != nil {
 			c.pPropertyCount = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t))
@@ -4940,58 +4392,18 @@ type SparseMemoryBind struct {
 }
 
 func (g *SparseMemoryBind) toC(c *C.VkSparseMemoryBind) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ResourceOffset))
-		c.resourceOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.resourceOffset) = C.uint64_t((uint64)(g.ResourceOffset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
 	c.memory = C.VkDeviceMemory(g.Memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkSparseMemoryBindFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSparseMemoryBindFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(g.MemoryOffset))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *SparseMemoryBind) fromC(c *C.VkSparseMemoryBind) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.resourceOffset))
-		g.ResourceOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.ResourceOffset) = uint64((C.uint64_t)(c.resourceOffset))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
 	g.Memory = DeviceMemory(c.memory)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkSparseMemoryBindFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSparseMemoryBindFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
-	}
+	*(*uint64)(&g.MemoryOffset) = uint64((C.uint64_t)(c.memoryOffset))
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 
 type SparseBufferMemoryBindInfo struct {
@@ -5059,28 +4471,12 @@ type ImageSubresource struct {
 }
 
 func (g *ImageSubresource) toC(c *C.VkImageSubresource) {
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 	c.mipLevel = C.uint32_t(g.MipLevel)
 	c.arrayLayer = C.uint32_t(g.ArrayLayer)
 }
 func (g *ImageSubresource) fromC(c *C.VkImageSubresource) {
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 	g.MipLevel = uint32(c.mipLevel)
 	g.ArrayLayer = uint32(c.arrayLayer)
 }
@@ -5116,40 +4512,16 @@ func (g *SparseImageMemoryBind) toC(c *C.VkSparseImageMemoryBind) {
 	g.Offset.toC(&c.offset)
 	g.Extent.toC(&c.extent)
 	c.memory = C.VkDeviceMemory(g.Memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkSparseMemoryBindFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSparseMemoryBindFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(g.MemoryOffset))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *SparseImageMemoryBind) fromC(c *C.VkSparseImageMemoryBind) {
 	g.Subresource.fromC(&c.subresource)
 	g.Offset.fromC(&c.offset)
 	g.Extent.fromC(&c.extent)
 	g.Memory = DeviceMemory(c.memory)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkSparseMemoryBindFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSparseMemoryBindFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SparseMemoryBindFlags(temp_in_VkSparseMemoryBindFlags)
-	}
+	*(*uint64)(&g.MemoryOffset) = uint64((C.uint64_t)(c.memoryOffset))
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 
 type SparseImageMemoryBindInfo struct {
@@ -5345,29 +4717,13 @@ func (g *FenceCreateInfo) toC(c *C.VkFenceCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkFenceCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkFenceCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkFenceCreateFlags(temp_in_VkFenceCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *FenceCreateInfo) fromC(c *C.VkFenceCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkFenceCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkFenceCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = FenceCreateFlags(temp_in_VkFenceCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 func (s *FenceCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
@@ -5551,29 +4907,13 @@ func (g *SemaphoreCreateInfo) toC(c *C.VkSemaphoreCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkSemaphoreCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSemaphoreCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSemaphoreCreateFlags(temp_in_VkSemaphoreCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *SemaphoreCreateInfo) fromC(c *C.VkSemaphoreCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkSemaphoreCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSemaphoreCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SemaphoreCreateFlags(temp_in_VkSemaphoreCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 func (s *SemaphoreCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO
@@ -5671,29 +5011,13 @@ func (g *EventCreateInfo) toC(c *C.VkEventCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkEventCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkEventCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkEventCreateFlags(temp_in_VkEventCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *EventCreateInfo) fromC(c *C.VkEventCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkEventCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkEventCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = EventCreateFlags(temp_in_VkEventCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 func (s *EventCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_EVENT_CREATE_INFO
@@ -5850,51 +5174,19 @@ func (g *QueryPoolCreateInfo) toC(c *C.VkQueryPoolCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkQueryPoolCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkQueryPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkQueryPoolCreateFlags(temp_in_VkQueryPoolCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.queryType = C.VkQueryType(g.QueryType)
 	c.queryCount = C.uint32_t(g.QueryCount)
-	{
-		var temp_in_VkQueryPipelineStatisticFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
-			temp_in_VkQueryPipelineStatisticFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.pipelineStatistics)) = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
 }
 func (g *QueryPoolCreateInfo) fromC(c *C.VkQueryPoolCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkQueryPoolCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkQueryPoolCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = QueryPoolCreateFlags(temp_in_VkQueryPoolCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.QueryType = QueryType(c.queryType)
 	g.QueryCount = uint32(c.queryCount)
-	{
-		var temp_in_VkQueryPipelineStatisticFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
-			temp_in_VkQueryPipelineStatisticFlags = Flags(temp_in_VkFlags)
-		}
-		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
-	}
+	*(*uint32)((*Flags)(&g.PipelineStatistics)) = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
 }
 func (s *QueryPoolCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO
@@ -6008,20 +5300,8 @@ func ToGetQueryPoolResults(p PFNVoidFunction) (fn FuncGetQueryPoolResults) {
 		} else {
 			c.pData = nil
 		}
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
-			c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkQueryResultFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
-		}
+		*(*C.uint64_t)(&c.stride) = C.uint64_t((uint64)(stride))
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		c._ret = C.callPFN_vkGetQueryPoolResults(C.PFN_vkGetQueryPoolResults(unsafe.Pointer(p)), c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 		_ret = Result(c._ret)
 		return
@@ -6045,29 +5325,9 @@ func (g *BufferCreateInfo) toC(c *C.VkBufferCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkBufferCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkBufferCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkBufferCreateFlags(temp_in_VkBufferCreateFlags)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkBufferUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
-			temp_in_VkBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkBufferUsageFlags(temp_in_VkBufferUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(g.Usage)))
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -6084,29 +5344,9 @@ func (g *BufferCreateInfo) fromC(c *C.VkBufferCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkBufferCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkBufferCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = BufferCreateFlags(temp_in_VkBufferCreateFlags)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkBufferUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			temp_in_VkBufferUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Usage = BufferUsageFlags(temp_in_VkBufferUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
+	*(*uint32)((*Flags)(&g.Usage)) = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
 	g.SharingMode = SharingMode(c.sharingMode)
 	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -6216,53 +5456,21 @@ func (g *BufferViewCreateInfo) toC(c *C.VkBufferViewCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkBufferViewCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkBufferViewCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkBufferViewCreateFlags(temp_in_VkBufferViewCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.buffer = C.VkBuffer(g.Buffer)
 	c.format = C.VkFormat(g.Format)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
-		c._range = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint64_t)(&c._range) = C.uint64_t((uint64)(g.Range))
 }
 func (g *BufferViewCreateInfo) fromC(c *C.VkBufferViewCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkBufferViewCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkBufferViewCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = BufferViewCreateFlags(temp_in_VkBufferViewCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Buffer = Buffer(c.buffer)
 	g.Format = Format(c.format)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c._range))
-		g.Range = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint64)(&g.Range) = uint64((C.uint64_t)(c._range))
 }
 func (s *BufferViewCreateInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BUFFER_VIEW_CREATE_INFO
@@ -6371,15 +5579,7 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkImageCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.imageType = C.VkImageType(g.ImageType)
 	c.format = C.VkFormat(g.Format)
 	g.Extent.toC(&c.extent)
@@ -6387,15 +5587,7 @@ func (g *ImageCreateInfo) toC(c *C.VkImageCreateInfo, m *cmemory) {
 	c.arrayLayers = C.uint32_t(g.ArrayLayers)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
 	c.tiling = C.VkImageTiling(g.Tiling)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(g.Usage)))
 	c.sharingMode = C.VkSharingMode(g.SharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -6413,15 +5605,7 @@ func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkImageCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkImageCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ImageCreateFlags(temp_in_VkImageCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.ImageType = ImageType(c.imageType)
 	g.Format = Format(c.format)
 	g.Extent.fromC(&c.extent)
@@ -6429,15 +5613,7 @@ func (g *ImageCreateInfo) fromC(c *C.VkImageCreateInfo) {
 	g.ArrayLayers = uint32(c.arrayLayers)
 	g.Samples = SampleCountFlagBits(c.samples)
 	g.Tiling = ImageTiling(c.tiling)
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.Usage)) = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
 	g.SharingMode = SharingMode(c.sharingMode)
 	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -6542,58 +5718,18 @@ type SubresourceLayout struct {
 }
 
 func (g *SubresourceLayout) toC(c *C.VkSubresourceLayout) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.RowPitch))
-		c.rowPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.ArrayPitch))
-		c.arrayPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.DepthPitch))
-		c.depthPitch = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
+	*(*C.uint64_t)(&c.rowPitch) = C.uint64_t((uint64)(g.RowPitch))
+	*(*C.uint64_t)(&c.arrayPitch) = C.uint64_t((uint64)(g.ArrayPitch))
+	*(*C.uint64_t)(&c.depthPitch) = C.uint64_t((uint64)(g.DepthPitch))
 }
 func (g *SubresourceLayout) fromC(c *C.VkSubresourceLayout) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.rowPitch))
-		g.RowPitch = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.arrayPitch))
-		g.ArrayPitch = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.depthPitch))
-		g.DepthPitch = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
+	*(*uint64)(&g.RowPitch) = uint64((C.uint64_t)(c.rowPitch))
+	*(*uint64)(&g.ArrayPitch) = uint64((C.uint64_t)(c.arrayPitch))
+	*(*uint64)(&g.DepthPitch) = uint64((C.uint64_t)(c.depthPitch))
 }
 
 type FuncGetImageSubresourceLayout func(device Device, image Image, subresource *ImageSubresource, layout *SubresourceLayout)
@@ -6660,30 +5796,14 @@ type ImageSubresourceRange struct {
 }
 
 func (g *ImageSubresourceRange) toC(c *C.VkImageSubresourceRange) {
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 	c.baseMipLevel = C.uint32_t(g.BaseMipLevel)
 	c.levelCount = C.uint32_t(g.LevelCount)
 	c.baseArrayLayer = C.uint32_t(g.BaseArrayLayer)
 	c.layerCount = C.uint32_t(g.LayerCount)
 }
 func (g *ImageSubresourceRange) fromC(c *C.VkImageSubresourceRange) {
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 	g.BaseMipLevel = uint32(c.baseMipLevel)
 	g.LevelCount = uint32(c.levelCount)
 	g.BaseArrayLayer = uint32(c.baseArrayLayer)
@@ -6705,15 +5825,7 @@ func (g *ImageViewCreateInfo) toC(c *C.VkImageViewCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkImageViewCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkImageViewCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkImageViewCreateFlags(temp_in_VkImageViewCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.image = C.VkImage(g.Image)
 	c.viewType = C.VkImageViewType(g.ViewType)
 	c.format = C.VkFormat(g.Format)
@@ -6724,15 +5836,7 @@ func (g *ImageViewCreateInfo) fromC(c *C.VkImageViewCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkImageViewCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkImageViewCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ImageViewCreateFlags(temp_in_VkImageViewCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Image = Image(c.image)
 	g.ViewType = ImageViewType(c.viewType)
 	g.Format = Format(c.format)
@@ -6838,15 +5942,7 @@ func (g *ShaderModuleCreateInfo) toC(c *C.VkShaderModuleCreateInfo, m *cmemory) 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkShaderModuleCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkShaderModuleCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.codeSize = C.size_t(g.CodeSize)
 	if len(g.Code) != 0 {
 		c.pCode = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t * uint(len(g.Code))))
@@ -6862,15 +5958,7 @@ func (g *ShaderModuleCreateInfo) fromC(c *C.VkShaderModuleCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkShaderModuleCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkShaderModuleCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ShaderModuleCreateFlags(temp_in_VkShaderModuleCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.CodeSize = uint(c.codeSize)
 	if len(g.Code) != 0 {
 		slice1 := (*[1 << 31]C.uint32_t)(unsafe.Pointer(c.pCode))[:len(g.Code):len(g.Code)]
@@ -6977,15 +6065,7 @@ func (g *PipelineCacheCreateInfo) toC(c *C.VkPipelineCacheCreateInfo, m *cmemory
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineCacheCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineCacheCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineCacheCreateFlags(temp_in_VkPipelineCacheCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.initialDataSize = C.size_t(len(g.InitialData))
 	if len(g.InitialData) != 0 {
 		c.pInitialData = m.alloc(C.sizeof_char * uint(len(g.InitialData)))
@@ -7001,15 +6081,7 @@ func (g *PipelineCacheCreateInfo) fromC(c *C.VkPipelineCacheCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineCacheCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineCacheCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineCacheCreateFlags(temp_in_VkPipelineCacheCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.InitialData = make([]byte, int(c.initialDataSize))
 	if len(g.InitialData) != 0 {
 		slice1 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
@@ -7249,15 +6321,7 @@ func (g *PipelineShaderStageCreateInfo) toC(c *C.VkPipelineShaderStageCreateInfo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineShaderStageCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineShaderStageCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineShaderStageCreateFlags(temp_in_VkPipelineShaderStageCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.stage = C.VkShaderStageFlagBits(g.Stage)
 	c.module = C.VkShaderModule(g.Module)
 	c.pName = toCString(g.Name, m)
@@ -7272,15 +6336,7 @@ func (g *PipelineShaderStageCreateInfo) fromC(c *C.VkPipelineShaderStageCreateIn
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineShaderStageCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineShaderStageCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineShaderStageCreateFlags(temp_in_VkPipelineShaderStageCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Stage = ShaderStageFlagBits(c.stage)
 	g.Module = ShaderModule(c.module)
 	g.Name = toGoString(c.pName)
@@ -7357,15 +6413,7 @@ func (g *PipelineVertexInputStateCreateInfo) toC(c *C.VkPipelineVertexInputState
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineVertexInputStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineVertexInputStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineVertexInputStateCreateFlags(temp_in_VkPipelineVertexInputStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.vertexBindingDescriptionCount = C.uint32_t(len(g.VertexBindingDescriptions))
 	if len(g.VertexBindingDescriptions) != 0 {
 		c.pVertexBindingDescriptions = (*C.VkVertexInputBindingDescription)(m.alloc(C.sizeof_VkVertexInputBindingDescription * uint(len(g.VertexBindingDescriptions))))
@@ -7391,15 +6439,7 @@ func (g *PipelineVertexInputStateCreateInfo) fromC(c *C.VkPipelineVertexInputSta
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineVertexInputStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineVertexInputStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineVertexInputStateCreateFlags(temp_in_VkPipelineVertexInputStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.VertexBindingDescriptions = make([]VertexInputBindingDescription, int(c.vertexBindingDescriptionCount))
 	if len(g.VertexBindingDescriptions) != 0 {
 		slice1 := (*[1 << 31]C.VkVertexInputBindingDescription)(unsafe.Pointer(c.pVertexBindingDescriptions))[:len(g.VertexBindingDescriptions):len(g.VertexBindingDescriptions)]
@@ -7447,15 +6487,7 @@ func (g *PipelineInputAssemblyStateCreateInfo) toC(c *C.VkPipelineInputAssemblyS
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineInputAssemblyStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineInputAssemblyStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.topology = C.VkPrimitiveTopology(g.Topology)
 	if g.PrimitiveRestartEnable {
 		c.primitiveRestartEnable = 1
@@ -7467,15 +6499,7 @@ func (g *PipelineInputAssemblyStateCreateInfo) fromC(c *C.VkPipelineInputAssembl
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineInputAssemblyStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineInputAssemblyStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineInputAssemblyStateCreateFlags(temp_in_VkPipelineInputAssemblyStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Topology = PrimitiveTopology(c.topology)
 	g.PrimitiveRestartEnable = c.primitiveRestartEnable != 0
 }
@@ -7510,30 +6534,14 @@ func (g *PipelineTessellationStateCreateInfo) toC(c *C.VkPipelineTessellationSta
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineTessellationStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineTessellationStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineTessellationStateCreateFlags(temp_in_VkPipelineTessellationStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.patchControlPoints = C.uint32_t(g.PatchControlPoints)
 }
 func (g *PipelineTessellationStateCreateInfo) fromC(c *C.VkPipelineTessellationStateCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineTessellationStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineTessellationStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineTessellationStateCreateFlags(temp_in_VkPipelineTessellationStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.PatchControlPoints = uint32(c.patchControlPoints)
 }
 func (s *PipelineTessellationStateCreateInfo) sType() C.VkStructureType {
@@ -7636,15 +6644,7 @@ func (g *PipelineViewportStateCreateInfo) toC(c *C.VkPipelineViewportStateCreate
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineViewportStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineViewportStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineViewportStateCreateFlags(temp_in_VkPipelineViewportStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.viewportCount = C.uint32_t(len(g.Viewports))
 	if len(g.Viewports) != 0 {
 		c.pViewports = (*C.VkViewport)(m.alloc(C.sizeof_VkViewport * uint(len(g.Viewports))))
@@ -7670,15 +6670,7 @@ func (g *PipelineViewportStateCreateInfo) fromC(c *C.VkPipelineViewportStateCrea
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineViewportStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineViewportStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineViewportStateCreateFlags(temp_in_VkPipelineViewportStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Viewports = make([]Viewport, int(c.viewportCount))
 	if len(g.Viewports) != 0 {
 		slice1 := (*[1 << 31]C.VkViewport)(unsafe.Pointer(c.pViewports))[:len(g.Viewports):len(g.Viewports)]
@@ -7735,15 +6727,7 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineRasterizationStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineRasterizationStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	if g.DepthClampEnable {
 		c.depthClampEnable = 1
 	} else {
@@ -7755,15 +6739,7 @@ func (g *PipelineRasterizationStateCreateInfo) toC(c *C.VkPipelineRasterizationS
 		c.rasterizerDiscardEnable = 0
 	}
 	c.polygonMode = C.VkPolygonMode(g.PolygonMode)
-	{
-		var temp_in_VkCullModeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CullMode)))
-			temp_in_VkCullModeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.cullMode = C.VkCullModeFlags(temp_in_VkCullModeFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.cullMode)) = C.uint32_t((uint32)((Flags)(g.CullMode)))
 	c.frontFace = C.VkFrontFace(g.FrontFace)
 	if g.DepthBiasEnable {
 		c.depthBiasEnable = 1
@@ -7779,27 +6755,11 @@ func (g *PipelineRasterizationStateCreateInfo) fromC(c *C.VkPipelineRasterizatio
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineRasterizationStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineRasterizationStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineRasterizationStateCreateFlags(temp_in_VkPipelineRasterizationStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.DepthClampEnable = c.depthClampEnable != 0
 	g.RasterizerDiscardEnable = c.rasterizerDiscardEnable != 0
 	g.PolygonMode = PolygonMode(c.polygonMode)
-	{
-		var temp_in_VkCullModeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.cullMode)))
-			temp_in_VkCullModeFlags = Flags(temp_in_VkFlags)
-		}
-		g.CullMode = CullModeFlags(temp_in_VkCullModeFlags)
-	}
+	*(*uint32)((*Flags)(&g.CullMode)) = uint32((C.uint32_t)((C.VkFlags)(c.cullMode)))
 	g.FrontFace = FrontFace(c.frontFace)
 	g.DepthBiasEnable = c.depthBiasEnable != 0
 	g.DepthBiasConstantFactor = float32(c.depthBiasConstantFactor)
@@ -7844,15 +6804,7 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineMultisampleStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineMultisampleStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.rasterizationSamples = C.VkSampleCountFlagBits(g.RasterizationSamples)
 	if g.SampleShadingEnable {
 		c.sampleShadingEnable = 1
@@ -7862,11 +6814,7 @@ func (g *PipelineMultisampleStateCreateInfo) toC(c *C.VkPipelineMultisampleState
 	c.minSampleShading = C.float(g.MinSampleShading)
 	if g.SampleMask != nil {
 		c.pSampleMask = (*C.VkSampleMask)(m.alloc(C.sizeof_VkSampleMask))
-		{
-			var temp_in_VkSampleMask C.uint32_t
-			temp_in_VkSampleMask = C.uint32_t((uint32)(*g.SampleMask))
-			*c.pSampleMask = C.VkSampleMask(temp_in_VkSampleMask)
-		}
+		*(*C.uint32_t)(c.pSampleMask) = C.uint32_t((uint32)(*g.SampleMask))
 	} else {
 		c.pSampleMask = nil
 	}
@@ -7885,22 +6833,12 @@ func (g *PipelineMultisampleStateCreateInfo) fromC(c *C.VkPipelineMultisampleSta
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineMultisampleStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineMultisampleStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineMultisampleStateCreateFlags(temp_in_VkPipelineMultisampleStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.RasterizationSamples = SampleCountFlagBits(c.rasterizationSamples)
 	g.SampleShadingEnable = c.sampleShadingEnable != 0
 	g.MinSampleShading = float32(c.minSampleShading)
 	if g.SampleMask != nil {
-		var temp_in_VkSampleMask uint32
-		temp_in_VkSampleMask = uint32((C.uint32_t)(*c.pSampleMask))
-		*g.SampleMask = SampleMask(temp_in_VkSampleMask)
+		*(*uint32)(g.SampleMask) = uint32((C.uint32_t)(*c.pSampleMask))
 	}
 	g.AlphaToCoverageEnable = c.alphaToCoverageEnable != 0
 	g.AlphaToOneEnable = c.alphaToOneEnable != 0
@@ -7973,15 +6911,7 @@ func (g *PipelineDepthStencilStateCreateInfo) toC(c *C.VkPipelineDepthStencilSta
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineDepthStencilStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineDepthStencilStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	if g.DepthTestEnable {
 		c.depthTestEnable = 1
 	} else {
@@ -8012,15 +6942,7 @@ func (g *PipelineDepthStencilStateCreateInfo) fromC(c *C.VkPipelineDepthStencilS
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineDepthStencilStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineDepthStencilStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineDepthStencilStateCreateFlags(temp_in_VkPipelineDepthStencilStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.DepthTestEnable = c.depthTestEnable != 0
 	g.DepthWriteEnable = c.depthWriteEnable != 0
 	g.DepthCompareOp = CompareOp(c.depthCompareOp)
@@ -8075,15 +6997,7 @@ func (g *PipelineColorBlendAttachmentState) toC(c *C.VkPipelineColorBlendAttachm
 	c.srcAlphaBlendFactor = C.VkBlendFactor(g.SrcAlphaBlendFactor)
 	c.dstAlphaBlendFactor = C.VkBlendFactor(g.DstAlphaBlendFactor)
 	c.alphaBlendOp = C.VkBlendOp(g.AlphaBlendOp)
-	{
-		var temp_in_VkColorComponentFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ColorWriteMask)))
-			temp_in_VkColorComponentFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.colorWriteMask = C.VkColorComponentFlags(temp_in_VkColorComponentFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.colorWriteMask)) = C.uint32_t((uint32)((Flags)(g.ColorWriteMask)))
 }
 func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttachmentState) {
 	g.BlendEnable = c.blendEnable != 0
@@ -8093,15 +7007,7 @@ func (g *PipelineColorBlendAttachmentState) fromC(c *C.VkPipelineColorBlendAttac
 	g.SrcAlphaBlendFactor = BlendFactor(c.srcAlphaBlendFactor)
 	g.DstAlphaBlendFactor = BlendFactor(c.dstAlphaBlendFactor)
 	g.AlphaBlendOp = BlendOp(c.alphaBlendOp)
-	{
-		var temp_in_VkColorComponentFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.colorWriteMask)))
-			temp_in_VkColorComponentFlags = Flags(temp_in_VkFlags)
-		}
-		g.ColorWriteMask = ColorComponentFlags(temp_in_VkColorComponentFlags)
-	}
+	*(*uint32)((*Flags)(&g.ColorWriteMask)) = uint32((C.uint32_t)((C.VkFlags)(c.colorWriteMask)))
 }
 
 type PipelineColorBlendStateCreateInfo struct {
@@ -8118,15 +7024,7 @@ func (g *PipelineColorBlendStateCreateInfo) toC(c *C.VkPipelineColorBlendStateCr
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineColorBlendStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineColorBlendStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	if g.LogicOpEnable {
 		c.logicOpEnable = 1
 	} else {
@@ -8151,15 +7049,7 @@ func (g *PipelineColorBlendStateCreateInfo) fromC(c *C.VkPipelineColorBlendState
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineColorBlendStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineColorBlendStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineColorBlendStateCreateFlags(temp_in_VkPipelineColorBlendStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.LogicOpEnable = c.logicOpEnable != 0
 	g.LogicOp = LogicOp(c.logicOp)
 	g.Attachments = make([]PipelineColorBlendAttachmentState, int(c.attachmentCount))
@@ -8204,15 +7094,7 @@ func (g *PipelineDynamicStateCreateInfo) toC(c *C.VkPipelineDynamicStateCreateIn
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineDynamicStateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineDynamicStateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineDynamicStateCreateFlags(temp_in_VkPipelineDynamicStateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.dynamicStateCount = C.uint32_t(len(g.DynamicStates))
 	if len(g.DynamicStates) != 0 {
 		c.pDynamicStates = (*C.VkDynamicState)(m.alloc(C.sizeof_VkDynamicState * uint(len(g.DynamicStates))))
@@ -8228,15 +7110,7 @@ func (g *PipelineDynamicStateCreateInfo) fromC(c *C.VkPipelineDynamicStateCreate
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineDynamicStateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineDynamicStateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineDynamicStateCreateFlags(temp_in_VkPipelineDynamicStateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.DynamicStates = make([]DynamicState, int(c.dynamicStateCount))
 	if len(g.DynamicStates) != 0 {
 		slice1 := (*[1 << 31]C.VkDynamicState)(unsafe.Pointer(c.pDynamicStates))[:len(g.DynamicStates):len(g.DynamicStates)]
@@ -8292,15 +7166,7 @@ func (g *GraphicsPipelineCreateInfo) toC(c *C.VkGraphicsPipelineCreateInfo, m *c
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineCreateFlags(temp_in_VkPipelineCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.stageCount = C.uint32_t(len(g.Stages))
 	if len(g.Stages) != 0 {
 		c.pStages = (*C.VkPipelineShaderStageCreateInfo)(m.alloc(C.sizeof_VkPipelineShaderStageCreateInfo * uint(len(g.Stages))))
@@ -8375,15 +7241,7 @@ func (g *GraphicsPipelineCreateInfo) fromC(c *C.VkGraphicsPipelineCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineCreateFlags(temp_in_VkPipelineCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Stages = make([]PipelineShaderStageCreateInfo, int(c.stageCount))
 	if len(g.Stages) != 0 {
 		slice1 := (*[1 << 31]C.VkPipelineShaderStageCreateInfo)(unsafe.Pointer(c.pStages))[:len(g.Stages):len(g.Stages)]
@@ -8512,15 +7370,7 @@ func (g *ComputePipelineCreateInfo) toC(c *C.VkComputePipelineCreateInfo, m *cme
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineCreateFlags(temp_in_VkPipelineCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	g.Stage.toC(&c.stage, m)
 	c.layout = C.VkPipelineLayout(g.Layout)
 	c.basePipelineHandle = C.VkPipeline(g.BasePipelineHandle)
@@ -8530,15 +7380,7 @@ func (g *ComputePipelineCreateInfo) fromC(c *C.VkComputePipelineCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineCreateFlags(temp_in_VkPipelineCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Stage.fromC(&c.stage)
 	g.Layout = PipelineLayout(c.layout)
 	g.BasePipelineHandle = Pipeline(c.basePipelineHandle)
@@ -8652,28 +7494,12 @@ type PushConstantRange struct {
 }
 
 func (g *PushConstantRange) toC(c *C.VkPushConstantRange) {
-	{
-		var temp_in_VkShaderStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StageFlags)))
-			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.stageFlags)) = C.uint32_t((uint32)((Flags)(g.StageFlags)))
 	c.offset = C.uint32_t(g.Offset)
 	c.size = C.uint32_t(g.Size)
 }
 func (g *PushConstantRange) fromC(c *C.VkPushConstantRange) {
-	{
-		var temp_in_VkShaderStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
-			temp_in_VkShaderStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.StageFlags = ShaderStageFlags(temp_in_VkShaderStageFlags)
-	}
+	*(*uint32)((*Flags)(&g.StageFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
 	g.Offset = uint32(c.offset)
 	g.Size = uint32(c.size)
 }
@@ -8690,15 +7516,7 @@ func (g *PipelineLayoutCreateInfo) toC(c *C.VkPipelineLayoutCreateInfo, m *cmemo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkPipelineLayoutCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkPipelineLayoutCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkPipelineLayoutCreateFlags(temp_in_VkPipelineLayoutCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.setLayoutCount = C.uint32_t(len(g.SetLayouts))
 	if len(g.SetLayouts) != 0 {
 		c.pSetLayouts = (*C.VkDescriptorSetLayout)(m.alloc(C.sizeof_VkDescriptorSetLayout * uint(len(g.SetLayouts))))
@@ -8724,15 +7542,7 @@ func (g *PipelineLayoutCreateInfo) fromC(c *C.VkPipelineLayoutCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkPipelineLayoutCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkPipelineLayoutCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = PipelineLayoutCreateFlags(temp_in_VkPipelineLayoutCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.SetLayouts = make([]DescriptorSetLayout, int(c.setLayoutCount))
 	if len(g.SetLayouts) != 0 {
 		slice1 := (*[1 << 31]C.VkDescriptorSetLayout)(unsafe.Pointer(c.pSetLayouts))[:len(g.SetLayouts):len(g.SetLayouts)]
@@ -8859,15 +7669,7 @@ func (g *SamplerCreateInfo) toC(c *C.VkSamplerCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkSamplerCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSamplerCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSamplerCreateFlags(temp_in_VkSamplerCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.magFilter = C.VkFilter(g.MagFilter)
 	c.minFilter = C.VkFilter(g.MinFilter)
 	c.mipmapMode = C.VkSamplerMipmapMode(g.MipmapMode)
@@ -8900,15 +7702,7 @@ func (g *SamplerCreateInfo) fromC(c *C.VkSamplerCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkSamplerCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSamplerCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SamplerCreateFlags(temp_in_VkSamplerCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.MagFilter = Filter(c.magFilter)
 	g.MinFilter = Filter(c.minFilter)
 	g.MipmapMode = SamplerMipmapMode(c.mipmapMode)
@@ -9024,15 +7818,7 @@ func (g *DescriptorSetLayoutBinding) toC(c *C.VkDescriptorSetLayoutBinding, m *c
 	c.binding = C.uint32_t(g.Binding)
 	c.descriptorType = C.VkDescriptorType(g.DescriptorType)
 	c.descriptorCount = C.uint32_t(g.DescriptorCount)
-	{
-		var temp_in_VkShaderStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.StageFlags)))
-			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.stageFlags)) = C.uint32_t((uint32)((Flags)(g.StageFlags)))
 	if g.ImmutableSamplers != nil {
 		c.pImmutableSamplers = (*C.VkSampler)(m.alloc(C.sizeof_VkSampler))
 		*c.pImmutableSamplers = C.VkSampler(*g.ImmutableSamplers)
@@ -9044,15 +7830,7 @@ func (g *DescriptorSetLayoutBinding) fromC(c *C.VkDescriptorSetLayoutBinding) {
 	g.Binding = uint32(c.binding)
 	g.DescriptorType = DescriptorType(c.descriptorType)
 	g.DescriptorCount = uint32(c.descriptorCount)
-	{
-		var temp_in_VkShaderStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
-			temp_in_VkShaderStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.StageFlags = ShaderStageFlags(temp_in_VkShaderStageFlags)
-	}
+	*(*uint32)((*Flags)(&g.StageFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.stageFlags)))
 	if g.ImmutableSamplers != nil {
 		*g.ImmutableSamplers = Sampler(*c.pImmutableSamplers)
 	}
@@ -9069,15 +7847,7 @@ func (g *DescriptorSetLayoutCreateInfo) toC(c *C.VkDescriptorSetLayoutCreateInfo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDescriptorSetLayoutCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDescriptorSetLayoutCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDescriptorSetLayoutCreateFlags(temp_in_VkDescriptorSetLayoutCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.bindingCount = C.uint32_t(len(g.Bindings))
 	if len(g.Bindings) != 0 {
 		c.pBindings = (*C.VkDescriptorSetLayoutBinding)(m.alloc(C.sizeof_VkDescriptorSetLayoutBinding * uint(len(g.Bindings))))
@@ -9093,15 +7863,7 @@ func (g *DescriptorSetLayoutCreateInfo) fromC(c *C.VkDescriptorSetLayoutCreateIn
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDescriptorSetLayoutCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDescriptorSetLayoutCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DescriptorSetLayoutCreateFlags(temp_in_VkDescriptorSetLayoutCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Bindings = make([]DescriptorSetLayoutBinding, int(c.bindingCount))
 	if len(g.Bindings) != 0 {
 		slice1 := (*[1 << 31]C.VkDescriptorSetLayoutBinding)(unsafe.Pointer(c.pBindings))[:len(g.Bindings):len(g.Bindings)]
@@ -9222,15 +7984,7 @@ func (g *DescriptorPoolCreateInfo) toC(c *C.VkDescriptorPoolCreateInfo, m *cmemo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDescriptorPoolCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDescriptorPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDescriptorPoolCreateFlags(temp_in_VkDescriptorPoolCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.maxSets = C.uint32_t(g.MaxSets)
 	c.poolSizeCount = C.uint32_t(len(g.PoolSizes))
 	if len(g.PoolSizes) != 0 {
@@ -9247,15 +8001,7 @@ func (g *DescriptorPoolCreateInfo) fromC(c *C.VkDescriptorPoolCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDescriptorPoolCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDescriptorPoolCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DescriptorPoolCreateFlags(temp_in_VkDescriptorPoolCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.MaxSets = uint32(c.maxSets)
 	g.PoolSizes = make([]DescriptorPoolSize, int(c.poolSizeCount))
 	if len(g.PoolSizes) != 0 {
@@ -9364,15 +8110,7 @@ func ToResetDescriptorPool(p PFNVoidFunction) (fn FuncResetDescriptorPool) {
 		}
 		c.device = C.VkDevice(device)
 		c.descriptorPool = C.VkDescriptorPool(descriptorPool)
-		{
-			var temp_in_VkDescriptorPoolResetFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkDescriptorPoolResetFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkDescriptorPoolResetFlags(temp_in_VkDescriptorPoolResetFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		c._ret = C.callPFN_vkResetDescriptorPool(C.PFN_vkResetDescriptorPool(unsafe.Pointer(p)), c.device, c.descriptorPool, c.flags)
 		_ret = Result(c._ret)
 		return
@@ -9528,29 +8266,13 @@ type DescriptorBufferInfo struct {
 
 func (g *DescriptorBufferInfo) toC(c *C.VkDescriptorBufferInfo) {
 	c.buffer = C.VkBuffer(g.Buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Range))
-		c._range = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint64_t)(&c._range) = C.uint64_t((uint64)(g.Range))
 }
 func (g *DescriptorBufferInfo) fromC(c *C.VkDescriptorBufferInfo) {
 	g.Buffer = Buffer(c.buffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c._range))
-		g.Range = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint64)(&g.Range) = uint64((C.uint64_t)(c._range))
 }
 
 type WriteDescriptorSet struct {
@@ -9742,15 +8464,7 @@ func (g *FramebufferCreateInfo) toC(c *C.VkFramebufferCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkFramebufferCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkFramebufferCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkFramebufferCreateFlags(temp_in_VkFramebufferCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.renderPass = C.VkRenderPass(g.RenderPass)
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
 	if len(g.Attachments) != 0 {
@@ -9770,15 +8484,7 @@ func (g *FramebufferCreateInfo) fromC(c *C.VkFramebufferCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkFramebufferCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkFramebufferCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = FramebufferCreateFlags(temp_in_VkFramebufferCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.RenderPass = RenderPass(c.renderPass)
 	g.Attachments = make([]ImageView, int(c.attachmentCount))
 	if len(g.Attachments) != 0 {
@@ -9892,15 +8598,7 @@ type AttachmentDescription struct {
 }
 
 func (g *AttachmentDescription) toC(c *C.VkAttachmentDescription) {
-	{
-		var temp_in_VkAttachmentDescriptionFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkAttachmentDescriptionFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkAttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.format = C.VkFormat(g.Format)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
 	c.loadOp = C.VkAttachmentLoadOp(g.LoadOp)
@@ -9911,15 +8609,7 @@ func (g *AttachmentDescription) toC(c *C.VkAttachmentDescription) {
 	c.finalLayout = C.VkImageLayout(g.FinalLayout)
 }
 func (g *AttachmentDescription) fromC(c *C.VkAttachmentDescription) {
-	{
-		var temp_in_VkAttachmentDescriptionFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkAttachmentDescriptionFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = AttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Format = Format(c.format)
 	g.Samples = SampleCountFlagBits(c.samples)
 	g.LoadOp = AttachmentLoadOp(c.loadOp)
@@ -9956,15 +8646,7 @@ type SubpassDescription struct {
 }
 
 func (g *SubpassDescription) toC(c *C.VkSubpassDescription, m *cmemory) {
-	{
-		var temp_in_VkSubpassDescriptionFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSubpassDescriptionFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
 	if len(g.InputAttachments) != 0 {
@@ -10013,15 +8695,7 @@ func (g *SubpassDescription) toC(c *C.VkSubpassDescription, m *cmemory) {
 	}
 }
 func (g *SubpassDescription) fromC(c *C.VkSubpassDescription) {
-	{
-		var temp_in_VkSubpassDescriptionFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSubpassDescriptionFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
 	g.InputAttachments = make([]AttachmentReference, int(c.inputAttachmentCount))
 	if len(g.InputAttachments) != 0 {
@@ -10070,100 +8744,20 @@ type SubpassDependency struct {
 func (g *SubpassDependency) toC(c *C.VkSubpassDependency) {
 	c.srcSubpass = C.uint32_t(g.SrcSubpass)
 	c.dstSubpass = C.uint32_t(g.DstSubpass)
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkDependencyFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
-			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcAccessMask)) = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstAccessMask)) = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dependencyFlags)) = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
 }
 func (g *SubpassDependency) fromC(c *C.VkSubpassDependency) {
 	g.SrcSubpass = uint32(c.srcSubpass)
 	g.DstSubpass = uint32(c.dstSubpass)
-	{
-		var temp_in_VkPipelineStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
-			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
-			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkDependencyFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
-			temp_in_VkDependencyFlags = Flags(temp_in_VkFlags)
-		}
-		g.DependencyFlags = DependencyFlags(temp_in_VkDependencyFlags)
-	}
+	*(*uint32)((*Flags)(&g.SrcStageMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
+	*(*uint32)((*Flags)(&g.DstStageMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
+	*(*uint32)((*Flags)(&g.SrcAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+	*(*uint32)((*Flags)(&g.DstAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+	*(*uint32)((*Flags)(&g.DependencyFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
 }
 
 type RenderPassCreateInfo struct {
@@ -10179,15 +8773,7 @@ func (g *RenderPassCreateInfo) toC(c *C.VkRenderPassCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkRenderPassCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkRenderPassCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
 	if len(g.Attachments) != 0 {
 		c.pAttachments = (*C.VkAttachmentDescription)(m.alloc(C.sizeof_VkAttachmentDescription * uint(len(g.Attachments))))
@@ -10223,15 +8809,7 @@ func (g *RenderPassCreateInfo) fromC(c *C.VkRenderPassCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkRenderPassCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkRenderPassCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = RenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Attachments = make([]AttachmentDescription, int(c.attachmentCount))
 	if len(g.Attachments) != 0 {
 		slice1 := (*[1 << 31]C.VkAttachmentDescription)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
@@ -10378,30 +8956,14 @@ func (g *CommandPoolCreateInfo) toC(c *C.VkCommandPoolCreateInfo, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkCommandPoolCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkCommandPoolCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkCommandPoolCreateFlags(temp_in_VkCommandPoolCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 }
 func (g *CommandPoolCreateInfo) fromC(c *C.VkCommandPoolCreateInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkCommandPoolCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkCommandPoolCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = CommandPoolCreateFlags(temp_in_VkCommandPoolCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 }
 func (s *CommandPoolCreateInfo) sType() C.VkStructureType {
@@ -10503,15 +9065,7 @@ func ToResetCommandPool(p PFNVoidFunction) (fn FuncResetCommandPool) {
 		}
 		c.device = C.VkDevice(device)
 		c.commandPool = C.VkCommandPool(commandPool)
-		{
-			var temp_in_VkCommandPoolResetFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkCommandPoolResetFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkCommandPoolResetFlags(temp_in_VkCommandPoolResetFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		c._ret = C.callPFN_vkResetCommandPool(C.PFN_vkResetCommandPool(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 		_ret = Result(c._ret)
 		return
@@ -10651,24 +9205,8 @@ func (g *CommandBufferInheritanceInfo) toC(c *C.VkCommandBufferInheritanceInfo, 
 	} else {
 		c.occlusionQueryEnable = 0
 	}
-	{
-		var temp_in_VkQueryControlFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.QueryFlags)))
-			temp_in_VkQueryControlFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.queryFlags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
-	}
-	{
-		var temp_in_VkQueryPipelineStatisticFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
-			temp_in_VkQueryPipelineStatisticFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.pipelineStatistics = C.VkQueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.queryFlags)) = C.uint32_t((uint32)((Flags)(g.QueryFlags)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.pipelineStatistics)) = C.uint32_t((uint32)((Flags)(g.PipelineStatistics)))
 }
 func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo) {
 	if g.Next != nil {
@@ -10678,24 +9216,8 @@ func (g *CommandBufferInheritanceInfo) fromC(c *C.VkCommandBufferInheritanceInfo
 	g.Subpass = uint32(c.subpass)
 	g.Framebuffer = Framebuffer(c.framebuffer)
 	g.OcclusionQueryEnable = c.occlusionQueryEnable != 0
-	{
-		var temp_in_VkQueryControlFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.queryFlags)))
-			temp_in_VkQueryControlFlags = Flags(temp_in_VkFlags)
-		}
-		g.QueryFlags = QueryControlFlags(temp_in_VkQueryControlFlags)
-	}
-	{
-		var temp_in_VkQueryPipelineStatisticFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
-			temp_in_VkQueryPipelineStatisticFlags = Flags(temp_in_VkFlags)
-		}
-		g.PipelineStatistics = QueryPipelineStatisticFlags(temp_in_VkQueryPipelineStatisticFlags)
-	}
+	*(*uint32)((*Flags)(&g.QueryFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.queryFlags)))
+	*(*uint32)((*Flags)(&g.PipelineStatistics)) = uint32((C.uint32_t)((C.VkFlags)(c.pipelineStatistics)))
 }
 func (s *CommandBufferInheritanceInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO
@@ -10727,15 +9249,7 @@ func (g *CommandBufferBeginInfo) toC(c *C.VkCommandBufferBeginInfo, m *cmemory) 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkCommandBufferUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkCommandBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkCommandBufferUsageFlags(temp_in_VkCommandBufferUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	if g.InheritanceInfo != nil {
 		c.pInheritanceInfo = (*C.VkCommandBufferInheritanceInfo)(m.alloc(C.sizeof_VkCommandBufferInheritanceInfo))
 		g.InheritanceInfo.toC(c.pInheritanceInfo, m)
@@ -10747,15 +9261,7 @@ func (g *CommandBufferBeginInfo) fromC(c *C.VkCommandBufferBeginInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkCommandBufferUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkCommandBufferUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = CommandBufferUsageFlags(temp_in_VkCommandBufferUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	if g.InheritanceInfo != nil {
 		g.InheritanceInfo.fromC(c.pInheritanceInfo)
 	}
@@ -10831,15 +9337,7 @@ func ToResetCommandBuffer(p PFNVoidFunction) (fn FuncResetCommandBuffer) {
 			_ret          C.VkResult
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-		{
-			var temp_in_VkCommandBufferResetFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkCommandBufferResetFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkCommandBufferResetFlags(temp_in_VkCommandBufferResetFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		c._ret = C.callPFN_vkResetCommandBuffer(C.PFN_vkResetCommandBuffer(unsafe.Pointer(p)), c.commandBuffer, c.flags)
 		_ret = Result(c._ret)
 		return
@@ -11007,15 +9505,7 @@ func ToCmdSetStencilCompareMask(p PFNVoidFunction) (fn FuncCmdSetStencilCompareM
 			compareMask   C.uint32_t
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-		{
-			var temp_in_VkStencilFaceFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-				temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 		c.compareMask = C.uint32_t(compareMask)
 		C.callPFN_vkCmdSetStencilCompareMask(C.PFN_vkCmdSetStencilCompareMask(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.compareMask)
 	}
@@ -11032,15 +9522,7 @@ func ToCmdSetStencilWriteMask(p PFNVoidFunction) (fn FuncCmdSetStencilWriteMask)
 			writeMask     C.uint32_t
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-		{
-			var temp_in_VkStencilFaceFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-				temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 		c.writeMask = C.uint32_t(writeMask)
 		C.callPFN_vkCmdSetStencilWriteMask(C.PFN_vkCmdSetStencilWriteMask(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.writeMask)
 	}
@@ -11057,15 +9539,7 @@ func ToCmdSetStencilReference(p PFNVoidFunction) (fn FuncCmdSetStencilReference)
 			reference     C.uint32_t
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-		{
-			var temp_in_VkStencilFaceFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-				temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 		c.reference = C.uint32_t(reference)
 		C.callPFN_vkCmdSetStencilReference(C.PFN_vkCmdSetStencilReference(unsafe.Pointer(p)), c.commandBuffer, c.faceMask, c.reference)
 	}
@@ -11125,11 +9599,7 @@ func ToCmdBindIndexBuffer(p PFNVoidFunction) (fn FuncCmdBindIndexBuffer) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.indexType = C.VkIndexType(indexType)
 		C.callPFN_vkCmdBindIndexBuffer(C.PFN_vkCmdBindIndexBuffer(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.indexType)
 	}
@@ -11165,11 +9635,7 @@ func ToCmdBindVertexBuffers(p PFNVoidFunction) (fn FuncCmdBindVertexBuffers) {
 			c.pOffsets = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize * uint(len(offsets))))
 			slice1 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pOffsets))[:len(offsets):len(offsets)]
 			for i1, _ := range offsets {
-				{
-					var temp_in_VkDeviceSize C.uint64_t
-					temp_in_VkDeviceSize = C.uint64_t((uint64)(offsets[i1]))
-					slice1[i1] = C.VkDeviceSize(temp_in_VkDeviceSize)
-				}
+				*(*C.uint64_t)(&slice1[i1]) = C.uint64_t((uint64)(offsets[i1]))
 			}
 		} else {
 			c.pOffsets = nil
@@ -11236,11 +9702,7 @@ func ToCmdDrawIndirect(p PFNVoidFunction) (fn FuncCmdDrawIndirect) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.drawCount = C.uint32_t(drawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndirect(C.PFN_vkCmdDrawIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
@@ -11261,11 +9723,7 @@ func ToCmdDrawIndexedIndirect(p PFNVoidFunction) (fn FuncCmdDrawIndexedIndirect)
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.drawCount = C.uint32_t(drawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndexedIndirect(C.PFN_vkCmdDrawIndexedIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
@@ -11303,11 +9761,7 @@ func ToCmdDispatchIndirect(p PFNVoidFunction) (fn FuncCmdDispatchIndirect) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		C.callPFN_vkCmdDispatchIndirect(C.PFN_vkCmdDispatchIndirect(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset)
 	}
 }
@@ -11320,38 +9774,14 @@ type BufferCopy struct {
 }
 
 func (g *BufferCopy) toC(c *C.VkBufferCopy) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SrcOffset))
-		c.srcOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.DstOffset))
-		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.srcOffset) = C.uint64_t((uint64)(g.SrcOffset))
+	*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(g.DstOffset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
 }
 func (g *BufferCopy) fromC(c *C.VkBufferCopy) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.srcOffset))
-		g.SrcOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.dstOffset))
-		g.DstOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.SrcOffset) = uint64((C.uint64_t)(c.srcOffset))
+	*(*uint64)(&g.DstOffset) = uint64((C.uint64_t)(c.dstOffset))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
 }
 
 type FuncCmdCopyBuffer func(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buffer, regions []BufferCopy)
@@ -11393,29 +9823,13 @@ type ImageSubresourceLayers struct {
 }
 
 func (g *ImageSubresourceLayers) toC(c *C.VkImageSubresourceLayers) {
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 	c.mipLevel = C.uint32_t(g.MipLevel)
 	c.baseArrayLayer = C.uint32_t(g.BaseArrayLayer)
 	c.layerCount = C.uint32_t(g.LayerCount)
 }
 func (g *ImageSubresourceLayers) fromC(c *C.VkImageSubresourceLayers) {
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 	g.MipLevel = uint32(c.mipLevel)
 	g.BaseArrayLayer = uint32(c.baseArrayLayer)
 	g.LayerCount = uint32(c.layerCount)
@@ -11554,11 +9968,7 @@ type BufferImageCopy struct {
 }
 
 func (g *BufferImageCopy) toC(c *C.VkBufferImageCopy) {
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.BufferOffset))
-		c.bufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.bufferOffset) = C.uint64_t((uint64)(g.BufferOffset))
 	c.bufferRowLength = C.uint32_t(g.BufferRowLength)
 	c.bufferImageHeight = C.uint32_t(g.BufferImageHeight)
 	g.ImageSubresource.toC(&c.imageSubresource)
@@ -11566,11 +9976,7 @@ func (g *BufferImageCopy) toC(c *C.VkBufferImageCopy) {
 	g.ImageExtent.toC(&c.imageExtent)
 }
 func (g *BufferImageCopy) fromC(c *C.VkBufferImageCopy) {
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.bufferOffset))
-		g.BufferOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.BufferOffset) = uint64((C.uint64_t)(c.bufferOffset))
 	g.BufferRowLength = uint32(c.bufferRowLength)
 	g.BufferImageHeight = uint32(c.bufferImageHeight)
 	g.ImageSubresource.fromC(&c.imageSubresource)
@@ -11657,16 +10063,8 @@ func ToCmdUpdateBuffer(p PFNVoidFunction) (fn FuncCmdUpdateBuffer) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.dstBuffer = C.VkBuffer(dstBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-			c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(dataSize))
-			c.dataSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+		*(*C.uint64_t)(&c.dataSize) = C.uint64_t((uint64)(dataSize))
 		c.pData = data
 		C.callPFN_vkCmdUpdateBuffer(C.PFN_vkCmdUpdateBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 	}
@@ -11686,16 +10084,8 @@ func ToCmdFillBuffer(p PFNVoidFunction) (fn FuncCmdFillBuffer) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.dstBuffer = C.VkBuffer(dstBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-			c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
-			c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+		*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(size))
 		c.data = C.uint32_t(data)
 		C.callPFN_vkCmdFillBuffer(C.PFN_vkCmdFillBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)
 	}
@@ -11867,28 +10257,12 @@ type ClearAttachment struct {
 }
 
 func (g *ClearAttachment) toC(c *C.VkClearAttachment) {
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 	c.colorAttachment = C.uint32_t(g.ColorAttachment)
 	c.clearValue = C.VkClearValue(g.ClearValue)
 }
 func (g *ClearAttachment) fromC(c *C.VkClearAttachment) {
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 	g.ColorAttachment = uint32(c.colorAttachment)
 	g.ClearValue = ClearValue(c.clearValue)
 }
@@ -12018,15 +10392,7 @@ func ToCmdSetEvent(p PFNVoidFunction) (fn FuncCmdSetEvent) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.event = C.VkEvent(event)
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.stageMask)) = C.uint32_t((uint32)((Flags)(stageMask)))
 		C.callPFN_vkCmdSetEvent(C.PFN_vkCmdSetEvent(unsafe.Pointer(p)), c.commandBuffer, c.event, c.stageMask)
 	}
 }
@@ -12043,15 +10409,7 @@ func ToCmdResetEvent(p PFNVoidFunction) (fn FuncCmdResetEvent) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.event = C.VkEvent(event)
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.stageMask)) = C.uint32_t((uint32)((Flags)(stageMask)))
 		C.callPFN_vkCmdResetEvent(C.PFN_vkCmdResetEvent(unsafe.Pointer(p)), c.commandBuffer, c.event, c.stageMask)
 	}
 }
@@ -12068,47 +10426,15 @@ func (g *MemoryBarrier) toC(c *C.VkMemoryBarrier, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcAccessMask)) = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstAccessMask)) = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
 }
 func (g *MemoryBarrier) fromC(c *C.VkMemoryBarrier) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*uint32)((*Flags)(&g.SrcAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+	*(*uint32)((*Flags)(&g.DstAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
 }
 func (s *MemoryBarrier) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_MEMORY_BARRIER
@@ -12145,73 +10471,25 @@ func (g *BufferMemoryBarrier) toC(c *C.VkBufferMemoryBarrier, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcAccessMask)) = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstAccessMask)) = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
 	c.srcQueueFamilyIndex = C.uint32_t(g.SrcQueueFamilyIndex)
 	c.dstQueueFamilyIndex = C.uint32_t(g.DstQueueFamilyIndex)
 	c.buffer = C.VkBuffer(g.Buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(g.Size))
 }
 func (g *BufferMemoryBarrier) fromC(c *C.VkBufferMemoryBarrier) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*uint32)((*Flags)(&g.SrcAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+	*(*uint32)((*Flags)(&g.DstAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
 	g.SrcQueueFamilyIndex = uint32(c.srcQueueFamilyIndex)
 	g.DstQueueFamilyIndex = uint32(c.dstQueueFamilyIndex)
 	g.Buffer = Buffer(c.buffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.size))
-		g.Size = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint64)(&g.Size) = uint64((C.uint64_t)(c.size))
 }
 func (s *BufferMemoryBarrier) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER
@@ -12249,24 +10527,8 @@ func (g *ImageMemoryBarrier) toC(c *C.VkImageMemoryBarrier, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcAccessMask)) = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstAccessMask)) = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
 	c.oldLayout = C.VkImageLayout(g.OldLayout)
 	c.newLayout = C.VkImageLayout(g.NewLayout)
 	c.srcQueueFamilyIndex = C.uint32_t(g.SrcQueueFamilyIndex)
@@ -12278,24 +10540,8 @@ func (g *ImageMemoryBarrier) fromC(c *C.VkImageMemoryBarrier) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
+	*(*uint32)((*Flags)(&g.SrcAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+	*(*uint32)((*Flags)(&g.DstAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
 	g.OldLayout = ImageLayout(c.oldLayout)
 	g.NewLayout = ImageLayout(c.newLayout)
 	g.SrcQueueFamilyIndex = uint32(c.srcQueueFamilyIndex)
@@ -12352,24 +10598,8 @@ func ToCmdWaitEvents(p PFNVoidFunction) (fn FuncCmdWaitEvents) {
 		} else {
 			c.pEvents = nil
 		}
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(srcStageMask)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(dstStageMask)))
 		c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
 		if len(memoryBarriers) != 0 {
 			c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
@@ -12424,33 +10654,9 @@ func ToCmdPipelineBarrier(p PFNVoidFunction) (fn FuncCmdPipelineBarrier) {
 		m := pool.take()
 		defer pool.give(m)
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
-		{
-			var temp_in_VkPipelineStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
-				temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-		}
-		{
-			var temp_in_VkDependencyFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dependencyFlags)))
-				temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(srcStageMask)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(dstStageMask)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.dependencyFlags)) = C.uint32_t((uint32)((Flags)(dependencyFlags)))
 		c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
 		if len(memoryBarriers) != 0 {
 			c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
@@ -12499,15 +10705,7 @@ func ToCmdBeginQuery(p PFNVoidFunction) (fn FuncCmdBeginQuery) {
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.queryPool = C.VkQueryPool(queryPool)
 		c.query = C.uint32_t(query)
-		{
-			var temp_in_VkQueryControlFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkQueryControlFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		C.callPFN_vkCmdBeginQuery(C.PFN_vkCmdBeginQuery(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.query, c.flags)
 	}
 }
@@ -12587,25 +10785,9 @@ func ToCmdCopyQueryPoolResults(p PFNVoidFunction) (fn FuncCmdCopyQueryPoolResult
 		c.firstQuery = C.uint32_t(firstQuery)
 		c.queryCount = C.uint32_t(queryCount)
 		c.dstBuffer = C.VkBuffer(dstBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-			c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
-			c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
-		{
-			var temp_in_VkQueryResultFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
-		}
+		*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+		*(*C.uint64_t)(&c.stride) = C.uint64_t((uint64)(stride))
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		C.callPFN_vkCmdCopyQueryPoolResults(C.PFN_vkCmdCopyQueryPoolResults(unsafe.Pointer(p)), c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount, c.dstBuffer, c.dstOffset, c.stride, c.flags)
 	}
 }
@@ -12625,15 +10807,7 @@ func ToCmdPushConstants(p PFNVoidFunction) (fn FuncCmdPushConstants) {
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.layout = C.VkPipelineLayout(layout)
-		{
-			var temp_in_VkShaderStageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageFlags)))
-				temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.stageFlags)) = C.uint32_t((uint32)((Flags)(stageFlags)))
 		c.offset = C.uint32_t(offset)
 		c.size = C.uint32_t(len(values))
 		if len(values) != 0 {
@@ -12927,24 +11101,8 @@ func GetPhysicalDeviceImageFormatProperties(physicalDevice PhysicalDevice, forma
 	c.format = C.VkFormat(format)
 	c._type = C.VkImageType(_type)
 	c.tiling = C.VkImageTiling(tiling)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
-	{
-		var temp_in_VkImageCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(usage)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	if imageFormatProperties != nil {
 		c.pImageFormatProperties = (*C.VkImageFormatProperties)(m.alloc(C.sizeof_VkImageFormatProperties))
 		imageFormatProperties.toC(c.pImageFormatProperties)
@@ -13400,25 +11558,9 @@ func MapMemory(device Device, memory DeviceMemory, offset DeviceSize, size Devic
 	defer pool.give(m)
 	c.device = C.VkDevice(device)
 	c.memory = C.VkDeviceMemory(memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkMemoryMapFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkMemoryMapFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkMemoryMapFlags(temp_in_VkMemoryMapFlags)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(size))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	if data != nil {
 		c.ppData = (*unsafe.Pointer)(m.alloc(C.sizeof_void_pointer))
 		*c.ppData = *data
@@ -13501,19 +11643,13 @@ func GetDeviceMemoryCommitment(device Device, memory DeviceMemory, committedMemo
 	c.memory = C.VkDeviceMemory(memory)
 	if committedMemoryInBytes != nil {
 		c.pCommittedMemoryInBytes = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize))
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(*committedMemoryInBytes))
-			*c.pCommittedMemoryInBytes = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(c.pCommittedMemoryInBytes) = C.uint64_t((uint64)(*committedMemoryInBytes))
 	} else {
 		c.pCommittedMemoryInBytes = nil
 	}
 	C.vkGetDeviceMemoryCommitment(c.device, c.memory, c.pCommittedMemoryInBytes)
 	if committedMemoryInBytes != nil {
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
-		*committedMemoryInBytes = DeviceSize(temp_in_VkDeviceSize)
+		*(*uint64)(committedMemoryInBytes) = uint64((C.uint64_t)(*c.pCommittedMemoryInBytes))
 	}
 }
 func BindBufferMemory(device Device, buffer Buffer, memory DeviceMemory, memoryOffset DeviceSize) (_ret Result) {
@@ -13527,11 +11663,7 @@ func BindBufferMemory(device Device, buffer Buffer, memory DeviceMemory, memoryO
 	c.device = C.VkDevice(device)
 	c.buffer = C.VkBuffer(buffer)
 	c.memory = C.VkDeviceMemory(memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(memoryOffset))
 	c._ret = C.vkBindBufferMemory(c.device, c.buffer, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
 	return
@@ -13547,11 +11679,7 @@ func BindImageMemory(device Device, image Image, memory DeviceMemory, memoryOffs
 	c.device = C.VkDevice(device)
 	c.image = C.VkImage(image)
 	c.memory = C.VkDeviceMemory(memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(memoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(memoryOffset))
 	c._ret = C.vkBindImageMemory(c.device, c.image, c.memory, c.memoryOffset)
 	_ret = Result(c._ret)
 	return
@@ -13652,15 +11780,7 @@ func GetPhysicalDeviceSparseImageFormatProperties(physicalDevice PhysicalDevice,
 	c.format = C.VkFormat(format)
 	c._type = C.VkImageType(_type)
 	c.samples = C.VkSampleCountFlagBits(samples)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(usage)))
 	c.tiling = C.VkImageTiling(tiling)
 	if propertyCount != nil {
 		c.pPropertyCount = (*C.uint32_t)(m.alloc(C.sizeof_uint32_t))
@@ -14053,20 +12173,8 @@ func GetQueryPoolResults(device Device, queryPool QueryPool, firstQuery uint32, 
 	} else {
 		c.pData = nil
 	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
-		c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkQueryResultFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
-	}
+	*(*C.uint64_t)(&c.stride) = C.uint64_t((uint64)(stride))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	c._ret = C.vkGetQueryPoolResults(c.device, c.queryPool, c.firstQuery, c.queryCount, c.dataSize, c.pData, c.stride, c.flags)
 	_ret = Result(c._ret)
 	return
@@ -14820,15 +12928,7 @@ func ResetDescriptorPool(device Device, descriptorPool DescriptorPool, flags Des
 	}
 	c.device = C.VkDevice(device)
 	c.descriptorPool = C.VkDescriptorPool(descriptorPool)
-	{
-		var temp_in_VkDescriptorPoolResetFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkDescriptorPoolResetFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDescriptorPoolResetFlags(temp_in_VkDescriptorPoolResetFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	c._ret = C.vkResetDescriptorPool(c.device, c.descriptorPool, c.flags)
 	_ret = Result(c._ret)
 	return
@@ -15113,15 +13213,7 @@ func ResetCommandPool(device Device, commandPool CommandPool, flags CommandPoolR
 	}
 	c.device = C.VkDevice(device)
 	c.commandPool = C.VkCommandPool(commandPool)
-	{
-		var temp_in_VkCommandPoolResetFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkCommandPoolResetFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkCommandPoolResetFlags(temp_in_VkCommandPoolResetFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	c._ret = C.vkResetCommandPool(c.device, c.commandPool, c.flags)
 	_ret = Result(c._ret)
 	return
@@ -15214,15 +13306,7 @@ func ResetCommandBuffer(commandBuffer CommandBuffer, flags CommandBufferResetFla
 		_ret          C.VkResult
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		var temp_in_VkCommandBufferResetFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkCommandBufferResetFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkCommandBufferResetFlags(temp_in_VkCommandBufferResetFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	c._ret = C.vkResetCommandBuffer(c.commandBuffer, c.flags)
 	_ret = Result(c._ret)
 	return
@@ -15340,15 +13424,7 @@ func CmdSetStencilCompareMask(commandBuffer CommandBuffer, faceMask StencilFaceF
 		compareMask   C.uint32_t
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		var temp_in_VkStencilFaceFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 	c.compareMask = C.uint32_t(compareMask)
 	C.vkCmdSetStencilCompareMask(c.commandBuffer, c.faceMask, c.compareMask)
 }
@@ -15359,15 +13435,7 @@ func CmdSetStencilWriteMask(commandBuffer CommandBuffer, faceMask StencilFaceFla
 		writeMask     C.uint32_t
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		var temp_in_VkStencilFaceFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 	c.writeMask = C.uint32_t(writeMask)
 	C.vkCmdSetStencilWriteMask(c.commandBuffer, c.faceMask, c.writeMask)
 }
@@ -15378,15 +13446,7 @@ func CmdSetStencilReference(commandBuffer CommandBuffer, faceMask StencilFaceFla
 		reference     C.uint32_t
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		var temp_in_VkStencilFaceFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(faceMask)))
-			temp_in_VkStencilFaceFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.faceMask = C.VkStencilFaceFlags(temp_in_VkStencilFaceFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.faceMask)) = C.uint32_t((uint32)((Flags)(faceMask)))
 	c.reference = C.uint32_t(reference)
 	C.vkCmdSetStencilReference(c.commandBuffer, c.faceMask, c.reference)
 }
@@ -15434,11 +13494,7 @@ func CmdBindIndexBuffer(commandBuffer CommandBuffer, buffer Buffer, offset Devic
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 	c.indexType = C.VkIndexType(indexType)
 	C.vkCmdBindIndexBuffer(c.commandBuffer, c.buffer, c.offset, c.indexType)
 }
@@ -15468,11 +13524,7 @@ func CmdBindVertexBuffers(commandBuffer CommandBuffer, firstBinding uint32, buff
 		c.pOffsets = (*C.VkDeviceSize)(m.alloc(C.sizeof_VkDeviceSize * uint(len(offsets))))
 		slice1 := (*[1 << 31]C.VkDeviceSize)(unsafe.Pointer(c.pOffsets))[:len(offsets):len(offsets)]
 		for i1, _ := range offsets {
-			{
-				var temp_in_VkDeviceSize C.uint64_t
-				temp_in_VkDeviceSize = C.uint64_t((uint64)(offsets[i1]))
-				slice1[i1] = C.VkDeviceSize(temp_in_VkDeviceSize)
-			}
+			*(*C.uint64_t)(&slice1[i1]) = C.uint64_t((uint64)(offsets[i1]))
 		}
 	} else {
 		c.pOffsets = nil
@@ -15521,11 +13573,7 @@ func CmdDrawIndirect(commandBuffer CommandBuffer, buffer Buffer, offset DeviceSi
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
 	C.vkCmdDrawIndirect(c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
@@ -15540,11 +13588,7 @@ func CmdDrawIndexedIndirect(commandBuffer CommandBuffer, buffer Buffer, offset D
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 	c.drawCount = C.uint32_t(drawCount)
 	c.stride = C.uint32_t(stride)
 	C.vkCmdDrawIndexedIndirect(c.commandBuffer, c.buffer, c.offset, c.drawCount, c.stride)
@@ -15570,11 +13614,7 @@ func CmdDispatchIndirect(commandBuffer CommandBuffer, buffer Buffer, offset Devi
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.buffer = C.VkBuffer(buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 	C.vkCmdDispatchIndirect(c.commandBuffer, c.buffer, c.offset)
 }
 func CmdCopyBuffer(commandBuffer CommandBuffer, srcBuffer Buffer, dstBuffer Buffer, regions []BufferCopy) {
@@ -15726,16 +13766,8 @@ func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset De
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(dataSize))
-		c.dataSize = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+	*(*C.uint64_t)(&c.dataSize) = C.uint64_t((uint64)(dataSize))
 	c.pData = data
 	C.vkCmdUpdateBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 }
@@ -15749,16 +13781,8 @@ func CmdFillBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset Devi
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(size))
-		c.size = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+	*(*C.uint64_t)(&c.size) = C.uint64_t((uint64)(size))
 	c.data = C.uint32_t(data)
 	C.vkCmdFillBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.size, c.data)
 }
@@ -15896,15 +13920,7 @@ func CmdSetEvent(commandBuffer CommandBuffer, event Event, stageMask PipelineSta
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.event = C.VkEvent(event)
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.stageMask)) = C.uint32_t((uint32)((Flags)(stageMask)))
 	C.vkCmdSetEvent(c.commandBuffer, c.event, c.stageMask)
 }
 func CmdResetEvent(commandBuffer CommandBuffer, event Event, stageMask PipelineStageFlags) {
@@ -15915,15 +13931,7 @@ func CmdResetEvent(commandBuffer CommandBuffer, event Event, stageMask PipelineS
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.event = C.VkEvent(event)
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.stageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.stageMask)) = C.uint32_t((uint32)((Flags)(stageMask)))
 	C.vkCmdResetEvent(c.commandBuffer, c.event, c.stageMask)
 }
 func CmdWaitEvents(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier) {
@@ -15953,24 +13961,8 @@ func CmdWaitEvents(commandBuffer CommandBuffer, events []Event, srcStageMask Pip
 	} else {
 		c.pEvents = nil
 	}
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(srcStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(dstStageMask)))
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
 	if len(memoryBarriers) != 0 {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
@@ -16019,33 +14011,9 @@ func CmdPipelineBarrier(commandBuffer CommandBuffer, srcStageMask PipelineStageF
 	m := pool.take()
 	defer pool.give(m)
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(srcStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dstStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkDependencyFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(dependencyFlags)))
-			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(srcStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(dstStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dependencyFlags)) = C.uint32_t((uint32)((Flags)(dependencyFlags)))
 	c.memoryBarrierCount = C.uint32_t(len(memoryBarriers))
 	if len(memoryBarriers) != 0 {
 		c.pMemoryBarriers = (*C.VkMemoryBarrier)(m.alloc(C.sizeof_VkMemoryBarrier * uint(len(memoryBarriers))))
@@ -16088,15 +14056,7 @@ func CmdBeginQuery(commandBuffer CommandBuffer, queryPool QueryPool, query uint3
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.queryPool = C.VkQueryPool(queryPool)
 	c.query = C.uint32_t(query)
-	{
-		var temp_in_VkQueryControlFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkQueryControlFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkQueryControlFlags(temp_in_VkQueryControlFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	C.vkCmdBeginQuery(c.commandBuffer, c.queryPool, c.query, c.flags)
 }
 func CmdEndQuery(commandBuffer CommandBuffer, queryPool QueryPool, query uint32) {
@@ -16152,25 +14112,9 @@ func CmdCopyQueryPoolResults(commandBuffer CommandBuffer, queryPool QueryPool, f
 	c.firstQuery = C.uint32_t(firstQuery)
 	c.queryCount = C.uint32_t(queryCount)
 	c.dstBuffer = C.VkBuffer(dstBuffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-		c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(stride))
-		c.stride = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkQueryResultFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkQueryResultFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkQueryResultFlags(temp_in_VkQueryResultFlags)
-	}
+	*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
+	*(*C.uint64_t)(&c.stride) = C.uint64_t((uint64)(stride))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	C.vkCmdCopyQueryPoolResults(c.commandBuffer, c.queryPool, c.firstQuery, c.queryCount, c.dstBuffer, c.dstOffset, c.stride, c.flags)
 }
 func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageFlags ShaderStageFlags, offset uint32, values []byte) {
@@ -16184,15 +14128,7 @@ func CmdPushConstants(commandBuffer CommandBuffer, layout PipelineLayout, stageF
 	}
 	c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 	c.layout = C.VkPipelineLayout(layout)
-	{
-		var temp_in_VkShaderStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(stageFlags)))
-			temp_in_VkShaderStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.stageFlags = C.VkShaderStageFlags(temp_in_VkShaderStageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.stageFlags)) = C.uint32_t((uint32)((Flags)(stageFlags)))
 	c.offset = C.uint32_t(offset)
 	c.size = C.uint32_t(len(values))
 	if len(values) != 0 {
@@ -16519,11 +14455,7 @@ func (g *BindBufferMemoryInfo) toC(c *C.VkBindBufferMemoryInfo, m *cmemory) {
 	}
 	c.buffer = C.VkBuffer(g.Buffer)
 	c.memory = C.VkDeviceMemory(g.Memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(g.MemoryOffset))
 }
 func (g *BindBufferMemoryInfo) fromC(c *C.VkBindBufferMemoryInfo) {
 	if g.Next != nil {
@@ -16531,11 +14463,7 @@ func (g *BindBufferMemoryInfo) fromC(c *C.VkBindBufferMemoryInfo) {
 	}
 	g.Buffer = Buffer(c.buffer)
 	g.Memory = DeviceMemory(c.memory)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.MemoryOffset) = uint64((C.uint64_t)(c.memoryOffset))
 }
 func (s *BindBufferMemoryInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BIND_BUFFER_MEMORY_INFO
@@ -16600,11 +14528,7 @@ func (g *BindImageMemoryInfo) toC(c *C.VkBindImageMemoryInfo, m *cmemory) {
 	}
 	c.image = C.VkImage(g.Image)
 	c.memory = C.VkDeviceMemory(g.Memory)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.MemoryOffset))
-		c.memoryOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.memoryOffset) = C.uint64_t((uint64)(g.MemoryOffset))
 }
 func (g *BindImageMemoryInfo) fromC(c *C.VkBindImageMemoryInfo) {
 	if g.Next != nil {
@@ -16612,11 +14536,7 @@ func (g *BindImageMemoryInfo) fromC(c *C.VkBindImageMemoryInfo) {
 	}
 	g.Image = Image(c.image)
 	g.Memory = DeviceMemory(c.memory)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.memoryOffset))
-		g.MemoryOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.MemoryOffset) = uint64((C.uint64_t)(c.memoryOffset))
 }
 func (s *BindImageMemoryInfo) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_BIND_IMAGE_MEMORY_INFO
@@ -16689,15 +14609,7 @@ func ToGetDeviceGroupPeerMemoryFeatures(p PFNVoidFunction) (fn FuncGetDeviceGrou
 			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 			for i1, _ := range peerMemoryFeatures {
-				{
-					var temp_in_VkPeerMemoryFeatureFlags C.VkFlags
-					{
-						var temp_in_VkFlags C.uint32_t
-						temp_in_VkFlags = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-						temp_in_VkPeerMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
-					}
-					slice1[i1] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-				}
+				*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
 			}
 		} else {
 			c.pPeerMemoryFeatures = nil
@@ -16706,15 +14618,7 @@ func ToGetDeviceGroupPeerMemoryFeatures(p PFNVoidFunction) (fn FuncGetDeviceGrou
 		if len(peerMemoryFeatures) != 0 {
 			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 			for i1, _ := range peerMemoryFeatures {
-				{
-					var temp_in_VkPeerMemoryFeatureFlags Flags
-					{
-						var temp_in_VkFlags uint32
-						temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-						temp_in_VkPeerMemoryFeatureFlags = Flags(temp_in_VkFlags)
-					}
-					peerMemoryFeatures[i1] = PeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-				}
+				*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
 			}
 		}
 	}
@@ -17358,24 +15262,8 @@ func (g *PhysicalDeviceImageFormatInfo2) toC(c *C.VkPhysicalDeviceImageFormatInf
 	c.format = C.VkFormat(g.Format)
 	c._type = C.VkImageType(g.Type)
 	c.tiling = C.VkImageTiling(g.Tiling)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
-	{
-		var temp_in_VkImageCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(g.Usage)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *PhysicalDeviceImageFormatInfo2) fromC(c *C.VkPhysicalDeviceImageFormatInfo2) {
 	if g.Next != nil {
@@ -17384,24 +15272,8 @@ func (g *PhysicalDeviceImageFormatInfo2) fromC(c *C.VkPhysicalDeviceImageFormatI
 	g.Format = Format(c.format)
 	g.Type = ImageType(c._type)
 	g.Tiling = ImageTiling(c.tiling)
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
-	{
-		var temp_in_VkImageCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkImageCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ImageCreateFlags(temp_in_VkImageCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Usage)) = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 func (s *PhysicalDeviceImageFormatInfo2) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2
@@ -17651,15 +15523,7 @@ func (g *PhysicalDeviceSparseImageFormatInfo2) toC(c *C.VkPhysicalDeviceSparseIm
 	c.format = C.VkFormat(g.Format)
 	c._type = C.VkImageType(g.Type)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(g.Usage)))
 	c.tiling = C.VkImageTiling(g.Tiling)
 }
 func (g *PhysicalDeviceSparseImageFormatInfo2) fromC(c *C.VkPhysicalDeviceSparseImageFormatInfo2) {
@@ -17669,15 +15533,7 @@ func (g *PhysicalDeviceSparseImageFormatInfo2) fromC(c *C.VkPhysicalDeviceSparse
 	g.Format = Format(c.format)
 	g.Type = ImageType(c._type)
 	g.Samples = SampleCountFlagBits(c.samples)
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Usage = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.Usage)) = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
 	g.Tiling = ImageTiling(c.tiling)
 }
 func (s *PhysicalDeviceSparseImageFormatInfo2) sType() C.VkStructureType {
@@ -17796,15 +15652,7 @@ func ToTrimCommandPool(p PFNVoidFunction) (fn FuncTrimCommandPool) {
 		}
 		c.device = C.VkDevice(device)
 		c.commandPool = C.VkCommandPool(commandPool)
-		{
-			var temp_in_VkCommandPoolTrimFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkCommandPoolTrimFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		C.callPFN_vkTrimCommandPool(C.PFN_vkTrimCommandPool(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 	}
 }
@@ -17822,15 +15670,7 @@ func (g *DeviceQueueInfo2) toC(c *C.VkDeviceQueueInfo2, m *cmemory) {
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDeviceQueueCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDeviceQueueCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.queueFamilyIndex = C.uint32_t(g.QueueFamilyIndex)
 	c.queueIndex = C.uint32_t(g.QueueIndex)
 }
@@ -17838,15 +15678,7 @@ func (g *DeviceQueueInfo2) fromC(c *C.VkDeviceQueueInfo2) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDeviceQueueCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDeviceQueueCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DeviceQueueCreateFlags(temp_in_VkDeviceQueueCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.QueueFamilyIndex = uint32(c.queueFamilyIndex)
 	g.QueueIndex = uint32(c.queueIndex)
 }
@@ -18073,15 +15905,7 @@ func (g *DescriptorUpdateTemplateCreateInfo) toC(c *C.VkDescriptorUpdateTemplate
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDescriptorUpdateTemplateCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDescriptorUpdateTemplateCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDescriptorUpdateTemplateCreateFlags(temp_in_VkDescriptorUpdateTemplateCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.descriptorUpdateEntryCount = C.uint32_t(len(g.DescriptorUpdateEntries))
 	if len(g.DescriptorUpdateEntries) != 0 {
 		c.pDescriptorUpdateEntries = (*C.VkDescriptorUpdateTemplateEntry)(m.alloc(C.sizeof_VkDescriptorUpdateTemplateEntry * uint(len(g.DescriptorUpdateEntries))))
@@ -18102,15 +15926,7 @@ func (g *DescriptorUpdateTemplateCreateInfo) fromC(c *C.VkDescriptorUpdateTempla
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDescriptorUpdateTemplateCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDescriptorUpdateTemplateCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DescriptorUpdateTemplateCreateFlags(temp_in_VkDescriptorUpdateTemplateCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.DescriptorUpdateEntries = make([]DescriptorUpdateTemplateEntry, int(c.descriptorUpdateEntryCount))
 	if len(g.DescriptorUpdateEntries) != 0 {
 		slice1 := (*[1 << 31]C.VkDescriptorUpdateTemplateEntry)(unsafe.Pointer(c.pDescriptorUpdateEntries))[:len(g.DescriptorUpdateEntries):len(g.DescriptorUpdateEntries)]
@@ -18241,48 +16057,16 @@ func (g *PhysicalDeviceExternalBufferInfo) toC(c *C.VkPhysicalDeviceExternalBuff
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkBufferCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkBufferCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkBufferCreateFlags(temp_in_VkBufferCreateFlags)
-	}
-	{
-		var temp_in_VkBufferUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Usage)))
-			temp_in_VkBufferUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.usage = C.VkBufferUsageFlags(temp_in_VkBufferUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(g.Usage)))
 	c.handleType = C.VkExternalMemoryHandleTypeFlagBits(g.HandleType)
 }
 func (g *PhysicalDeviceExternalBufferInfo) fromC(c *C.VkPhysicalDeviceExternalBufferInfo) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkBufferCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkBufferCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = BufferCreateFlags(temp_in_VkBufferCreateFlags)
-	}
-	{
-		var temp_in_VkBufferUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
-			temp_in_VkBufferUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.Usage = BufferUsageFlags(temp_in_VkBufferUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+	*(*uint32)((*Flags)(&g.Usage)) = uint32((C.uint32_t)((C.VkFlags)(c.usage)))
 	g.HandleType = ExternalMemoryHandleTypeFlagBits(c.handleType)
 }
 func (s *PhysicalDeviceExternalBufferInfo) sType() C.VkStructureType {
@@ -18313,62 +16097,14 @@ type ExternalMemoryProperties struct {
 }
 
 func (g *ExternalMemoryProperties) toC(c *C.VkExternalMemoryProperties) {
-	{
-		var temp_in_VkExternalMemoryFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
-			temp_in_VkExternalMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.externalMemoryFeatures = C.VkExternalMemoryFeatureFlags(temp_in_VkExternalMemoryFeatureFlags)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.exportFromImportedHandleTypes = C.VkExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.compatibleHandleTypes = C.VkExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.externalMemoryFeatures)) = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.exportFromImportedHandleTypes)) = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.compatibleHandleTypes)) = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
 }
 func (g *ExternalMemoryProperties) fromC(c *C.VkExternalMemoryProperties) {
-	{
-		var temp_in_VkExternalMemoryFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
-			temp_in_VkExternalMemoryFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExternalMemoryFeatures = ExternalMemoryFeatureFlags(temp_in_VkExternalMemoryFeatureFlags)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExportFromImportedHandleTypes = ExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlags(temp_in_VkExternalMemoryHandleTypeFlags)
-	}
+	*(*uint32)((*Flags)(&g.ExternalMemoryFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
+	*(*uint32)((*Flags)(&g.ExportFromImportedHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+	*(*uint32)((*Flags)(&g.CompatibleHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
 }
 
 type ExternalBufferProperties struct {
@@ -18491,65 +16227,17 @@ func (g *ExternalFenceProperties) toC(c *C.VkExternalFenceProperties, m *cmemory
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkExternalFenceHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
-			temp_in_VkExternalFenceHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.exportFromImportedHandleTypes = C.VkExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalFenceHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
-			temp_in_VkExternalFenceHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.compatibleHandleTypes = C.VkExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalFenceFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalFenceFeatures)))
-			temp_in_VkExternalFenceFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.externalFenceFeatures = C.VkExternalFenceFeatureFlags(temp_in_VkExternalFenceFeatureFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.exportFromImportedHandleTypes)) = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.compatibleHandleTypes)) = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.externalFenceFeatures)) = C.uint32_t((uint32)((Flags)(g.ExternalFenceFeatures)))
 }
 func (g *ExternalFenceProperties) fromC(c *C.VkExternalFenceProperties) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkExternalFenceHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
-			temp_in_VkExternalFenceHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExportFromImportedHandleTypes = ExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalFenceHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
-			temp_in_VkExternalFenceHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.CompatibleHandleTypes = ExternalFenceHandleTypeFlags(temp_in_VkExternalFenceHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalFenceFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalFenceFeatures)))
-			temp_in_VkExternalFenceFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExternalFenceFeatures = ExternalFenceFeatureFlags(temp_in_VkExternalFenceFeatureFlags)
-	}
+	*(*uint32)((*Flags)(&g.ExportFromImportedHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+	*(*uint32)((*Flags)(&g.CompatibleHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+	*(*uint32)((*Flags)(&g.ExternalFenceFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.externalFenceFeatures)))
 }
 func (s *ExternalFenceProperties) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_EXTERNAL_FENCE_PROPERTIES
@@ -18653,65 +16341,17 @@ func (g *ExternalSemaphoreProperties) toC(c *C.VkExternalSemaphoreProperties, m 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkExternalSemaphoreHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
-			temp_in_VkExternalSemaphoreHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.exportFromImportedHandleTypes = C.VkExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalSemaphoreHandleTypeFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
-			temp_in_VkExternalSemaphoreHandleTypeFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.compatibleHandleTypes = C.VkExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalSemaphoreFeatureFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalSemaphoreFeatures)))
-			temp_in_VkExternalSemaphoreFeatureFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.externalSemaphoreFeatures = C.VkExternalSemaphoreFeatureFlags(temp_in_VkExternalSemaphoreFeatureFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.exportFromImportedHandleTypes)) = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.compatibleHandleTypes)) = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.externalSemaphoreFeatures)) = C.uint32_t((uint32)((Flags)(g.ExternalSemaphoreFeatures)))
 }
 func (g *ExternalSemaphoreProperties) fromC(c *C.VkExternalSemaphoreProperties) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkExternalSemaphoreHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
-			temp_in_VkExternalSemaphoreHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExportFromImportedHandleTypes = ExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalSemaphoreHandleTypeFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
-			temp_in_VkExternalSemaphoreHandleTypeFlags = Flags(temp_in_VkFlags)
-		}
-		g.CompatibleHandleTypes = ExternalSemaphoreHandleTypeFlags(temp_in_VkExternalSemaphoreHandleTypeFlags)
-	}
-	{
-		var temp_in_VkExternalSemaphoreFeatureFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalSemaphoreFeatures)))
-			temp_in_VkExternalSemaphoreFeatureFlags = Flags(temp_in_VkFlags)
-		}
-		g.ExternalSemaphoreFeatures = ExternalSemaphoreFeatureFlags(temp_in_VkExternalSemaphoreFeatureFlags)
-	}
+	*(*uint32)((*Flags)(&g.ExportFromImportedHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+	*(*uint32)((*Flags)(&g.CompatibleHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
+	*(*uint32)((*Flags)(&g.ExternalSemaphoreFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.externalSemaphoreFeatures)))
 }
 func (s *ExternalSemaphoreProperties) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_EXTERNAL_SEMAPHORE_PROPERTIES
@@ -18921,15 +16561,7 @@ func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDevi
 		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 		slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i1, _ := range peerMemoryFeatures {
-			{
-				var temp_in_VkPeerMemoryFeatureFlags C.VkFlags
-				{
-					var temp_in_VkFlags C.uint32_t
-					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-					temp_in_VkPeerMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
-				}
-				slice1[i1] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-			}
+			*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
 		}
 	} else {
 		c.pPeerMemoryFeatures = nil
@@ -18938,15 +16570,7 @@ func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDevi
 	if len(peerMemoryFeatures) != 0 {
 		slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 		for i1, _ := range peerMemoryFeatures {
-			{
-				var temp_in_VkPeerMemoryFeatureFlags Flags
-				{
-					var temp_in_VkFlags uint32
-					temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-					temp_in_VkPeerMemoryFeatureFlags = Flags(temp_in_VkFlags)
-				}
-				peerMemoryFeatures[i1] = PeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-			}
+			*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
 		}
 	}
 }
@@ -19302,15 +16926,7 @@ func TrimCommandPool(device Device, commandPool CommandPool, flags CommandPoolTr
 	}
 	c.device = C.VkDevice(device)
 	c.commandPool = C.VkCommandPool(commandPool)
-	{
-		var temp_in_VkCommandPoolTrimFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-			temp_in_VkCommandPoolTrimFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 	C.vkTrimCommandPool(c.device, c.commandPool, c.flags)
 }
 func GetDeviceQueue2(device Device, queueInfo *DeviceQueueInfo2, queue *Queue) {
@@ -19713,34 +17329,10 @@ func (g *SurfaceCapabilitiesKHR) toC(c *C.VkSurfaceCapabilitiesKHR) {
 	g.MinImageExtent.toC(&c.minImageExtent)
 	g.MaxImageExtent.toC(&c.maxImageExtent)
 	c.maxImageArrayLayers = C.uint32_t(g.MaxImageArrayLayers)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedTransforms)) = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
 	c.currentTransform = C.VkSurfaceTransformFlagBitsKHR(g.CurrentTransform)
-	{
-		var temp_in_VkCompositeAlphaFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
-			temp_in_VkCompositeAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedCompositeAlpha = C.VkCompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
-	}
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedUsageFlags = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedCompositeAlpha)) = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedUsageFlags)) = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
 }
 func (g *SurfaceCapabilitiesKHR) fromC(c *C.VkSurfaceCapabilitiesKHR) {
 	g.MinImageCount = uint32(c.minImageCount)
@@ -19749,34 +17341,10 @@ func (g *SurfaceCapabilitiesKHR) fromC(c *C.VkSurfaceCapabilitiesKHR) {
 	g.MinImageExtent.fromC(&c.minImageExtent)
 	g.MaxImageExtent.fromC(&c.maxImageExtent)
 	g.MaxImageArrayLayers = uint32(c.maxImageArrayLayers)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.SupportedTransforms)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
 	g.CurrentTransform = SurfaceTransformFlagBitsKHR(c.currentTransform)
-	{
-		var temp_in_VkCompositeAlphaFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
-			temp_in_VkCompositeAlphaFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedCompositeAlpha = CompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
-	}
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.SupportedCompositeAlpha)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
+	*(*uint32)((*Flags)(&g.SupportedUsageFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
 }
 
 type FuncGetPhysicalDeviceSurfaceCapabilitiesKHR func(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities *SurfaceCapabilitiesKHR) (_ret Result)
@@ -19959,30 +17527,14 @@ func (g *SwapchainCreateInfoKHR) toC(c *C.VkSwapchainCreateInfoKHR, m *cmemory) 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkSwapchainCreateFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSwapchainCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSwapchainCreateFlagsKHR(temp_in_VkSwapchainCreateFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.surface = C.VkSurfaceKHR(g.Surface)
 	c.minImageCount = C.uint32_t(g.MinImageCount)
 	c.imageFormat = C.VkFormat(g.ImageFormat)
 	c.imageColorSpace = C.VkColorSpaceKHR(g.ImageColorSpace)
 	g.ImageExtent.toC(&c.imageExtent)
 	c.imageArrayLayers = C.uint32_t(g.ImageArrayLayers)
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ImageUsage)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.imageUsage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.imageUsage)) = C.uint32_t((uint32)((Flags)(g.ImageUsage)))
 	c.imageSharingMode = C.VkSharingMode(g.ImageSharingMode)
 	c.queueFamilyIndexCount = C.uint32_t(len(g.QueueFamilyIndices))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -20008,30 +17560,14 @@ func (g *SwapchainCreateInfoKHR) fromC(c *C.VkSwapchainCreateInfoKHR) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkSwapchainCreateFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSwapchainCreateFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SwapchainCreateFlagsKHR(temp_in_VkSwapchainCreateFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Surface = SurfaceKHR(c.surface)
 	g.MinImageCount = uint32(c.minImageCount)
 	g.ImageFormat = Format(c.imageFormat)
 	g.ImageColorSpace = ColorSpaceKHR(c.imageColorSpace)
 	g.ImageExtent.fromC(&c.imageExtent)
 	g.ImageArrayLayers = uint32(c.imageArrayLayers)
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.imageUsage)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.ImageUsage = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
+	*(*uint32)((*Flags)(&g.ImageUsage)) = uint32((C.uint32_t)((C.VkFlags)(c.imageUsage)))
 	g.ImageSharingMode = SharingMode(c.imageSharingMode)
 	g.QueueFamilyIndices = make([]uint32, int(c.queueFamilyIndexCount))
 	if len(g.QueueFamilyIndices) != 0 {
@@ -20355,15 +17891,7 @@ func (g *DeviceGroupPresentCapabilitiesKHR) toC(c *C.VkDeviceGroupPresentCapabil
 	for i, _ := range g.PresentMask {
 		c.presentMask[i] = C.uint32_t(g.PresentMask[i])
 	}
-	{
-		var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Modes)))
-			temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.modes = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.modes)) = C.uint32_t((uint32)((Flags)(g.Modes)))
 }
 func (g *DeviceGroupPresentCapabilitiesKHR) fromC(c *C.VkDeviceGroupPresentCapabilitiesKHR) {
 	if g.Next != nil {
@@ -20372,15 +17900,7 @@ func (g *DeviceGroupPresentCapabilitiesKHR) fromC(c *C.VkDeviceGroupPresentCapab
 	for i, _ := range g.PresentMask {
 		g.PresentMask[i] = uint32(c.presentMask[i])
 	}
-	{
-		var temp_in_VkDeviceGroupPresentModeFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.modes)))
-			temp_in_VkDeviceGroupPresentModeFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.Modes = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.Modes)) = uint32((C.uint32_t)((C.VkFlags)(c.modes)))
 }
 func (s *DeviceGroupPresentCapabilitiesKHR) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_DEVICE_GROUP_PRESENT_CAPABILITIES_KHR
@@ -20445,28 +17965,14 @@ func ToGetDeviceGroupSurfacePresentModesKHR(p PFNVoidFunction) (fn FuncGetDevice
 		c.surface = C.VkSurfaceKHR(surface)
 		if modes != nil {
 			c.pModes = (*C.VkDeviceGroupPresentModeFlagsKHR)(m.alloc(C.sizeof_VkDeviceGroupPresentModeFlagsKHR))
-			{
-				var temp_in_VkDeviceGroupPresentModeFlagsKHR C.VkFlags
-				{
-					var temp_in_VkFlags C.uint32_t
-					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(*modes)))
-					temp_in_VkDeviceGroupPresentModeFlagsKHR = C.VkFlags(temp_in_VkFlags)
-				}
-				*c.pModes = C.VkDeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
-			}
+			*(*C.uint32_t)((*C.VkFlags)(c.pModes)) = C.uint32_t((uint32)((Flags)(*modes)))
 		} else {
 			c.pModes = nil
 		}
 		c._ret = C.callPFN_vkGetDeviceGroupSurfacePresentModesKHR(C.PFN_vkGetDeviceGroupSurfacePresentModesKHR(unsafe.Pointer(p)), c.device, c.surface, c.pModes)
 		_ret = Result(c._ret)
 		if modes != nil {
-			var temp_in_VkDeviceGroupPresentModeFlagsKHR Flags
-			{
-				var temp_in_VkFlags uint32
-				temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(*c.pModes)))
-				temp_in_VkDeviceGroupPresentModeFlagsKHR = Flags(temp_in_VkFlags)
-			}
-			*modes = DeviceGroupPresentModeFlagsKHR(temp_in_VkDeviceGroupPresentModeFlagsKHR)
+			*(*uint32)((*Flags)(modes)) = uint32((C.uint32_t)((C.VkFlags)(*c.pModes)))
 		}
 		return
 	}
@@ -20629,15 +18135,7 @@ func (g *DisplayPropertiesKHR) toC(c *C.VkDisplayPropertiesKHR, m *cmemory) {
 	c.displayName = toCString(g.DisplayName, m)
 	g.PhysicalDimensions.toC(&c.physicalDimensions)
 	g.PhysicalResolution.toC(&c.physicalResolution)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedTransforms)) = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
 	if g.PlaneReorderPossible {
 		c.planeReorderPossible = 1
 	} else {
@@ -20654,15 +18152,7 @@ func (g *DisplayPropertiesKHR) fromC(c *C.VkDisplayPropertiesKHR) {
 	g.DisplayName = toGoString(c.displayName)
 	g.PhysicalDimensions.fromC(&c.physicalDimensions)
 	g.PhysicalResolution.fromC(&c.physicalResolution)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.SupportedTransforms)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
 	g.PlaneReorderPossible = c.planeReorderPossible != 0
 	g.PersistentContent = c.persistentContent != 0
 }
@@ -20902,30 +18392,14 @@ func (g *DisplayModeCreateInfoKHR) toC(c *C.VkDisplayModeCreateInfoKHR, m *cmemo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDisplayModeCreateFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDisplayModeCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDisplayModeCreateFlagsKHR(temp_in_VkDisplayModeCreateFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	g.Parameters.toC(&c.parameters)
 }
 func (g *DisplayModeCreateInfoKHR) fromC(c *C.VkDisplayModeCreateInfoKHR) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDisplayModeCreateFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDisplayModeCreateFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DisplayModeCreateFlagsKHR(temp_in_VkDisplayModeCreateFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Parameters.fromC(&c.parameters)
 }
 func (s *DisplayModeCreateInfoKHR) sType() C.VkStructureType {
@@ -21005,15 +18479,7 @@ type DisplayPlaneCapabilitiesKHR struct {
 }
 
 func (g *DisplayPlaneCapabilitiesKHR) toC(c *C.VkDisplayPlaneCapabilitiesKHR) {
-	{
-		var temp_in_VkDisplayPlaneAlphaFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedAlpha)))
-			temp_in_VkDisplayPlaneAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedAlpha = C.VkDisplayPlaneAlphaFlagsKHR(temp_in_VkDisplayPlaneAlphaFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedAlpha)) = C.uint32_t((uint32)((Flags)(g.SupportedAlpha)))
 	g.MinSrcPosition.toC(&c.minSrcPosition)
 	g.MaxSrcPosition.toC(&c.maxSrcPosition)
 	g.MinSrcExtent.toC(&c.minSrcExtent)
@@ -21024,15 +18490,7 @@ func (g *DisplayPlaneCapabilitiesKHR) toC(c *C.VkDisplayPlaneCapabilitiesKHR) {
 	g.MaxDstExtent.toC(&c.maxDstExtent)
 }
 func (g *DisplayPlaneCapabilitiesKHR) fromC(c *C.VkDisplayPlaneCapabilitiesKHR) {
-	{
-		var temp_in_VkDisplayPlaneAlphaFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedAlpha)))
-			temp_in_VkDisplayPlaneAlphaFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedAlpha = DisplayPlaneAlphaFlagsKHR(temp_in_VkDisplayPlaneAlphaFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.SupportedAlpha)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedAlpha)))
 	g.MinSrcPosition.fromC(&c.minSrcPosition)
 	g.MaxSrcPosition.fromC(&c.maxSrcPosition)
 	g.MinSrcExtent.fromC(&c.minSrcExtent)
@@ -21099,15 +18557,7 @@ func (g *DisplaySurfaceCreateInfoKHR) toC(c *C.VkDisplaySurfaceCreateInfoKHR, m 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDisplaySurfaceCreateFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDisplaySurfaceCreateFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDisplaySurfaceCreateFlagsKHR(temp_in_VkDisplaySurfaceCreateFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.displayMode = C.VkDisplayModeKHR(g.DisplayMode)
 	c.planeIndex = C.uint32_t(g.PlaneIndex)
 	c.planeStackIndex = C.uint32_t(g.PlaneStackIndex)
@@ -21120,15 +18570,7 @@ func (g *DisplaySurfaceCreateInfoKHR) fromC(c *C.VkDisplaySurfaceCreateInfoKHR) 
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDisplaySurfaceCreateFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDisplaySurfaceCreateFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DisplaySurfaceCreateFlagsKHR(temp_in_VkDisplaySurfaceCreateFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.DisplayMode = DisplayModeKHR(c.displayMode)
 	g.PlaneIndex = uint32(c.planeIndex)
 	g.PlaneStackIndex = uint32(c.planeStackIndex)
@@ -21498,15 +18940,7 @@ func ToGetDeviceGroupPeerMemoryFeaturesKHR(p PFNVoidFunction) (fn FuncGetDeviceG
 			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
 			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 			for i1, _ := range peerMemoryFeatures {
-				{
-					var temp_in_VkPeerMemoryFeatureFlags C.VkFlags
-					{
-						var temp_in_VkFlags C.uint32_t
-						temp_in_VkFlags = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-						temp_in_VkPeerMemoryFeatureFlags = C.VkFlags(temp_in_VkFlags)
-					}
-					slice1[i1] = C.VkPeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-				}
+				*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
 			}
 		} else {
 			c.pPeerMemoryFeatures = nil
@@ -21515,15 +18949,7 @@ func ToGetDeviceGroupPeerMemoryFeaturesKHR(p PFNVoidFunction) (fn FuncGetDeviceG
 		if len(peerMemoryFeatures) != 0 {
 			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
 			for i1, _ := range peerMemoryFeatures {
-				{
-					var temp_in_VkPeerMemoryFeatureFlags Flags
-					{
-						var temp_in_VkFlags uint32
-						temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-						temp_in_VkPeerMemoryFeatureFlags = Flags(temp_in_VkFlags)
-					}
-					peerMemoryFeatures[i1] = PeerMemoryFeatureFlags(temp_in_VkPeerMemoryFeatureFlags)
-				}
+				*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
 			}
 		}
 	}
@@ -21581,15 +19007,7 @@ func ToTrimCommandPoolKHR(p PFNVoidFunction) (fn FuncTrimCommandPoolKHR) {
 		}
 		c.device = C.VkDevice(device)
 		c.commandPool = C.VkCommandPool(commandPool)
-		{
-			var temp_in_VkCommandPoolTrimFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkCommandPoolTrimFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkCommandPoolTrimFlags(temp_in_VkCommandPoolTrimFlags)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		C.callPFN_vkTrimCommandPoolKHR(C.PFN_vkTrimCommandPoolKHR(unsafe.Pointer(p)), c.device, c.commandPool, c.flags)
 	}
 }
@@ -21862,15 +19280,7 @@ func (g *ImportSemaphoreFdInfoKHR) toC(c *C.VkImportSemaphoreFdInfoKHR, m *cmemo
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.semaphore = C.VkSemaphore(g.Semaphore)
-	{
-		var temp_in_VkSemaphoreImportFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSemaphoreImportFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSemaphoreImportFlags(temp_in_VkSemaphoreImportFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.handleType = C.VkExternalSemaphoreHandleTypeFlagBits(g.HandleType)
 	c.fd = C.int(g.Fd)
 }
@@ -21879,15 +19289,7 @@ func (g *ImportSemaphoreFdInfoKHR) fromC(c *C.VkImportSemaphoreFdInfoKHR) {
 		g.Next.fromCStructure(c.pNext)
 	}
 	g.Semaphore = Semaphore(c.semaphore)
-	{
-		var temp_in_VkSemaphoreImportFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSemaphoreImportFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SemaphoreImportFlags(temp_in_VkSemaphoreImportFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.HandleType = ExternalSemaphoreHandleTypeFlagBits(c.handleType)
 	g.Fd = int32(c.fd)
 }
@@ -22171,15 +19573,7 @@ func (g *AttachmentDescription2KHR) toC(c *C.VkAttachmentDescription2KHR, m *cme
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkAttachmentDescriptionFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkAttachmentDescriptionFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkAttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.format = C.VkFormat(g.Format)
 	c.samples = C.VkSampleCountFlagBits(g.Samples)
 	c.loadOp = C.VkAttachmentLoadOp(g.LoadOp)
@@ -22193,15 +19587,7 @@ func (g *AttachmentDescription2KHR) fromC(c *C.VkAttachmentDescription2KHR) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkAttachmentDescriptionFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkAttachmentDescriptionFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = AttachmentDescriptionFlags(temp_in_VkAttachmentDescriptionFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Format = Format(c.format)
 	g.Samples = SampleCountFlagBits(c.samples)
 	g.LoadOp = AttachmentLoadOp(c.loadOp)
@@ -22244,15 +19630,7 @@ func (g *AttachmentReference2KHR) toC(c *C.VkAttachmentReference2KHR, m *cmemory
 	}
 	c.attachment = C.uint32_t(g.Attachment)
 	c.layout = C.VkImageLayout(g.Layout)
-	{
-		var temp_in_VkImageAspectFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.AspectMask)))
-			temp_in_VkImageAspectFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.aspectMask = C.VkImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.aspectMask)) = C.uint32_t((uint32)((Flags)(g.AspectMask)))
 }
 func (g *AttachmentReference2KHR) fromC(c *C.VkAttachmentReference2KHR) {
 	if g.Next != nil {
@@ -22260,15 +19638,7 @@ func (g *AttachmentReference2KHR) fromC(c *C.VkAttachmentReference2KHR) {
 	}
 	g.Attachment = uint32(c.attachment)
 	g.Layout = ImageLayout(c.layout)
-	{
-		var temp_in_VkImageAspectFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
-			temp_in_VkImageAspectFlags = Flags(temp_in_VkFlags)
-		}
-		g.AspectMask = ImageAspectFlags(temp_in_VkImageAspectFlags)
-	}
+	*(*uint32)((*Flags)(&g.AspectMask)) = uint32((C.uint32_t)((C.VkFlags)(c.aspectMask)))
 }
 func (s *AttachmentReference2KHR) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2_KHR
@@ -22306,15 +19676,7 @@ func (g *SubpassDescription2KHR) toC(c *C.VkSubpassDescription2KHR, m *cmemory) 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkSubpassDescriptionFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkSubpassDescriptionFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkSubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
 	c.viewMask = C.uint32_t(g.ViewMask)
 	c.inputAttachmentCount = C.uint32_t(len(g.InputAttachments))
@@ -22367,15 +19729,7 @@ func (g *SubpassDescription2KHR) fromC(c *C.VkSubpassDescription2KHR) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkSubpassDescriptionFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkSubpassDescriptionFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = SubpassDescriptionFlags(temp_in_VkSubpassDescriptionFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
 	g.ViewMask = uint32(c.viewMask)
 	g.InputAttachments = make([]AttachmentReference2KHR, int(c.inputAttachmentCount))
@@ -22447,51 +19801,11 @@ func (g *SubpassDependency2KHR) toC(c *C.VkSubpassDependency2KHR, m *cmemory) {
 	}
 	c.srcSubpass = C.uint32_t(g.SrcSubpass)
 	c.dstSubpass = C.uint32_t(g.DstSubpass)
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
-			temp_in_VkPipelineStageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstStageMask = C.VkPipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.srcAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
-			temp_in_VkAccessFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dstAccessMask = C.VkAccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkDependencyFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
-			temp_in_VkDependencyFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.dependencyFlags = C.VkDependencyFlags(temp_in_VkDependencyFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcStageMask)) = C.uint32_t((uint32)((Flags)(g.SrcStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstStageMask)) = C.uint32_t((uint32)((Flags)(g.DstStageMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.srcAccessMask)) = C.uint32_t((uint32)((Flags)(g.SrcAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dstAccessMask)) = C.uint32_t((uint32)((Flags)(g.DstAccessMask)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.dependencyFlags)) = C.uint32_t((uint32)((Flags)(g.DependencyFlags)))
 	c.viewOffset = C.int32_t(g.ViewOffset)
 }
 func (g *SubpassDependency2KHR) fromC(c *C.VkSubpassDependency2KHR) {
@@ -22500,51 +19814,11 @@ func (g *SubpassDependency2KHR) fromC(c *C.VkSubpassDependency2KHR) {
 	}
 	g.SrcSubpass = uint32(c.srcSubpass)
 	g.DstSubpass = uint32(c.dstSubpass)
-	{
-		var temp_in_VkPipelineStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
-			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkPipelineStageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
-			temp_in_VkPipelineStageFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstStageMask = PipelineStageFlags(temp_in_VkPipelineStageFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.SrcAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkAccessFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
-			temp_in_VkAccessFlags = Flags(temp_in_VkFlags)
-		}
-		g.DstAccessMask = AccessFlags(temp_in_VkAccessFlags)
-	}
-	{
-		var temp_in_VkDependencyFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
-			temp_in_VkDependencyFlags = Flags(temp_in_VkFlags)
-		}
-		g.DependencyFlags = DependencyFlags(temp_in_VkDependencyFlags)
-	}
+	*(*uint32)((*Flags)(&g.SrcStageMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcStageMask)))
+	*(*uint32)((*Flags)(&g.DstStageMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstStageMask)))
+	*(*uint32)((*Flags)(&g.SrcAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.srcAccessMask)))
+	*(*uint32)((*Flags)(&g.DstAccessMask)) = uint32((C.uint32_t)((C.VkFlags)(c.dstAccessMask)))
+	*(*uint32)((*Flags)(&g.DependencyFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.dependencyFlags)))
 	g.ViewOffset = int32(c.viewOffset)
 }
 func (s *SubpassDependency2KHR) sType() C.VkStructureType {
@@ -22580,15 +19854,7 @@ func (g *RenderPassCreateInfo2KHR) toC(c *C.VkRenderPassCreateInfo2KHR, m *cmemo
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkRenderPassCreateFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkRenderPassCreateFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkRenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.attachmentCount = C.uint32_t(len(g.Attachments))
 	if len(g.Attachments) != 0 {
 		c.pAttachments = (*C.VkAttachmentDescription2KHR)(m.alloc(C.sizeof_VkAttachmentDescription2KHR * uint(len(g.Attachments))))
@@ -22634,15 +19900,7 @@ func (g *RenderPassCreateInfo2KHR) fromC(c *C.VkRenderPassCreateInfo2KHR) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkRenderPassCreateFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkRenderPassCreateFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = RenderPassCreateFlags(temp_in_VkRenderPassCreateFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Attachments = make([]AttachmentDescription2KHR, int(c.attachmentCount))
 	if len(g.Attachments) != 0 {
 		slice1 := (*[1 << 31]C.VkAttachmentDescription2KHR)(unsafe.Pointer(c.pAttachments))[:len(g.Attachments):len(g.Attachments)]
@@ -22947,15 +20205,7 @@ func (g *ImportFenceFdInfoKHR) toC(c *C.VkImportFenceFdInfoKHR, m *cmemory) {
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.fence = C.VkFence(g.Fence)
-	{
-		var temp_in_VkFenceImportFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkFenceImportFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkFenceImportFlags(temp_in_VkFenceImportFlags)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.handleType = C.VkExternalFenceHandleTypeFlagBits(g.HandleType)
 	c.fd = C.int(g.Fd)
 }
@@ -22964,15 +20214,7 @@ func (g *ImportFenceFdInfoKHR) fromC(c *C.VkImportFenceFdInfoKHR) {
 		g.Next.fromCStructure(c.pNext)
 	}
 	g.Fence = Fence(c.fence)
-	{
-		var temp_in_VkFenceImportFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkFenceImportFlags = Flags(temp_in_VkFlags)
-		}
-		g.Flags = FenceImportFlags(temp_in_VkFenceImportFlags)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.HandleType = ExternalFenceHandleTypeFlagBits(c.handleType)
 	g.Fd = int32(c.fd)
 }
@@ -23934,17 +21176,9 @@ func ToCmdDrawIndirectCountKHR(p PFNVoidFunction) (fn FuncCmdDrawIndirectCountKH
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.countBuffer = C.VkBuffer(countBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
-			c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.countBufferOffset) = C.uint64_t((uint64)(countBufferOffset))
 		c.maxDrawCount = C.uint32_t(maxDrawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndirectCountKHR(C.PFN_vkCmdDrawIndirectCountKHR(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
@@ -23967,17 +21201,9 @@ func ToCmdDrawIndexedIndirectCountKHR(p PFNVoidFunction) (fn FuncCmdDrawIndexedI
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.countBuffer = C.VkBuffer(countBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
-			c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.countBufferOffset) = C.uint64_t((uint64)(countBufferOffset))
 		c.maxDrawCount = C.uint32_t(maxDrawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndexedIndirectCountKHR(C.PFN_vkCmdDrawIndexedIndirectCountKHR(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
@@ -24061,15 +21287,7 @@ func ToDebugReportCallbackEXT(p PFNVoidFunction) (fn FuncDebugReportCallbackEXT)
 		}
 		m := pool.take()
 		defer pool.give(m)
-		{
-			var temp_in_VkDebugReportFlagsEXT C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(arg0)))
-				temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
-			}
-			c.arg0 = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.arg0)) = C.uint32_t((uint32)((Flags)(arg0)))
 		c.arg1 = C.VkDebugReportObjectTypeEXT(arg1)
 		c.arg2 = C.uint64_t(arg2)
 		c.arg3 = C.size_t(arg3)
@@ -24096,15 +21314,7 @@ func (g *DebugReportCallbackCreateInfoEXT) toC(c *C.VkDebugReportCallbackCreateI
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDebugReportFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.pfnCallback = C.PFN_vkDebugReportCallbackEXT(g.Callback)
 	c.pUserData = g.UserData
 }
@@ -24112,15 +21322,7 @@ func (g *DebugReportCallbackCreateInfoEXT) fromC(c *C.VkDebugReportCallbackCreat
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDebugReportFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDebugReportFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Callback = PFNDebugReportCallbackEXT(c.pfnCallback)
 	g.UserData = c.pUserData
 }
@@ -24227,15 +21429,7 @@ func ToDebugReportMessageEXT(p PFNVoidFunction) (fn FuncDebugReportMessageEXT) {
 		m := pool.take()
 		defer pool.give(m)
 		c.instance = C.VkInstance(instance)
-		{
-			var temp_in_VkDebugReportFlagsEXT C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkDebugReportFlagsEXT = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkDebugReportFlagsEXT(temp_in_VkDebugReportFlagsEXT)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
 		c.objectType = C.VkDebugReportObjectTypeEXT(objectType)
 		c.object = C.uint64_t(object)
 		c.location = C.size_t(location)
@@ -24514,17 +21708,9 @@ func ToCmdDrawIndirectCountAMD(p PFNVoidFunction) (fn FuncCmdDrawIndirectCountAM
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.countBuffer = C.VkBuffer(countBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
-			c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.countBufferOffset) = C.uint64_t((uint64)(countBufferOffset))
 		c.maxDrawCount = C.uint32_t(maxDrawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndirectCountAMD(C.PFN_vkCmdDrawIndirectCountAMD(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
@@ -24547,17 +21733,9 @@ func ToCmdDrawIndexedIndirectCountAMD(p PFNVoidFunction) (fn FuncCmdDrawIndexedI
 		}
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.buffer = C.VkBuffer(buffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(offset))
-			c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(offset))
 		c.countBuffer = C.VkBuffer(countBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(countBufferOffset))
-			c.countBufferOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.countBufferOffset) = C.uint64_t((uint64)(countBufferOffset))
 		c.maxDrawCount = C.uint32_t(maxDrawCount)
 		c.stride = C.uint32_t(stride)
 		C.callPFN_vkCmdDrawIndexedIndirectCountAMD(C.PFN_vkCmdDrawIndexedIndirectCountAMD(unsafe.Pointer(p)), c.commandBuffer, c.buffer, c.offset, c.countBuffer, c.countBufferOffset, c.maxDrawCount, c.stride)
@@ -24643,63 +21821,15 @@ type ExternalImageFormatPropertiesNV struct {
 
 func (g *ExternalImageFormatPropertiesNV) toC(c *C.VkExternalImageFormatPropertiesNV) {
 	g.ImageFormatProperties.toC(&c.imageFormatProperties)
-	{
-		var temp_in_VkExternalMemoryFeatureFlagsNV C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
-			temp_in_VkExternalMemoryFeatureFlagsNV = C.VkFlags(temp_in_VkFlags)
-		}
-		c.externalMemoryFeatures = C.VkExternalMemoryFeatureFlagsNV(temp_in_VkExternalMemoryFeatureFlagsNV)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
-		}
-		c.exportFromImportedHandleTypes = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
-		}
-		c.compatibleHandleTypes = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.externalMemoryFeatures)) = C.uint32_t((uint32)((Flags)(g.ExternalMemoryFeatures)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.exportFromImportedHandleTypes)) = C.uint32_t((uint32)((Flags)(g.ExportFromImportedHandleTypes)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.compatibleHandleTypes)) = C.uint32_t((uint32)((Flags)(g.CompatibleHandleTypes)))
 }
 func (g *ExternalImageFormatPropertiesNV) fromC(c *C.VkExternalImageFormatPropertiesNV) {
 	g.ImageFormatProperties.fromC(&c.imageFormatProperties)
-	{
-		var temp_in_VkExternalMemoryFeatureFlagsNV Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
-			temp_in_VkExternalMemoryFeatureFlagsNV = Flags(temp_in_VkFlags)
-		}
-		g.ExternalMemoryFeatures = ExternalMemoryFeatureFlagsNV(temp_in_VkExternalMemoryFeatureFlagsNV)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlagsNV Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlagsNV = Flags(temp_in_VkFlags)
-		}
-		g.ExportFromImportedHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
-	}
-	{
-		var temp_in_VkExternalMemoryHandleTypeFlagsNV Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
-			temp_in_VkExternalMemoryHandleTypeFlagsNV = Flags(temp_in_VkFlags)
-		}
-		g.CompatibleHandleTypes = ExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
-	}
+	*(*uint32)((*Flags)(&g.ExternalMemoryFeatures)) = uint32((C.uint32_t)((C.VkFlags)(c.externalMemoryFeatures)))
+	*(*uint32)((*Flags)(&g.ExportFromImportedHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.exportFromImportedHandleTypes)))
+	*(*uint32)((*Flags)(&g.CompatibleHandleTypes)) = uint32((C.uint32_t)((C.VkFlags)(c.compatibleHandleTypes)))
 }
 
 type FuncGetPhysicalDeviceExternalImageFormatPropertiesNV func(physicalDevice PhysicalDevice, format Format, _type ImageType, tiling ImageTiling, usage ImageUsageFlags, flags ImageCreateFlags, externalHandleType ExternalMemoryHandleTypeFlagsNV, externalImageFormatProperties *ExternalImageFormatPropertiesNV) (_ret Result)
@@ -24723,33 +21853,9 @@ func ToGetPhysicalDeviceExternalImageFormatPropertiesNV(p PFNVoidFunction) (fn F
 		c.format = C.VkFormat(format)
 		c._type = C.VkImageType(_type)
 		c.tiling = C.VkImageTiling(tiling)
-		{
-			var temp_in_VkImageUsageFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(usage)))
-				temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.usage = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-		}
-		{
-			var temp_in_VkImageCreateFlags C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(flags)))
-				temp_in_VkImageCreateFlags = C.VkFlags(temp_in_VkFlags)
-			}
-			c.flags = C.VkImageCreateFlags(temp_in_VkImageCreateFlags)
-		}
-		{
-			var temp_in_VkExternalMemoryHandleTypeFlagsNV C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(externalHandleType)))
-				temp_in_VkExternalMemoryHandleTypeFlagsNV = C.VkFlags(temp_in_VkFlags)
-			}
-			c.externalHandleType = C.VkExternalMemoryHandleTypeFlagsNV(temp_in_VkExternalMemoryHandleTypeFlagsNV)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.usage)) = C.uint32_t((uint32)((Flags)(usage)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(flags)))
+		*(*C.uint32_t)((*C.VkFlags)(&c.externalHandleType)) = C.uint32_t((uint32)((Flags)(externalHandleType)))
 		if externalImageFormatProperties != nil {
 			c.pExternalImageFormatProperties = (*C.VkExternalImageFormatPropertiesNV)(m.alloc(C.sizeof_VkExternalImageFormatPropertiesNV))
 			externalImageFormatProperties.toC(c.pExternalImageFormatProperties)
@@ -24798,40 +21904,16 @@ func (g *ConditionalRenderingBeginInfoEXT) toC(c *C.VkConditionalRenderingBeginI
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.buffer = C.VkBuffer(g.Buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkConditionalRenderingFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkConditionalRenderingFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkConditionalRenderingFlagsEXT(temp_in_VkConditionalRenderingFlagsEXT)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *ConditionalRenderingBeginInfoEXT) fromC(c *C.VkConditionalRenderingBeginInfoEXT) {
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
 	g.Buffer = Buffer(c.buffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
-	{
-		var temp_in_VkConditionalRenderingFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkConditionalRenderingFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ConditionalRenderingFlagsEXT(temp_in_VkConditionalRenderingFlagsEXT)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 func (s *ConditionalRenderingBeginInfoEXT) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_CONDITIONAL_RENDERING_BEGIN_INFO_EXT
@@ -24945,20 +22027,12 @@ type IndirectCommandsTokenNVX struct {
 func (g *IndirectCommandsTokenNVX) toC(c *C.VkIndirectCommandsTokenNVX) {
 	c.tokenType = C.VkIndirectCommandsTokenTypeNVX(g.TokenType)
 	c.buffer = C.VkBuffer(g.Buffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.Offset))
-		c.offset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.offset) = C.uint64_t((uint64)(g.Offset))
 }
 func (g *IndirectCommandsTokenNVX) fromC(c *C.VkIndirectCommandsTokenNVX) {
 	g.TokenType = IndirectCommandsTokenTypeNVX(c.tokenType)
 	g.Buffer = Buffer(c.buffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.offset))
-		g.Offset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.Offset) = uint64((C.uint64_t)(c.offset))
 }
 
 type CmdProcessCommandsInfoNVX struct {
@@ -24994,17 +22068,9 @@ func (g *CmdProcessCommandsInfoNVX) toC(c *C.VkCmdProcessCommandsInfoNVX, m *cme
 	c.maxSequencesCount = C.uint32_t(g.MaxSequencesCount)
 	c.targetCommandBuffer = C.VkCommandBuffer(g.TargetCommandBuffer)
 	c.sequencesCountBuffer = C.VkBuffer(g.SequencesCountBuffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SequencesCountOffset))
-		c.sequencesCountOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.sequencesCountOffset) = C.uint64_t((uint64)(g.SequencesCountOffset))
 	c.sequencesIndexBuffer = C.VkBuffer(g.SequencesIndexBuffer)
-	{
-		var temp_in_VkDeviceSize C.uint64_t
-		temp_in_VkDeviceSize = C.uint64_t((uint64)(g.SequencesIndexOffset))
-		c.sequencesIndexOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*C.uint64_t)(&c.sequencesIndexOffset) = C.uint64_t((uint64)(g.SequencesIndexOffset))
 }
 func (g *CmdProcessCommandsInfoNVX) fromC(c *C.VkCmdProcessCommandsInfoNVX) {
 	if g.Next != nil {
@@ -25022,17 +22088,9 @@ func (g *CmdProcessCommandsInfoNVX) fromC(c *C.VkCmdProcessCommandsInfoNVX) {
 	g.MaxSequencesCount = uint32(c.maxSequencesCount)
 	g.TargetCommandBuffer = CommandBuffer(c.targetCommandBuffer)
 	g.SequencesCountBuffer = Buffer(c.sequencesCountBuffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sequencesCountOffset))
-		g.SequencesCountOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.SequencesCountOffset) = uint64((C.uint64_t)(c.sequencesCountOffset))
 	g.SequencesIndexBuffer = Buffer(c.sequencesIndexBuffer)
-	{
-		var temp_in_VkDeviceSize uint64
-		temp_in_VkDeviceSize = uint64((C.uint64_t)(c.sequencesIndexOffset))
-		g.SequencesIndexOffset = DeviceSize(temp_in_VkDeviceSize)
-	}
+	*(*uint64)(&g.SequencesIndexOffset) = uint64((C.uint64_t)(c.sequencesIndexOffset))
 }
 func (s *CmdProcessCommandsInfoNVX) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_CMD_PROCESS_COMMANDS_INFO_NVX
@@ -25174,15 +22232,7 @@ func (g *IndirectCommandsLayoutCreateInfoNVX) toC(c *C.VkIndirectCommandsLayoutC
 		c.pNext = g.Next.toCStructure(m)
 	}
 	c.pipelineBindPoint = C.VkPipelineBindPoint(g.PipelineBindPoint)
-	{
-		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkIndirectCommandsLayoutUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkIndirectCommandsLayoutUsageFlagsNVX(temp_in_VkIndirectCommandsLayoutUsageFlagsNVX)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.tokenCount = C.uint32_t(len(g.Tokens))
 	if len(g.Tokens) != 0 {
 		c.pTokens = (*C.VkIndirectCommandsLayoutTokenNVX)(m.alloc(C.sizeof_VkIndirectCommandsLayoutTokenNVX * uint(len(g.Tokens))))
@@ -25199,15 +22249,7 @@ func (g *IndirectCommandsLayoutCreateInfoNVX) fromC(c *C.VkIndirectCommandsLayou
 		g.Next.fromCStructure(c.pNext)
 	}
 	g.PipelineBindPoint = PipelineBindPoint(c.pipelineBindPoint)
-	{
-		var temp_in_VkIndirectCommandsLayoutUsageFlagsNVX Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkIndirectCommandsLayoutUsageFlagsNVX = Flags(temp_in_VkFlags)
-		}
-		g.Flags = IndirectCommandsLayoutUsageFlagsNVX(temp_in_VkIndirectCommandsLayoutUsageFlagsNVX)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.Tokens = make([]IndirectCommandsLayoutTokenNVX, int(c.tokenCount))
 	if len(g.Tokens) != 0 {
 		slice1 := (*[1 << 31]C.VkIndirectCommandsLayoutTokenNVX)(unsafe.Pointer(c.pTokens))[:len(g.Tokens):len(g.Tokens)]
@@ -25342,15 +22384,7 @@ func (g *ObjectTableCreateInfoNVX) toC(c *C.VkObjectTableCreateInfoNVX, m *cmemo
 		c.pObjectEntryUsageFlags = (*C.VkObjectEntryUsageFlagsNVX)(m.alloc(C.sizeof_VkObjectEntryUsageFlagsNVX * uint(len(g.ObjectEntryUsageFlags))))
 		slice1 := (*[1 << 31]C.VkObjectEntryUsageFlagsNVX)(unsafe.Pointer(c.pObjectEntryUsageFlags))[:len(g.ObjectEntryUsageFlags):len(g.ObjectEntryUsageFlags)]
 		for i1, _ := range g.ObjectEntryUsageFlags {
-			{
-				var temp_in_VkObjectEntryUsageFlagsNVX C.VkFlags
-				{
-					var temp_in_VkFlags C.uint32_t
-					temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.ObjectEntryUsageFlags[i1])))
-					temp_in_VkObjectEntryUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
-				}
-				slice1[i1] = C.VkObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
-			}
+			*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(g.ObjectEntryUsageFlags[i1])))
 		}
 	} else {
 		c.pObjectEntryUsageFlags = nil
@@ -25381,15 +22415,7 @@ func (g *ObjectTableCreateInfoNVX) fromC(c *C.VkObjectTableCreateInfoNVX) {
 	if len(g.ObjectEntryUsageFlags) != 0 {
 		slice1 := (*[1 << 31]C.VkObjectEntryUsageFlagsNVX)(unsafe.Pointer(c.pObjectEntryUsageFlags))[:len(g.ObjectEntryUsageFlags):len(g.ObjectEntryUsageFlags)]
 		for i1, _ := range g.ObjectEntryUsageFlags {
-			{
-				var temp_in_VkObjectEntryUsageFlagsNVX Flags
-				{
-					var temp_in_VkFlags uint32
-					temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-					temp_in_VkObjectEntryUsageFlagsNVX = Flags(temp_in_VkFlags)
-				}
-				g.ObjectEntryUsageFlags[i1] = ObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
-			}
+			*(*uint32)((*Flags)(&g.ObjectEntryUsageFlags[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
 		}
 	}
 	g.MaxUniformBuffersPerDescriptor = uint32(c.maxUniformBuffersPerDescriptor)
@@ -25490,27 +22516,11 @@ type ObjectTableEntryNVX struct {
 
 func (g *ObjectTableEntryNVX) toC(c *C.VkObjectTableEntryNVX) {
 	c._type = C.VkObjectEntryTypeNVX(g.Type)
-	{
-		var temp_in_VkObjectEntryUsageFlagsNVX C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkObjectEntryUsageFlagsNVX = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 }
 func (g *ObjectTableEntryNVX) fromC(c *C.VkObjectTableEntryNVX) {
 	g.Type = ObjectEntryTypeNVX(c._type)
-	{
-		var temp_in_VkObjectEntryUsageFlagsNVX Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkObjectEntryUsageFlagsNVX = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ObjectEntryUsageFlagsNVX(temp_in_VkObjectEntryUsageFlagsNVX)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 }
 
 type FuncRegisterObjectsNVX func(device Device, objectTable ObjectTableNVX, objectTableEntries []*ObjectTableEntryNVX, objectIndices []uint32) (_ret Result)
@@ -25814,43 +22824,11 @@ func (g *SurfaceCapabilities2EXT) toC(c *C.VkSurfaceCapabilities2EXT, m *cmemory
 	g.MinImageExtent.toC(&c.minImageExtent)
 	g.MaxImageExtent.toC(&c.maxImageExtent)
 	c.maxImageArrayLayers = C.uint32_t(g.MaxImageArrayLayers)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedTransforms = C.VkSurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedTransforms)) = C.uint32_t((uint32)((Flags)(g.SupportedTransforms)))
 	c.currentTransform = C.VkSurfaceTransformFlagBitsKHR(g.CurrentTransform)
-	{
-		var temp_in_VkCompositeAlphaFlagsKHR C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
-			temp_in_VkCompositeAlphaFlagsKHR = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedCompositeAlpha = C.VkCompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
-	}
-	{
-		var temp_in_VkImageUsageFlags C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
-			temp_in_VkImageUsageFlags = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedUsageFlags = C.VkImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
-	{
-		var temp_in_VkSurfaceCounterFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.SupportedSurfaceCounters)))
-			temp_in_VkSurfaceCounterFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.supportedSurfaceCounters = C.VkSurfaceCounterFlagsEXT(temp_in_VkSurfaceCounterFlagsEXT)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedCompositeAlpha)) = C.uint32_t((uint32)((Flags)(g.SupportedCompositeAlpha)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedUsageFlags)) = C.uint32_t((uint32)((Flags)(g.SupportedUsageFlags)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.supportedSurfaceCounters)) = C.uint32_t((uint32)((Flags)(g.SupportedSurfaceCounters)))
 }
 func (g *SurfaceCapabilities2EXT) fromC(c *C.VkSurfaceCapabilities2EXT) {
 	if g.Next != nil {
@@ -25862,43 +22840,11 @@ func (g *SurfaceCapabilities2EXT) fromC(c *C.VkSurfaceCapabilities2EXT) {
 	g.MinImageExtent.fromC(&c.minImageExtent)
 	g.MaxImageExtent.fromC(&c.maxImageExtent)
 	g.MaxImageArrayLayers = uint32(c.maxImageArrayLayers)
-	{
-		var temp_in_VkSurfaceTransformFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
-			temp_in_VkSurfaceTransformFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedTransforms = SurfaceTransformFlagsKHR(temp_in_VkSurfaceTransformFlagsKHR)
-	}
+	*(*uint32)((*Flags)(&g.SupportedTransforms)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedTransforms)))
 	g.CurrentTransform = SurfaceTransformFlagBitsKHR(c.currentTransform)
-	{
-		var temp_in_VkCompositeAlphaFlagsKHR Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
-			temp_in_VkCompositeAlphaFlagsKHR = Flags(temp_in_VkFlags)
-		}
-		g.SupportedCompositeAlpha = CompositeAlphaFlagsKHR(temp_in_VkCompositeAlphaFlagsKHR)
-	}
-	{
-		var temp_in_VkImageUsageFlags Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
-			temp_in_VkImageUsageFlags = Flags(temp_in_VkFlags)
-		}
-		g.SupportedUsageFlags = ImageUsageFlags(temp_in_VkImageUsageFlags)
-	}
-	{
-		var temp_in_VkSurfaceCounterFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.supportedSurfaceCounters)))
-			temp_in_VkSurfaceCounterFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.SupportedSurfaceCounters = SurfaceCounterFlagsEXT(temp_in_VkSurfaceCounterFlagsEXT)
-	}
+	*(*uint32)((*Flags)(&g.SupportedCompositeAlpha)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedCompositeAlpha)))
+	*(*uint32)((*Flags)(&g.SupportedUsageFlags)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedUsageFlags)))
+	*(*uint32)((*Flags)(&g.SupportedSurfaceCounters)) = uint32((C.uint32_t)((C.VkFlags)(c.supportedSurfaceCounters)))
 }
 func (s *SurfaceCapabilities2EXT) sType() C.VkStructureType {
 	return C.VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_EXT
@@ -26647,15 +23593,7 @@ func (g *DebugUtilsMessengerCallbackDataEXT) toC(c *C.VkDebugUtilsMessengerCallb
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDebugUtilsMessengerCallbackDataFlagsEXT(temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.pMessageIdName = toCString(g.MessageIdName, m)
 	c.messageIdNumber = C.int32_t(g.MessageIdNumber)
 	c.pMessage = toCString(g.Message, m)
@@ -26694,15 +23632,7 @@ func (g *DebugUtilsMessengerCallbackDataEXT) fromC(c *C.VkDebugUtilsMessengerCal
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DebugUtilsMessengerCallbackDataFlagsEXT(temp_in_VkDebugUtilsMessengerCallbackDataFlagsEXT)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.MessageIdName = toGoString(c.pMessageIdName)
 	g.MessageIdNumber = int32(c.messageIdNumber)
 	g.Message = toGoString(c.pMessage)
@@ -26761,15 +23691,7 @@ func ToDebugUtilsMessengerCallbackEXT(p PFNVoidFunction) (fn FuncDebugUtilsMesse
 		m := pool.take()
 		defer pool.give(m)
 		c.arg0 = C.VkDebugUtilsMessageSeverityFlagBitsEXT(arg0)
-		{
-			var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(arg1)))
-				temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
-			}
-			c.arg1 = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.arg1)) = C.uint32_t((uint32)((Flags)(arg1)))
 		if arg2 != nil {
 			c.arg2 = (*C.VkDebugUtilsMessengerCallbackDataEXT)(m.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT))
 			arg2.toC(c.arg2, m)
@@ -27009,33 +23931,9 @@ func (g *DebugUtilsMessengerCreateInfoEXT) toC(c *C.VkDebugUtilsMessengerCreateI
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkDebugUtilsMessengerCreateFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkDebugUtilsMessengerCreateFlagsEXT(temp_in_VkDebugUtilsMessengerCreateFlagsEXT)
-	}
-	{
-		var temp_in_VkDebugUtilsMessageSeverityFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.MessageSeverity)))
-			temp_in_VkDebugUtilsMessageSeverityFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.messageSeverity = C.VkDebugUtilsMessageSeverityFlagsEXT(temp_in_VkDebugUtilsMessageSeverityFlagsEXT)
-	}
-	{
-		var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.MessageType)))
-			temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.messageType = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.messageSeverity)) = C.uint32_t((uint32)((Flags)(g.MessageSeverity)))
+	*(*C.uint32_t)((*C.VkFlags)(&c.messageType)) = C.uint32_t((uint32)((Flags)(g.MessageType)))
 	c.pfnUserCallback = C.PFN_vkDebugUtilsMessengerCallbackEXT(g.UserCallback)
 	c.pUserData = g.UserData
 }
@@ -27043,33 +23941,9 @@ func (g *DebugUtilsMessengerCreateInfoEXT) fromC(c *C.VkDebugUtilsMessengerCreat
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkDebugUtilsMessengerCreateFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkDebugUtilsMessengerCreateFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.Flags = DebugUtilsMessengerCreateFlagsEXT(temp_in_VkDebugUtilsMessengerCreateFlagsEXT)
-	}
-	{
-		var temp_in_VkDebugUtilsMessageSeverityFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.messageSeverity)))
-			temp_in_VkDebugUtilsMessageSeverityFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.MessageSeverity = DebugUtilsMessageSeverityFlagsEXT(temp_in_VkDebugUtilsMessageSeverityFlagsEXT)
-	}
-	{
-		var temp_in_VkDebugUtilsMessageTypeFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.messageType)))
-			temp_in_VkDebugUtilsMessageTypeFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.MessageType = DebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
+	*(*uint32)((*Flags)(&g.MessageSeverity)) = uint32((C.uint32_t)((C.VkFlags)(c.messageSeverity)))
+	*(*uint32)((*Flags)(&g.MessageType)) = uint32((C.uint32_t)((C.VkFlags)(c.messageType)))
 	g.UserCallback = PFNDebugUtilsMessengerCallbackEXT(c.pfnUserCallback)
 	g.UserData = c.pUserData
 }
@@ -27173,15 +24047,7 @@ func ToSubmitDebugUtilsMessageEXT(p PFNVoidFunction) (fn FuncSubmitDebugUtilsMes
 		defer pool.give(m)
 		c.instance = C.VkInstance(instance)
 		c.messageSeverity = C.VkDebugUtilsMessageSeverityFlagBitsEXT(messageSeverity)
-		{
-			var temp_in_VkDebugUtilsMessageTypeFlagsEXT C.VkFlags
-			{
-				var temp_in_VkFlags C.uint32_t
-				temp_in_VkFlags = C.uint32_t((uint32)((Flags)(messageTypes)))
-				temp_in_VkDebugUtilsMessageTypeFlagsEXT = C.VkFlags(temp_in_VkFlags)
-			}
-			c.messageTypes = C.VkDebugUtilsMessageTypeFlagsEXT(temp_in_VkDebugUtilsMessageTypeFlagsEXT)
-		}
+		*(*C.uint32_t)((*C.VkFlags)(&c.messageTypes)) = C.uint32_t((uint32)((Flags)(messageTypes)))
 		if callbackData != nil {
 			c.pCallbackData = (*C.VkDebugUtilsMessengerCallbackDataEXT)(m.alloc(C.sizeof_VkDebugUtilsMessengerCallbackDataEXT))
 			callbackData.toC(c.pCallbackData, m)
@@ -27410,15 +24276,7 @@ func (g *ValidationCacheCreateInfoEXT) toC(c *C.VkValidationCacheCreateInfoEXT, 
 	if g.Next != nil {
 		c.pNext = g.Next.toCStructure(m)
 	}
-	{
-		var temp_in_VkValidationCacheCreateFlagsEXT C.VkFlags
-		{
-			var temp_in_VkFlags C.uint32_t
-			temp_in_VkFlags = C.uint32_t((uint32)((Flags)(g.Flags)))
-			temp_in_VkValidationCacheCreateFlagsEXT = C.VkFlags(temp_in_VkFlags)
-		}
-		c.flags = C.VkValidationCacheCreateFlagsEXT(temp_in_VkValidationCacheCreateFlagsEXT)
-	}
+	*(*C.uint32_t)((*C.VkFlags)(&c.flags)) = C.uint32_t((uint32)((Flags)(g.Flags)))
 	c.initialDataSize = C.size_t(len(g.InitialData))
 	if len(g.InitialData) != 0 {
 		c.pInitialData = m.alloc(C.sizeof_char * uint(len(g.InitialData)))
@@ -27434,15 +24292,7 @@ func (g *ValidationCacheCreateInfoEXT) fromC(c *C.VkValidationCacheCreateInfoEXT
 	if g.Next != nil {
 		g.Next.fromCStructure(c.pNext)
 	}
-	{
-		var temp_in_VkValidationCacheCreateFlagsEXT Flags
-		{
-			var temp_in_VkFlags uint32
-			temp_in_VkFlags = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
-			temp_in_VkValidationCacheCreateFlagsEXT = Flags(temp_in_VkFlags)
-		}
-		g.Flags = ValidationCacheCreateFlagsEXT(temp_in_VkValidationCacheCreateFlagsEXT)
-	}
+	*(*uint32)((*Flags)(&g.Flags)) = uint32((C.uint32_t)((C.VkFlags)(c.flags)))
 	g.InitialData = make([]byte, int(c.initialDataSize))
 	if len(g.InitialData) != 0 {
 		slice1 := (*[1 << 31]byte)(c.pInitialData)[:len(g.InitialData):len(g.InitialData)]
@@ -27711,11 +24561,7 @@ func ToCmdWriteBufferMarkerAMD(p PFNVoidFunction) (fn FuncCmdWriteBufferMarkerAM
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.pipelineStage = C.VkPipelineStageFlagBits(pipelineStage)
 		c.dstBuffer = C.VkBuffer(dstBuffer)
-		{
-			var temp_in_VkDeviceSize C.uint64_t
-			temp_in_VkDeviceSize = C.uint64_t((uint64)(dstOffset))
-			c.dstOffset = C.VkDeviceSize(temp_in_VkDeviceSize)
-		}
+		*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
 		c.marker = C.uint32_t(marker)
 		C.callPFN_vkCmdWriteBufferMarkerAMD(C.PFN_vkCmdWriteBufferMarkerAMD(unsafe.Pointer(p)), c.commandBuffer, c.pipelineStage, c.dstBuffer, c.dstOffset, c.marker)
 	}

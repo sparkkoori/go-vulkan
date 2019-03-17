@@ -959,20 +959,18 @@ func (g *generator) genTypedefDecl(decl *cast.TypedefDecl) *typeInfo {
 
 	info.go2cAlloc = oinfo.go2cAlloc
 	info.go2c = func(govar, cvar goast.Expr) goast.Stmt {
-		temp := ident("temp_in_" + decl.Name)
-		def := varDeclStmt(oinfo.ctype, temp)
-		convc := oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), temp)
-		convbase := assignStmt1n1(cvar, callExpr(info.ctype, temp))
-		return blockStmt(def, convc, convbase)
+		ocvar := starExpr(callExpr(parenExpr(starExpr(oinfo.ctype)), takeAddr(cvar)))
+		ogovar := callExpr(parenExpr(oinfo.gotype), govar)
+		conv := oinfo.go2c(ogovar, ocvar)
+		return conv
 		// return oinfo.go2c(callExpr(parenExpr(oinfo.gotype), govar), callExpr(parenExpr(oinfo.ctype), cvar))
 	}
 
 	info.c2go = func(govar, cvar goast.Expr) goast.Stmt {
-		temp := ident("temp_in_" + decl.Name)
-		def := varDeclStmt(oinfo.gotype, temp)
-		convc := oinfo.c2go(temp, callExpr(parenExpr(oinfo.ctype), cvar))
-		convbase := assignStmt1n1(govar, callExpr(info.gotype, temp))
-		return blockStmt(def, convc, convbase)
+		ocvar := callExpr(parenExpr(oinfo.ctype), cvar)
+		ogovar := starExpr(callExpr(parenExpr(starExpr(oinfo.gotype)), takeAddr(govar)))
+		conv := oinfo.c2go(ogovar, ocvar)
+		return conv
 		// return oinfo.c2go(callExpr(parenExpr(oinfo.gotype), govar), callExpr(parenExpr(oinfo.ctype), cvar))
 	}
 
