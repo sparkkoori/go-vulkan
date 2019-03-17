@@ -351,21 +351,21 @@ func (g *generator) genStructureMethods(name string, info *typeInfo) {
 		g.target.addGo(fn)
 	}
 
-	//GetNext()
+	//getNext()
 	{
 		fnT := funcType(nil, []*goast.Field{field(ident("Structure"))})
 		ret := returnStmt(selectorExpr(ident("s"), ident("Next")))
-		fn := funcDecl(ident("GetNext"), field(starExpr(info.gotype), ident("s")), fnT, ret)
+		fn := funcDecl(ident("getNext"), field(starExpr(info.gotype), ident("s")), fnT, ret)
 		g.target.addGo(fn)
 	}
 
-	//SetNext()
-	{
-		fnT := funcType([]*goast.Field{field(ident("Structure"), ident("n"))}, nil)
-		ass := assignStmt1n1(selectorExpr(ident("s"), ident("Next")), ident("n"))
-		fn := funcDecl(ident("SetNext"), field(starExpr(info.gotype), ident("s")), fnT, ass)
-		g.target.addGo(fn)
-	}
+	// //SetNext()
+	// {
+	// 	fnT := funcType([]*goast.Field{field(ident("Structure"), ident("n"))}, nil)
+	// 	ass := assignStmt1n1(selectorExpr(ident("s"), ident("Next")), ident("n"))
+	// 	fn := funcDecl(ident("SetNext"), field(starExpr(info.gotype), ident("s")), fnT, ass)
+	// 	g.target.addGo(fn)
+	// }
 }
 
 func (g *generator) convConst(node cast.Node) goast.Expr {

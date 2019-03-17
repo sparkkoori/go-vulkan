@@ -16,8 +16,8 @@ import (
 var pool cmemoryPool
 
 type Structure interface {
-	GetNext() Structure
-	SetNext(s Structure)
+	getNext() Structure
+	// SetNext(s Structure)
 	sType() C.VkStructureType
 	toCStructure(*cmemory) unsafe.Pointer
 	fromCStructure(unsafe.Pointer)

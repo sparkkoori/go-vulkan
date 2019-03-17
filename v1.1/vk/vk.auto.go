@@ -1769,11 +1769,8 @@ func (s *ApplicationInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkApplicationInfo)(p)
 	s.fromC(c)
 }
-func (s *ApplicationInfo) GetNext() Structure {
+func (s *ApplicationInfo) getNext() Structure {
 	return s.Next
-}
-func (s *ApplicationInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type InstanceCreateInfo struct {
@@ -1852,11 +1849,8 @@ func (s *InstanceCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkInstanceCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *InstanceCreateInfo) GetNext() Structure {
+func (s *InstanceCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *InstanceCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type AllocationCallbacks struct {
@@ -3250,11 +3244,8 @@ func (s *DeviceQueueCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceQueueCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *DeviceQueueCreateInfo) GetNext() Structure {
+func (s *DeviceQueueCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceQueueCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DeviceCreateInfo struct {
@@ -3351,11 +3342,8 @@ func (s *DeviceCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *DeviceCreateInfo) GetNext() Structure {
+func (s *DeviceCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateDevice func(physicalDevice PhysicalDevice, createInfo *DeviceCreateInfo, allocator *AllocationCallbacks, device *Device) (_ret Result)
@@ -3768,11 +3756,8 @@ func (s *SubmitInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSubmitInfo)(p)
 	s.fromC(c)
 }
-func (s *SubmitInfo) GetNext() Structure {
+func (s *SubmitInfo) getNext() Structure {
 	return s.Next
-}
-func (s *SubmitInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type Fence C.VkFence
@@ -3873,11 +3858,8 @@ func (s *MemoryAllocateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryAllocateInfo)(p)
 	s.fromC(c)
 }
-func (s *MemoryAllocateInfo) GetNext() Structure {
+func (s *MemoryAllocateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryAllocateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DeviceMemory C.VkDeviceMemory
@@ -4035,11 +4017,8 @@ func (s *MappedMemoryRange) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMappedMemoryRange)(p)
 	s.fromC(c)
 }
-func (s *MappedMemoryRange) GetNext() Structure {
+func (s *MappedMemoryRange) getNext() Structure {
 	return s.Next
-}
-func (s *MappedMemoryRange) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncFlushMappedMemoryRanges func(device Device, memoryRanges []MappedMemoryRange) (_ret Result)
@@ -4670,11 +4649,8 @@ func (s *BindSparseInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBindSparseInfo)(p)
 	s.fromC(c)
 }
-func (s *BindSparseInfo) GetNext() Structure {
+func (s *BindSparseInfo) getNext() Structure {
 	return s.Next
-}
-func (s *BindSparseInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncQueueBindSparse func(queue Queue, bindInfoCount uint32, bindInfo *BindSparseInfo, fence Fence) (_ret Result)
@@ -4737,11 +4713,8 @@ func (s *FenceCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkFenceCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *FenceCreateInfo) GetNext() Structure {
+func (s *FenceCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *FenceCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateFence func(device Device, createInfo *FenceCreateInfo, allocator *AllocationCallbacks, fence *Fence) (_ret Result)
@@ -4927,11 +4900,8 @@ func (s *SemaphoreCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSemaphoreCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *SemaphoreCreateInfo) GetNext() Structure {
+func (s *SemaphoreCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *SemaphoreCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateSemaphore func(device Device, createInfo *SemaphoreCreateInfo, allocator *AllocationCallbacks, semaphore *Semaphore) (_ret Result)
@@ -5031,11 +5001,8 @@ func (s *EventCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkEventCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *EventCreateInfo) GetNext() Structure {
+func (s *EventCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *EventCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type Event C.VkEvent
@@ -5200,11 +5167,8 @@ func (s *QueryPoolCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkQueryPoolCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *QueryPoolCreateInfo) GetNext() Structure {
+func (s *QueryPoolCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *QueryPoolCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type QueryPool C.VkQueryPool
@@ -5368,11 +5332,8 @@ func (s *BufferCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBufferCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *BufferCreateInfo) GetNext() Structure {
+func (s *BufferCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *BufferCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateBuffer func(device Device, createInfo *BufferCreateInfo, allocator *AllocationCallbacks, buffer *Buffer) (_ret Result)
@@ -5484,11 +5445,8 @@ func (s *BufferViewCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBufferViewCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *BufferViewCreateInfo) GetNext() Structure {
+func (s *BufferViewCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *BufferViewCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type BufferView C.VkBufferView
@@ -5636,11 +5594,8 @@ func (s *ImageCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *ImageCreateInfo) GetNext() Structure {
+func (s *ImageCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *ImageCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateImage func(device Device, createInfo *ImageCreateInfo, allocator *AllocationCallbacks, image *Image) (_ret Result)
@@ -5855,11 +5810,8 @@ func (s *ImageViewCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageViewCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *ImageViewCreateInfo) GetNext() Structure {
+func (s *ImageViewCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *ImageViewCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ImageView C.VkImageView
@@ -5979,11 +5931,8 @@ func (s *ShaderModuleCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkShaderModuleCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *ShaderModuleCreateInfo) GetNext() Structure {
+func (s *ShaderModuleCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *ShaderModuleCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ShaderModule C.VkShaderModule
@@ -6102,11 +6051,8 @@ func (s *PipelineCacheCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineCacheCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineCacheCreateInfo) GetNext() Structure {
+func (s *PipelineCacheCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineCacheCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineCache C.VkPipelineCache
@@ -6356,11 +6302,8 @@ func (s *PipelineShaderStageCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineShaderStageCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineShaderStageCreateInfo) GetNext() Structure {
+func (s *PipelineShaderStageCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineShaderStageCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineVertexInputStateCreateFlags Flags
@@ -6467,11 +6410,8 @@ func (s *PipelineVertexInputStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineVertexInputStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineVertexInputStateCreateInfo) GetNext() Structure {
+func (s *PipelineVertexInputStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineVertexInputStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineInputAssemblyStateCreateFlags Flags
@@ -6515,11 +6455,8 @@ func (s *PipelineInputAssemblyStateCreateInfo) fromCStructure(p unsafe.Pointer) 
 	c := (*C.VkPipelineInputAssemblyStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineInputAssemblyStateCreateInfo) GetNext() Structure {
+func (s *PipelineInputAssemblyStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineInputAssemblyStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineTessellationStateCreateFlags Flags
@@ -6556,11 +6493,8 @@ func (s *PipelineTessellationStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineTessellationStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineTessellationStateCreateInfo) GetNext() Structure {
+func (s *PipelineTessellationStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineTessellationStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineViewportStateCreateFlags Flags
@@ -6698,11 +6632,8 @@ func (s *PipelineViewportStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineViewportStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineViewportStateCreateInfo) GetNext() Structure {
+func (s *PipelineViewportStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineViewportStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineRasterizationStateCreateFlags Flags
@@ -6779,11 +6710,8 @@ func (s *PipelineRasterizationStateCreateInfo) fromCStructure(p unsafe.Pointer) 
 	c := (*C.VkPipelineRasterizationStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineRasterizationStateCreateInfo) GetNext() Structure {
+func (s *PipelineRasterizationStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineRasterizationStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineMultisampleStateCreateFlags Flags
@@ -6855,11 +6783,8 @@ func (s *PipelineMultisampleStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineMultisampleStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineMultisampleStateCreateInfo) GetNext() Structure {
+func (s *PipelineMultisampleStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineMultisampleStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineDepthStencilStateCreateFlags Flags
@@ -6965,11 +6890,8 @@ func (s *PipelineDepthStencilStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineDepthStencilStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineDepthStencilStateCreateInfo) GetNext() Structure {
+func (s *PipelineDepthStencilStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineDepthStencilStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineColorBlendStateCreateFlags Flags
@@ -7075,11 +6997,8 @@ func (s *PipelineColorBlendStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineColorBlendStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineColorBlendStateCreateInfo) GetNext() Structure {
+func (s *PipelineColorBlendStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineColorBlendStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineDynamicStateCreateFlags Flags
@@ -7131,11 +7050,8 @@ func (s *PipelineDynamicStateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineDynamicStateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineDynamicStateCreateInfo) GetNext() Structure {
+func (s *PipelineDynamicStateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineDynamicStateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type PipelineLayout C.VkPipelineLayout
@@ -7294,11 +7210,8 @@ func (s *GraphicsPipelineCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkGraphicsPipelineCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *GraphicsPipelineCreateInfo) GetNext() Structure {
+func (s *GraphicsPipelineCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *GraphicsPipelineCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateGraphicsPipelines func(device Device, pipelineCache PipelineCache, createInfos []GraphicsPipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result)
@@ -7398,11 +7311,8 @@ func (s *ComputePipelineCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkComputePipelineCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *ComputePipelineCreateInfo) GetNext() Structure {
+func (s *ComputePipelineCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *ComputePipelineCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateComputePipelines func(device Device, pipelineCache PipelineCache, createInfos []ComputePipelineCreateInfo, allocator *AllocationCallbacks, pipelines []Pipeline) (_ret Result)
@@ -7570,11 +7480,8 @@ func (s *PipelineLayoutCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPipelineLayoutCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *PipelineLayoutCreateInfo) GetNext() Structure {
+func (s *PipelineLayoutCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PipelineLayoutCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreatePipelineLayout func(device Device, createInfo *PipelineLayoutCreateInfo, allocator *AllocationCallbacks, pipelineLayout *PipelineLayout) (_ret Result)
@@ -7731,11 +7638,8 @@ func (s *SamplerCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSamplerCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *SamplerCreateInfo) GetNext() Structure {
+func (s *SamplerCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *SamplerCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type Sampler C.VkSampler
@@ -7884,11 +7788,8 @@ func (s *DescriptorSetLayoutCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDescriptorSetLayoutCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *DescriptorSetLayoutCreateInfo) GetNext() Structure {
+func (s *DescriptorSetLayoutCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DescriptorSetLayoutCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateDescriptorSetLayout func(device Device, createInfo *DescriptorSetLayoutCreateInfo, allocator *AllocationCallbacks, setLayout *DescriptorSetLayout) (_ret Result)
@@ -8023,11 +7924,8 @@ func (s *DescriptorPoolCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDescriptorPoolCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *DescriptorPoolCreateInfo) GetNext() Structure {
+func (s *DescriptorPoolCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DescriptorPoolCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DescriptorPool C.VkDescriptorPool
@@ -8166,11 +8064,8 @@ func (s *DescriptorSetAllocateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDescriptorSetAllocateInfo)(p)
 	s.fromC(c)
 }
-func (s *DescriptorSetAllocateInfo) GetNext() Structure {
+func (s *DescriptorSetAllocateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DescriptorSetAllocateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DescriptorSet C.VkDescriptorSet
@@ -8347,11 +8242,8 @@ func (s *WriteDescriptorSet) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkWriteDescriptorSet)(p)
 	s.fromC(c)
 }
-func (s *WriteDescriptorSet) GetNext() Structure {
+func (s *WriteDescriptorSet) getNext() Structure {
 	return s.Next
-}
-func (s *WriteDescriptorSet) SetNext(n Structure) {
-	s.Next = n
 }
 
 type CopyDescriptorSet struct {
@@ -8402,11 +8294,8 @@ func (s *CopyDescriptorSet) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCopyDescriptorSet)(p)
 	s.fromC(c)
 }
-func (s *CopyDescriptorSet) GetNext() Structure {
+func (s *CopyDescriptorSet) getNext() Structure {
 	return s.Next
-}
-func (s *CopyDescriptorSet) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncUpdateDescriptorSets func(device Device, descriptorWrites []WriteDescriptorSet, descriptorCopies []CopyDescriptorSet)
@@ -8509,11 +8398,8 @@ func (s *FramebufferCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkFramebufferCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *FramebufferCreateInfo) GetNext() Structure {
+func (s *FramebufferCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *FramebufferCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type Framebuffer C.VkFramebuffer
@@ -8844,11 +8730,8 @@ func (s *RenderPassCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkRenderPassCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *RenderPassCreateInfo) GetNext() Structure {
+func (s *RenderPassCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *RenderPassCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateRenderPass func(device Device, createInfo *RenderPassCreateInfo, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result)
@@ -8978,11 +8861,8 @@ func (s *CommandPoolCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCommandPoolCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *CommandPoolCreateInfo) GetNext() Structure {
+func (s *CommandPoolCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *CommandPoolCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type CommandPool C.VkCommandPool
@@ -9109,11 +8989,8 @@ func (s *CommandBufferAllocateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCommandBufferAllocateInfo)(p)
 	s.fromC(c)
 }
-func (s *CommandBufferAllocateInfo) GetNext() Structure {
+func (s *CommandBufferAllocateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *CommandBufferAllocateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncAllocateCommandBuffers func(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result)
@@ -9231,11 +9108,8 @@ func (s *CommandBufferInheritanceInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCommandBufferInheritanceInfo)(p)
 	s.fromC(c)
 }
-func (s *CommandBufferInheritanceInfo) GetNext() Structure {
+func (s *CommandBufferInheritanceInfo) getNext() Structure {
 	return s.Next
-}
-func (s *CommandBufferInheritanceInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type CommandBufferBeginInfo struct {
@@ -9278,11 +9152,8 @@ func (s *CommandBufferBeginInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCommandBufferBeginInfo)(p)
 	s.fromC(c)
 }
-func (s *CommandBufferBeginInfo) GetNext() Structure {
+func (s *CommandBufferBeginInfo) getNext() Structure {
 	return s.Next
-}
-func (s *CommandBufferBeginInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncBeginCommandBuffer func(commandBuffer CommandBuffer, beginInfo *CommandBufferBeginInfo) (_ret Result)
@@ -10448,11 +10319,8 @@ func (s *MemoryBarrier) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryBarrier)(p)
 	s.fromC(c)
 }
-func (s *MemoryBarrier) GetNext() Structure {
+func (s *MemoryBarrier) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryBarrier) SetNext(n Structure) {
-	s.Next = n
 }
 
 type BufferMemoryBarrier struct {
@@ -10503,11 +10371,8 @@ func (s *BufferMemoryBarrier) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBufferMemoryBarrier)(p)
 	s.fromC(c)
 }
-func (s *BufferMemoryBarrier) GetNext() Structure {
+func (s *BufferMemoryBarrier) getNext() Structure {
 	return s.Next
-}
-func (s *BufferMemoryBarrier) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ImageMemoryBarrier struct {
@@ -10561,11 +10426,8 @@ func (s *ImageMemoryBarrier) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageMemoryBarrier)(p)
 	s.fromC(c)
 }
-func (s *ImageMemoryBarrier) GetNext() Structure {
+func (s *ImageMemoryBarrier) getNext() Structure {
 	return s.Next
-}
-func (s *ImageMemoryBarrier) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdWaitEvents func(commandBuffer CommandBuffer, events []Event, srcStageMask PipelineStageFlags, dstStageMask PipelineStageFlags, memoryBarriers []MemoryBarrier, bufferMemoryBarriers []BufferMemoryBarrier, imageMemoryBarriers []ImageMemoryBarrier)
@@ -10874,11 +10736,8 @@ func (s *RenderPassBeginInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkRenderPassBeginInfo)(p)
 	s.fromC(c)
 }
-func (s *RenderPassBeginInfo) GetNext() Structure {
+func (s *RenderPassBeginInfo) getNext() Structure {
 	return s.Next
-}
-func (s *RenderPassBeginInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdBeginRenderPass func(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, contents SubpassContents)
@@ -14477,11 +14336,8 @@ func (s *BindBufferMemoryInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBindBufferMemoryInfo)(p)
 	s.fromC(c)
 }
-func (s *BindBufferMemoryInfo) GetNext() Structure {
+func (s *BindBufferMemoryInfo) getNext() Structure {
 	return s.Next
-}
-func (s *BindBufferMemoryInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncBindBufferMemory2 func(device Device, bindInfos []BindBufferMemoryInfo) (_ret Result)
@@ -14550,11 +14406,8 @@ func (s *BindImageMemoryInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBindImageMemoryInfo)(p)
 	s.fromC(c)
 }
-func (s *BindImageMemoryInfo) GetNext() Structure {
+func (s *BindImageMemoryInfo) getNext() Structure {
 	return s.Next
-}
-func (s *BindImageMemoryInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncBindImageMemory2 func(device Device, bindInfos []BindImageMemoryInfo) (_ret Result)
@@ -14709,11 +14562,8 @@ func (s *PhysicalDeviceGroupProperties) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceGroupProperties)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceGroupProperties) GetNext() Structure {
+func (s *PhysicalDeviceGroupProperties) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceGroupProperties) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncEnumeratePhysicalDeviceGroups func(instance Instance, physicalDeviceGroupCount *uint32, physicalDeviceGroupProperties []PhysicalDeviceGroupProperties) (_ret Result)
@@ -14790,11 +14640,8 @@ func (s *ImageMemoryRequirementsInfo2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageMemoryRequirementsInfo2)(p)
 	s.fromC(c)
 }
-func (s *ImageMemoryRequirementsInfo2) GetNext() Structure {
+func (s *ImageMemoryRequirementsInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *ImageMemoryRequirementsInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type MemoryRequirements2 struct {
@@ -14827,11 +14674,8 @@ func (s *MemoryRequirements2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryRequirements2)(p)
 	s.fromC(c)
 }
-func (s *MemoryRequirements2) GetNext() Structure {
+func (s *MemoryRequirements2) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryRequirements2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetImageMemoryRequirements2 func(device Device, info *ImageMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2)
@@ -14896,11 +14740,8 @@ func (s *BufferMemoryRequirementsInfo2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkBufferMemoryRequirementsInfo2)(p)
 	s.fromC(c)
 }
-func (s *BufferMemoryRequirementsInfo2) GetNext() Structure {
+func (s *BufferMemoryRequirementsInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *BufferMemoryRequirementsInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetBufferMemoryRequirements2 func(device Device, info *BufferMemoryRequirementsInfo2, memoryRequirements *MemoryRequirements2)
@@ -14965,11 +14806,8 @@ func (s *ImageSparseMemoryRequirementsInfo2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageSparseMemoryRequirementsInfo2)(p)
 	s.fromC(c)
 }
-func (s *ImageSparseMemoryRequirementsInfo2) GetNext() Structure {
+func (s *ImageSparseMemoryRequirementsInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *ImageSparseMemoryRequirementsInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SparseImageMemoryRequirements2 struct {
@@ -15002,11 +14840,8 @@ func (s *SparseImageMemoryRequirements2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSparseImageMemoryRequirements2)(p)
 	s.fromC(c)
 }
-func (s *SparseImageMemoryRequirements2) GetNext() Structure {
+func (s *SparseImageMemoryRequirements2) getNext() Structure {
 	return s.Next
-}
-func (s *SparseImageMemoryRequirements2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetImageSparseMemoryRequirements2 func(device Device, info *ImageSparseMemoryRequirementsInfo2, sparseMemoryRequirementCount *uint32, sparseMemoryRequirements []SparseImageMemoryRequirements2)
@@ -15087,11 +14922,8 @@ func (s *PhysicalDeviceFeatures2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceFeatures2)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceFeatures2) GetNext() Structure {
+func (s *PhysicalDeviceFeatures2) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceFeatures2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceFeatures2 func(physicalDevice PhysicalDevice, features *PhysicalDeviceFeatures2)
@@ -15149,11 +14981,8 @@ func (s *PhysicalDeviceProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceProperties2)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceProperties2) GetNext() Structure {
+func (s *PhysicalDeviceProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceProperties2 func(physicalDevice PhysicalDevice, properties *PhysicalDeviceProperties2)
@@ -15211,11 +15040,8 @@ func (s *FormatProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkFormatProperties2)(p)
 	s.fromC(c)
 }
-func (s *FormatProperties2) GetNext() Structure {
+func (s *FormatProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *FormatProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceFormatProperties2 func(physicalDevice PhysicalDevice, format Format, formatProperties *FormatProperties2)
@@ -15287,11 +15113,8 @@ func (s *PhysicalDeviceImageFormatInfo2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceImageFormatInfo2)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceImageFormatInfo2) GetNext() Structure {
+func (s *PhysicalDeviceImageFormatInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceImageFormatInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ImageFormatProperties2 struct {
@@ -15324,11 +15147,8 @@ func (s *ImageFormatProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImageFormatProperties2)(p)
 	s.fromC(c)
 }
-func (s *ImageFormatProperties2) GetNext() Structure {
+func (s *ImageFormatProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *ImageFormatProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceImageFormatProperties2 func(physicalDevice PhysicalDevice, imageFormatInfo *PhysicalDeviceImageFormatInfo2, imageFormatProperties *ImageFormatProperties2) (_ret Result)
@@ -15396,11 +15216,8 @@ func (s *QueueFamilyProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkQueueFamilyProperties2)(p)
 	s.fromC(c)
 }
-func (s *QueueFamilyProperties2) GetNext() Structure {
+func (s *QueueFamilyProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *QueueFamilyProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceQueueFamilyProperties2 func(physicalDevice PhysicalDevice, queueFamilyPropertyCount *uint32, queueFamilyProperties []QueueFamilyProperties2)
@@ -15474,11 +15291,8 @@ func (s *PhysicalDeviceMemoryProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceMemoryProperties2)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceMemoryProperties2) GetNext() Structure {
+func (s *PhysicalDeviceMemoryProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceMemoryProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceMemoryProperties2 func(physicalDevice PhysicalDevice, memoryProperties *PhysicalDeviceMemoryProperties2)
@@ -15548,11 +15362,8 @@ func (s *PhysicalDeviceSparseImageFormatInfo2) fromCStructure(p unsafe.Pointer) 
 	c := (*C.VkPhysicalDeviceSparseImageFormatInfo2)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceSparseImageFormatInfo2) GetNext() Structure {
+func (s *PhysicalDeviceSparseImageFormatInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceSparseImageFormatInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SparseImageFormatProperties2 struct {
@@ -15585,11 +15396,8 @@ func (s *SparseImageFormatProperties2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSparseImageFormatProperties2)(p)
 	s.fromC(c)
 }
-func (s *SparseImageFormatProperties2) GetNext() Structure {
+func (s *SparseImageFormatProperties2) getNext() Structure {
 	return s.Next
-}
-func (s *SparseImageFormatProperties2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceSparseImageFormatProperties2 func(physicalDevice PhysicalDevice, formatInfo *PhysicalDeviceSparseImageFormatInfo2, propertyCount *uint32, properties []SparseImageFormatProperties2)
@@ -15694,11 +15502,8 @@ func (s *DeviceQueueInfo2) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceQueueInfo2)(p)
 	s.fromC(c)
 }
-func (s *DeviceQueueInfo2) GetNext() Structure {
+func (s *DeviceQueueInfo2) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceQueueInfo2) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetDeviceQueue2 func(device Device, queueInfo *DeviceQueueInfo2, queue *Queue)
@@ -15788,11 +15593,8 @@ func (s *SamplerYcbcrConversionCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSamplerYcbcrConversionCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *SamplerYcbcrConversionCreateInfo) GetNext() Structure {
+func (s *SamplerYcbcrConversionCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *SamplerYcbcrConversionCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SamplerYcbcrConversion C.VkSamplerYcbcrConversion
@@ -15952,11 +15754,8 @@ func (s *DescriptorUpdateTemplateCreateInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDescriptorUpdateTemplateCreateInfo)(p)
 	s.fromC(c)
 }
-func (s *DescriptorUpdateTemplateCreateInfo) GetNext() Structure {
+func (s *DescriptorUpdateTemplateCreateInfo) getNext() Structure {
 	return s.Next
-}
-func (s *DescriptorUpdateTemplateCreateInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DescriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -16081,11 +15880,8 @@ func (s *PhysicalDeviceExternalBufferInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceExternalBufferInfo)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceExternalBufferInfo) GetNext() Structure {
+func (s *PhysicalDeviceExternalBufferInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceExternalBufferInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ExternalMemoryFeatureFlags Flags
@@ -16137,11 +15933,8 @@ func (s *ExternalBufferProperties) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkExternalBufferProperties)(p)
 	s.fromC(c)
 }
-func (s *ExternalBufferProperties) GetNext() Structure {
+func (s *ExternalBufferProperties) getNext() Structure {
 	return s.Next
-}
-func (s *ExternalBufferProperties) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceExternalBufferProperties func(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties *ExternalBufferProperties)
@@ -16206,11 +15999,8 @@ func (s *PhysicalDeviceExternalFenceInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceExternalFenceInfo)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceExternalFenceInfo) GetNext() Structure {
+func (s *PhysicalDeviceExternalFenceInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceExternalFenceInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ExternalFenceHandleTypeFlags Flags
@@ -16251,11 +16041,8 @@ func (s *ExternalFenceProperties) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkExternalFenceProperties)(p)
 	s.fromC(c)
 }
-func (s *ExternalFenceProperties) GetNext() Structure {
+func (s *ExternalFenceProperties) getNext() Structure {
 	return s.Next
-}
-func (s *ExternalFenceProperties) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceExternalFenceProperties func(physicalDevice PhysicalDevice, externalFenceInfo *PhysicalDeviceExternalFenceInfo, externalFenceProperties *ExternalFenceProperties)
@@ -16320,11 +16107,8 @@ func (s *PhysicalDeviceExternalSemaphoreInfo) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceExternalSemaphoreInfo)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceExternalSemaphoreInfo) GetNext() Structure {
+func (s *PhysicalDeviceExternalSemaphoreInfo) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceExternalSemaphoreInfo) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ExternalSemaphoreHandleTypeFlags Flags
@@ -16365,11 +16149,8 @@ func (s *ExternalSemaphoreProperties) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkExternalSemaphoreProperties)(p)
 	s.fromC(c)
 }
-func (s *ExternalSemaphoreProperties) GetNext() Structure {
+func (s *ExternalSemaphoreProperties) getNext() Structure {
 	return s.Next
-}
-func (s *ExternalSemaphoreProperties) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceExternalSemaphoreProperties func(physicalDevice PhysicalDevice, externalSemaphoreInfo *PhysicalDeviceExternalSemaphoreInfo, externalSemaphoreProperties *ExternalSemaphoreProperties)
@@ -16438,11 +16219,8 @@ func (s *DescriptorSetLayoutSupport) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDescriptorSetLayoutSupport)(p)
 	s.fromC(c)
 }
-func (s *DescriptorSetLayoutSupport) GetNext() Structure {
+func (s *DescriptorSetLayoutSupport) getNext() Structure {
 	return s.Next
-}
-func (s *DescriptorSetLayoutSupport) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetDescriptorSetLayoutSupport func(device Device, createInfo *DescriptorSetLayoutCreateInfo, support *DescriptorSetLayoutSupport)
@@ -17594,11 +17372,8 @@ func (s *SwapchainCreateInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSwapchainCreateInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *SwapchainCreateInfoKHR) GetNext() Structure {
+func (s *SwapchainCreateInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *SwapchainCreateInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateSwapchainKHR func(device Device, createInfo *SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchain *SwapchainKHR) (_ret Result)
@@ -17844,11 +17619,8 @@ func (s *PresentInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPresentInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *PresentInfoKHR) GetNext() Structure {
+func (s *PresentInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *PresentInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncQueuePresentKHR func(queue Queue, presentInfo *PresentInfoKHR) (_ret Result)
@@ -17914,11 +17686,8 @@ func (s *DeviceGroupPresentCapabilitiesKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceGroupPresentCapabilitiesKHR)(p)
 	s.fromC(c)
 }
-func (s *DeviceGroupPresentCapabilitiesKHR) GetNext() Structure {
+func (s *DeviceGroupPresentCapabilitiesKHR) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceGroupPresentCapabilitiesKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetDeviceGroupPresentCapabilitiesKHR func(device Device, deviceGroupPresentCapabilities *DeviceGroupPresentCapabilitiesKHR) (_ret Result)
@@ -18067,11 +17836,8 @@ func (s *AcquireNextImageInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkAcquireNextImageInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *AcquireNextImageInfoKHR) GetNext() Structure {
+func (s *AcquireNextImageInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *AcquireNextImageInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncAcquireNextImage2KHR func(device Device, acquireInfo *AcquireNextImageInfoKHR, imageIndex *uint32) (_ret Result)
@@ -18414,11 +18180,8 @@ func (s *DisplayModeCreateInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayModeCreateInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayModeCreateInfoKHR) GetNext() Structure {
+func (s *DisplayModeCreateInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayModeCreateInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateDisplayModeKHR func(physicalDevice PhysicalDevice, display DisplayKHR, createInfo *DisplayModeCreateInfoKHR, allocator *AllocationCallbacks, mode *DisplayModeKHR) (_ret Result)
@@ -18591,11 +18354,8 @@ func (s *DisplaySurfaceCreateInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplaySurfaceCreateInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *DisplaySurfaceCreateInfoKHR) GetNext() Structure {
+func (s *DisplaySurfaceCreateInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplaySurfaceCreateInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateDisplayPlaneSurfaceKHR func(instance Instance, createInfo *DisplaySurfaceCreateInfoKHR, allocator *AllocationCallbacks, surface *SurfaceKHR) (_ret Result)
@@ -19122,11 +18882,8 @@ func (s *MemoryGetFdInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryGetFdInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *MemoryGetFdInfoKHR) GetNext() Structure {
+func (s *MemoryGetFdInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryGetFdInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetMemoryFdKHR func(device Device, getFdInfo *MemoryGetFdInfoKHR, fd *int32) (_ret Result)
@@ -19194,11 +18951,8 @@ func (s *MemoryFdPropertiesKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryFdPropertiesKHR)(p)
 	s.fromC(c)
 }
-func (s *MemoryFdPropertiesKHR) GetNext() Structure {
+func (s *MemoryFdPropertiesKHR) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryFdPropertiesKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetMemoryFdPropertiesKHR func(device Device, handleType ExternalMemoryHandleTypeFlagBits, fd int32, memoryFdProperties *MemoryFdPropertiesKHR) (_ret Result)
@@ -19305,11 +19059,8 @@ func (s *ImportSemaphoreFdInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImportSemaphoreFdInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *ImportSemaphoreFdInfoKHR) GetNext() Structure {
+func (s *ImportSemaphoreFdInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *ImportSemaphoreFdInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncImportSemaphoreFdKHR func(device Device, importSemaphoreFdInfo *ImportSemaphoreFdInfoKHR) (_ret Result)
@@ -19370,11 +19121,8 @@ func (s *SemaphoreGetFdInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSemaphoreGetFdInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *SemaphoreGetFdInfoKHR) GetNext() Structure {
+func (s *SemaphoreGetFdInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *SemaphoreGetFdInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetSemaphoreFdKHR func(device Device, getFdInfo *SemaphoreGetFdInfoKHR, fd *int32) (_ret Result)
@@ -19609,11 +19357,8 @@ func (s *AttachmentDescription2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkAttachmentDescription2KHR)(p)
 	s.fromC(c)
 }
-func (s *AttachmentDescription2KHR) GetNext() Structure {
+func (s *AttachmentDescription2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *AttachmentDescription2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type AttachmentReference2KHR struct {
@@ -19652,11 +19397,8 @@ func (s *AttachmentReference2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkAttachmentReference2KHR)(p)
 	s.fromC(c)
 }
-func (s *AttachmentReference2KHR) GetNext() Structure {
+func (s *AttachmentReference2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *AttachmentReference2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SubpassDescription2KHR struct {
@@ -19775,11 +19517,8 @@ func (s *SubpassDescription2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSubpassDescription2KHR)(p)
 	s.fromC(c)
 }
-func (s *SubpassDescription2KHR) GetNext() Structure {
+func (s *SubpassDescription2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *SubpassDescription2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SubpassDependency2KHR struct {
@@ -19833,11 +19572,8 @@ func (s *SubpassDependency2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSubpassDependency2KHR)(p)
 	s.fromC(c)
 }
-func (s *SubpassDependency2KHR) GetNext() Structure {
+func (s *SubpassDependency2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *SubpassDependency2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type RenderPassCreateInfo2KHR struct {
@@ -19942,11 +19678,8 @@ func (s *RenderPassCreateInfo2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkRenderPassCreateInfo2KHR)(p)
 	s.fromC(c)
 }
-func (s *RenderPassCreateInfo2KHR) GetNext() Structure {
+func (s *RenderPassCreateInfo2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *RenderPassCreateInfo2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateRenderPass2KHR func(device Device, createInfo *RenderPassCreateInfo2KHR, allocator *AllocationCallbacks, renderPass *RenderPass) (_ret Result)
@@ -20021,11 +19754,8 @@ func (s *SubpassBeginInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSubpassBeginInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *SubpassBeginInfoKHR) GetNext() Structure {
+func (s *SubpassBeginInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *SubpassBeginInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdBeginRenderPass2KHR func(commandBuffer CommandBuffer, renderPassBegin *RenderPassBeginInfo, subpassBeginInfo *SubpassBeginInfoKHR)
@@ -20082,11 +19812,8 @@ func (s *SubpassEndInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSubpassEndInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *SubpassEndInfoKHR) GetNext() Structure {
+func (s *SubpassEndInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *SubpassEndInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdNextSubpass2KHR func(commandBuffer CommandBuffer, subpassBeginInfo *SubpassBeginInfoKHR, subpassEndInfo *SubpassEndInfoKHR)
@@ -20230,11 +19957,8 @@ func (s *ImportFenceFdInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkImportFenceFdInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *ImportFenceFdInfoKHR) GetNext() Structure {
+func (s *ImportFenceFdInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *ImportFenceFdInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncImportFenceFdKHR func(device Device, importFenceFdInfo *ImportFenceFdInfoKHR) (_ret Result)
@@ -20295,11 +20019,8 @@ func (s *FenceGetFdInfoKHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkFenceGetFdInfoKHR)(p)
 	s.fromC(c)
 }
-func (s *FenceGetFdInfoKHR) GetNext() Structure {
+func (s *FenceGetFdInfoKHR) getNext() Structure {
 	return s.Next
-}
-func (s *FenceGetFdInfoKHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetFenceFdKHR func(device Device, getFdInfo *FenceGetFdInfoKHR, fd *int32) (_ret Result)
@@ -20367,11 +20088,8 @@ func (s *PhysicalDeviceSurfaceInfo2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkPhysicalDeviceSurfaceInfo2KHR)(p)
 	s.fromC(c)
 }
-func (s *PhysicalDeviceSurfaceInfo2KHR) GetNext() Structure {
+func (s *PhysicalDeviceSurfaceInfo2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *PhysicalDeviceSurfaceInfo2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type SurfaceCapabilities2KHR struct {
@@ -20404,11 +20122,8 @@ func (s *SurfaceCapabilities2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSurfaceCapabilities2KHR)(p)
 	s.fromC(c)
 }
-func (s *SurfaceCapabilities2KHR) GetNext() Structure {
+func (s *SurfaceCapabilities2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *SurfaceCapabilities2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceSurfaceCapabilities2KHR func(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceCapabilities *SurfaceCapabilities2KHR) (_ret Result)
@@ -20476,11 +20191,8 @@ func (s *SurfaceFormat2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSurfaceFormat2KHR)(p)
 	s.fromC(c)
 }
-func (s *SurfaceFormat2KHR) GetNext() Structure {
+func (s *SurfaceFormat2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *SurfaceFormat2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceSurfaceFormats2KHR func(physicalDevice PhysicalDevice, surfaceInfo *PhysicalDeviceSurfaceInfo2KHR, surfaceFormatCount *uint32, surfaceFormats []SurfaceFormat2KHR) (_ret Result)
@@ -20564,11 +20276,8 @@ func (s *DisplayProperties2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayProperties2KHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayProperties2KHR) GetNext() Structure {
+func (s *DisplayProperties2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayProperties2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceDisplayProperties2KHR func(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayProperties2KHR) (_ret Result)
@@ -20645,11 +20354,8 @@ func (s *DisplayPlaneProperties2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayPlaneProperties2KHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayPlaneProperties2KHR) GetNext() Structure {
+func (s *DisplayPlaneProperties2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayPlaneProperties2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceDisplayPlaneProperties2KHR func(physicalDevice PhysicalDevice, propertyCount *uint32, properties []DisplayPlaneProperties2KHR) (_ret Result)
@@ -20726,11 +20432,8 @@ func (s *DisplayModeProperties2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayModeProperties2KHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayModeProperties2KHR) GetNext() Structure {
+func (s *DisplayModeProperties2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayModeProperties2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetDisplayModeProperties2KHR func(physicalDevice PhysicalDevice, display DisplayKHR, propertyCount *uint32, properties []DisplayModeProperties2KHR) (_ret Result)
@@ -20812,11 +20515,8 @@ func (s *DisplayPlaneInfo2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayPlaneInfo2KHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayPlaneInfo2KHR) GetNext() Structure {
+func (s *DisplayPlaneInfo2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayPlaneInfo2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DisplayPlaneCapabilities2KHR struct {
@@ -20849,11 +20549,8 @@ func (s *DisplayPlaneCapabilities2KHR) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayPlaneCapabilities2KHR)(p)
 	s.fromC(c)
 }
-func (s *DisplayPlaneCapabilities2KHR) GetNext() Structure {
+func (s *DisplayPlaneCapabilities2KHR) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayPlaneCapabilities2KHR) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetDisplayPlaneCapabilities2KHR func(physicalDevice PhysicalDevice, displayPlaneInfo *DisplayPlaneInfo2KHR, capabilities *DisplayPlaneCapabilities2KHR) (_ret Result)
@@ -21338,11 +21035,8 @@ func (s *DebugReportCallbackCreateInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugReportCallbackCreateInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugReportCallbackCreateInfoEXT) GetNext() Structure {
+func (s *DebugReportCallbackCreateInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugReportCallbackCreateInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DebugReportCallbackEXT C.VkDebugReportCallbackEXT
@@ -21494,11 +21188,8 @@ func (s *DebugMarkerObjectTagInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugMarkerObjectTagInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugMarkerObjectTagInfoEXT) GetNext() Structure {
+func (s *DebugMarkerObjectTagInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugMarkerObjectTagInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncDebugMarkerSetObjectTagEXT func(device Device, tagInfo *DebugMarkerObjectTagInfoEXT) (_ret Result)
@@ -21562,11 +21253,8 @@ func (s *DebugMarkerObjectNameInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugMarkerObjectNameInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugMarkerObjectNameInfoEXT) GetNext() Structure {
+func (s *DebugMarkerObjectNameInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugMarkerObjectNameInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncDebugMarkerSetObjectNameEXT func(device Device, nameInfo *DebugMarkerObjectNameInfoEXT) (_ret Result)
@@ -21631,11 +21319,8 @@ func (s *DebugMarkerMarkerInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugMarkerMarkerInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugMarkerMarkerInfoEXT) GetNext() Structure {
+func (s *DebugMarkerMarkerInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugMarkerMarkerInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdDebugMarkerBeginEXT func(commandBuffer CommandBuffer, markerInfo *DebugMarkerMarkerInfoEXT)
@@ -21927,11 +21612,8 @@ func (s *ConditionalRenderingBeginInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkConditionalRenderingBeginInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *ConditionalRenderingBeginInfoEXT) GetNext() Structure {
+func (s *ConditionalRenderingBeginInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *ConditionalRenderingBeginInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdBeginConditionalRenderingEXT func(commandBuffer CommandBuffer, conditionalRenderingBegin *ConditionalRenderingBeginInfoEXT)
@@ -22104,11 +21786,8 @@ func (s *CmdProcessCommandsInfoNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCmdProcessCommandsInfoNVX)(p)
 	s.fromC(c)
 }
-func (s *CmdProcessCommandsInfoNVX) GetNext() Structure {
+func (s *CmdProcessCommandsInfoNVX) getNext() Structure {
 	return s.Next
-}
-func (s *CmdProcessCommandsInfoNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdProcessCommandsNVX func(commandBuffer CommandBuffer, processCommandsInfo *CmdProcessCommandsInfoNVX)
@@ -22169,11 +21848,8 @@ func (s *CmdReserveSpaceForCommandsInfoNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCmdReserveSpaceForCommandsInfoNVX)(p)
 	s.fromC(c)
 }
-func (s *CmdReserveSpaceForCommandsInfoNVX) GetNext() Structure {
+func (s *CmdReserveSpaceForCommandsInfoNVX) getNext() Structure {
 	return s.Next
-}
-func (s *CmdReserveSpaceForCommandsInfoNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdReserveSpaceForCommandsNVX func(commandBuffer CommandBuffer, reserveSpaceInfo *CmdReserveSpaceForCommandsInfoNVX)
@@ -22270,11 +21946,8 @@ func (s *IndirectCommandsLayoutCreateInfoNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkIndirectCommandsLayoutCreateInfoNVX)(p)
 	s.fromC(c)
 }
-func (s *IndirectCommandsLayoutCreateInfoNVX) GetNext() Structure {
+func (s *IndirectCommandsLayoutCreateInfoNVX) getNext() Structure {
 	return s.Next
-}
-func (s *IndirectCommandsLayoutCreateInfoNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateIndirectCommandsLayoutNVX func(device Device, createInfo *IndirectCommandsLayoutCreateInfoNVX, allocator *AllocationCallbacks, indirectCommandsLayout *IndirectCommandsLayoutNVX) (_ret Result)
@@ -22436,11 +22109,8 @@ func (s *ObjectTableCreateInfoNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkObjectTableCreateInfoNVX)(p)
 	s.fromC(c)
 }
-func (s *ObjectTableCreateInfoNVX) GetNext() Structure {
+func (s *ObjectTableCreateInfoNVX) getNext() Structure {
 	return s.Next
-}
-func (s *ObjectTableCreateInfoNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCreateObjectTableNVX func(device Device, createInfo *ObjectTableCreateInfoNVX, allocator *AllocationCallbacks, objectTable *ObjectTableNVX) (_ret Result)
@@ -22638,11 +22308,8 @@ func (s *DeviceGeneratedCommandsFeaturesNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceGeneratedCommandsFeaturesNVX)(p)
 	s.fromC(c)
 }
-func (s *DeviceGeneratedCommandsFeaturesNVX) GetNext() Structure {
+func (s *DeviceGeneratedCommandsFeaturesNVX) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceGeneratedCommandsFeaturesNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DeviceGeneratedCommandsLimitsNVX struct {
@@ -22687,11 +22354,8 @@ func (s *DeviceGeneratedCommandsLimitsNVX) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceGeneratedCommandsLimitsNVX)(p)
 	s.fromC(c)
 }
-func (s *DeviceGeneratedCommandsLimitsNVX) GetNext() Structure {
+func (s *DeviceGeneratedCommandsLimitsNVX) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceGeneratedCommandsLimitsNVX) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceGeneratedCommandsPropertiesNVX func(physicalDevice PhysicalDevice, features *DeviceGeneratedCommandsFeaturesNVX, limits *DeviceGeneratedCommandsLimitsNVX)
@@ -22858,11 +22522,8 @@ func (s *SurfaceCapabilities2EXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSurfaceCapabilities2EXT)(p)
 	s.fromC(c)
 }
-func (s *SurfaceCapabilities2EXT) GetNext() Structure {
+func (s *SurfaceCapabilities2EXT) getNext() Structure {
 	return s.Next
-}
-func (s *SurfaceCapabilities2EXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceSurfaceCapabilities2EXT func(physicalDevice PhysicalDevice, surface SurfaceKHR, surfaceCapabilities *SurfaceCapabilities2EXT) (_ret Result)
@@ -22957,11 +22618,8 @@ func (s *DisplayPowerInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayPowerInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DisplayPowerInfoEXT) GetNext() Structure {
+func (s *DisplayPowerInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayPowerInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncDisplayPowerControlEXT func(device Device, display DisplayKHR, displayPowerInfo *DisplayPowerInfoEXT) (_ret Result)
@@ -23021,11 +22679,8 @@ func (s *DeviceEventInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDeviceEventInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DeviceEventInfoEXT) GetNext() Structure {
+func (s *DeviceEventInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DeviceEventInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncRegisterDeviceEventEXT func(device Device, deviceEventInfo *DeviceEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result)
@@ -23100,11 +22755,8 @@ func (s *DisplayEventInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDisplayEventInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DisplayEventInfoEXT) GetNext() Structure {
+func (s *DisplayEventInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DisplayEventInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncRegisterDisplayEventEXT func(device Device, display DisplayKHR, displayEventInfo *DisplayEventInfoEXT, allocator *AllocationCallbacks, fence *Fence) (_ret Result)
@@ -23425,11 +23077,8 @@ func (s *HdrMetadataEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkHdrMetadataEXT)(p)
 	s.fromC(c)
 }
-func (s *HdrMetadataEXT) GetNext() Structure {
+func (s *HdrMetadataEXT) getNext() Structure {
 	return s.Next
-}
-func (s *HdrMetadataEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncSetHdrMetadataEXT func(device Device, swapchains []SwapchainKHR, metadata []HdrMetadataEXT)
@@ -23527,11 +23176,8 @@ func (s *DebugUtilsLabelEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugUtilsLabelEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugUtilsLabelEXT) GetNext() Structure {
+func (s *DebugUtilsLabelEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugUtilsLabelEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DebugUtilsObjectNameInfoEXT struct {
@@ -23570,11 +23216,8 @@ func (s *DebugUtilsObjectNameInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugUtilsObjectNameInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugUtilsObjectNameInfoEXT) GetNext() Structure {
+func (s *DebugUtilsObjectNameInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugUtilsObjectNameInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DebugUtilsMessengerCallbackDataEXT struct {
@@ -23670,11 +23313,8 @@ func (s *DebugUtilsMessengerCallbackDataEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugUtilsMessengerCallbackDataEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugUtilsMessengerCallbackDataEXT) GetNext() Structure {
+func (s *DebugUtilsMessengerCallbackDataEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugUtilsMessengerCallbackDataEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncDebugUtilsMessengerCallbackEXT func(arg0 DebugUtilsMessageSeverityFlagBitsEXT, arg1 DebugUtilsMessageTypeFlagsEXT, arg2 *DebugUtilsMessengerCallbackDataEXT, arg3 unsafe.Pointer) (_ret bool)
@@ -23773,11 +23413,8 @@ func (s *DebugUtilsObjectTagInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugUtilsObjectTagInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugUtilsObjectTagInfoEXT) GetNext() Structure {
+func (s *DebugUtilsObjectTagInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugUtilsObjectTagInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncSetDebugUtilsObjectTagEXT func(device Device, tagInfo *DebugUtilsObjectTagInfoEXT) (_ret Result)
@@ -23959,11 +23596,8 @@ func (s *DebugUtilsMessengerCreateInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkDebugUtilsMessengerCreateInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *DebugUtilsMessengerCreateInfoEXT) GetNext() Structure {
+func (s *DebugUtilsMessengerCreateInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *DebugUtilsMessengerCreateInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type DebugUtilsMessengerEXT C.VkDebugUtilsMessengerEXT
@@ -24136,11 +23770,8 @@ func (s *SampleLocationsInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkSampleLocationsInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *SampleLocationsInfoEXT) GetNext() Structure {
+func (s *SampleLocationsInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *SampleLocationsInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncCmdSetSampleLocationsEXT func(commandBuffer CommandBuffer, sampleLocationsInfo *SampleLocationsInfoEXT)
@@ -24195,11 +23826,8 @@ func (s *MultisamplePropertiesEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMultisamplePropertiesEXT)(p)
 	s.fromC(c)
 }
-func (s *MultisamplePropertiesEXT) GetNext() Structure {
+func (s *MultisamplePropertiesEXT) getNext() Structure {
 	return s.Next
-}
-func (s *MultisamplePropertiesEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetPhysicalDeviceMultisamplePropertiesEXT func(physicalDevice PhysicalDevice, samples SampleCountFlagBits, multisampleProperties *MultisamplePropertiesEXT)
@@ -24313,11 +23941,8 @@ func (s *ValidationCacheCreateInfoEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkValidationCacheCreateInfoEXT)(p)
 	s.fromC(c)
 }
-func (s *ValidationCacheCreateInfoEXT) GetNext() Structure {
+func (s *ValidationCacheCreateInfoEXT) getNext() Structure {
 	return s.Next
-}
-func (s *ValidationCacheCreateInfoEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type ValidationCacheEXT C.VkValidationCacheEXT
@@ -24508,11 +24133,8 @@ func (s *MemoryHostPointerPropertiesEXT) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkMemoryHostPointerPropertiesEXT)(p)
 	s.fromC(c)
 }
-func (s *MemoryHostPointerPropertiesEXT) GetNext() Structure {
+func (s *MemoryHostPointerPropertiesEXT) getNext() Structure {
 	return s.Next
-}
-func (s *MemoryHostPointerPropertiesEXT) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetMemoryHostPointerPropertiesEXT func(device Device, handleType ExternalMemoryHandleTypeFlagBits, hostPointer unsafe.Pointer, memoryHostPointerProperties *MemoryHostPointerPropertiesEXT) (_ret Result)
@@ -24616,11 +24238,8 @@ func (s *CheckpointDataNV) fromCStructure(p unsafe.Pointer) {
 	c := (*C.VkCheckpointDataNV)(p)
 	s.fromC(c)
 }
-func (s *CheckpointDataNV) GetNext() Structure {
+func (s *CheckpointDataNV) getNext() Structure {
 	return s.Next
-}
-func (s *CheckpointDataNV) SetNext(n Structure) {
-	s.Next = n
 }
 
 type FuncGetQueueCheckpointDataNV func(queue Queue, checkpointDataCount *uint32, checkpointData []CheckpointDataNV)
