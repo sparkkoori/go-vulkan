@@ -1,4 +1,5 @@
 package vk
+
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
 //typedef void * void_pointer;
@@ -3668,7 +3669,7 @@ type CommandBuffer C.VkCommandBuffer
 type SubmitInfo struct {
 	Next             Structure
 	WaitSemaphores   []Semaphore
-	WaitDstStageMask *PipelineStageFlags
+	WaitDstStageMask []PipelineStageFlags
 	CommandBuffers   []CommandBuffer
 	SignalSemaphores []Semaphore
 }
@@ -3688,9 +3689,12 @@ func (g *SubmitInfo) toC(c *C.VkSubmitInfo, m *cmemory) {
 	} else {
 		c.pWaitSemaphores = nil
 	}
-	if g.WaitDstStageMask != nil {
-		c.pWaitDstStageMask = (*C.VkPipelineStageFlags)(m.alloc(C.sizeof_VkPipelineStageFlags))
-		*(*C.uint32_t)((*C.VkFlags)(c.pWaitDstStageMask)) = C.uint32_t((uint32)((Flags)(*g.WaitDstStageMask)))
+	if len(g.WaitDstStageMask) != 0 {
+		c.pWaitDstStageMask = (*C.VkPipelineStageFlags)(m.alloc(C.sizeof_VkPipelineStageFlags * uint(len(g.WaitDstStageMask))))
+		slice1 := (*[1 << 31]C.VkPipelineStageFlags)(unsafe.Pointer(c.pWaitDstStageMask))[:len(g.WaitDstStageMask):len(g.WaitDstStageMask)]
+		for i1, _ := range g.WaitDstStageMask {
+			*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(g.WaitDstStageMask[i1])))
+		}
 	} else {
 		c.pWaitDstStageMask = nil
 	}
@@ -3726,8 +3730,11 @@ func (g *SubmitInfo) fromC(c *C.VkSubmitInfo) {
 			g.WaitSemaphores[i1] = Semaphore(slice1[i1])
 		}
 	}
-	if g.WaitDstStageMask != nil {
-		*(*uint32)((*Flags)(g.WaitDstStageMask)) = uint32((C.uint32_t)((C.VkFlags)(*c.pWaitDstStageMask)))
+	if len(g.WaitDstStageMask) != 0 {
+		slice1 := (*[1 << 31]C.VkPipelineStageFlags)(unsafe.Pointer(c.pWaitDstStageMask))[:len(g.WaitDstStageMask):len(g.WaitDstStageMask)]
+		for i1, _ := range g.WaitDstStageMask {
+			*(*uint32)((*Flags)(&g.WaitDstStageMask[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
+		}
 	}
 	g.CommandBuffers = make([]CommandBuffer, int(c.commandBufferCount))
 	if len(g.CommandBuffers) != 0 {
