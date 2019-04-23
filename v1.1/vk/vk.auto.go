@@ -1,5 +1,4 @@
 package vk
-
 //#include "vulkan/vulkan.h"
 //#include "bridges.auto.h"
 //typedef void * void_pointer;
@@ -9000,10 +8999,10 @@ func (s *CommandBufferAllocateInfo) getNext() Structure {
 	return s.Next
 }
 
-type FuncAllocateCommandBuffers func(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result)
+type FuncAllocateCommandBuffers func(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result)
 
 func ToAllocateCommandBuffers(p PFNVoidFunction) (fn FuncAllocateCommandBuffers) {
-	return func(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result) {
+	return func(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
 		var c struct {
 			device          C.VkDevice
 			pAllocateInfo   *C.VkCommandBufferAllocateInfo
@@ -9019,16 +9018,22 @@ func ToAllocateCommandBuffers(p PFNVoidFunction) (fn FuncAllocateCommandBuffers)
 		} else {
 			c.pAllocateInfo = nil
 		}
-		if commandBuffers != nil {
-			c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer))
-			*c.pCommandBuffers = C.VkCommandBuffer(*commandBuffers)
+		if len(commandBuffers) != 0 {
+			c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
+			slice1 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
+			for i1, _ := range commandBuffers {
+				slice1[i1] = C.VkCommandBuffer(commandBuffers[i1])
+			}
 		} else {
 			c.pCommandBuffers = nil
 		}
 		c._ret = C.callPFN_vkAllocateCommandBuffers(C.PFN_vkAllocateCommandBuffers(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pCommandBuffers)
 		_ret = Result(c._ret)
-		if commandBuffers != nil {
-			*commandBuffers = CommandBuffer(*c.pCommandBuffers)
+		if len(commandBuffers) != 0 {
+			slice1 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
+			for i1, _ := range commandBuffers {
+				commandBuffers[i1] = CommandBuffer(slice1[i1])
+			}
 		}
 		return
 	}
@@ -9928,10 +9933,10 @@ func ToCmdCopyImageToBuffer(p PFNVoidFunction) (fn FuncCmdCopyImageToBuffer) {
 }
 
 type PFNCmdUpdateBuffer C.PFN_vkCmdUpdateBuffer
-type FuncCmdUpdateBuffer func(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data unsafe.Pointer)
+type FuncCmdUpdateBuffer func(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte)
 
 func ToCmdUpdateBuffer(p PFNVoidFunction) (fn FuncCmdUpdateBuffer) {
-	return func(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data unsafe.Pointer) {
+	return func(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
 		var c struct {
 			commandBuffer C.VkCommandBuffer
 			dstBuffer     C.VkBuffer
@@ -9943,7 +9948,11 @@ func ToCmdUpdateBuffer(p PFNVoidFunction) (fn FuncCmdUpdateBuffer) {
 		c.dstBuffer = C.VkBuffer(dstBuffer)
 		*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
 		*(*C.uint64_t)(&c.dataSize) = C.uint64_t((uint64)(dataSize))
-		c.pData = data
+		if len(data) != 0 {
+			c.pData = (unsafe.Pointer)(&data[0])
+		} else {
+			c.pData = nil
+		}
 		C.callPFN_vkCmdUpdateBuffer(C.PFN_vkCmdUpdateBuffer(unsafe.Pointer(p)), c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 	}
 }
@@ -13084,7 +13093,7 @@ func ResetCommandPool(device Device, commandPool CommandPool, flags CommandPoolR
 	_ret = Result(c._ret)
 	return
 }
-func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers *CommandBuffer) (_ret Result) {
+func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateInfo, commandBuffers []CommandBuffer) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkCommandBufferAllocateInfo
@@ -13100,16 +13109,22 @@ func AllocateCommandBuffers(device Device, allocateInfo *CommandBufferAllocateIn
 	} else {
 		c.pAllocateInfo = nil
 	}
-	if commandBuffers != nil {
-		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer))
-		*c.pCommandBuffers = C.VkCommandBuffer(*commandBuffers)
+	if len(commandBuffers) != 0 {
+		c.pCommandBuffers = (*C.VkCommandBuffer)(m.alloc(C.sizeof_VkCommandBuffer * uint(len(commandBuffers))))
+		slice1 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
+		for i1, _ := range commandBuffers {
+			slice1[i1] = C.VkCommandBuffer(commandBuffers[i1])
+		}
 	} else {
 		c.pCommandBuffers = nil
 	}
 	c._ret = C.vkAllocateCommandBuffers(c.device, c.pAllocateInfo, c.pCommandBuffers)
 	_ret = Result(c._ret)
-	if commandBuffers != nil {
-		*commandBuffers = CommandBuffer(*c.pCommandBuffers)
+	if len(commandBuffers) != 0 {
+		slice1 := (*[1 << 31]C.VkCommandBuffer)(unsafe.Pointer(c.pCommandBuffers))[:len(commandBuffers):len(commandBuffers)]
+		for i1, _ := range commandBuffers {
+			commandBuffers[i1] = CommandBuffer(slice1[i1])
+		}
 	}
 	return
 }
@@ -13622,7 +13637,7 @@ func CmdCopyImageToBuffer(commandBuffer CommandBuffer, srcImage Image, srcImageL
 	}
 	C.vkCmdCopyImageToBuffer(c.commandBuffer, c.srcImage, c.srcImageLayout, c.dstBuffer, c.regionCount, c.pRegions)
 }
-func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data unsafe.Pointer) {
+func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, dataSize DeviceSize, data []byte) {
 	var c struct {
 		commandBuffer C.VkCommandBuffer
 		dstBuffer     C.VkBuffer
@@ -13634,7 +13649,11 @@ func CmdUpdateBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset De
 	c.dstBuffer = C.VkBuffer(dstBuffer)
 	*(*C.uint64_t)(&c.dstOffset) = C.uint64_t((uint64)(dstOffset))
 	*(*C.uint64_t)(&c.dataSize) = C.uint64_t((uint64)(dataSize))
-	c.pData = data
+	if len(data) != 0 {
+		c.pData = (unsafe.Pointer)(&data[0])
+	} else {
+		c.pData = nil
+	}
 	C.vkCmdUpdateBuffer(c.commandBuffer, c.dstBuffer, c.dstOffset, c.dataSize, c.pData)
 }
 func CmdFillBuffer(commandBuffer CommandBuffer, dstBuffer Buffer, dstOffset DeviceSize, size DeviceSize, data uint32) {
@@ -14448,10 +14467,10 @@ func ToBindImageMemory2(p PFNVoidFunction) (fn FuncBindImageMemory2) {
 
 type PFNGetDeviceGroupPeerMemoryFeatures C.PFN_vkGetDeviceGroupPeerMemoryFeatures
 type PeerMemoryFeatureFlags Flags
-type FuncGetDeviceGroupPeerMemoryFeatures func(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags)
+type FuncGetDeviceGroupPeerMemoryFeatures func(device Device, heapIndex uint32, localDeviceIndex uint32, remoteDeviceIndex uint32, peerMemoryFeatures *PeerMemoryFeatureFlags)
 
 func ToGetDeviceGroupPeerMemoryFeatures(p PFNVoidFunction) (fn FuncGetDeviceGroupPeerMemoryFeatures) {
-	return func(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+	return func(device Device, heapIndex uint32, localDeviceIndex uint32, remoteDeviceIndex uint32, peerMemoryFeatures *PeerMemoryFeatureFlags) {
 		var c struct {
 			device              C.VkDevice
 			heapIndex           C.uint32_t
@@ -14464,22 +14483,16 @@ func ToGetDeviceGroupPeerMemoryFeatures(p PFNVoidFunction) (fn FuncGetDeviceGrou
 		c.device = C.VkDevice(device)
 		c.heapIndex = C.uint32_t(heapIndex)
 		c.localDeviceIndex = C.uint32_t(localDeviceIndex)
-		c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-		if len(peerMemoryFeatures) != 0 {
-			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
-			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-			for i1, _ := range peerMemoryFeatures {
-				*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-			}
+		c.remoteDeviceIndex = C.uint32_t(remoteDeviceIndex)
+		if peerMemoryFeatures != nil {
+			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags))
+			*(*C.uint32_t)((*C.VkFlags)(c.pPeerMemoryFeatures)) = C.uint32_t((uint32)((Flags)(*peerMemoryFeatures)))
 		} else {
 			c.pPeerMemoryFeatures = nil
 		}
 		C.callPFN_vkGetDeviceGroupPeerMemoryFeatures(C.PFN_vkGetDeviceGroupPeerMemoryFeatures(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
-		if len(peerMemoryFeatures) != 0 {
-			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-			for i1, _ := range peerMemoryFeatures {
-				*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-			}
+		if peerMemoryFeatures != nil {
+			*(*uint32)((*Flags)(peerMemoryFeatures)) = uint32((C.uint32_t)((C.VkFlags)(*c.pPeerMemoryFeatures)))
 		}
 	}
 }
@@ -15832,10 +15845,10 @@ func ToDestroyDescriptorUpdateTemplate(p PFNVoidFunction) (fn FuncDestroyDescrip
 }
 
 type PFNUpdateDescriptorSetWithTemplate C.PFN_vkUpdateDescriptorSetWithTemplate
-type FuncUpdateDescriptorSetWithTemplate func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer)
+type FuncUpdateDescriptorSetWithTemplate func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte)
 
 func ToUpdateDescriptorSetWithTemplate(p PFNVoidFunction) (fn FuncUpdateDescriptorSetWithTemplate) {
-	return func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
+	return func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
 		var c struct {
 			device                   C.VkDevice
 			descriptorSet            C.VkDescriptorSet
@@ -15845,7 +15858,11 @@ func ToUpdateDescriptorSetWithTemplate(p PFNVoidFunction) (fn FuncUpdateDescript
 		c.device = C.VkDevice(device)
 		c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 		c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-		c.pData = data
+		if len(data) != 0 {
+			c.pData = (unsafe.Pointer)(&data[0])
+		} else {
+			c.pData = nil
+		}
 		C.callPFN_vkUpdateDescriptorSetWithTemplate(C.PFN_vkUpdateDescriptorSetWithTemplate(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 	}
 }
@@ -16328,7 +16345,7 @@ func BindImageMemory2(device Device, bindInfos []BindImageMemoryInfo) (_ret Resu
 	_ret = Result(c._ret)
 	return
 }
-func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDeviceIndex uint32, remoteDeviceIndex uint32, peerMemoryFeatures *PeerMemoryFeatureFlags) {
 	var c struct {
 		device              C.VkDevice
 		heapIndex           C.uint32_t
@@ -16341,22 +16358,16 @@ func GetDeviceGroupPeerMemoryFeatures(device Device, heapIndex uint32, localDevi
 	c.device = C.VkDevice(device)
 	c.heapIndex = C.uint32_t(heapIndex)
 	c.localDeviceIndex = C.uint32_t(localDeviceIndex)
-	c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-	if len(peerMemoryFeatures) != 0 {
-		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
-		slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-		for i1, _ := range peerMemoryFeatures {
-			*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-		}
+	c.remoteDeviceIndex = C.uint32_t(remoteDeviceIndex)
+	if peerMemoryFeatures != nil {
+		c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags))
+		*(*C.uint32_t)((*C.VkFlags)(c.pPeerMemoryFeatures)) = C.uint32_t((uint32)((Flags)(*peerMemoryFeatures)))
 	} else {
 		c.pPeerMemoryFeatures = nil
 	}
 	C.vkGetDeviceGroupPeerMemoryFeatures(c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
-	if len(peerMemoryFeatures) != 0 {
-		slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-		for i1, _ := range peerMemoryFeatures {
-			*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-		}
+	if peerMemoryFeatures != nil {
+		*(*uint32)((*Flags)(peerMemoryFeatures)) = uint32((C.uint32_t)((C.VkFlags)(*c.pPeerMemoryFeatures)))
 	}
 }
 func CmdSetDeviceMask(commandBuffer CommandBuffer, deviceMask uint32) {
@@ -16848,7 +16859,7 @@ func DestroyDescriptorUpdateTemplate(device Device, descriptorUpdateTemplate Des
 	}
 	C.vkDestroyDescriptorUpdateTemplate(c.device, c.descriptorUpdateTemplate, c.pAllocator)
 }
-func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
+func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
 	var c struct {
 		device                   C.VkDevice
 		descriptorSet            C.VkDescriptorSet
@@ -16858,7 +16869,11 @@ func UpdateDescriptorSetWithTemplate(device Device, descriptorSet DescriptorSet,
 	c.device = C.VkDevice(device)
 	c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 	c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-	c.pData = data
+	if len(data) != 0 {
+		c.pData = (unsafe.Pointer)(&data[0])
+	} else {
+		c.pData = nil
+	}
 	C.vkUpdateDescriptorSetWithTemplate(c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 }
 func GetPhysicalDeviceExternalBufferProperties(physicalDevice PhysicalDevice, externalBufferInfo *PhysicalDeviceExternalBufferInfo, externalBufferProperties *ExternalBufferProperties) {
@@ -18271,10 +18286,10 @@ func (g *DisplayPlaneCapabilitiesKHR) fromC(c *C.VkDisplayPlaneCapabilitiesKHR) 
 	g.MaxDstExtent.fromC(&c.maxDstExtent)
 }
 
-type FuncGetDisplayPlaneCapabilitiesKHR func(physicalDevice PhysicalDevice, mode DisplayModeKHR, capabilities []DisplayPlaneCapabilitiesKHR) (_ret Result)
+type FuncGetDisplayPlaneCapabilitiesKHR func(physicalDevice PhysicalDevice, mode DisplayModeKHR, planeIndex uint32, capabilities *DisplayPlaneCapabilitiesKHR) (_ret Result)
 
 func ToGetDisplayPlaneCapabilitiesKHR(p PFNVoidFunction) (fn FuncGetDisplayPlaneCapabilitiesKHR) {
-	return func(physicalDevice PhysicalDevice, mode DisplayModeKHR, capabilities []DisplayPlaneCapabilitiesKHR) (_ret Result) {
+	return func(physicalDevice PhysicalDevice, mode DisplayModeKHR, planeIndex uint32, capabilities *DisplayPlaneCapabilitiesKHR) (_ret Result) {
 		var c struct {
 			physicalDevice C.VkPhysicalDevice
 			mode           C.VkDisplayModeKHR
@@ -18286,23 +18301,17 @@ func ToGetDisplayPlaneCapabilitiesKHR(p PFNVoidFunction) (fn FuncGetDisplayPlane
 		defer pool.give(m)
 		c.physicalDevice = C.VkPhysicalDevice(physicalDevice)
 		c.mode = C.VkDisplayModeKHR(mode)
-		c.planeIndex = C.uint32_t(len(capabilities))
-		if len(capabilities) != 0 {
-			c.pCapabilities = (*C.VkDisplayPlaneCapabilitiesKHR)(m.alloc(C.sizeof_VkDisplayPlaneCapabilitiesKHR * uint(len(capabilities))))
-			slice1 := (*[1 << 31]C.VkDisplayPlaneCapabilitiesKHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
-			for i1, _ := range capabilities {
-				capabilities[i1].toC(&slice1[i1])
-			}
+		c.planeIndex = C.uint32_t(planeIndex)
+		if capabilities != nil {
+			c.pCapabilities = (*C.VkDisplayPlaneCapabilitiesKHR)(m.alloc(C.sizeof_VkDisplayPlaneCapabilitiesKHR))
+			capabilities.toC(c.pCapabilities)
 		} else {
 			c.pCapabilities = nil
 		}
 		c._ret = C.callPFN_vkGetDisplayPlaneCapabilitiesKHR(C.PFN_vkGetDisplayPlaneCapabilitiesKHR(unsafe.Pointer(p)), c.physicalDevice, c.mode, c.planeIndex, c.pCapabilities)
 		_ret = Result(c._ret)
-		if len(capabilities) != 0 {
-			slice1 := (*[1 << 31]C.VkDisplayPlaneCapabilitiesKHR)(unsafe.Pointer(c.pCapabilities))[:len(capabilities):len(capabilities)]
-			for i1, _ := range capabilities {
-				capabilities[i1].fromC(&slice1[i1])
-			}
+		if capabilities != nil {
+			capabilities.fromC(c.pCapabilities)
 		}
 		return
 	}
@@ -18407,10 +18416,10 @@ func ToCreateDisplayPlaneSurfaceKHR(p PFNVoidFunction) (fn FuncCreateDisplayPlan
 }
 
 type PFNCreateSharedSwapchainsKHR C.PFN_vkCreateSharedSwapchainsKHR
-type FuncCreateSharedSwapchainsKHR func(device Device, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result)
+type FuncCreateSharedSwapchainsKHR func(device Device, swapchainCount uint32, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result)
 
 func ToCreateSharedSwapchainsKHR(p PFNVoidFunction) (fn FuncCreateSharedSwapchainsKHR) {
-	return func(device Device, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result) {
+	return func(device Device, swapchainCount uint32, createInfos []SwapchainCreateInfoKHR, allocator *AllocationCallbacks, swapchains []SwapchainKHR) (_ret Result) {
 		var c struct {
 			device         C.VkDevice
 			swapchainCount C.uint32_t
@@ -18422,7 +18431,7 @@ func ToCreateSharedSwapchainsKHR(p PFNVoidFunction) (fn FuncCreateSharedSwapchai
 		m := pool.take()
 		defer pool.give(m)
 		c.device = C.VkDevice(device)
-		c.swapchainCount = C.uint32_t(len(createInfos))
+		c.swapchainCount = C.uint32_t(swapchainCount)
 		if len(createInfos) != 0 {
 			c.pCreateInfos = (*C.VkSwapchainCreateInfoKHR)(m.alloc(C.sizeof_VkSwapchainCreateInfoKHR * uint(len(createInfos))))
 			slice1 := (*[1 << 31]C.VkSwapchainCreateInfoKHR)(unsafe.Pointer(c.pCreateInfos))[:len(createInfos):len(createInfos)]
@@ -18686,10 +18695,10 @@ func ToGetPhysicalDeviceSparseImageFormatProperties2KHR(p PFNVoidFunction) (fn F
 }
 
 type PFNGetDeviceGroupPeerMemoryFeaturesKHR C.PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR
-type FuncGetDeviceGroupPeerMemoryFeaturesKHR func(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags)
+type FuncGetDeviceGroupPeerMemoryFeaturesKHR func(device Device, heapIndex uint32, localDeviceIndex uint32, remoteDeviceIndex uint32, peerMemoryFeatures *PeerMemoryFeatureFlags)
 
 func ToGetDeviceGroupPeerMemoryFeaturesKHR(p PFNVoidFunction) (fn FuncGetDeviceGroupPeerMemoryFeaturesKHR) {
-	return func(device Device, heapIndex uint32, localDeviceIndex uint32, peerMemoryFeatures []PeerMemoryFeatureFlags) {
+	return func(device Device, heapIndex uint32, localDeviceIndex uint32, remoteDeviceIndex uint32, peerMemoryFeatures *PeerMemoryFeatureFlags) {
 		var c struct {
 			device              C.VkDevice
 			heapIndex           C.uint32_t
@@ -18702,22 +18711,16 @@ func ToGetDeviceGroupPeerMemoryFeaturesKHR(p PFNVoidFunction) (fn FuncGetDeviceG
 		c.device = C.VkDevice(device)
 		c.heapIndex = C.uint32_t(heapIndex)
 		c.localDeviceIndex = C.uint32_t(localDeviceIndex)
-		c.remoteDeviceIndex = C.uint32_t(len(peerMemoryFeatures))
-		if len(peerMemoryFeatures) != 0 {
-			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags * uint(len(peerMemoryFeatures))))
-			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-			for i1, _ := range peerMemoryFeatures {
-				*(*C.uint32_t)((*C.VkFlags)(&slice1[i1])) = C.uint32_t((uint32)((Flags)(peerMemoryFeatures[i1])))
-			}
+		c.remoteDeviceIndex = C.uint32_t(remoteDeviceIndex)
+		if peerMemoryFeatures != nil {
+			c.pPeerMemoryFeatures = (*C.VkPeerMemoryFeatureFlags)(m.alloc(C.sizeof_VkPeerMemoryFeatureFlags))
+			*(*C.uint32_t)((*C.VkFlags)(c.pPeerMemoryFeatures)) = C.uint32_t((uint32)((Flags)(*peerMemoryFeatures)))
 		} else {
 			c.pPeerMemoryFeatures = nil
 		}
 		C.callPFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(C.PFN_vkGetDeviceGroupPeerMemoryFeaturesKHR(unsafe.Pointer(p)), c.device, c.heapIndex, c.localDeviceIndex, c.remoteDeviceIndex, c.pPeerMemoryFeatures)
-		if len(peerMemoryFeatures) != 0 {
-			slice1 := (*[1 << 31]C.VkPeerMemoryFeatureFlags)(unsafe.Pointer(c.pPeerMemoryFeatures))[:len(peerMemoryFeatures):len(peerMemoryFeatures)]
-			for i1, _ := range peerMemoryFeatures {
-				*(*uint32)((*Flags)(&peerMemoryFeatures[i1])) = uint32((C.uint32_t)((C.VkFlags)(slice1[i1])))
-			}
+		if peerMemoryFeatures != nil {
+			*(*uint32)((*Flags)(peerMemoryFeatures)) = uint32((C.uint32_t)((C.VkFlags)(*c.pPeerMemoryFeatures)))
 		}
 	}
 }
@@ -19200,10 +19203,10 @@ func ToCmdPushDescriptorSetKHR(p PFNVoidFunction) (fn FuncCmdPushDescriptorSetKH
 }
 
 type PFNCmdPushDescriptorSetWithTemplateKHR C.PFN_vkCmdPushDescriptorSetWithTemplateKHR
-type FuncCmdPushDescriptorSetWithTemplateKHR func(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, data []byte)
+type FuncCmdPushDescriptorSetWithTemplateKHR func(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, set uint32, data []byte)
 
 func ToCmdPushDescriptorSetWithTemplateKHR(p PFNVoidFunction) (fn FuncCmdPushDescriptorSetWithTemplateKHR) {
-	return func(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, data []byte) {
+	return func(commandBuffer CommandBuffer, descriptorUpdateTemplate DescriptorUpdateTemplate, layout PipelineLayout, set uint32, data []byte) {
 		var c struct {
 			commandBuffer            C.VkCommandBuffer
 			descriptorUpdateTemplate C.VkDescriptorUpdateTemplate
@@ -19214,7 +19217,7 @@ func ToCmdPushDescriptorSetWithTemplateKHR(p PFNVoidFunction) (fn FuncCmdPushDes
 		c.commandBuffer = C.VkCommandBuffer(commandBuffer)
 		c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
 		c.layout = C.VkPipelineLayout(layout)
-		c.set = C.uint32_t(len(data))
+		c.set = C.uint32_t(set)
 		if len(data) != 0 {
 			c.pData = (unsafe.Pointer)(&data[0])
 		} else {
@@ -19291,10 +19294,10 @@ func ToDestroyDescriptorUpdateTemplateKHR(p PFNVoidFunction) (fn FuncDestroyDesc
 }
 
 type PFNUpdateDescriptorSetWithTemplateKHR C.PFN_vkUpdateDescriptorSetWithTemplateKHR
-type FuncUpdateDescriptorSetWithTemplateKHR func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer)
+type FuncUpdateDescriptorSetWithTemplateKHR func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte)
 
 func ToUpdateDescriptorSetWithTemplateKHR(p PFNVoidFunction) (fn FuncUpdateDescriptorSetWithTemplateKHR) {
-	return func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data unsafe.Pointer) {
+	return func(device Device, descriptorSet DescriptorSet, descriptorUpdateTemplate DescriptorUpdateTemplate, data []byte) {
 		var c struct {
 			device                   C.VkDevice
 			descriptorSet            C.VkDescriptorSet
@@ -19304,7 +19307,11 @@ func ToUpdateDescriptorSetWithTemplateKHR(p PFNVoidFunction) (fn FuncUpdateDescr
 		c.device = C.VkDevice(device)
 		c.descriptorSet = C.VkDescriptorSet(descriptorSet)
 		c.descriptorUpdateTemplate = C.VkDescriptorUpdateTemplate(descriptorUpdateTemplate)
-		c.pData = data
+		if len(data) != 0 {
+			c.pData = (unsafe.Pointer)(&data[0])
+		} else {
+			c.pData = nil
+		}
 		C.callPFN_vkUpdateDescriptorSetWithTemplateKHR(C.PFN_vkUpdateDescriptorSetWithTemplateKHR(unsafe.Pointer(p)), c.device, c.descriptorSet, c.descriptorUpdateTemplate, c.pData)
 	}
 }

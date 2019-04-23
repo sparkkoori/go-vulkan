@@ -1,87 +1,188 @@
 package main
 
 import (
+	"strings"
+
 	cast "github.com/elliotchance/c2go/ast"
 	"github.com/jinzhu/inflection"
 )
 
-func isMaybePlural(name string) bool {
-	return inflection.Plural(name) == name
-}
-
 func analyzeHint(h *hint, src Source) {
-	analyzeArrayAndSize := func(decls []*cast.FieldDecl, pid string) {
-		/*Array Conditions:
-		- It's pointer type.
-		- It may be a plural name.
-		- There must be one size of array, at least.
-		- It's not explicitly excluded.
-		*/
+	markArray := func(id string, bl bool) {
+		if bl {
+			h.isArray[id] = true
+		} else {
+			delete(h.isArray, id)
+		}
+	}
 
+	markArraySize := func(id string, bl bool) {
+		if bl {
+			h.isArraySize[id] = true
+		} else {
+			delete(h.isArraySize, id)
+		}
+	}
+
+	analyzeArrayAndSize := func(decls []*cast.FieldDecl, pid string) {
 		/*Size of Array Conditions:
 		- It's uint32_t or size_t type.
-		- What next to it is an array.
-		// - The name is singular form of array with suffix of "Size" or "Count".
+		- The name contains suffix of "Size" or "Count".
+		- It's follow by Array.
 		*/
 
-		existArraySize := false
-		for i := len(decls) - 1; i >= 0; i-- {
+		/*Array Conditions:
+		- It's next to an size param or array param.
+		- It's pointer type.
+		- The name is not singular form.
+		*/
+
+		nextToSizeOrArray := false
+		for i := 0; i < len(decls); i++ {
+			name := decls[i].Name
+			id := pid + "." + name
+
+			isArray := func(decl *cast.FieldDecl, nextToSizeOrArray bool) bool {
+				name := decl.Name
+
+				//Cond 1
+				{
+					if !nextToSizeOrArray {
+						return false
+					}
+				}
+
+				//Cond 2
+				{
+					var ok bool
+					switch n := decl.ChildNodes[0].(type) {
+					case *cast.PointerType:
+						_ = n
+						ok = true
+					}
+					if !ok {
+						return false
+					}
+				}
+
+				//Cond 3
+				if inflection.Plural(name) != name {
+					return false
+				}
+
+				return true
+			}
+
+			isArraySize := func(decl, ndecl *cast.FieldDecl) (bool, bool) {
+				name := decl.Name
+				var in bool = false
+				//Cond 1
+				{
+					var ok bool
+					switch n := decl.ChildNodes[0].(type) {
+					case *cast.PointerType:
+						if n.Type == "uint32_t *" || n.Type == "size_t *" {
+							ok = true
+							in = false
+						}
+					case *cast.TypedefType:
+						if n.Type == "uint32_t" || n.Type == "size_t" {
+							ok = true
+							in = true
+						}
+					}
+					if !ok {
+						return false, in
+					}
+				}
+				//Cond 2
+				{
+					check := func(suffix, name string) bool {
+						if name != strings.ToLower(suffix) && !strings.HasSuffix(name, suffix) {
+							return false
+						}
+						// name = strings.TrimSuffix(name, suffix)
+						// if inflection.Singular(name) != name {
+						// 	// println(inflection.Singular(name), "!=", name)
+						// 	if !strings.Contains(name, "Data") && !strings.Contains(name, "data") {
+						// 		return false
+						// 	}
+						// }
+
+						return true
+					}
+
+					if !check("Size", name) && !check("Count", name) {
+						return false, false
+					}
+				}
+
+				//Cond 3
+				{
+					if ndecl == nil {
+						return false, false
+					}
+
+					// println("isArray", decl.Name, ndecl.Name, isArray(ndecl, true))
+					if !isArray(ndecl, true) {
+						return false, false
+					}
+				}
+
+				return true, in
+			}
+
 			decl := decls[i]
-			id := pid + "." + decl.Name
-			nid := ""
+			var ndecl *cast.FieldDecl = nil
 			if i < len(decls)-1 {
-				nid = pid + "." + decls[i+1].Name
+				ndecl = decls[i+1]
 			}
 
-			//array
-			if _, ok := decl.ChildNodes[0].(*cast.PointerType); ok {
-				switch decl.Name {
-				case "pEnabledFeatures":
-				case "pWaitDstStageMask":
-					h.isArray[id] = true
-				case "pData":
-					h.isArray[id] = true
-				case "pCode":
-					h.isArray[id] = true
-				default:
-					if isMaybePlural(decl.Name) {
-						h.isArray[id] = true
-					}
+			if ok, in := isArraySize(decl, ndecl); ok {
+				if in {
+					markArraySize(id, true)
 				}
+				nextToSizeOrArray = true
+				continue
 			}
 
-			//size
+			if isArray(decl, nextToSizeOrArray) {
+				markArray(id, true)
+				continue
+			}
+
 			{
-				if id == "VkShaderModuleCreateInfo.codeSize" {
-					delete(h.isArray, id)
-					existArraySize = true
-					continue
-				}
-				switch n := decl.ChildNodes[0].(type) {
-				case *cast.PointerType:
-					if n.Type == "uint32_t *" || n.Type == "size_t *" {
-						if nid != "" && h.isArray[nid] {
-							delete(h.isArray, id)
-							existArraySize = true
-						}
-					}
-				case *cast.TypedefType:
-					if n.Type == "uint32_t" || n.Type == "size_t" {
-						if nid != "" && h.isArray[nid] {
-							delete(h.isArray, id)
-							existArraySize = true
-							h.isArraySize[id] = true
-						}
-					}
-				}
+				nextToSizeOrArray = false
+				continue
 			}
 		}
 
-		//There must be one size of array, at least.
-		if !existArraySize {
-			for i := len(decls) - 1; i >= 0; i-- {
-				id := pid + "." + decls[i].Name
-				delete(h.isArray, id)
+		//Pass 2: explicty
+		for i := 0; i < len(decls); i++ {
+			name := decls[i].Name
+			id := pid + "." + decls[i].Name
+
+			switch name {
+			case "pPipelines":
+				markArray(id, true)
+			case "pCommandBuffers":
+				markArray(id, true)
+			case "pData":
+				markArray(id, true)
+			case "pCode":
+				markArray(id, true)
+			}
+
+			switch id {
+			case "VkDeviceCreateInfo.pEnabledFeatures":
+				markArray(id, false)
+			case "VkSubmitInfo.pWaitDstStageMask":
+				markArray(id, true)
+
+			case "PFN_vkCreateSharedSwapchainsKHR().swapchainCount":
+				markArraySize(id, false)
+			case "PFN_vkCreateSharedSwapchainsKHR().pSwapchains":
+				markArray(id, true)
 			}
 		}
 	}
