@@ -8189,9 +8189,9 @@ type WriteDescriptorSet struct {
 	DstArrayElement uint32
 	DescriptorCount uint32
 	DescriptorType  DescriptorType
-	ImageInfo       *DescriptorImageInfo
-	BufferInfo      *DescriptorBufferInfo
-	TexelBufferView *BufferView
+	ImageInfo       []DescriptorImageInfo
+	BufferInfo      []DescriptorBufferInfo
+	TexelBufferView []BufferView
 }
 
 func (g *WriteDescriptorSet) toC(c *C.VkWriteDescriptorSet, m *cmemory) {
@@ -8204,21 +8204,30 @@ func (g *WriteDescriptorSet) toC(c *C.VkWriteDescriptorSet, m *cmemory) {
 	c.dstArrayElement = C.uint32_t(g.DstArrayElement)
 	c.descriptorCount = C.uint32_t(g.DescriptorCount)
 	c.descriptorType = C.VkDescriptorType(g.DescriptorType)
-	if g.ImageInfo != nil {
-		c.pImageInfo = (*C.VkDescriptorImageInfo)(m.alloc(C.sizeof_VkDescriptorImageInfo))
-		g.ImageInfo.toC(c.pImageInfo)
+	if len(g.ImageInfo) != 0 {
+		c.pImageInfo = (*C.VkDescriptorImageInfo)(m.alloc(C.sizeof_VkDescriptorImageInfo * uint(len(g.ImageInfo))))
+		slice1 := (*[1 << 31]C.VkDescriptorImageInfo)(unsafe.Pointer(c.pImageInfo))[:len(g.ImageInfo):len(g.ImageInfo)]
+		for i1, _ := range g.ImageInfo {
+			g.ImageInfo[i1].toC(&slice1[i1])
+		}
 	} else {
 		c.pImageInfo = nil
 	}
-	if g.BufferInfo != nil {
-		c.pBufferInfo = (*C.VkDescriptorBufferInfo)(m.alloc(C.sizeof_VkDescriptorBufferInfo))
-		g.BufferInfo.toC(c.pBufferInfo)
+	if len(g.BufferInfo) != 0 {
+		c.pBufferInfo = (*C.VkDescriptorBufferInfo)(m.alloc(C.sizeof_VkDescriptorBufferInfo * uint(len(g.BufferInfo))))
+		slice1 := (*[1 << 31]C.VkDescriptorBufferInfo)(unsafe.Pointer(c.pBufferInfo))[:len(g.BufferInfo):len(g.BufferInfo)]
+		for i1, _ := range g.BufferInfo {
+			g.BufferInfo[i1].toC(&slice1[i1])
+		}
 	} else {
 		c.pBufferInfo = nil
 	}
-	if g.TexelBufferView != nil {
-		c.pTexelBufferView = (*C.VkBufferView)(m.alloc(C.sizeof_VkBufferView))
-		*c.pTexelBufferView = C.VkBufferView(*g.TexelBufferView)
+	if len(g.TexelBufferView) != 0 {
+		c.pTexelBufferView = (*C.VkBufferView)(m.alloc(C.sizeof_VkBufferView * uint(len(g.TexelBufferView))))
+		slice1 := (*[1 << 31]C.VkBufferView)(unsafe.Pointer(c.pTexelBufferView))[:len(g.TexelBufferView):len(g.TexelBufferView)]
+		for i1, _ := range g.TexelBufferView {
+			slice1[i1] = C.VkBufferView(g.TexelBufferView[i1])
+		}
 	} else {
 		c.pTexelBufferView = nil
 	}
@@ -8232,14 +8241,23 @@ func (g *WriteDescriptorSet) fromC(c *C.VkWriteDescriptorSet) {
 	g.DstArrayElement = uint32(c.dstArrayElement)
 	g.DescriptorCount = uint32(c.descriptorCount)
 	g.DescriptorType = DescriptorType(c.descriptorType)
-	if g.ImageInfo != nil {
-		g.ImageInfo.fromC(c.pImageInfo)
+	if len(g.ImageInfo) != 0 {
+		slice1 := (*[1 << 31]C.VkDescriptorImageInfo)(unsafe.Pointer(c.pImageInfo))[:len(g.ImageInfo):len(g.ImageInfo)]
+		for i1, _ := range g.ImageInfo {
+			g.ImageInfo[i1].fromC(&slice1[i1])
+		}
 	}
-	if g.BufferInfo != nil {
-		g.BufferInfo.fromC(c.pBufferInfo)
+	if len(g.BufferInfo) != 0 {
+		slice1 := (*[1 << 31]C.VkDescriptorBufferInfo)(unsafe.Pointer(c.pBufferInfo))[:len(g.BufferInfo):len(g.BufferInfo)]
+		for i1, _ := range g.BufferInfo {
+			g.BufferInfo[i1].fromC(&slice1[i1])
+		}
 	}
-	if g.TexelBufferView != nil {
-		*g.TexelBufferView = BufferView(*c.pTexelBufferView)
+	if len(g.TexelBufferView) != 0 {
+		slice1 := (*[1 << 31]C.VkBufferView)(unsafe.Pointer(c.pTexelBufferView))[:len(g.TexelBufferView):len(g.TexelBufferView)]
+		for i1, _ := range g.TexelBufferView {
+			g.TexelBufferView[i1] = BufferView(slice1[i1])
+		}
 	}
 }
 func (s *WriteDescriptorSet) sType() C.VkStructureType {

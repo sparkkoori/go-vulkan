@@ -180,6 +180,12 @@ func analyzeHint(h *hint, src Source) {
 				markArray(id, false)
 			case "VkSubmitInfo.pWaitDstStageMask":
 				markArray(id, true)
+			case "VkWriteDescriptorSet.pImageInfo":
+				markArray(id, true)
+			case "VkWriteDescriptorSet.pBufferInfo":
+				markArray(id, true)
+			case "VkWriteDescriptorSet.pTexelBufferView":
+				markArray(id, true)
 
 			case "PFN_vkCreateSharedSwapchainsKHR().swapchainCount":
 				markArraySize(id, false)
