@@ -8075,10 +8075,10 @@ func (s *DescriptorSetAllocateInfo) getNext() Structure {
 }
 
 type DescriptorSet C.VkDescriptorSet
-type FuncAllocateDescriptorSets func(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets *DescriptorSet) (_ret Result)
+type FuncAllocateDescriptorSets func(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result)
 
 func ToAllocateDescriptorSets(p PFNVoidFunction) (fn FuncAllocateDescriptorSets) {
-	return func(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets *DescriptorSet) (_ret Result) {
+	return func(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
 		var c struct {
 			device          C.VkDevice
 			pAllocateInfo   *C.VkDescriptorSetAllocateInfo
@@ -8094,16 +8094,22 @@ func ToAllocateDescriptorSets(p PFNVoidFunction) (fn FuncAllocateDescriptorSets)
 		} else {
 			c.pAllocateInfo = nil
 		}
-		if descriptorSets != nil {
-			c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet))
-			*c.pDescriptorSets = C.VkDescriptorSet(*descriptorSets)
+		if len(descriptorSets) != 0 {
+			c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
+			slice1 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
+			for i1, _ := range descriptorSets {
+				slice1[i1] = C.VkDescriptorSet(descriptorSets[i1])
+			}
 		} else {
 			c.pDescriptorSets = nil
 		}
 		c._ret = C.callPFN_vkAllocateDescriptorSets(C.PFN_vkAllocateDescriptorSets(unsafe.Pointer(p)), c.device, c.pAllocateInfo, c.pDescriptorSets)
 		_ret = Result(c._ret)
-		if descriptorSets != nil {
-			*descriptorSets = DescriptorSet(*c.pDescriptorSets)
+		if len(descriptorSets) != 0 {
+			slice1 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
+			for i1, _ := range descriptorSets {
+				descriptorSets[i1] = DescriptorSet(slice1[i1])
+			}
 		}
 		return
 	}
@@ -12808,7 +12814,7 @@ func ResetDescriptorPool(device Device, descriptorPool DescriptorPool, flags Des
 	_ret = Result(c._ret)
 	return
 }
-func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets *DescriptorSet) (_ret Result) {
+func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateInfo, descriptorSets []DescriptorSet) (_ret Result) {
 	var c struct {
 		device          C.VkDevice
 		pAllocateInfo   *C.VkDescriptorSetAllocateInfo
@@ -12824,16 +12830,22 @@ func AllocateDescriptorSets(device Device, allocateInfo *DescriptorSetAllocateIn
 	} else {
 		c.pAllocateInfo = nil
 	}
-	if descriptorSets != nil {
-		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet))
-		*c.pDescriptorSets = C.VkDescriptorSet(*descriptorSets)
+	if len(descriptorSets) != 0 {
+		c.pDescriptorSets = (*C.VkDescriptorSet)(m.alloc(C.sizeof_VkDescriptorSet * uint(len(descriptorSets))))
+		slice1 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
+		for i1, _ := range descriptorSets {
+			slice1[i1] = C.VkDescriptorSet(descriptorSets[i1])
+		}
 	} else {
 		c.pDescriptorSets = nil
 	}
 	c._ret = C.vkAllocateDescriptorSets(c.device, c.pAllocateInfo, c.pDescriptorSets)
 	_ret = Result(c._ret)
-	if descriptorSets != nil {
-		*descriptorSets = DescriptorSet(*c.pDescriptorSets)
+	if len(descriptorSets) != 0 {
+		slice1 := (*[1 << 31]C.VkDescriptorSet)(unsafe.Pointer(c.pDescriptorSets))[:len(descriptorSets):len(descriptorSets)]
+		for i1, _ := range descriptorSets {
+			descriptorSets[i1] = DescriptorSet(slice1[i1])
+		}
 	}
 	return
 }

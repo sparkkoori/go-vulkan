@@ -171,6 +171,8 @@ func analyzeHint(h *hint, src Source) {
 				markArray(id, true)
 			case "pCode":
 				markArray(id, true)
+			case "pDescriptorSets":
+				markArray(id, true)
 			}
 
 			switch id {
