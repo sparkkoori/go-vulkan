@@ -44,6 +44,20 @@ var ERROR_INVALID_EXTERNAL_HANDLE_KHR = errors.New("ERROR_INVALID_EXTERNAL_HANDL
 
 var UNKOWN = errors.New("Unknown VkResult")
 
+func Check(rs vk.Result) {
+	switch rs {
+	case vk.SUCCESS:
+	case vk.NOT_READY:
+	case vk.TIMEOUT:
+	case vk.EVENT_SET:
+	case vk.EVENT_RESET:
+	case vk.INCOMPLETE:
+	case vk.SUBOPTIMAL_KHR:
+	default:
+		panic(Convert(rs))
+	}
+}
+
 func Convert(rs vk.Result) error {
 	switch rs {
 	case vk.SUCCESS:
