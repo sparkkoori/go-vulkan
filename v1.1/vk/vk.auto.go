@@ -10005,7 +10005,7 @@ func ToCmdFillBuffer(p PFNVoidFunction) (fn FuncCmdFillBuffer) {
 type PFNCmdClearColorImage C.PFN_vkCmdClearColorImage
 type ClearColorValue C.VkClearColorValue
 
-func (g *ClearColorValue) AssginFloat32(v [4]float32) {
+func (g *ClearColorValue) AssignFloat32(v [4]float32) {
 	var cv [4]C.float
 	for i, _ := range v {
 		cv[i] = C.float(v[i])
@@ -10019,7 +10019,7 @@ func (g *ClearColorValue) Float32() (v [4]float32) {
 	}
 	return
 }
-func (g *ClearColorValue) AssginInt32(v [4]int32) {
+func (g *ClearColorValue) AssignInt32(v [4]int32) {
 	var cv [4]C.int32_t
 	for i, _ := range v {
 		cv[i] = C.int32_t(v[i])
@@ -10033,7 +10033,7 @@ func (g *ClearColorValue) Int32() (v [4]int32) {
 	}
 	return
 }
-func (g *ClearColorValue) AssginUint32(v [4]uint32) {
+func (g *ClearColorValue) AssignUint32(v [4]uint32) {
 	var cv [4]C.uint32_t
 	for i, _ := range v {
 		cv[i] = C.uint32_t(v[i])
@@ -10140,7 +10140,7 @@ func ToCmdClearDepthStencilImage(p PFNVoidFunction) (fn FuncCmdClearDepthStencil
 type PFNCmdClearAttachments C.PFN_vkCmdClearAttachments
 type ClearValue C.VkClearValue
 
-func (g *ClearValue) AssginColor(v ClearColorValue) {
+func (g *ClearValue) AssignColor(v ClearColorValue) {
 	var cv C.VkClearColorValue
 	cv = C.VkClearColorValue(v)
 	*(*C.VkClearColorValue)(unsafe.Pointer(g)) = cv
@@ -10150,7 +10150,7 @@ func (g *ClearValue) Color() (v ClearColorValue) {
 	v = ClearColorValue(cv)
 	return
 }
-func (g *ClearValue) AssginDepthStencil(v ClearDepthStencilValue) {
+func (g *ClearValue) AssignDepthStencil(v ClearDepthStencilValue) {
 	var cv C.VkClearDepthStencilValue
 	v.toC(&cv)
 	*(*C.VkClearDepthStencilValue)(unsafe.Pointer(g)) = cv

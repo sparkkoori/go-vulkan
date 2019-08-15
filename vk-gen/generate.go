@@ -179,7 +179,7 @@ func (g *generator) genRecordTypeUnion(decl *cast.RecordDecl) *typeInfo {
 			lhs := starExpr(callExpr(starExpr(finfo.ctype), callExpr(ident("unsafe.Pointer"), ident("g"))))
 			stmts0 = append(stmts0, assignStmt1n1(lhs, ident("cv")))
 		}
-		g.target.addGo(funcDecl(ident("Assgin"+upFirst(gostr)), recv, funcType0, stmts0...))
+		g.target.addGo(funcDecl(ident("Assign"+upFirst(gostr)), recv, funcType0, stmts0...))
 
 		//get
 		funcType1 := funcType(nil, []*goast.Field{
